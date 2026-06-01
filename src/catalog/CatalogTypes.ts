@@ -6,7 +6,7 @@ export interface CatalogEntry {
 }
 
 export interface Implementation {
-    runtime: 'arduino:cpp' | 'arduino:python';
+    runtime: 'arduino:cpp';
     dependencies?: Dependency[];
     targets?: string[];
     codegen?: CodegenSections;

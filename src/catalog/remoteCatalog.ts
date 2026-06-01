@@ -72,4 +72,4 @@ export async function downloadCatalog(
     return { localPath, downloaded: true };
 }
 
-export { isUrl };
+export { isUrl, httpGet };

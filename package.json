@@ -25,6 +25,115 @@
   "activationEvents": [],
   "main": "./dist/extension.js",
   "contributes": {
+    "chatParticipants": [
+      {
+        "id": "blocks-editor.blockAuthor",
+        "fullName": "Block Author",
+        "name": "blocks",
+        "description": "Create block catalog YAML files for hardware libraries",
+        "isSticky": true,
+        "commands": [
+          {
+            "name": "research",
+            "description": "Research a hardware library for block catalog creation"
+          },
+          {
+            "name": "design",
+            "description": "Design blocks based on gathered research"
+          },
+          {
+            "name": "generate",
+            "description": "Generate YAML catalog from the design"
+          },
+          {
+            "name": "validate",
+            "description": "Validate YAML catalog against the schema"
+          }
+        ]
+      }
+    ],
+    "languageModelTools": [
+      {
+        "name": "blocks-editor-fetch-url",
+        "displayName": "Fetch URL",
+        "modelDescription": "Fetch any URL and return its text content. Use for reading library documentation, GitHub raw files (.h, .cpp, library.properties), and example sketches.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "url": {
+              "type": "string",
+              "description": "The URL to fetch"
+            }
+          },
+          "required": ["url"]
+        }
+      },
+      {
+        "name": "blocks-editor-search-pio-registry",
+        "displayName": "Search PIO Registry",
+        "modelDescription": "Search the PlatformIO library registry by name. Returns matching libraries with versions and descriptions.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Library name or keyword to search"
+            }
+          },
+          "required": ["query"]
+        }
+      },
+      {
+        "name": "blocks-editor-check-arduino-registry",
+        "displayName": "Check Arduino Registry",
+        "modelDescription": "Check if a library is in the Arduino Library Registry (installable via arduino-cli lib install). PIO and Arduino registries do not fully overlap — check both.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "libraryName": {
+              "type": "string",
+              "description": "Library name to look up"
+            }
+          },
+          "required": ["libraryName"]
+        }
+      },
+      {
+        "name": "blocks-editor-validate-catalog",
+        "displayName": "Validate Catalog",
+        "modelDescription": "Validate multi-document YAML against the block catalog schema and run structural checks (duplicate types, precedence, placeholders). Always validate before saving.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "yaml": {
+              "type": "string",
+              "description": "The YAML catalog content to validate"
+            }
+          },
+          "required": ["yaml"]
+        }
+      },
+      {
+        "name": "blocks-editor-save-catalog",
+        "displayName": "Save Catalog",
+        "userDescription": "Save a block catalog YAML file to the workspace .blocks/ directory",
+        "modelDescription": "Save a YAML catalog file to the workspace .blocks/ directory. The extension auto-reloads catalogs when new files appear.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "filename": {
+              "type": "string",
+              "description": "Filename (e.g. wifinina.yaml)"
+            },
+            "content": {
+              "type": "string",
+              "description": "The YAML content to save"
+            }
+          },
+          "required": ["filename", "content"]
+        }
+      }
+    ],
     "commands": [
       {
         "command": "blocks-editor.refreshCatalogs",

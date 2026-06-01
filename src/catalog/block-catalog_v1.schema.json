@@ -35,8 +35,8 @@
       "properties": {
         "runtime": {
           "type": "string",
-          "enum": ["arduino:cpp", "arduino:python"],
-          "description": "Target runtime. 'arduino:cpp' → sketch/sketch.ino (MCU side). 'arduino:python' → python/main.py (SBC side)."
+          "enum": ["arduino:cpp"],
+          "description": "Target runtime. 'arduino:cpp' → Arduino C++ sketch."
         },
         "dependencies": {
           "type": "array",

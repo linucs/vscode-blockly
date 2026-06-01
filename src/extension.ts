@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { BlocksEditorProvider } from './BlocksEditorProvider';
 import { CatalogManager } from './catalog/CatalogManager';
+import { registerBlockAuthorParticipant } from './chat/blockAuthorParticipant';
 
 export async function activate(context: vscode.ExtensionContext) {
 	console.log('Blocks Editor extension is now active.');
@@ -9,6 +10,7 @@ export async function activate(context: vscode.ExtensionContext) {
     await catalogManager.init();
 
 	context.subscriptions.push(BlocksEditorProvider.register(context, catalogManager));
+	context.subscriptions.push(...registerBlockAuthorParticipant(context, catalogManager));
 
     context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(async e => {
         if (e.affectsConfiguration('blocks-editor.catalogPaths')) {

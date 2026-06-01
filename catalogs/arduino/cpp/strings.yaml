@@ -1,0 +1,224 @@
+# Built-in catalog — Arduino String class (arduino:cpp).
+# Per decision: L1 Text blocks stay; L2 adds ONLY String methods NOT covered by
+# L1 (length/charAt/indexOf/substring/changeCase/trim/concat are L1 → omitted).
+# Consolidated: equals/equalsIgnoreCase/startsWith/endsWith -> 1 dropdown;
+# toInt/toFloat/toDouble -> 1 dropdown.
+# Omitted by design (buffer/pointer args, not block-friendly): toCharArray, getBytes.
+# All blocks operate on a target String (the STR input).
+id: arduino_string
+category: "Text::String"
+implementations:
+  - runtime: "arduino:cpp"
+    blocks:
+      # --- compare/predicate: equals / equalsIgnoreCase / startsWith / endsWith ---
+      - blockly:
+          type: cpp_string_predicate
+          message0: "%1 %2 %3"
+          args0:
+            - type: input_value
+              name: STR
+              check: ["String"]
+            - type: field_dropdown
+              name: FUNC
+              options:
+                - ["equals", "equals"]
+                - ["equals (ignore case)", "equalsIgnoreCase"]
+                - ["starts with", "startsWith"]
+                - ["ends with", "endsWith"]
+            - type: input_value
+              name: ARG
+              check: ["String"]
+          output: Boolean
+          inputsInline: true
+          tooltip: "Compare a String against another (equality, case-insensitive equality, prefix, or suffix)."
+          helpUrl: "https://docs.arduino.cc/language-reference/en/variables/data-types/string/functions/equals/"
+        codegen:
+          body:
+            - "{{STR}}.{{FUNC}}({{ARG}})"
+          precedence: ATOMIC
+          inputDefaults:
+            STR: '""'
+            ARG: '""'
+
+      # --- compareTo ---
+      - blockly:
+          type: cpp_string_compare_to
+          message0: "%1 compareTo %2"
+          args0:
+            - type: input_value
+              name: STR
+              check: ["String"]
+            - type: input_value
+              name: ARG
+              check: ["String"]
+          output: Number
+          inputsInline: true
+          tooltip: "Lexicographically compare two Strings: negative, zero, or positive."
+          helpUrl: "https://docs.arduino.cc/language-reference/en/variables/data-types/string/functions/compareTo/"
+        codegen:
+          body:
+            - "{{STR}}.compareTo({{ARG}})"
+          precedence: ATOMIC
+          inputDefaults:
+            STR: '""'
+            ARG: '""'
+
+      # --- lastIndexOf ---
+      - blockly:
+          type: cpp_string_last_index_of
+          message0: "%1 lastIndexOf %2"
+          args0:
+            - type: input_value
+              name: STR
+              check: ["String"]
+            - type: input_value
+              name: ARG
+          output: Number
+          inputsInline: true
+          tooltip: "Index of the last occurrence of a character/substring, or -1 if not found."
+          helpUrl: "https://docs.arduino.cc/language-reference/en/variables/data-types/string/functions/lastIndexOf/"
+        codegen:
+          body:
+            - "{{STR}}.lastIndexOf({{ARG}})"
+          precedence: ATOMIC
+          inputDefaults:
+            STR: '""'
+            ARG: "' '"
+
+      # --- toInt / toFloat / toDouble (consolidated, dropdown) ---
+      - blockly:
+          type: cpp_string_to_number
+          message0: "%1 to %2"
+          args0:
+            - type: input_value
+              name: STR
+              check: ["String"]
+            - type: field_dropdown
+              name: FUNC
+              options:
+                - ["integer", "toInt"]
+                - ["float", "toFloat"]
+                - ["double", "toDouble"]
+          output: Number
+          inputsInline: true
+          tooltip: "Convert a String to an integer, float, or double."
+          helpUrl: "https://docs.arduino.cc/language-reference/en/variables/data-types/string/functions/toInt/"
+        codegen:
+          body:
+            - "{{STR}}.{{FUNC}}()"
+          precedence: ATOMIC
+          inputDefaults:
+            STR: '""'
+
+      # --- c_str ---
+      - blockly:
+          type: cpp_string_c_str
+          message0: "%1 as C string"
+          args0:
+            - type: input_value
+              name: STR
+              check: ["String"]
+          output: null
+          inputsInline: true
+          tooltip: "Return a const char* (null-terminated C string) view of the String, e.g. to pass to C APIs."
+          helpUrl: "https://docs.arduino.cc/language-reference/en/variables/data-types/string/functions/c_str/"
+        codegen:
+          body:
+            - "{{STR}}.c_str()"
+          precedence: ATOMIC
+          inputDefaults:
+            STR: '""'
+
+      # --- replace (in place) ---
+      - blockly:
+          type: cpp_string_replace
+          message0: "%1 replace %2 with %3"
+          args0:
+            - type: input_value
+              name: STR
+              check: ["String"]
+            - type: input_value
+              name: FROM
+            - type: input_value
+              name: TO
+          previousStatement: null
+          nextStatement: null
+          inputsInline: true
+          tooltip: "Replace all occurrences of a substring with another, modifying the String in place. STR must be a variable."
+          helpUrl: "https://docs.arduino.cc/language-reference/en/variables/data-types/string/functions/replace/"
+        codegen:
+          body:
+            - "{{STR}}.replace({{FROM}}, {{TO}});"
+          inputDefaults:
+            FROM: '""'
+            TO: '""'
+
+      # --- remove (in place) ---
+      - blockly:
+          type: cpp_string_remove
+          message0: "%1 remove from index %2 count %3"
+          args0:
+            - type: input_value
+              name: STR
+              check: ["String"]
+            - type: input_value
+              name: INDEX
+            - type: input_value
+              name: COUNT
+          previousStatement: null
+          nextStatement: null
+          inputsInline: true
+          tooltip: "Remove COUNT characters starting at INDEX, modifying the String in place. STR must be a variable."
+          helpUrl: "https://docs.arduino.cc/language-reference/en/variables/data-types/string/functions/remove/"
+        codegen:
+          body:
+            - "{{STR}}.remove({{INDEX}}, {{COUNT}});"
+          inputDefaults:
+            INDEX: "0"
+            COUNT: "1"
+
+      # --- setCharAt (in place) ---
+      - blockly:
+          type: cpp_string_set_char_at
+          message0: "%1 setCharAt %2 to %3"
+          args0:
+            - type: input_value
+              name: STR
+              check: ["String"]
+            - type: input_value
+              name: INDEX
+            - type: input_value
+              name: CHAR
+          previousStatement: null
+          nextStatement: null
+          inputsInline: true
+          tooltip: "Set the character at INDEX, modifying the String in place. STR must be a variable."
+          helpUrl: "https://docs.arduino.cc/language-reference/en/variables/data-types/string/functions/setCharAt/"
+        codegen:
+          body:
+            - "{{STR}}.setCharAt({{INDEX}}, {{CHAR}});"
+          inputDefaults:
+            INDEX: "0"
+            CHAR: "' '"
+
+      # --- reserve ---
+      - blockly:
+          type: cpp_string_reserve
+          message0: "%1 reserve %2 bytes"
+          args0:
+            - type: input_value
+              name: STR
+              check: ["String"]
+            - type: input_value
+              name: SIZE
+              check: ["Number", "int", "unsigned int", "long", "unsigned long"]
+          previousStatement: null
+          nextStatement: null
+          inputsInline: true
+          tooltip: "Pre-allocate buffer memory for the String to avoid fragmentation. STR must be a variable."
+          helpUrl: "https://docs.arduino.cc/language-reference/en/variables/data-types/string/functions/reserve/"
+        codegen:
+          body:
+            - "{{STR}}.reserve({{SIZE}});"
+          inputDefaults:
+            SIZE: "32"

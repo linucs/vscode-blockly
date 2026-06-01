@@ -1,0 +1,93 @@
+# Built-in catalog — Math (arduino:cpp).
+# Only the Arduino math functions NOT already covered by L1 (abs, pow, sq, sqrt,
+# sin, cos, tan are L1). min/max consolidated into one dropdown block.
+id: arduino_math
+category: "Math::Arduino"
+implementations:
+  - runtime: "arduino:cpp"
+    blocks:
+      # --- min / max (consolidated, dropdown) ---
+      - blockly:
+          type: cpp_math_minmax
+          message0: "%1 of %2 and %3"
+          args0:
+            - type: field_dropdown
+              name: FUNC
+              options:
+                - ["min", "min"]
+                - ["max", "max"]
+            - type: input_value
+              name: A
+              check: ["Number", "int", "unsigned int", "long", "unsigned long", "byte", "word", "float", "double", "uint8_t", "uint16_t", "uint32_t", "int8_t", "int16_t", "int32_t"]
+            - type: input_value
+              name: B
+              check: ["Number", "int", "unsigned int", "long", "unsigned long", "byte", "word", "float", "double", "uint8_t", "uint16_t", "uint32_t", "int8_t", "int16_t", "int32_t"]
+          output: Number
+          inputsInline: true
+          tooltip: "Smaller (min) or larger (max) of two numbers."
+          helpUrl: "https://docs.arduino.cc/language-reference/en/functions/math/min/"
+        codegen:
+          body:
+            - "{{FUNC}}({{A}}, {{B}})"
+          precedence: ATOMIC
+          inputDefaults:
+            A: "0"
+            B: "0"
+
+      # --- constrain ---
+      - blockly:
+          type: cpp_constrain
+          message0: "constrain %1 between %2 and %3"
+          args0:
+            - type: input_value
+              name: X
+              check: ["Number", "int", "unsigned int", "long", "unsigned long", "byte", "word", "float", "double", "uint8_t", "uint16_t", "uint32_t", "int8_t", "int16_t", "int32_t"]
+            - type: input_value
+              name: LOW
+              check: ["Number", "int", "unsigned int", "long", "unsigned long", "byte", "word", "float", "double", "uint8_t", "uint16_t", "uint32_t", "int8_t", "int16_t", "int32_t"]
+            - type: input_value
+              name: HIGH
+              check: ["Number", "int", "unsigned int", "long", "unsigned long", "byte", "word", "float", "double", "uint8_t", "uint16_t", "uint32_t", "int8_t", "int16_t", "int32_t"]
+          output: Number
+          inputsInline: true
+          tooltip: "Constrain a number to stay within the inclusive range [low, high]."
+          helpUrl: "https://docs.arduino.cc/language-reference/en/functions/math/constrain/"
+        codegen:
+          body:
+            - "constrain({{X}}, {{LOW}}, {{HIGH}})"
+          precedence: ATOMIC
+          inputDefaults:
+            X: "0"
+            LOW: "0"
+            HIGH: "255"
+
+      # --- map ---
+      - blockly:
+          type: cpp_map
+          message0: "map %1 from %2 .. %3 to %4 .. %5"
+          args0:
+            - type: input_value
+              name: VALUE
+              check: ["Number", "int", "unsigned int", "long", "unsigned long", "byte", "word", "uint8_t", "uint16_t", "uint32_t", "int8_t", "int16_t", "int32_t"]
+            - type: input_value
+              name: FROMLOW
+            - type: input_value
+              name: FROMHIGH
+            - type: input_value
+              name: TOLOW
+            - type: input_value
+              name: TOHIGH
+          output: Number
+          inputsInline: true
+          tooltip: "Re-map a number from one range to another (integer math)."
+          helpUrl: "https://docs.arduino.cc/language-reference/en/functions/math/map/"
+        codegen:
+          body:
+            - "map({{VALUE}}, {{FROMLOW}}, {{FROMHIGH}}, {{TOLOW}}, {{TOHIGH}})"
+          precedence: ATOMIC
+          inputDefaults:
+            VALUE: "0"
+            FROMLOW: "0"
+            FROMHIGH: "1023"
+            TOLOW: "0"
+            TOHIGH: "255"

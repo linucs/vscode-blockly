@@ -1,0 +1,68 @@
+# Built-in catalog — Time (arduino:cpp).
+# Ported from arduino-app-lab (builtin_utility.yaml), adapted to this repo:
+#  - extracted the time blocks into their own file/category (App Lab mixed them
+#    with a board-specific onboard-LED block under a generic "Control" category;
+#    the LED belongs to L3, not here).
+#  - renamed cpp_wait -> cpp_delay and message "wait" -> "delay" for consistency
+#    with the other ports (which show the real Arduino function name).
+#  - normalized helpUrl base to docs.arduino.cc.
+id: arduino_time
+category: "Control::Time"
+implementations:
+  - runtime: "arduino:cpp"
+    blocks:
+      # --- delay ---
+      - blockly:
+          type: cpp_delay
+          message0: "delay %1 ms"
+          args0:
+            - type: input_value
+              name: DURATION
+              check: ["Number", "int", "unsigned int", "long", "unsigned long", "byte", "word", "uint8_t", "uint16_t", "uint32_t", "int8_t", "int16_t", "int32_t"]
+          previousStatement: null
+          nextStatement: null
+          inputsInline: true
+          tooltip: "Pause execution for the given number of milliseconds."
+          helpUrl: "https://docs.arduino.cc/language-reference/en/functions/time/delay/"
+        codegen:
+          body:
+            - "delay({{DURATION}});"
+          inputDefaults:
+            DURATION: "1000"
+
+      # --- delayMicroseconds ---
+      - blockly:
+          type: cpp_delay_microseconds
+          message0: "delayMicroseconds %1 µs"
+          args0:
+            - type: input_value
+              name: US
+              check: ["Number", "int", "unsigned int", "long", "unsigned long", "byte", "word", "uint8_t", "uint16_t", "uint32_t", "int8_t", "int16_t", "int32_t"]
+          previousStatement: null
+          nextStatement: null
+          inputsInline: true
+          tooltip: "Pause execution for the given number of microseconds."
+          helpUrl: "https://docs.arduino.cc/language-reference/en/functions/time/delayMicroseconds/"
+        codegen:
+          body:
+            - "delayMicroseconds({{US}});"
+          inputDefaults:
+            US: "100"
+
+      # --- time since start: millis / micros (consolidated, dropdown) ---
+      - blockly:
+          type: cpp_time_since_start
+          message0: "time since start %1"
+          args0:
+            - type: field_dropdown
+              name: UNIT
+              options:
+                - ["milliseconds", "millis"]
+                - ["microseconds", "micros"]
+          output: Number
+          tooltip: "Number of milliseconds (millis) or microseconds (micros) since the board started running."
+          helpUrl: "https://docs.arduino.cc/language-reference/en/functions/time/millis/"
+        codegen:
+          body:
+            - "{{UNIT}}()"
+          precedence: ATOMIC

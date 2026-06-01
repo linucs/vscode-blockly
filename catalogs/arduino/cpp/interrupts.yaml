@@ -1,0 +1,93 @@
+# Built-in catalog — Interrupts (arduino:cpp).
+# Covers External Interrupts + global Interrupts. interrupts()/noInterrupts()
+# consolidated into one dropdown block (both parameterless, same domain).
+id: arduino_interrupts
+category: "Control::Interrupts"
+implementations:
+  - runtime: "arduino:cpp"
+    blocks:
+      # --- attachInterrupt(digitalPinToInterrupt(pin), ISR, mode) ---
+      - blockly:
+          type: cpp_attach_interrupt
+          message0: "attachInterrupt pin %1 call %2 on %3"
+          args0:
+            - type: input_value
+              name: PIN
+              check: ["Number", "int", "unsigned int", "byte", "word", "uint8_t", "uint16_t", "uint32_t"]
+            - type: field_input
+              name: ISR
+              text: "myISR"
+            - type: field_dropdown
+              name: MODE
+              options:
+                - ["change", "CHANGE"]
+                - ["rising", "RISING"]
+                - ["falling", "FALLING"]
+                - ["low", "LOW"]
+                - ["high", "HIGH"]
+          previousStatement: null
+          nextStatement: null
+          inputsInline: true
+          tooltip: "Call the named function (you must define a 'void myISR()') when the pin changes. Place inside a 'setup' block."
+          helpUrl: "https://docs.arduino.cc/language-reference/en/functions/external-interrupts/attachInterrupt/"
+        codegen:
+          body:
+            - "attachInterrupt(digitalPinToInterrupt({{PIN}}), {{ISR}}, {{MODE}});"
+          inputDefaults:
+            PIN: "2"
+
+      # --- detachInterrupt(digitalPinToInterrupt(pin)) ---
+      - blockly:
+          type: cpp_detach_interrupt
+          message0: "detachInterrupt pin %1"
+          args0:
+            - type: input_value
+              name: PIN
+              check: ["Number", "int", "unsigned int", "byte", "word", "uint8_t", "uint16_t", "uint32_t"]
+          previousStatement: null
+          nextStatement: null
+          inputsInline: true
+          tooltip: "Turn off the interrupt attached to the given pin."
+          helpUrl: "https://docs.arduino.cc/language-reference/en/functions/external-interrupts/detachInterrupt/"
+        codegen:
+          body:
+            - "detachInterrupt(digitalPinToInterrupt({{PIN}}));"
+          inputDefaults:
+            PIN: "2"
+
+      # --- digitalPinToInterrupt(pin) ---
+      - blockly:
+          type: cpp_digital_pin_to_interrupt
+          message0: "digitalPinToInterrupt pin %1"
+          args0:
+            - type: input_value
+              name: PIN
+              check: ["Number", "int", "unsigned int", "byte", "word", "uint8_t", "uint16_t", "uint32_t"]
+          output: Number
+          inputsInline: true
+          tooltip: "Translate a digital pin number to the matching interrupt number for attachInterrupt."
+          helpUrl: "https://docs.arduino.cc/language-reference/en/functions/external-interrupts/digitalPinToInterrupt/"
+        codegen:
+          body:
+            - "digitalPinToInterrupt({{PIN}})"
+          precedence: ATOMIC
+          inputDefaults:
+            PIN: "2"
+
+      # --- interrupts / noInterrupts (consolidated, dropdown) ---
+      - blockly:
+          type: cpp_interrupts
+          message0: "%1 interrupts"
+          args0:
+            - type: field_dropdown
+              name: FUNC
+              options:
+                - ["enable", "interrupts"]
+                - ["disable", "noInterrupts"]
+          previousStatement: null
+          nextStatement: null
+          tooltip: "Enable (interrupts) or disable (noInterrupts) interrupts globally. Keep disabled sections short."
+          helpUrl: "https://docs.arduino.cc/language-reference/en/functions/interrupts/interrupts/"
+        codegen:
+          body:
+            - "{{FUNC}}();"

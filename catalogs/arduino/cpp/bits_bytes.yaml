@@ -1,0 +1,117 @@
+# Built-in catalog — Bits and Bytes (arduino:cpp).
+# Consolidated: bitSet/bitClear -> one dropdown block; highByte/lowByte -> one.
+id: arduino_bits_bytes
+category: "Math::Bits and Bytes"
+implementations:
+  - runtime: "arduino:cpp"
+    blocks:
+      # --- bit(n) ---
+      - blockly:
+          type: cpp_bit
+          message0: "bit %1"
+          args0:
+            - type: input_value
+              name: N
+              check: ["Number", "int", "unsigned int", "byte", "word", "uint8_t", "uint16_t", "uint32_t"]
+          output: Number
+          inputsInline: true
+          tooltip: "The value of the given bit: bit 0 is 1, bit 1 is 2, bit 2 is 4, … (1 << n)."
+          helpUrl: "https://docs.arduino.cc/language-reference/en/functions/bits-and-bytes/bit/"
+        codegen:
+          body:
+            - "bit({{N}})"
+          precedence: ATOMIC
+          inputDefaults:
+            N: "0"
+
+      # --- bitRead(x, n) ---
+      - blockly:
+          type: cpp_bit_read
+          message0: "bitRead %1 bit %2"
+          args0:
+            - type: input_value
+              name: X
+            - type: input_value
+              name: N
+          output: Number
+          inputsInline: true
+          tooltip: "Read bit n of number x (0 or 1)."
+          helpUrl: "https://docs.arduino.cc/language-reference/en/functions/bits-and-bytes/bitRead/"
+        codegen:
+          body:
+            - "bitRead({{X}}, {{N}})"
+          precedence: ATOMIC
+          inputDefaults:
+            X: "0"
+            N: "0"
+
+      # --- bitSet / bitClear (consolidated, dropdown) ---
+      - blockly:
+          type: cpp_bit_set_clear
+          message0: "%1 bit %2 of %3"
+          args0:
+            - type: field_dropdown
+              name: FUNC
+              options:
+                - ["set", "bitSet"]
+                - ["clear", "bitClear"]
+            - type: input_value
+              name: N
+            - type: input_value
+              name: X
+          previousStatement: null
+          nextStatement: null
+          inputsInline: true
+          tooltip: "Set (to 1) or clear (to 0) bit n of the variable x. x must be a variable."
+          helpUrl: "https://docs.arduino.cc/language-reference/en/functions/bits-and-bytes/bitSet/"
+        codegen:
+          body:
+            - "{{FUNC}}({{X}}, {{N}});"
+          inputDefaults:
+            N: "0"
+
+      # --- bitWrite(x, n, b) ---
+      - blockly:
+          type: cpp_bit_write
+          message0: "bitWrite %1 bit %2 = %3"
+          args0:
+            - type: input_value
+              name: X
+            - type: input_value
+              name: N
+            - type: input_value
+              name: B
+          previousStatement: null
+          nextStatement: null
+          inputsInline: true
+          tooltip: "Write bit b (0 or 1) into bit n of the variable x. x must be a variable."
+          helpUrl: "https://docs.arduino.cc/language-reference/en/functions/bits-and-bytes/bitWrite/"
+        codegen:
+          body:
+            - "bitWrite({{X}}, {{N}}, {{B}});"
+          inputDefaults:
+            N: "0"
+            B: "1"
+
+      # --- highByte / lowByte (consolidated, dropdown) ---
+      - blockly:
+          type: cpp_byte_of
+          message0: "%1 byte of %2"
+          args0:
+            - type: field_dropdown
+              name: FUNC
+              options:
+                - ["high", "highByte"]
+                - ["low", "lowByte"]
+            - type: input_value
+              name: X
+          output: Number
+          inputsInline: true
+          tooltip: "Extract the high-order or low-order byte of a value."
+          helpUrl: "https://docs.arduino.cc/language-reference/en/functions/bits-and-bytes/highByte/"
+        codegen:
+          body:
+            - "{{FUNC}}({{X}})"
+          precedence: ATOMIC
+          inputDefaults:
+            X: "0"

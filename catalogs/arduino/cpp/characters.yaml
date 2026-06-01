@@ -1,0 +1,41 @@
+# Built-in catalog — Characters (arduino:cpp).
+# Consolidated: the 13 Arduino is*() character-classification functions (all
+# share signature `bool isX(int c)`) collapse into ONE block with a dropdown.
+id: arduino_characters
+category: "Text::Characters"
+implementations:
+  - runtime: "arduino:cpp"
+    blocks:
+      - blockly:
+          type: cpp_char_is
+          message0: "%1 is %2 ?"
+          args0:
+            - type: input_value
+              name: CHAR
+              check: ["Number", "char", "int", "byte", "uint8_t", "int8_t"]
+            - type: field_dropdown
+              name: FUNC
+              options:
+                - ["a letter", "isAlpha"]
+                - ["a letter or digit", "isAlphaNumeric"]
+                - ["ASCII", "isAscii"]
+                - ["a control character", "isControl"]
+                - ["a digit", "isDigit"]
+                - ["printable, not space", "isGraph"]
+                - ["a hex digit", "isHexadecimalDigit"]
+                - ["lowercase", "isLowerCase"]
+                - ["printable", "isPrintable"]
+                - ["punctuation", "isPunct"]
+                - ["a space", "isSpace"]
+                - ["uppercase", "isUpperCase"]
+                - ["whitespace", "isWhitespace"]
+          output: Boolean
+          inputsInline: true
+          tooltip: "Test whether a character belongs to a class (Arduino is*() functions). Returns true/false."
+          helpUrl: "https://docs.arduino.cc/language-reference/en/functions/characters/isAlpha/"
+        codegen:
+          body:
+            - "{{FUNC}}({{CHAR}})"
+          precedence: ATOMIC
+          inputDefaults:
+            CHAR: "'A'"

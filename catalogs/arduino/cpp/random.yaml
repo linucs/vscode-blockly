@@ -1,0 +1,49 @@
+# Built-in catalog — Random Numbers (arduino:cpp).
+# random(max) and random(min,max) are overloads of one function → one block
+# with both bounds (set min to 0 for the single-arg behavior).
+id: arduino_math_random
+category: "Math::Random"
+implementations:
+  - runtime: "arduino:cpp"
+    blocks:
+      # --- random(min, max) ---
+      - blockly:
+          type: cpp_random
+          message0: "random from %1 to %2"
+          args0:
+            - type: input_value
+              name: MIN
+              check: ["Number", "int", "unsigned int", "long", "unsigned long", "byte", "word", "uint8_t", "uint16_t", "uint32_t", "int8_t", "int16_t", "int32_t"]
+            - type: input_value
+              name: MAX
+              check: ["Number", "int", "unsigned int", "long", "unsigned long", "byte", "word", "uint8_t", "uint16_t", "uint32_t", "int8_t", "int16_t", "int32_t"]
+          output: Number
+          inputsInline: true
+          tooltip: "Pseudo-random number in [min, max) — the upper bound is exclusive."
+          helpUrl: "https://docs.arduino.cc/language-reference/en/functions/random-numbers/random/"
+        codegen:
+          body:
+            - "random({{MIN}}, {{MAX}})"
+          precedence: ATOMIC
+          inputDefaults:
+            MIN: "0"
+            MAX: "100"
+
+      # --- randomSeed (place in a setup block) ---
+      - blockly:
+          type: cpp_random_seed
+          message0: "randomSeed %1"
+          args0:
+            - type: input_value
+              name: SEED
+              check: ["Number", "int", "unsigned int", "long", "unsigned long", "byte", "word", "uint8_t", "uint16_t", "uint32_t", "int8_t", "int16_t", "int32_t"]
+          previousStatement: null
+          nextStatement: null
+          inputsInline: true
+          tooltip: "Seed the pseudo-random generator. A common idiom is analogRead() on a floating pin. Place inside a 'setup' block."
+          helpUrl: "https://docs.arduino.cc/language-reference/en/functions/random-numbers/randomSeed/"
+        codegen:
+          body:
+            - "randomSeed({{SEED}});"
+          inputDefaults:
+            SEED: "analogRead(A0)"

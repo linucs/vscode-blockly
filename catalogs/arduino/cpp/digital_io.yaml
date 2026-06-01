@@ -1,0 +1,79 @@
+# Built-in catalog — Digital I/O (arduino:cpp).
+# Ported from arduino-app-lab (tested), adapted to this repo:
+#  - added inputsInline for visual consistency with Analog I/O.
+#  - WYSIWYG placement: every block emits where it sits (codegen.body). To run a
+#    config block once at startup, the user places it inside a `code_setup`
+#    container — NO automatic routing to setup() (App Lab forced pinMode into
+#    setup via codegen.setup; we don't, so setup vs loop stays explicit).
+id: arduino_digital_io
+category: "Input / Output::Digital"
+implementations:
+  - runtime: "arduino:cpp"
+    blocks:
+      # --- pinMode (setup-only) ---
+      - blockly:
+          type: cpp_pin_mode
+          message0: "pinMode pin %1 mode %2"
+          args0:
+            - type: input_value
+              name: PIN
+              check: ["Number", "int", "unsigned int", "long", "unsigned long", "byte", "word", "uint8_t", "uint16_t", "uint32_t", "int8_t", "int16_t", "int32_t"]
+            - type: field_dropdown
+              name: MODE
+              options:
+                - ["INPUT", "INPUT"]
+                - ["OUTPUT", "OUTPUT"]
+                - ["INPUT_PULLUP", "INPUT_PULLUP"]
+          previousStatement: null
+          nextStatement: null
+          inputsInline: true
+          tooltip: "Configure a digital pin as INPUT, OUTPUT, or INPUT_PULLUP. Place inside a 'setup' block to run once at startup."
+          helpUrl: "https://docs.arduino.cc/language-reference/en/functions/digital-io/pinMode/"
+        codegen:
+          body:
+            - "pinMode({{PIN}}, {{MODE}});"
+          inputDefaults:
+            PIN: "13"
+
+      # --- digitalWrite ---
+      - blockly:
+          type: cpp_digital_write
+          message0: "digitalWrite pin %1 %2"
+          args0:
+            - type: input_value
+              name: PIN
+              check: ["Number", "int", "unsigned int", "long", "unsigned long", "byte", "word", "uint8_t", "uint16_t", "uint32_t", "int8_t", "int16_t", "int32_t"]
+            - type: field_dropdown
+              name: VALUE
+              options:
+                - ["HIGH", "HIGH"]
+                - ["LOW", "LOW"]
+          previousStatement: null
+          nextStatement: null
+          inputsInline: true
+          tooltip: "Write HIGH or LOW to a digital pin."
+          helpUrl: "https://docs.arduino.cc/language-reference/en/functions/digital-io/digitalWrite/"
+        codegen:
+          body:
+            - "digitalWrite({{PIN}}, {{VALUE}});"
+          inputDefaults:
+            PIN: "13"
+
+      # --- digitalRead ---
+      - blockly:
+          type: cpp_digital_read
+          message0: "digitalRead pin %1"
+          args0:
+            - type: input_value
+              name: PIN
+              check: ["Number", "int", "unsigned int", "long", "unsigned long", "byte", "word", "uint8_t", "uint16_t", "uint32_t", "int8_t", "int16_t", "int32_t"]
+          output: Number
+          inputsInline: true
+          tooltip: "Read the value from a digital pin (HIGH or LOW)."
+          helpUrl: "https://docs.arduino.cc/language-reference/en/functions/digital-io/digitalRead/"
+        codegen:
+          body:
+            - "digitalRead({{PIN}})"
+          precedence: ATOMIC
+          inputDefaults:
+            PIN: "2"

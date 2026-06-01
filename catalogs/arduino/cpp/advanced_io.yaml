@@ -1,0 +1,141 @@
+# Built-in catalog — Advanced I/O (arduino:cpp).
+# Consolidated: pulseIn/pulseInLong share signature -> one dropdown block.
+id: arduino_advanced_io
+category: "Input / Output::Advanced"
+implementations:
+  - runtime: "arduino:cpp"
+    blocks:
+      # --- tone(pin, frequency, duration) ---
+      - blockly:
+          type: cpp_tone
+          message0: "tone pin %1 frequency %2 Hz for %3 ms"
+          args0:
+            - type: input_value
+              name: PIN
+              check: ["Number", "int", "unsigned int", "byte", "word", "uint8_t", "uint16_t", "uint32_t"]
+            - type: input_value
+              name: FREQUENCY
+            - type: input_value
+              name: DURATION
+          previousStatement: null
+          nextStatement: null
+          inputsInline: true
+          tooltip: "Generate a square wave of the given frequency (and duration) on a pin."
+          helpUrl: "https://docs.arduino.cc/language-reference/en/functions/advanced-io/tone/"
+        codegen:
+          body:
+            - "tone({{PIN}}, {{FREQUENCY}}, {{DURATION}});"
+          inputDefaults:
+            PIN: "8"
+            FREQUENCY: "440"
+            DURATION: "1000"
+
+      # --- noTone(pin) ---
+      - blockly:
+          type: cpp_no_tone
+          message0: "noTone pin %1"
+          args0:
+            - type: input_value
+              name: PIN
+              check: ["Number", "int", "unsigned int", "byte", "word", "uint8_t", "uint16_t", "uint32_t"]
+          previousStatement: null
+          nextStatement: null
+          inputsInline: true
+          tooltip: "Stop the square wave started by tone() on a pin."
+          helpUrl: "https://docs.arduino.cc/language-reference/en/functions/advanced-io/noTone/"
+        codegen:
+          body:
+            - "noTone({{PIN}});"
+          inputDefaults:
+            PIN: "8"
+
+      # --- pulseIn / pulseInLong (consolidated, dropdown) ---
+      - blockly:
+          type: cpp_pulse_in
+          message0: "%1 pin %2 state %3 timeout %4 µs"
+          args0:
+            - type: field_dropdown
+              name: FUNC
+              options:
+                - ["pulseIn", "pulseIn"]
+                - ["pulseInLong", "pulseInLong"]
+            - type: input_value
+              name: PIN
+              check: ["Number", "int", "unsigned int", "byte", "word", "uint8_t", "uint16_t", "uint32_t"]
+            - type: field_dropdown
+              name: STATE
+              options:
+                - ["HIGH", "HIGH"]
+                - ["LOW", "LOW"]
+            - type: input_value
+              name: TIMEOUT
+          output: Number
+          inputsInline: true
+          tooltip: "Measure the duration (µs) of a pulse on a pin. pulseInLong uses interrupts (longer pulses, needs interrupts enabled)."
+          helpUrl: "https://docs.arduino.cc/language-reference/en/functions/advanced-io/pulseIn/"
+        codegen:
+          body:
+            - "{{FUNC}}({{PIN}}, {{STATE}}, {{TIMEOUT}})"
+          precedence: ATOMIC
+          inputDefaults:
+            PIN: "7"
+            TIMEOUT: "1000000"
+
+      # --- shiftOut(dataPin, clockPin, bitOrder, value) ---
+      - blockly:
+          type: cpp_shift_out
+          message0: "shiftOut data %1 clock %2 order %3 value %4"
+          args0:
+            - type: input_value
+              name: DATAPIN
+              check: ["Number", "int", "unsigned int", "byte", "word", "uint8_t", "uint16_t", "uint32_t"]
+            - type: input_value
+              name: CLOCKPIN
+              check: ["Number", "int", "unsigned int", "byte", "word", "uint8_t", "uint16_t", "uint32_t"]
+            - type: field_dropdown
+              name: BITORDER
+              options:
+                - ["MSBFIRST", "MSBFIRST"]
+                - ["LSBFIRST", "LSBFIRST"]
+            - type: input_value
+              name: VALUE
+          previousStatement: null
+          nextStatement: null
+          inputsInline: true
+          tooltip: "Shift out a byte of data one bit at a time on a data pin, clocked by a clock pin."
+          helpUrl: "https://docs.arduino.cc/language-reference/en/functions/advanced-io/shiftOut/"
+        codegen:
+          body:
+            - "shiftOut({{DATAPIN}}, {{CLOCKPIN}}, {{BITORDER}}, {{VALUE}});"
+          inputDefaults:
+            DATAPIN: "11"
+            CLOCKPIN: "12"
+            VALUE: "0"
+
+      # --- shiftIn(dataPin, clockPin, bitOrder) ---
+      - blockly:
+          type: cpp_shift_in
+          message0: "shiftIn data %1 clock %2 order %3"
+          args0:
+            - type: input_value
+              name: DATAPIN
+              check: ["Number", "int", "unsigned int", "byte", "word", "uint8_t", "uint16_t", "uint32_t"]
+            - type: input_value
+              name: CLOCKPIN
+              check: ["Number", "int", "unsigned int", "byte", "word", "uint8_t", "uint16_t", "uint32_t"]
+            - type: field_dropdown
+              name: BITORDER
+              options:
+                - ["MSBFIRST", "MSBFIRST"]
+                - ["LSBFIRST", "LSBFIRST"]
+          output: Number
+          inputsInline: true
+          tooltip: "Shift in a byte of data one bit at a time from a data pin, clocked by a clock pin."
+          helpUrl: "https://docs.arduino.cc/language-reference/en/functions/advanced-io/shiftIn/"
+        codegen:
+          body:
+            - "shiftIn({{DATAPIN}}, {{CLOCKPIN}}, {{BITORDER}})"
+          precedence: ATOMIC
+          inputDefaults:
+            DATAPIN: "11"
+            CLOCKPIN: "12"

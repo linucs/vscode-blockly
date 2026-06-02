@@ -199,7 +199,7 @@ export class FieldTypedParamInput extends Blockly.Field<string> {
         nameRow.style.gap = '6px';
 
         const nameLabel = document.createElement('span');
-        nameLabel.textContent = 'name';
+        nameLabel.textContent = Blockly.Msg['FIELD_PARAM_NAME'] ?? 'name';
         nameLabel.className = 'blocklyTypedParamLabel';
         const nameInput = document.createElement('input');
         nameInput.type = 'text';
@@ -220,7 +220,7 @@ export class FieldTypedParamInput extends Blockly.Field<string> {
         typeList.style.overflowY = 'auto';
 
         const typeHeader = document.createElement('div');
-        typeHeader.textContent = 'type';
+        typeHeader.textContent = Blockly.Msg['FIELD_PARAM_TYPE'] ?? 'type';
         typeHeader.className = 'blocklyTypedParamLabel';
         typeHeader.style.padding = '4px 12px 2px';
         typeHeader.style.textTransform = 'uppercase';

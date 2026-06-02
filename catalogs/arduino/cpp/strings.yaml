@@ -30,7 +30,9 @@ implementations:
               check: ["String"]
           output: Boolean
           inputsInline: true
-          tooltip: "Compare a String against another (equality, case-insensitive equality, prefix, or suffix)."
+          tooltip:
+            en: "Compare a String against another (equality, case-insensitive equality, prefix, or suffix)."
+            it: "Confronta una String con un'altra (uguaglianza, uguaglianza senza distinzione maiuscole/minuscole, prefisso o suffisso)."
           helpUrl: "https://docs.arduino.cc/language-reference/en/variables/data-types/string/functions/equals/"
         codegen:
           body:
@@ -43,7 +45,9 @@ implementations:
       # --- compareTo ---
       - blockly:
           type: cpp_string_compare_to
-          message0: "%1 compareTo %2"
+          message0:
+            en: "%1 compareTo %2"
+            it: "%1 compareTo %2"
           args0:
             - type: input_value
               name: STR
@@ -53,7 +57,9 @@ implementations:
               check: ["String"]
           output: Number
           inputsInline: true
-          tooltip: "Lexicographically compare two Strings: negative, zero, or positive."
+          tooltip:
+            en: "Lexicographically compare two Strings: negative, zero, or positive."
+            it: "Confronta lessicograficamente due String: negativo, zero o positivo."
           helpUrl: "https://docs.arduino.cc/language-reference/en/variables/data-types/string/functions/compareTo/"
         codegen:
           body:
@@ -66,7 +72,9 @@ implementations:
       # --- lastIndexOf ---
       - blockly:
           type: cpp_string_last_index_of
-          message0: "%1 lastIndexOf %2"
+          message0:
+            en: "%1 lastIndexOf %2"
+            it: "%1 lastIndexOf %2"
           args0:
             - type: input_value
               name: STR
@@ -75,7 +83,9 @@ implementations:
               name: ARG
           output: Number
           inputsInline: true
-          tooltip: "Index of the last occurrence of a character/substring, or -1 if not found."
+          tooltip:
+            en: "Index of the last occurrence of a character/substring, or -1 if not found."
+            it: "Indice dell'ultima occorrenza di un carattere/sottostringa, oppure -1 se non trovato."
           helpUrl: "https://docs.arduino.cc/language-reference/en/variables/data-types/string/functions/lastIndexOf/"
         codegen:
           body:
@@ -88,7 +98,9 @@ implementations:
       # --- toInt / toFloat / toDouble (consolidated, dropdown) ---
       - blockly:
           type: cpp_string_to_number
-          message0: "%1 to %2"
+          message0:
+            en: "%1 to %2"
+            it: "%1 a %2"
           args0:
             - type: input_value
               name: STR
@@ -101,7 +113,9 @@ implementations:
                 - ["double", "toDouble"]
           output: Number
           inputsInline: true
-          tooltip: "Convert a String to an integer, float, or double."
+          tooltip:
+            en: "Convert a String to an integer, float, or double."
+            it: "Converte una String in un intero, float o double."
           helpUrl: "https://docs.arduino.cc/language-reference/en/variables/data-types/string/functions/toInt/"
         codegen:
           body:
@@ -113,14 +127,18 @@ implementations:
       # --- c_str ---
       - blockly:
           type: cpp_string_c_str
-          message0: "%1 as C string"
+          message0:
+            en: "%1 as C string"
+            it: "%1 come stringa C"
           args0:
             - type: input_value
               name: STR
               check: ["String"]
           output: null
           inputsInline: true
-          tooltip: "Return a const char* (null-terminated C string) view of the String, e.g. to pass to C APIs."
+          tooltip:
+            en: "Return a const char* (null-terminated C string) view of the String, e.g. to pass to C APIs."
+            it: "Restituisce una vista const char* (stringa C con terminatore null) della String, ad es. per passarla ad API C."
           helpUrl: "https://docs.arduino.cc/language-reference/en/variables/data-types/string/functions/c_str/"
         codegen:
           body:
@@ -132,7 +150,9 @@ implementations:
       # --- replace (in place) ---
       - blockly:
           type: cpp_string_replace
-          message0: "%1 replace %2 with %3"
+          message0:
+            en: "%1 replace %2 with %3"
+            it: "%1 sostituisci %2 con %3"
           args0:
             - type: input_value
               name: STR
@@ -144,7 +164,9 @@ implementations:
           previousStatement: null
           nextStatement: null
           inputsInline: true
-          tooltip: "Replace all occurrences of a substring with another, modifying the String in place. STR must be a variable."
+          tooltip:
+            en: "Replace all occurrences of a substring with another, modifying the String in place. STR must be a variable."
+            it: "Sostituisce tutte le occorrenze di una sottostringa con un'altra, modificando la String sul posto. STR deve essere una variabile."
           helpUrl: "https://docs.arduino.cc/language-reference/en/variables/data-types/string/functions/replace/"
         codegen:
           body:
@@ -156,7 +178,9 @@ implementations:
       # --- remove (in place) ---
       - blockly:
           type: cpp_string_remove
-          message0: "%1 remove from index %2 count %3"
+          message0:
+            en: "%1 remove from index %2 count %3"
+            it: "%1 rimuovi da indice %2 conteggio %3"
           args0:
             - type: input_value
               name: STR
@@ -168,7 +192,9 @@ implementations:
           previousStatement: null
           nextStatement: null
           inputsInline: true
-          tooltip: "Remove COUNT characters starting at INDEX, modifying the String in place. STR must be a variable."
+          tooltip:
+            en: "Remove COUNT characters starting at INDEX, modifying the String in place. STR must be a variable."
+            it: "Rimuove COUNT caratteri a partire da INDEX, modificando la String sul posto. STR deve essere una variabile."
           helpUrl: "https://docs.arduino.cc/language-reference/en/variables/data-types/string/functions/remove/"
         codegen:
           body:
@@ -180,7 +206,9 @@ implementations:
       # --- setCharAt (in place) ---
       - blockly:
           type: cpp_string_set_char_at
-          message0: "%1 setCharAt %2 to %3"
+          message0:
+            en: "%1 setCharAt %2 to %3"
+            it: "%1 setCharAt %2 a %3"
           args0:
             - type: input_value
               name: STR
@@ -192,7 +220,9 @@ implementations:
           previousStatement: null
           nextStatement: null
           inputsInline: true
-          tooltip: "Set the character at INDEX, modifying the String in place. STR must be a variable."
+          tooltip:
+            en: "Set the character at INDEX, modifying the String in place. STR must be a variable."
+            it: "Imposta il carattere alla posizione INDEX, modificando la String sul posto. STR deve essere una variabile."
           helpUrl: "https://docs.arduino.cc/language-reference/en/variables/data-types/string/functions/setCharAt/"
         codegen:
           body:
@@ -204,7 +234,9 @@ implementations:
       # --- reserve ---
       - blockly:
           type: cpp_string_reserve
-          message0: "%1 reserve %2 bytes"
+          message0:
+            en: "%1 reserve %2 bytes"
+            it: "%1 reserve %2 byte"
           args0:
             - type: input_value
               name: STR
@@ -215,7 +247,9 @@ implementations:
           previousStatement: null
           nextStatement: null
           inputsInline: true
-          tooltip: "Pre-allocate buffer memory for the String to avoid fragmentation. STR must be a variable."
+          tooltip:
+            en: "Pre-allocate buffer memory for the String to avoid fragmentation. STR must be a variable."
+            it: "Pre-alloca memoria buffer per la String per evitare la frammentazione. STR deve essere una variabile."
           helpUrl: "https://docs.arduino.cc/language-reference/en/variables/data-types/string/functions/reserve/"
         codegen:
           body:

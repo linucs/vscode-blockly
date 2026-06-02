@@ -74,7 +74,7 @@ function defineCustomBlocks(): void {
             args0: [{ type: 'field_input', name: 'SYMBOL', text: 'HIGH' }],
             output: null,
             style: blockStyleFor('Math'),
-            tooltip: 'A C++ symbol, constant, or identifier (e.g. HIGH, LOW, LED_BUILTIN, NULL).',
+            tooltip: '%{BKY_SYMBOL_LITERAL_TOOLTIP}',
         },
         // ── Custom code ──────────────────────────────────────────────
         {
@@ -84,7 +84,7 @@ function defineCustomBlocks(): void {
             previousStatement: null,
             nextStatement: null,
             style: blockStyleFor('Text'),
-            tooltip: 'Raw C++ code. Click to open the code editor.',
+            tooltip: '%{BKY_CODE_STATEMENT_TOOLTIP}',
         },
         {
             type: 'code_expression',
@@ -92,19 +92,19 @@ function defineCustomBlocks(): void {
             args0: [{ type: 'field_input', name: 'CODE', text: 'expression' }],
             output: null,
             style: blockStyleFor('Text'),
-            tooltip: 'Raw C++ expression. Inserted as-is as a value.',
+            tooltip: '%{BKY_CODE_EXPRESSION_TOOLTIP}',
         },
         {
             type: 'code_declaration',
-            message0: 'declarations %1',
+            message0: '%{BKY_CODE_DECLARATION_MSG}',
             args0: [{ type: 'input_statement', name: 'MEMBERS' }],
             style: blockStyleFor('Text'),
-            tooltip: 'Blocks inside go to file scope (before setup/loop). Use for includes, defines, global variables.',
+            tooltip: '%{BKY_CODE_DECLARATION_TOOLTIP}',
         },
         // ── do...while ───────────────────────────────────────────────
         {
             type: 'controls_doWhile',
-            message0: 'do %1 while %2',
+            message0: '%{BKY_DO_WHILE_MSG}',
             args0: [
                 { type: 'input_statement', name: 'DO' },
                 { type: 'input_value', name: 'BOOL', check: 'Boolean' },
@@ -112,7 +112,7 @@ function defineCustomBlocks(): void {
             previousStatement: null,
             nextStatement: null,
             style: blockStyleFor('Loops'),
-            tooltip: 'Execute the body first, then repeat while the condition is true.',
+            tooltip: '%{BKY_DO_WHILE_TOOLTIP}',
         },
         {
             type: 'bitwise_operation',
@@ -128,7 +128,7 @@ function defineCustomBlocks(): void {
             inputsInline: true,
             output: null,
             style: blockStyleFor('Math'),
-            tooltip: 'Bitwise operation between two integers.',
+            tooltip: '%{BKY_BITWISE_OP_TOOLTIP}',
         },
         {
             type: 'bitwise_not',
@@ -136,7 +136,7 @@ function defineCustomBlocks(): void {
             args0: [{ type: 'input_value', name: 'VALUE' }],
             output: null,
             style: blockStyleFor('Math'),
-            tooltip: 'Bitwise NOT (ones complement).',
+            tooltip: '%{BKY_BITWISE_NOT_TOOLTIP}',
         },
         {
             type: 'type_cast',
@@ -156,16 +156,16 @@ function defineCustomBlocks(): void {
             inputsInline: true,
             output: null,
             style: blockStyleFor('Math'),
-            tooltip: 'Explicit C++ type cast.',
+            tooltip: '%{BKY_TYPE_CAST_TOOLTIP}',
         },
         {
             type: 'return_statement',
-            message0: 'return %1',
+            message0: '%{BKY_RETURN_MSG}',
             args0: [{ type: 'input_value', name: 'VALUE' }],
             previousStatement: null,
             nextStatement: null,
             style: blockStyleFor('Functions'),
-            tooltip: 'Return a value from a function. Leave empty for void return.',
+            tooltip: '%{BKY_RETURN_TOOLTIP}',
         },
         {
             type: 'array_get',
@@ -177,7 +177,7 @@ function defineCustomBlocks(): void {
             inputsInline: true,
             output: null,
             style: blockStyleFor('Arrays'),
-            tooltip: 'Get an element from an array by index.',
+            tooltip: '%{BKY_ARRAY_GET_TOOLTIP}',
         },
         {
             type: 'array_set',
@@ -191,7 +191,7 @@ function defineCustomBlocks(): void {
             previousStatement: null,
             nextStatement: null,
             style: blockStyleFor('Arrays'),
-            tooltip: 'Set an element in an array by index.',
+            tooltip: '%{BKY_ARRAY_SET_TOOLTIP}',
         },
     ];
 

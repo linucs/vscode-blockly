@@ -79,9 +79,9 @@ function registerDefBlock(type: string, hasReturn: boolean): void {
 
             this.appendDummyInput('TOP')
                 .appendField(createPlusField(), 'PLUS')
-                .appendField('to')
+                .appendField(Blockly.Msg['CPP_PROC_TO'] ?? 'to')
                 .appendField(
-                    new Blockly.FieldTextInput('do something', Blockly.Procedures.rename),
+                    new Blockly.FieldTextInput(Blockly.Msg['CPP_PROC_DEFAULT_NAME'] ?? 'do something', Blockly.Procedures.rename),
                     'NAME',
                 );
 
@@ -90,7 +90,7 @@ function registerDefBlock(type: string, hasReturn: boolean): void {
             if (hasReturn) {
                 this.appendValueInput('RETURN')
                     .setAlign(Blockly.inputs.Align.RIGHT)
-                    .appendField('return')
+                    .appendField(Blockly.Msg['CPP_PROC_RETURN'] ?? 'return')
                     .appendField(
                         new FieldCombobox(RETURN_TYPE_PRESETS, 'int'),
                         'RETURN_TYPE',
@@ -100,8 +100,8 @@ function registerDefBlock(type: string, hasReturn: boolean): void {
             this.setStyle(BLOCK_STYLE);
             this.setTooltip(
                 hasReturn
-                    ? 'Define a function with a typed return value.'
-                    : 'Define a function that returns nothing (void).',
+                    ? (Blockly.Msg['CPP_PROC_DEF_RETURN_TOOLTIP'] ?? 'Define a function with a typed return value.')
+                    : (Blockly.Msg['CPP_PROC_DEF_NORETURN_TOOLTIP'] ?? 'Define a function that returns nothing (void).'),
             );
         },
 
@@ -260,8 +260,8 @@ function registerCallBlock(type: string, isValue: boolean): void {
             this.setStyle(BLOCK_STYLE);
             this.setTooltip(
                 isValue
-                    ? 'Call a function that returns a value.'
-                    : 'Call a function.',
+                    ? (Blockly.Msg['CPP_PROC_CALL_RETURN_TOOLTIP'] ?? 'Call a function that returns a value.')
+                    : (Blockly.Msg['CPP_PROC_CALL_TOOLTIP'] ?? 'Call a function.'),
             );
         },
 

@@ -10,6 +10,7 @@ import { collectUsedBlockTypes } from './project/blockUsage';
 import { collectRequirements } from './catalog/requirements';
 import { mergeEnvLists } from './project/pio/iniMerge';
 import { mergeSketchLibraries } from './project/arduino/sketchYamlMerge';
+import * as fs from 'fs/promises';
 
 /**
  * Custom editor that opens directly on a source file (main.cpp, sketch.ino, …)
@@ -40,7 +41,10 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
             enableScripts: true,
             localResourceRoots: [vscode.Uri.joinPath(this.context.extensionUri, 'dist')],
         };
-        webviewPanel.webview.html = this.getHtmlForWebview(webviewPanel.webview);
+        const locale = vscode.env.language || 'en';
+        const l10nBundle = await this.getL10nBundle();
+        const blockMessages = await this.getBlockMessages();
+        webviewPanel.webview.html = this.getHtmlForWebview(webviewPanel.webview, locale, l10nBundle, blockMessages);
 
         const sourceUri = document.uri;
         const language = languageForFile(sourceUri.fsPath) || 'cpp';
@@ -51,7 +55,7 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
 
         if (!(await companionExists(companion)) && document.getText().trim().length > 0) {
             void vscode.window.showWarningMessage(
-                `"${path.basename(sourceUri.fsPath)}" will be overwritten by the code generated from these blocks.`
+                vscode.l10n.t('"{0}" will be overwritten by the code generated from these blocks.', path.basename(sourceUri.fsPath))
             );
         }
 
@@ -199,13 +203,11 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
                     const blockType = /Invalid block definition for type:\s*(\S+)/.exec(e.error)?.[1];
                     if (blockType) {
                         vscode.window.showErrorMessage(
-                            `Blocks Editor: unknown block type "${blockType}". ` +
-                            `The .blk file references a block that is not in any loaded catalog. ` +
-                            `Check that the required catalog is present in the project's .blocks/ folder or in blocks-editor.catalogPaths.`
+                            vscode.l10n.t('Unknown block type "{0}". The .blk file references a block that is not in any loaded catalog. Check that the required catalog is present in the project\'s .blocks/ folder or in blocks-editor.catalogPaths.', blockType)
                         );
                     } else {
                         vscode.window.showErrorMessage(
-                            `Blocks Editor: failed to load workspace — ${e.error}`
+                            vscode.l10n.t('Failed to load workspace — {0}', e.error)
                         );
                     }
                     return;
@@ -296,12 +298,38 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
         return vscode.workspace.applyEdit(edit);
     }
 
-    private getHtmlForWebview(webview: vscode.Webview): string {
+    private async readJsonBundle(relativePath: string): Promise<string> {
+        const filePath = vscode.Uri.joinPath(this.context.extensionUri, ...relativePath.split('/'));
+        try {
+            const raw = await fs.readFile(filePath.fsPath, 'utf-8');
+            JSON.parse(raw);
+            return raw;
+        } catch {
+            return '{}';
+        }
+    }
+
+    private async getL10nBundle(): Promise<string> {
+        const locale = vscode.env.language;
+        if (!locale || locale === 'en') return '{}';
+        return this.readJsonBundle(`l10n/bundle.l10n.${locale}.json`);
+    }
+
+    private async getBlockMessages(): Promise<{ en: string; locale: string }> {
+        const locale = vscode.env.language || 'en';
+        const en = await this.readJsonBundle('l10n/blocks.en.json');
+        const localeBundle = locale !== 'en'
+            ? await this.readJsonBundle(`l10n/blocks.${locale}.json`)
+            : '{}';
+        return { en, locale: localeBundle };
+    }
+
+    private getHtmlForWebview(webview: vscode.Webview, locale: string, l10nBundle: string, blockMessages: { en: string; locale: string }): string {
         const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, 'dist', 'webview.js'));
 
         return /* html */`
             <!DOCTYPE html>
-            <html lang="en">
+            <html lang="${locale || 'en'}">
             <head>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -364,10 +392,10 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
             </head>
             <body>
                 <div id="toolbar">
-                    <label id="envLabel" for="envSelect" style="display:none">Environment</label>
+                    <label id="envLabel" for="envSelect" style="display:none">${vscode.l10n.t('Environment')}</label>
                     <vscode-dropdown id="envSelect" style="display:none"></vscode-dropdown>
                     <span class="spacer"></span>
-                    <vscode-button id="generateBtn" disabled>Generate C++</vscode-button>
+                    <vscode-button id="generateBtn" disabled>${vscode.l10n.t('Generate C++')}</vscode-button>
                 </div>
                 <div id="editorArea">
                     <div id="blocklyDiv"></div>
@@ -376,6 +404,10 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
                         <div class="hint">Open this file inside a project containing a <code>platformio.ini</code> or <code>sketch.yaml</code> to load the blocks compatible with your board.</div>
                     </div>
                 </div>
+                <script id="l10n-data" type="application/json">${l10nBundle}</script>
+                <script id="l10n-locale" type="application/json">"${locale || 'en'}"</script>
+                <script id="block-messages-en" type="application/json">${blockMessages.en}</script>
+                <script id="block-messages-locale" type="application/json">${blockMessages.locale}</script>
                 <script type="module" src="${scriptUri}"></script>
             </body>
             </html>`;

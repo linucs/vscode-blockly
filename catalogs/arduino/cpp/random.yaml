@@ -9,7 +9,9 @@ implementations:
       # --- random(min, max) ---
       - blockly:
           type: cpp_random
-          message0: "random from %1 to %2"
+          message0:
+            en: "random from %1 to %2"
+            it: "random da %1 a %2"
           args0:
             - type: input_value
               name: MIN
@@ -19,7 +21,9 @@ implementations:
               check: ["Number", "int", "unsigned int", "long", "unsigned long", "byte", "word", "uint8_t", "uint16_t", "uint32_t", "int8_t", "int16_t", "int32_t"]
           output: Number
           inputsInline: true
-          tooltip: "Pseudo-random number in [min, max) — the upper bound is exclusive."
+          tooltip:
+            en: "Pseudo-random number in [min, max) — the upper bound is exclusive."
+            it: "Numero pseudo-casuale nell'intervallo [min, max) — il limite superiore è escluso."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/random-numbers/random/"
         codegen:
           body:
@@ -32,7 +36,9 @@ implementations:
       # --- randomSeed (place in a setup block) ---
       - blockly:
           type: cpp_random_seed
-          message0: "randomSeed %1"
+          message0:
+            en: "randomSeed %1"
+            it: "randomSeed %1"
           args0:
             - type: input_value
               name: SEED
@@ -40,7 +46,9 @@ implementations:
           previousStatement: null
           nextStatement: null
           inputsInline: true
-          tooltip: "Seed the pseudo-random generator. A common idiom is analogRead() on a floating pin. Place inside a 'setup' block."
+          tooltip:
+            en: "Seed the pseudo-random generator. A common idiom is analogRead() on a floating pin. Place inside a 'setup' block."
+            it: "Inizializza il generatore pseudo-casuale. Un metodo comune è analogRead() su un pin non collegato. Posiziona dentro un blocco 'setup'."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/random-numbers/randomSeed/"
         codegen:
           body:

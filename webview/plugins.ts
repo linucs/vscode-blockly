@@ -398,12 +398,13 @@ export function initWorkspacePlugins(workspace: Blockly.WorkspaceSvg): () => voi
 export function initTypedVariableModal(
     workspace: Blockly.WorkspaceSvg,
     types: [string, string][],
+    blockMessages?: Record<string, string>,
 ): () => void {
     patchDynamicVariableBlocks();
 
     const createFlyout = (ws: Blockly.WorkspaceSvg): Element[] => {
         const button = document.createElement('button');
-        button.setAttribute('text', 'Create variable…');
+        button.setAttribute('text', Blockly.Msg['NEW_TYPED_VARIABLE'] ?? 'Create variable…');
         button.setAttribute('callbackKey', TYPED_VAR_CALLBACK_KEY);
         const varBlocks = Blockly.VariablesDynamic.flyoutCategoryBlocks(ws);
         return [button, ...varBlocks];
@@ -414,7 +415,7 @@ export function initTypedVariableModal(
         createFlyout,
     );
 
-    const modal = new StyledTypedVariableModal(workspace, TYPED_VAR_CALLBACK_KEY, types);
+    const modal = new StyledTypedVariableModal(workspace, TYPED_VAR_CALLBACK_KEY, types, blockMessages);
     modal.init();
 
     return () => {

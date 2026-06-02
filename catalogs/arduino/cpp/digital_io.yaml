@@ -13,7 +13,9 @@ implementations:
       # --- pinMode (setup-only) ---
       - blockly:
           type: cpp_pin_mode
-          message0: "pinMode pin %1 mode %2"
+          message0:
+            en: "pinMode pin %1 mode %2"
+            it: "pinMode pin %1 modalità %2"
           args0:
             - type: input_value
               name: PIN
@@ -27,7 +29,9 @@ implementations:
           previousStatement: null
           nextStatement: null
           inputsInline: true
-          tooltip: "Configure a digital pin as INPUT, OUTPUT, or INPUT_PULLUP. Place inside a 'setup' block to run once at startup."
+          tooltip:
+            en: "Configure a digital pin as INPUT, OUTPUT, or INPUT_PULLUP. Place inside a 'setup' block to run once at startup."
+            it: "Configura un pin digitale come INPUT, OUTPUT o INPUT_PULLUP. Posiziona dentro un blocco 'setup' per eseguire una sola volta all'avvio."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/digital-io/pinMode/"
         codegen:
           body:
@@ -38,7 +42,9 @@ implementations:
       # --- digitalWrite ---
       - blockly:
           type: cpp_digital_write
-          message0: "digitalWrite pin %1 %2"
+          message0:
+            en: "digitalWrite pin %1 %2"
+            it: "digitalWrite pin %1 %2"
           args0:
             - type: input_value
               name: PIN
@@ -51,7 +57,9 @@ implementations:
           previousStatement: null
           nextStatement: null
           inputsInline: true
-          tooltip: "Write HIGH or LOW to a digital pin."
+          tooltip:
+            en: "Write HIGH or LOW to a digital pin."
+            it: "Scrivi HIGH o LOW su un pin digitale."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/digital-io/digitalWrite/"
         codegen:
           body:
@@ -62,14 +70,18 @@ implementations:
       # --- digitalRead ---
       - blockly:
           type: cpp_digital_read
-          message0: "digitalRead pin %1"
+          message0:
+            en: "digitalRead pin %1"
+            it: "digitalRead pin %1"
           args0:
             - type: input_value
               name: PIN
               check: ["Number", "int", "unsigned int", "long", "unsigned long", "byte", "word", "uint8_t", "uint16_t", "uint32_t", "int8_t", "int16_t", "int32_t"]
           output: Number
           inputsInline: true
-          tooltip: "Read the value from a digital pin (HIGH or LOW)."
+          tooltip:
+            en: "Read the value from a digital pin (HIGH or LOW)."
+            it: "Leggi il valore da un pin digitale (HIGH o LOW)."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/digital-io/digitalRead/"
         codegen:
           body:

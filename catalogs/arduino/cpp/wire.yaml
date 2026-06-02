@@ -12,14 +12,18 @@ implementations:
       # --- Wire.begin([address]) (place in a setup block) ---
       - blockly:
           type: cpp_wire_begin
-          message0: "Wire.begin %1"
+          message0:
+            en: "Wire.begin %1"
+            it: "Wire.begin %1"
           args0:
             - type: input_value
               name: ADDRESS
           previousStatement: null
           nextStatement: null
           inputsInline: true
-          tooltip: "Join the I2C bus. No address = controller; with an address = peripheral. Place inside a 'setup' block."
+          tooltip:
+            en: "Join the I2C bus. No address = controller; with an address = peripheral. Place inside a 'setup' block."
+            it: "Entra nel bus I2C. Senza indirizzo = controller; con indirizzo = periferica. Posiziona dentro un blocco 'setup'."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/communication/wire/begin/"
         codegen:
           body:
@@ -30,11 +34,15 @@ implementations:
       # --- Wire.end ---
       - blockly:
           type: cpp_wire_end
-          message0: "Wire.end"
+          message0:
+            en: "Wire.end"
+            it: "Wire.end"
           args0: []
           previousStatement: null
           nextStatement: null
-          tooltip: "Disable the Wire library and release the I2C bus."
+          tooltip:
+            en: "Disable the Wire library and release the I2C bus."
+            it: "Disabilita la libreria Wire e rilascia il bus I2C."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/communication/wire/end/"
         codegen:
           body:
@@ -43,7 +51,9 @@ implementations:
       # --- Wire.beginTransmission(address) ---
       - blockly:
           type: cpp_wire_begin_transmission
-          message0: "Wire.beginTransmission to %1"
+          message0:
+            en: "Wire.beginTransmission to %1"
+            it: "Wire.beginTransmission a %1"
           args0:
             - type: input_value
               name: ADDRESS
@@ -51,7 +61,9 @@ implementations:
           previousStatement: null
           nextStatement: null
           inputsInline: true
-          tooltip: "Begin a queued transmission to the I2C peripheral at the given address."
+          tooltip:
+            en: "Begin a queued transmission to the I2C peripheral at the given address."
+            it: "Inizia una trasmissione in coda verso la periferica I2C all'indirizzo indicato."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/communication/wire/beginTransmission/"
         codegen:
           body:
@@ -62,10 +74,14 @@ implementations:
       # --- Wire.endTransmission ---
       - blockly:
           type: cpp_wire_end_transmission
-          message0: "Wire.endTransmission"
+          message0:
+            en: "Wire.endTransmission"
+            it: "Wire.endTransmission"
           args0: []
           output: Number
-          tooltip: "Transmit the queued bytes and end the transmission; returns a status code."
+          tooltip:
+            en: "Transmit the queued bytes and end the transmission; returns a status code."
+            it: "Trasmetti i byte in coda e termina la trasmissione; restituisce un codice di stato."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/communication/wire/endTransmission/"
         codegen:
           body:
@@ -75,7 +91,9 @@ implementations:
       # --- Wire.write(data) ---
       - blockly:
           type: cpp_wire_write
-          message0: "Wire.write %1"
+          message0:
+            en: "Wire.write %1"
+            it: "Wire.write %1"
           args0:
             - type: input_value
               name: DATA
@@ -83,7 +101,9 @@ implementations:
           previousStatement: null
           nextStatement: null
           inputsInline: true
-          tooltip: "Queue bytes for transmission (controller) or send bytes in response to a request (peripheral)."
+          tooltip:
+            en: "Queue bytes for transmission (controller) or send bytes in response to a request (peripheral)."
+            it: "Accoda byte per la trasmissione (controller) o invia byte in risposta a una richiesta (periferica)."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/communication/wire/write/"
         codegen:
           body:
@@ -94,10 +114,14 @@ implementations:
       # --- Wire.read ---
       - blockly:
           type: cpp_wire_read
-          message0: "Wire.read"
+          message0:
+            en: "Wire.read"
+            it: "Wire.read"
           args0: []
           output: Number
-          tooltip: "Read one byte received from a peripheral or sent from a controller."
+          tooltip:
+            en: "Read one byte received from a peripheral or sent from a controller."
+            it: "Leggi un byte ricevuto da una periferica o inviato da un controller."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/communication/wire/read/"
         codegen:
           body:
@@ -107,10 +131,14 @@ implementations:
       # --- Wire.available ---
       - blockly:
           type: cpp_wire_available
-          message0: "Wire.available"
+          message0:
+            en: "Wire.available"
+            it: "Wire.available"
           args0: []
           output: Number
-          tooltip: "Return the number of bytes available to read."
+          tooltip:
+            en: "Return the number of bytes available to read."
+            it: "Restituisce il numero di byte disponibili da leggere."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/communication/wire/available/"
         codegen:
           body:
@@ -120,7 +148,9 @@ implementations:
       # --- Wire.requestFrom(address, count) ---
       - blockly:
           type: cpp_wire_request_from
-          message0: "Wire.requestFrom address %1 count %2"
+          message0:
+            en: "Wire.requestFrom address %1 count %2"
+            it: "Wire.requestFrom indirizzo %1 quantita %2"
           args0:
             - type: input_value
               name: ADDRESS
@@ -131,7 +161,9 @@ implementations:
           previousStatement: null
           nextStatement: null
           inputsInline: true
-          tooltip: "Request bytes from a peripheral device; read them afterwards with Wire.available / Wire.read."
+          tooltip:
+            en: "Request bytes from a peripheral device; read them afterwards with Wire.available / Wire.read."
+            it: "Richiedi byte da una periferica; leggili successivamente con Wire.available / Wire.read."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/communication/wire/requestFrom/"
         codegen:
           body:
@@ -143,7 +175,9 @@ implementations:
       # --- Wire.setClock(hz) (place in a setup block) ---
       - blockly:
           type: cpp_wire_set_clock
-          message0: "Wire.setClock %1 Hz"
+          message0:
+            en: "Wire.setClock %1 Hz"
+            it: "Wire.setClock %1 Hz"
           args0:
             - type: field_dropdown
               name: HZ
@@ -153,7 +187,9 @@ implementations:
                 - ["1000000 (fast+)", "1000000"]
           previousStatement: null
           nextStatement: null
-          tooltip: "Set the I2C clock frequency. Place inside a 'setup' block."
+          tooltip:
+            en: "Set the I2C clock frequency. Place inside a 'setup' block."
+            it: "Imposta la frequenza del clock I2C. Posiziona dentro un blocco 'setup'."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/communication/wire/setClock/"
         codegen:
           body:
@@ -162,7 +198,9 @@ implementations:
       # --- Wire.onReceive / onRequest (consolidated, dropdown) ---
       - blockly:
           type: cpp_wire_on_event
-          message0: "Wire %1 call %2"
+          message0:
+            en: "Wire %1 call %2"
+            it: "Wire %1 chiama %2"
           args0:
             - type: field_dropdown
               name: FUNC
@@ -175,7 +213,9 @@ implementations:
           previousStatement: null
           nextStatement: null
           inputsInline: true
-          tooltip: "Register a callback (peripheral mode): onReceive when data arrives, onRequest when data is requested. Define a matching 'void onWireEvent(...)'. Place inside a 'setup' block."
+          tooltip:
+            en: "Register a callback (peripheral mode): onReceive when data arrives, onRequest when data is requested. Define a matching 'void onWireEvent(...)'. Place inside a 'setup' block."
+            it: "Registra una callback (modalita periferica): onReceive quando arrivano dati, onRequest quando vengono richiesti dati. Definisci una funzione corrispondente 'void onWireEvent(...)'. Posiziona dentro un blocco 'setup'."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/communication/wire/onReceive/"
         codegen:
           body:
@@ -184,7 +224,9 @@ implementations:
       # --- Wire.setWireTimeout(timeout, reset) ---
       - blockly:
           type: cpp_wire_set_timeout
-          message0: "Wire.setWireTimeout %1 µs reset on timeout %2"
+          message0:
+            en: "Wire.setWireTimeout %1 µs reset on timeout %2"
+            it: "Wire.setWireTimeout %1 µs reset al timeout %2"
           args0:
             - type: input_value
               name: TIMEOUT
@@ -197,7 +239,9 @@ implementations:
           previousStatement: null
           nextStatement: null
           inputsInline: true
-          tooltip: "Enable a bus timeout to prevent hanging on a stuck I2C bus. Place inside a 'setup' block."
+          tooltip:
+            en: "Enable a bus timeout to prevent hanging on a stuck I2C bus. Place inside a 'setup' block."
+            it: "Abilita un timeout sul bus per evitare blocchi su un bus I2C bloccato. Posiziona dentro un blocco 'setup'."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/communication/wire/setWireTimeout/"
         codegen:
           body:
@@ -208,11 +252,15 @@ implementations:
       # --- Wire.clearWireTimeoutFlag ---
       - blockly:
           type: cpp_wire_clear_timeout_flag
-          message0: "Wire.clearWireTimeoutFlag"
+          message0:
+            en: "Wire.clearWireTimeoutFlag"
+            it: "Wire.clearWireTimeoutFlag"
           args0: []
           previousStatement: null
           nextStatement: null
-          tooltip: "Clear the I2C bus timeout flag after a timeout has been detected."
+          tooltip:
+            en: "Clear the I2C bus timeout flag after a timeout has been detected."
+            it: "Cancella il flag di timeout del bus I2C dopo che e stato rilevato un timeout."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/communication/wire/clearWireTimeoutFlag/"
         codegen:
           body:
@@ -221,10 +269,14 @@ implementations:
       # --- Wire.getWireTimeoutFlag ---
       - blockly:
           type: cpp_wire_get_timeout_flag
-          message0: "Wire.getWireTimeoutFlag"
+          message0:
+            en: "Wire.getWireTimeoutFlag"
+            it: "Wire.getWireTimeoutFlag"
           args0: []
           output: Boolean
-          tooltip: "Return whether a bus timeout has occurred since the flag was last cleared."
+          tooltip:
+            en: "Return whether a bus timeout has occurred since the flag was last cleared."
+            it: "Restituisce se si e verificato un timeout del bus dall'ultima cancellazione del flag."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/communication/wire/getWireTimeoutFlag/"
         codegen:
           body:

@@ -8,7 +8,9 @@ implementations:
     blocks:
       - blockly:
           type: cpp_char_is
-          message0: "%1 is %2 ?"
+          message0:
+            en: "%1 is %2 ?"
+            it: "%1 è %2 ?"
           args0:
             - type: input_value
               name: CHAR
@@ -31,7 +33,9 @@ implementations:
                 - ["whitespace", "isWhitespace"]
           output: Boolean
           inputsInline: true
-          tooltip: "Test whether a character belongs to a class (Arduino is*() functions). Returns true/false."
+          tooltip:
+            en: "Test whether a character belongs to a class (Arduino is*() functions). Returns true/false."
+            it: "Verifica se un carattere appartiene a una classe (funzioni Arduino is*()). Restituisce true/false."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/characters/isAlpha/"
         codegen:
           body:

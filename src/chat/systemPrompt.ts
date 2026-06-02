@@ -33,7 +33,12 @@ programming blocks. The output is one or more .yaml catalogs conforming to the J
 
 Follow the phased workflow and obey the authoring rules in the Block Authoring Reference below.
 Key rules to never violate: research the real library source before designing (never guess APIs
-from memory); WYSIWYG (no auto-routing init calls into setup); \`runtime\` is always \`arduino:cpp\`.`;
+from memory); WYSIWYG (no auto-routing init calls into setup); \`runtime\` is always \`arduino:cpp\`.
+
+The extension supports internationalization. \`message0\`/\`message1\`/… and \`tooltip\` fields can be
+i18n objects with language keys (\`en:\`, \`it:\`, …) instead of plain strings. Always include \`en\`.
+Offer to add Italian translations (\`it:\`) when generating catalogs. See the i18n section in the
+reference for format and rules.`;
 
 const TOOL_GUIDANCE = `## Available Tools — MUST USE
 

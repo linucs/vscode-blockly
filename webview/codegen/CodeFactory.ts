@@ -4,6 +4,7 @@ import { RuntimeGenerator } from './runtimeGenerator';
 import { getRuntimeGenerator } from './generatorRegistry';
 import { resolveColor, categoryStyleFor, ensureCategoryRegistered } from '../ThemeAdapter';
 import { FIRST_PARTY_GENERATORS } from './firstPartyGenerators';
+import { preprocessCatalogI18n } from './catalogI18nPreprocess';
 
 const registeredBlockTypes = new Set<string>();
 
@@ -26,8 +27,13 @@ export class CodeFactory {
     // detect duplicate catalog entries (distinct from registeredBlockTypes, which
     // persists across reloads so the same blocks aren't redefined on reload).
     private seenThisLoad = new Set<string>();
+    private categoryTranslator: ((key: string) => string) | undefined;
 
     constructor() {}
+
+    public setCategoryTranslator(fn: (key: string) => string): void {
+        this.categoryTranslator = fn;
+    }
 
     /**
      * Select the generation engine for the active runtime. Returns false if no
@@ -39,12 +45,14 @@ export class CodeFactory {
         return !!this.rg;
     }
 
-    public loadCatalogEntries(entries: any[]): void {
+    public loadCatalogEntries(entries: any[], locale = 'en'): void {
         // Rebuild from scratch — this may be called again when catalogs reload,
         // and the category tree must not accumulate duplicates.
         this.categoryTree.clear();
         this.seenThisLoad.clear();
         if (!this.rg) return;
+
+        preprocessCatalogI18n(entries, locale);
 
         for (const entry of entries) {
             // Entries are pre-filtered by the host to the active runtime; pick the
@@ -163,18 +171,19 @@ export class CodeFactory {
         node.blocks.push(blockType);
     }
 
-    private buildCategory(name: string, node: any, parentStyle?: string): any {
+    private buildCategory(key: string, node: any, parentStyle?: string): any {
         const contents: any[] = [];
-        const style = parentStyle ?? categoryStyleFor(name);
+        const style = parentStyle ?? categoryStyleFor(key);
+        const displayName = this.categoryTranslator ? this.categoryTranslator(key) : key;
 
         for (const blockType of node.blocks) {
             contents.push({ kind: 'block', type: blockType });
         }
 
-        for (const [childName, childNode] of node.children) {
-            contents.push(this.buildCategory(childName, childNode, style));
+        for (const [childKey, childNode] of node.children) {
+            contents.push(this.buildCategory(childKey, childNode, style));
         }
 
-        return { kind: 'category', name, contents, categorystyle: style };
+        return { kind: 'category', _key: key, name: displayName, contents, categorystyle: style };
     }
 }

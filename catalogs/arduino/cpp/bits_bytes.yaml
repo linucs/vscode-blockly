@@ -8,14 +8,18 @@ implementations:
       # --- bit(n) ---
       - blockly:
           type: cpp_bit
-          message0: "bit %1"
+          message0:
+            en: "bit %1"
+            it: "bit %1"
           args0:
             - type: input_value
               name: N
               check: ["Number", "int", "unsigned int", "byte", "word", "uint8_t", "uint16_t", "uint32_t"]
           output: Number
           inputsInline: true
-          tooltip: "The value of the given bit: bit 0 is 1, bit 1 is 2, bit 2 is 4, … (1 << n)."
+          tooltip:
+            en: "The value of the given bit: bit 0 is 1, bit 1 is 2, bit 2 is 4, … (1 << n)."
+            it: "Il valore del bit indicato: bit 0 vale 1, bit 1 vale 2, bit 2 vale 4, … (1 << n)."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/bits-and-bytes/bit/"
         codegen:
           body:
@@ -27,7 +31,9 @@ implementations:
       # --- bitRead(x, n) ---
       - blockly:
           type: cpp_bit_read
-          message0: "bitRead %1 bit %2"
+          message0:
+            en: "bitRead %1 bit %2"
+            it: "bitRead %1 bit %2"
           args0:
             - type: input_value
               name: X
@@ -35,7 +41,9 @@ implementations:
               name: N
           output: Number
           inputsInline: true
-          tooltip: "Read bit n of number x (0 or 1)."
+          tooltip:
+            en: "Read bit n of number x (0 or 1)."
+            it: "Legge il bit n del numero x (0 o 1)."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/bits-and-bytes/bitRead/"
         codegen:
           body:
@@ -48,7 +56,9 @@ implementations:
       # --- bitSet / bitClear (consolidated, dropdown) ---
       - blockly:
           type: cpp_bit_set_clear
-          message0: "%1 bit %2 of %3"
+          message0:
+            en: "%1 bit %2 of %3"
+            it: "%1 bit %2 di %3"
           args0:
             - type: field_dropdown
               name: FUNC
@@ -62,7 +72,9 @@ implementations:
           previousStatement: null
           nextStatement: null
           inputsInline: true
-          tooltip: "Set (to 1) or clear (to 0) bit n of the variable x. x must be a variable."
+          tooltip:
+            en: "Set (to 1) or clear (to 0) bit n of the variable x. x must be a variable."
+            it: "Imposta (a 1) o azzera (a 0) il bit n della variabile x. x deve essere una variabile."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/bits-and-bytes/bitSet/"
         codegen:
           body:
@@ -73,7 +85,9 @@ implementations:
       # --- bitWrite(x, n, b) ---
       - blockly:
           type: cpp_bit_write
-          message0: "bitWrite %1 bit %2 = %3"
+          message0:
+            en: "bitWrite %1 bit %2 = %3"
+            it: "bitWrite %1 bit %2 = %3"
           args0:
             - type: input_value
               name: X
@@ -84,7 +98,9 @@ implementations:
           previousStatement: null
           nextStatement: null
           inputsInline: true
-          tooltip: "Write bit b (0 or 1) into bit n of the variable x. x must be a variable."
+          tooltip:
+            en: "Write bit b (0 or 1) into bit n of the variable x. x must be a variable."
+            it: "Scrive il bit b (0 o 1) nella posizione n della variabile x. x deve essere una variabile."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/bits-and-bytes/bitWrite/"
         codegen:
           body:
@@ -96,7 +112,9 @@ implementations:
       # --- highByte / lowByte (consolidated, dropdown) ---
       - blockly:
           type: cpp_byte_of
-          message0: "%1 byte of %2"
+          message0:
+            en: "%1 byte of %2"
+            it: "%1 byte di %2"
           args0:
             - type: field_dropdown
               name: FUNC
@@ -107,7 +125,9 @@ implementations:
               name: X
           output: Number
           inputsInline: true
-          tooltip: "Extract the high-order or low-order byte of a value."
+          tooltip:
+            en: "Extract the high-order or low-order byte of a value."
+            it: "Estrae il byte alto o basso di un valore."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/bits-and-bytes/highByte/"
         codegen:
           body:

@@ -1,5 +1,7 @@
 import * as Blockly from 'blockly';
 import * as En from 'blockly/msg/en';
+import * as It from 'blockly/msg/it';
+import * as l10n from '@vscode/l10n';
 import { provideVSCodeDesignSystem, vsCodeButton, vsCodeDropdown, vsCodeOption } from "@vscode/webview-ui-toolkit";
 import { ThemeAdapter, categoryStyleFor } from './ThemeAdapter';
 import { CodeFactory } from './codegen/CodeFactory';
@@ -7,7 +9,16 @@ import { isRuntimeSupported } from './codegen/generatorRegistry';
 import { initTypedVariableModal, initWorkspacePlugins, pluginInjectOptions, CPP_VARIABLE_TYPES, ThemedMinimap } from './plugins';
 import { initCppProcedureFlyout } from './custom-blocks/cppProcedureBlocks';
 
-Blockly.setLocale(En);
+// ── i18n bootstrap (must happen before any Blockly block defs or UI) ───────
+const l10nDataEl = document.getElementById('l10n-data');
+const l10nLocaleEl = document.getElementById('l10n-locale');
+const l10nContents: Record<string, string> = l10nDataEl ? JSON.parse(l10nDataEl.textContent || '{}') : {};
+const locale: string = l10nLocaleEl ? JSON.parse(l10nLocaleEl.textContent || '"en"') : 'en';
+
+l10n.config({ contents: l10nContents });
+
+const BLOCKLY_LOCALES: Record<string, typeof En> = { en: En, it: It };
+Blockly.setLocale(BLOCKLY_LOCALES[locale] ?? En);
 
 // Register VSCode UI Toolkit components
 provideVSCodeDesignSystem().register(vsCodeButton(), vsCodeDropdown(), vsCodeOption());
@@ -64,11 +75,39 @@ document.addEventListener("DOMContentLoaded", () => {
     const themeAdapter = new ThemeAdapter();
     themeAdapter.init(workspace);
 
-    initTypedVariableModal(workspace, CPP_VARIABLE_TYPES);
+    // Load block message dictionaries from JSON (injected by the host).
+    // Must happen BEFORE plugin init: typed-variable-modal pre-renders its
+    // DOM at init() time reading from Blockly.Msg, so the translations must
+    // already be present. We also pass them explicitly via the plugin's
+    // optMessages constructor parameter (its designed i18n API).
+    const blockMsgEnEl = document.getElementById('block-messages-en');
+    const blockMsgLocaleEl = document.getElementById('block-messages-locale');
+    const blockMsgEn: Record<string, string> = blockMsgEnEl ? JSON.parse(blockMsgEnEl.textContent || '{}') : {};
+    const blockMsgLocale: Record<string, string> = blockMsgLocaleEl ? JSON.parse(blockMsgLocaleEl.textContent || '{}') : {};
+    Object.assign(Blockly.Msg, blockMsgEn);
+    Object.assign(Blockly.Msg, blockMsgLocale);
+
+    const mergedBlockMessages = { ...blockMsgEn, ...blockMsgLocale };
+    initTypedVariableModal(workspace, CPP_VARIABLE_TYPES, mergedBlockMessages);
     initWorkspacePlugins(workspace);
     initCppProcedureFlyout(workspace);
 
+    const translateCategory = (key: string): string => {
+        const CATEGORY_NAMES: Record<string, () => string> = {
+            'Logic': () => l10n.t('Logic'),
+            'Loops': () => l10n.t('Loops'),
+            'Math': () => l10n.t('Math'),
+            'Text': () => l10n.t('Text'),
+            'Variables': () => l10n.t('Variables'),
+            'Arrays': () => l10n.t('Arrays'),
+            'Functions': () => l10n.t('Functions'),
+            'Code': () => l10n.t('Code'),
+        };
+        return CATEGORY_NAMES[key]?.() ?? key;
+    };
+
     const codeFactory = new CodeFactory();
+    codeFactory.setCategoryTranslator(translateCategory);
 
     const emptyState = document.getElementById('emptyState');
     const emptyTitle = emptyState?.querySelector('.title') as HTMLElement | null;
@@ -93,9 +132,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const origText = generateBtn.textContent;
         if (ok) {
-            generateBtn.textContent = 'Generated ✓';
+            generateBtn.textContent = l10n.t('Generated ✓');
         } else {
-            generateBtn.textContent = error ? `Error: ${error}` : 'Generation failed';
+            generateBtn.textContent = error ? l10n.t('Error: {0}', error) : l10n.t('Generation failed');
             if (autoGenerate) {
                 generateBtn.style.display = '';
             }
@@ -131,7 +170,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const LANGUAGE_CATEGORIES = [
         {
-            kind: 'category', name: 'Logic', categorystyle: categoryStyleFor('Logic'),
+            kind: 'category', _key: 'Logic', name: translateCategory('Logic'), categorystyle: categoryStyleFor('Logic'),
             contents: [
                 { kind: 'block', type: 'controls_if' },
                 { kind: 'block', type: 'controls_switch_case' },
@@ -143,7 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
             ]
         },
         {
-            kind: 'category', name: 'Loops', categorystyle: categoryStyleFor('Loops'),
+            kind: 'category', _key: 'Loops', name: translateCategory('Loops'), categorystyle: categoryStyleFor('Loops'),
             contents: [
                 { kind: 'block', type: 'controls_repeat_ext' },
                 { kind: 'block', type: 'controls_whileUntil' },
@@ -153,7 +192,7 @@ document.addEventListener("DOMContentLoaded", () => {
             ]
         },
         {
-            kind: 'category', name: 'Math', categorystyle: categoryStyleFor('Math'),
+            kind: 'category', _key: 'Math', name: translateCategory('Math'), categorystyle: categoryStyleFor('Math'),
             contents: [
                 { kind: 'block', type: 'math_number' },
                 { kind: 'block', type: 'math_arithmetic' },
@@ -169,7 +208,7 @@ document.addEventListener("DOMContentLoaded", () => {
             ]
         },
         {
-            kind: 'category', name: 'Text', categorystyle: categoryStyleFor('Text'),
+            kind: 'category', _key: 'Text', name: translateCategory('Text'), categorystyle: categoryStyleFor('Text'),
             contents: [
                 { kind: 'block', type: 'text' },
                 { kind: 'block', type: 'symbol_literal' },
@@ -185,22 +224,22 @@ document.addEventListener("DOMContentLoaded", () => {
             ]
         },
         {
-            kind: 'category', name: 'Variables', categorystyle: categoryStyleFor('Variables'),
+            kind: 'category', _key: 'Variables', name: translateCategory('Variables'), categorystyle: categoryStyleFor('Variables'),
             custom: 'CREATE_TYPED_VARIABLE',
         },
         {
-            kind: 'category', name: 'Arrays', categorystyle: categoryStyleFor('Arrays'),
+            kind: 'category', _key: 'Arrays', name: translateCategory('Arrays'), categorystyle: categoryStyleFor('Arrays'),
             contents: [
                 { kind: 'block', type: 'array_get' },
                 { kind: 'block', type: 'array_set' },
             ]
         },
         {
-            kind: 'category', name: 'Functions', categorystyle: categoryStyleFor('Functions'),
+            kind: 'category', _key: 'Functions', name: translateCategory('Functions'), categorystyle: categoryStyleFor('Functions'),
             custom: 'CPP_PROCEDURE',
         },
         {
-            kind: 'category', name: 'Code', categorystyle: categoryStyleFor('Text'),
+            kind: 'category', _key: 'Code', name: translateCategory('Code'), categorystyle: categoryStyleFor('Text'),
             contents: [
                 { kind: 'block', type: 'code_declaration' },
                 { kind: 'block', type: 'code_statement' },
@@ -244,25 +283,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 if (!hasBoard) {
                     showBlocked(
-                        'No board detected',
-                        'Open this file inside a project containing a platformio.ini or sketch.yaml to load the blocks compatible with your board.'
+                        l10n.t('No board detected'),
+                        l10n.t('Open this file inside a project containing a platformio.ini or sketch.yaml to load the blocks compatible with your board.')
                     );
                     break;
                 }
                 if (!framework || !runtime) {
                     const isArduino = message.configType === 'arduino';
                     showBlocked(
-                        'No framework declared',
+                        l10n.t('No framework declared'),
                         isArduino
-                            ? 'This profile\'s FQBN does not specify a recognized framework. Ensure the fqbn field is set correctly in sketch.yaml.'
-                            : 'This environment does not set "framework" in platformio.ini, so no code can be generated. Add a framework (e.g. framework = arduino).'
+                            ? l10n.t('This profile\'s FQBN does not specify a recognized framework. Ensure the fqbn field is set correctly in sketch.yaml.')
+                            : l10n.t('This environment does not set "framework" in platformio.ini, so no code can be generated. Add a framework (e.g. framework = arduino).')
                     );
                     break;
                 }
                 if (!isRuntimeSupported(runtime) || !codeFactory.setRuntime(runtime)) {
                     showBlocked(
-                        `Framework "${framework}" not yet supported`,
-                        `Block generation for the "${runtime}" runtime is not implemented yet. Currently supported: arduino:cpp.`
+                        l10n.t('Framework "{0}" not yet supported', framework),
+                        l10n.t('Block generation for the "{0}" runtime is not implemented yet. Currently supported: arduino:cpp.', runtime)
                     );
                     break;
                 }
@@ -272,7 +311,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 runtimeReady = true;
                 updateButtonVisibility();
 
-                codeFactory.loadCatalogEntries(message.entries ?? []);
+                codeFactory.loadCatalogEntries(message.entries ?? [], locale);
 
                 // Merge catalog categories into language categories that share a
                 // name (e.g. a catalog "Code" folds into the built-in "Code"
@@ -287,13 +326,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 const catalogCategories = codeFactory.getCatalogToolboxCategories();
                 const merged = new Set<string>();
                 const languageCategories = LANGUAGE_CATEGORIES.map(cat => {
-                    const name = (cat as any).name;
-                    const match = catalogCategories.find(c => c.name === name && Array.isArray(c.contents));
+                    const key = (cat as any)._key as string;
+                    const match = catalogCategories.find(c => c._key === key && Array.isArray(c.contents));
                     if (!match || !Array.isArray((cat as any).contents)) return cat;
-                    merged.add(name);
+                    merged.add(key);
                     return { ...cat, contents: [...(cat as any).contents, ...match.contents] };
                 });
-                const standalone = catalogCategories.filter(c => !merged.has(c.name));
+                const standalone = catalogCategories.filter(c => !merged.has(c._key));
 
                 workspace.updateToolbox({
                     kind: 'categoryToolbox',

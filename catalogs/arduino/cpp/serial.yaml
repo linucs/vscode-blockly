@@ -19,7 +19,9 @@ implementations:
       # --- Serial.begin (place in a setup block) ---
       - blockly:
           type: cpp_serial_begin
-          message0: "Serial.begin %1 baud"
+          message0:
+            en: "Serial.begin %1 baud"
+            it: "Serial.begin %1 baud"
           args0:
             - type: field_dropdown
               name: BAUD
@@ -31,7 +33,9 @@ implementations:
                 - ["230400", "230400"]
           previousStatement: null
           nextStatement: null
-          tooltip: "Initialize Serial communication at the given baud rate. Place inside a 'setup' block to run once at startup."
+          tooltip:
+            en: "Initialize Serial communication at the given baud rate. Place inside a 'setup' block to run once at startup."
+            it: "Inizializza la comunicazione seriale alla velocita' di trasmissione indicata. Posiziona dentro un blocco 'setup' per eseguire una sola volta all'avvio."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/communication/serial/begin/"
         codegen:
           body:
@@ -40,7 +44,9 @@ implementations:
       # --- Serial.print / println (consolidated, dropdown) ---
       - blockly:
           type: cpp_serial_print
-          message0: "Serial %1 %2"
+          message0:
+            en: "Serial %1 %2"
+            it: "Serial %1 %2"
           args0:
             - type: field_dropdown
               name: FUNC
@@ -52,7 +58,9 @@ implementations:
           previousStatement: null
           nextStatement: null
           inputsInline: true
-          tooltip: "Print a value to the Serial port. 'print line' (println) adds a trailing newline."
+          tooltip:
+            en: "Print a value to the Serial port. 'print line' (println) adds a trailing newline."
+            it: "Stampa un valore sulla porta seriale. 'print line' (println) aggiunge un ritorno a capo finale."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/communication/serial/print/"
         codegen:
           body:
@@ -63,7 +71,9 @@ implementations:
       # --- Serial.write ---
       - blockly:
           type: cpp_serial_write
-          message0: "Serial.write %1"
+          message0:
+            en: "Serial.write %1"
+            it: "Serial.write %1"
           args0:
             - type: input_value
               name: VALUE
@@ -71,7 +81,9 @@ implementations:
           previousStatement: null
           nextStatement: null
           inputsInline: true
-          tooltip: "Write raw binary data to the Serial port."
+          tooltip:
+            en: "Write raw binary data to the Serial port."
+            it: "Scrivi dati binari grezzi sulla porta seriale."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/communication/serial/write/"
         codegen:
           body:
@@ -82,10 +94,14 @@ implementations:
       # --- Serial.available ---
       - blockly:
           type: cpp_serial_available
-          message0: "Serial.available"
+          message0:
+            en: "Serial.available"
+            it: "Serial.available"
           args0: []
           output: Number
-          tooltip: "Return the number of bytes available to read from the Serial port."
+          tooltip:
+            en: "Return the number of bytes available to read from the Serial port."
+            it: "Restituisce il numero di byte disponibili da leggere dalla porta seriale."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/communication/serial/available/"
         codegen:
           body:
@@ -95,10 +111,14 @@ implementations:
       # --- Serial.read ---
       - blockly:
           type: cpp_serial_read
-          message0: "Serial.read"
+          message0:
+            en: "Serial.read"
+            it: "Serial.read"
           args0: []
           output: Number
-          tooltip: "Read the first byte from the Serial input buffer."
+          tooltip:
+            en: "Read the first byte from the Serial input buffer."
+            it: "Leggi il primo byte dal buffer di ingresso della porta seriale."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/communication/serial/read/"
         codegen:
           body:
@@ -108,10 +128,14 @@ implementations:
       # --- Serial.peek ---
       - blockly:
           type: cpp_serial_peek
-          message0: "Serial.peek"
+          message0:
+            en: "Serial.peek"
+            it: "Serial.peek"
           args0: []
           output: Number
-          tooltip: "Return the next byte of incoming Serial data without removing it from the buffer (-1 if none)."
+          tooltip:
+            en: "Return the next byte of incoming Serial data without removing it from the buffer (-1 if none)."
+            it: "Restituisce il prossimo byte dei dati seriali in arrivo senza rimuoverlo dal buffer (-1 se non presente)."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/communication/serial/peek/"
         codegen:
           body:
@@ -121,10 +145,14 @@ implementations:
       # --- Serial.availableForWrite ---
       - blockly:
           type: cpp_serial_available_for_write
-          message0: "Serial.availableForWrite"
+          message0:
+            en: "Serial.availableForWrite"
+            it: "Serial.availableForWrite"
           args0: []
           output: Number
-          tooltip: "Return the number of bytes that can be written to the Serial transmit buffer without blocking."
+          tooltip:
+            en: "Return the number of bytes that can be written to the Serial transmit buffer without blocking."
+            it: "Restituisce il numero di byte che possono essere scritti nel buffer di trasmissione seriale senza bloccare."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/communication/serial/availableForWrite/"
         codegen:
           body:
@@ -134,10 +162,14 @@ implementations:
       # --- Serial.readString ---
       - blockly:
           type: cpp_serial_read_string
-          message0: "Serial.readString"
+          message0:
+            en: "Serial.readString"
+            it: "Serial.readString"
           args0: []
           output: null
-          tooltip: "Read characters from the Serial buffer into a String until timeout."
+          tooltip:
+            en: "Read characters from the Serial buffer into a String until timeout."
+            it: "Leggi i caratteri dal buffer seriale in una stringa fino al timeout."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/communication/serial/readString/"
         codegen:
           body:
@@ -147,13 +179,17 @@ implementations:
       # --- Serial.readStringUntil ---
       - blockly:
           type: cpp_serial_read_string_until
-          message0: "Serial.readStringUntil %1"
+          message0:
+            en: "Serial.readStringUntil %1"
+            it: "Serial.readStringUntil %1"
           args0:
             - type: input_value
               name: TERMINATOR
           output: null
           inputsInline: true
-          tooltip: "Read characters from the Serial buffer into a String until the terminator character is found (or timeout)."
+          tooltip:
+            en: "Read characters from the Serial buffer into a String until the terminator character is found (or timeout)."
+            it: "Leggi i caratteri dal buffer seriale in una stringa fino a quando viene trovato il carattere terminatore (o al timeout)."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/communication/serial/readStringUntil/"
         codegen:
           body:
@@ -165,7 +201,9 @@ implementations:
       # --- Serial.parseInt / parseFloat (consolidated, dropdown) ---
       - blockly:
           type: cpp_serial_parse
-          message0: "Serial.parse %1"
+          message0:
+            en: "Serial.parse %1"
+            it: "Serial.parse %1"
           args0:
             - type: field_dropdown
               name: FUNC
@@ -173,7 +211,9 @@ implementations:
                 - ["integer", "parseInt"]
                 - ["float", "parseFloat"]
           output: Number
-          tooltip: "Read the next integer (parseInt) or floating-point number (parseFloat) from the Serial input buffer."
+          tooltip:
+            en: "Read the next integer (parseInt) or floating-point number (parseFloat) from the Serial input buffer."
+            it: "Leggi il prossimo intero (parseInt) o numero in virgola mobile (parseFloat) dal buffer di ingresso seriale."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/communication/serial/parseInt/"
         codegen:
           body:
@@ -183,13 +223,17 @@ implementations:
       # --- Serial.find ---
       - blockly:
           type: cpp_serial_find
-          message0: "Serial.find %1"
+          message0:
+            en: "Serial.find %1"
+            it: "Serial.find %1"
           args0:
             - type: input_value
               name: TARGET
           output: null
           inputsInline: true
-          tooltip: "Search the Serial buffer for a target string. Returns true if found."
+          tooltip:
+            en: "Search the Serial buffer for a target string. Returns true if found."
+            it: "Cerca una stringa obiettivo nel buffer seriale. Restituisce true se trovata."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/communication/serial/find/"
         codegen:
           body:
@@ -201,7 +245,9 @@ implementations:
       # --- Serial.findUntil ---
       - blockly:
           type: cpp_serial_find_until
-          message0: "Serial.findUntil target %1 terminator %2"
+          message0:
+            en: "Serial.findUntil target %1 terminator %2"
+            it: "Serial.findUntil obiettivo %1 terminatore %2"
           args0:
             - type: input_value
               name: TARGET
@@ -209,7 +255,9 @@ implementations:
               name: TERMINAL
           output: null
           inputsInline: true
-          tooltip: "Read from the Serial buffer until the target string is found or the terminator string is reached."
+          tooltip:
+            en: "Read from the Serial buffer until the target string is found or the terminator string is reached."
+            it: "Leggi dal buffer seriale fino a quando viene trovata la stringa obiettivo o viene raggiunta la stringa terminatore."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/communication/serial/findUntil/"
         codegen:
           body:
@@ -222,7 +270,9 @@ implementations:
       # --- Serial.setTimeout (place in a setup block) ---
       - blockly:
           type: cpp_serial_set_timeout
-          message0: "Serial.setTimeout %1 ms"
+          message0:
+            en: "Serial.setTimeout %1 ms"
+            it: "Serial.setTimeout %1 ms"
           args0:
             - type: input_value
               name: MS
@@ -230,7 +280,9 @@ implementations:
           previousStatement: null
           nextStatement: null
           inputsInline: true
-          tooltip: "Set the timeout for Serial read operations. Place inside a 'setup' block to run once at startup."
+          tooltip:
+            en: "Set the timeout for Serial read operations. Place inside a 'setup' block to run once at startup."
+            it: "Imposta il timeout per le operazioni di lettura seriale. Posiziona dentro un blocco 'setup' per eseguire una sola volta all'avvio."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/communication/serial/setTimeout/"
         codegen:
           body:
@@ -241,10 +293,14 @@ implementations:
       # --- Serial.getTimeout ---
       - blockly:
           type: cpp_serial_get_timeout
-          message0: "Serial.getTimeout"
+          message0:
+            en: "Serial.getTimeout"
+            it: "Serial.getTimeout"
           args0: []
           output: Number
-          tooltip: "Return the current timeout (ms) for Serial read operations."
+          tooltip:
+            en: "Return the current timeout (ms) for Serial read operations."
+            it: "Restituisce il timeout corrente (ms) per le operazioni di lettura seriale."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/communication/serial/getTimeout/"
         codegen:
           body:
@@ -254,11 +310,15 @@ implementations:
       # --- Serial.flush ---
       - blockly:
           type: cpp_serial_flush
-          message0: "Serial.flush"
+          message0:
+            en: "Serial.flush"
+            it: "Serial.flush"
           args0: []
           previousStatement: null
           nextStatement: null
-          tooltip: "Wait for outgoing Serial data to finish sending."
+          tooltip:
+            en: "Wait for outgoing Serial data to finish sending."
+            it: "Attendi che i dati seriali in uscita finiscano di essere inviati."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/communication/serial/flush/"
         codegen:
           body:
@@ -267,11 +327,15 @@ implementations:
       # --- Serial.end ---
       - blockly:
           type: cpp_serial_end
-          message0: "Serial.end"
+          message0:
+            en: "Serial.end"
+            it: "Serial.end"
           args0: []
           previousStatement: null
           nextStatement: null
-          tooltip: "Disable the Serial port."
+          tooltip:
+            en: "Disable the Serial port."
+            it: "Disabilita la porta seriale."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/communication/serial/end/"
         codegen:
           body:

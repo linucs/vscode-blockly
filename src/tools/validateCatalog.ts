@@ -72,6 +72,7 @@ export function validateCatalogYaml(input: string): string {
                     errors.push(`Block "${type}": has precedence but no output`);
                 }
 
+                checkI18nFields(blockly, type, errors);
                 checkPlaceholders(blockly, codegen, type, errors);
                 checkInputDefaults(blockly, codegen, type, errors);
             }
@@ -82,6 +83,45 @@ export function validateCatalogYaml(input: string): string {
         return `Valid. ${docCount} document(s), ${blockCount} block(s).`;
     }
     return `Validation found ${errors.length} issue(s):\n\n${errors.map(e => `- ${e}`).join('\n')}`;
+}
+
+const MSG_FIELD_RE = /^message\d+$/;
+const I18N_FIELDS = new Set(['tooltip']);
+
+function resolveI18nString(value: unknown): string | undefined {
+    if (typeof value === 'string') return value;
+    if (value && typeof value === 'object' && !Array.isArray(value)) {
+        const obj = value as Record<string, unknown>;
+        if (typeof obj['en'] === 'string') return obj['en'] as string;
+    }
+    return undefined;
+}
+
+function checkI18nFields(
+    blockly: Record<string, unknown>,
+    type: string | undefined,
+    errors: string[]
+) {
+    for (const key of Object.keys(blockly)) {
+        if (!MSG_FIELD_RE.test(key) && !I18N_FIELDS.has(key)) continue;
+        const val = blockly[key];
+        if (val && typeof val === 'object' && !Array.isArray(val)) {
+            const obj = val as Record<string, unknown>;
+            if (!('en' in obj)) {
+                errors.push(`Block "${type}": i18n field "${key}" is an object but missing required "en" key`);
+                continue;
+            }
+            const enMsg = typeof obj['en'] === 'string' ? obj['en'] : '';
+            const enPlaceholders = (enMsg.match(/%\d+/g) ?? []).sort();
+            for (const [lang, text] of Object.entries(obj)) {
+                if (lang === 'en' || typeof text !== 'string') continue;
+                const langPlaceholders = (text.match(/%\d+/g) ?? []).sort();
+                if (JSON.stringify(enPlaceholders) !== JSON.stringify(langPlaceholders)) {
+                    errors.push(`Block "${type}": i18n "${key}" locale "${lang}" has different placeholders than "en" (en: ${enPlaceholders.join(',')} vs ${lang}: ${langPlaceholders.join(',')})`);
+                }
+            }
+        }
+    }
 }
 
 function checkPlaceholders(

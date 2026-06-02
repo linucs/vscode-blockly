@@ -35,7 +35,7 @@ export class CatalogManager {
             await this.reloadCatalogs();
         } catch (error) {
             console.error('Failed to initialize CatalogManager:', error);
-            vscode.window.showErrorMessage('Failed to initialize Blocks Editor Catalog Manager.');
+            vscode.window.showErrorMessage(vscode.l10n.t('Failed to initialize Blocks Editor Catalog Manager.'));
         }
     }
 
@@ -68,7 +68,7 @@ export class CatalogManager {
             } catch { /* ENOENT or not accessible */ }
             if (!exists) {
                 vscode.window.showWarningMessage(
-                    `Blocks Editor: catalog path not found or not a directory: ${resolvedPath}`
+                    vscode.l10n.t('Catalog path not found or not a directory: {0}', resolvedPath)
                 );
                 continue;
             }
@@ -106,7 +106,7 @@ export class CatalogManager {
                 await downloadCatalog(url, destDir, force);
             } catch (err) {
                 const msg = err instanceof Error ? err.message : String(err);
-                vscode.window.showErrorMessage(`Blocks Editor: failed to download catalog from ${url}: ${msg}`);
+                vscode.window.showErrorMessage(vscode.l10n.t('Failed to download catalog from {0}: {1}', url, msg));
             }
         }
     }

@@ -100,35 +100,59 @@ You can leave everything at its defaults. If you want to tweak things, open VS C
 
 > This section is for people who want to **add new blocks** (for a specific sensor, board, or library). If you just want to *use* the editor, you can stop reading here.
 
-Blocks are defined in **YAML catalog files**, validated against a JSON Schema. A minimal catalog looks like this:
+Blocks are defined in **YAML catalog files**, validated against a JSON Schema. For the full technical reference (every key, every section, every design decision), see [BLOCK_AUTHORING.md](BLOCK_AUTHORING.md). A minimal catalog looks like this:
 
 ```yaml
 id: my-sensor
 category: "Sensors"
 implementations:
   - runtime: "arduino:cpp"
+    dependencies:
+      - type: library
+        name: "MySensorLib"
+        minVersion: "1.0.0"
+    codegen:
+      imports:
+        - "#include <MySensor.h>"
+      declarations:
+        - "MySensor mySensor;"
     blocks:
       - blockly:
-          type: my_sensor_read
-          message0: "read sensor on pin %1"
+          type: my_sensor_begin
+          message0:
+            en: "start sensor on pin %1"
+            it: "avvia sensore su pin %1"
           args0:
             - type: input_value
               name: PIN
               check: Number
-          output: Number
-          tooltip: "Read a value from the sensor."
+          previousStatement: null
+          nextStatement: null
+          tooltip:
+            en: "Initialize the sensor. Place inside a setup block."
+            it: "Inizializza il sensore. Metti dentro un blocco setup."
         codegen:
           body:
-            - "mySensor.read({{PIN}})"
-          imports:
-            - "#include <MySensor.h>"
-          setup:
-            - "mySensor.begin();"
-        dependencies:
-          - type: library
-            name: "MySensorLib"
-            minVersion: "1.0.0"
+            - "mySensor.begin({{PIN}});"
+          inputDefaults:
+            PIN: "2"
+      - blockly:
+          type: my_sensor_read
+          message0:
+            en: "read sensor"
+            it: "leggi sensore"
+          args0: []
+          output: Number
+          tooltip:
+            en: "Read a value from the sensor."
+            it: "Leggi un valore dal sensore."
+        codegen:
+          body:
+            - "mySensor.read()"
+          precedence: ATOMIC
 ```
+
+The `message0` and `tooltip` fields support translations — use an object with language keys (`en`, `it`, …) instead of a plain string. English (`en`) is always required; other languages are optional.
 
 ### Loading custom catalogs
 
@@ -155,7 +179,45 @@ Run the command **"Blocks Editor: Refresh Remote Catalogs"** to re-download remo
 
 ### Block Author assistant
 
-The extension ships a `@blocks` chat participant that helps research a hardware library and generate a catalog for it. Type `@blocks` in the Chat view to get started.
+Don't want to write YAML by hand? The extension includes an AI assistant that can research a hardware library and generate a complete block catalog for you.
+
+#### With GitHub Copilot
+
+Open the **Chat** panel in VS Code (sidebar or `Ctrl+Shift+I` / `Cmd+Shift+I`), then type:
+
+```
+@blocks create blocks for the BME280 sensor
+```
+
+The `@blocks` assistant will:
+1. **Research** the library — fetch the real header files and documentation, check the PlatformIO and Arduino registries.
+2. **Design** the blocks — propose a plan showing which blocks to create, which methods to expose, and which boards are supported.
+3. **Generate** the YAML — write a validated catalog file and save it to your project.
+
+You can also run each step separately with slash commands:
+
+| Command | What it does |
+|---------|-------------|
+| `@blocks /research BME280` | Fetch and analyze the library's API |
+| `@blocks /design` | Design the blocks based on the research |
+| `@blocks /generate` | Generate and validate the YAML catalog |
+| `@blocks /validate` | Validate an existing catalog against the schema |
+
+The assistant will ask if you want Italian translations added to the block labels and tooltips.
+
+#### With Claude Code
+
+If you use [Claude Code](https://claude.ai/code), run this command once in your project:
+
+**"Blocks Editor: Enable Claude Code integration"** (from the Command Palette)
+
+This sets up an MCP server and installs the **block-author** skill. In any Claude Code session for the project, Claude will automatically use the skill when you ask things like:
+
+```
+create blocks for the Adafruit NeoPixel library
+```
+
+The skill has the same workflow (research → design → generate) and the same tools as the Copilot assistant.
 
 ## Version Control
 

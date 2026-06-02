@@ -9,7 +9,9 @@ implementations:
       # --- attachInterrupt(digitalPinToInterrupt(pin), ISR, mode) ---
       - blockly:
           type: cpp_attach_interrupt
-          message0: "attachInterrupt pin %1 call %2 on %3"
+          message0:
+            en: "attachInterrupt pin %1 call %2 on %3"
+            it: "attachInterrupt pin %1 chiama %2 su %3"
           args0:
             - type: input_value
               name: PIN
@@ -28,7 +30,9 @@ implementations:
           previousStatement: null
           nextStatement: null
           inputsInline: true
-          tooltip: "Call the named function (you must define a 'void myISR()') when the pin changes. Place inside a 'setup' block."
+          tooltip:
+            en: "Call the named function (you must define a 'void myISR()') when the pin changes. Place inside a 'setup' block."
+            it: "Chiama la funzione indicata (devi definire una 'void myISR()') quando il pin cambia stato. Posiziona dentro un blocco 'setup'."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/external-interrupts/attachInterrupt/"
         codegen:
           body:
@@ -39,7 +43,9 @@ implementations:
       # --- detachInterrupt(digitalPinToInterrupt(pin)) ---
       - blockly:
           type: cpp_detach_interrupt
-          message0: "detachInterrupt pin %1"
+          message0:
+            en: "detachInterrupt pin %1"
+            it: "detachInterrupt pin %1"
           args0:
             - type: input_value
               name: PIN
@@ -47,7 +53,9 @@ implementations:
           previousStatement: null
           nextStatement: null
           inputsInline: true
-          tooltip: "Turn off the interrupt attached to the given pin."
+          tooltip:
+            en: "Turn off the interrupt attached to the given pin."
+            it: "Disattiva l'interrupt associato al pin indicato."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/external-interrupts/detachInterrupt/"
         codegen:
           body:
@@ -58,14 +66,18 @@ implementations:
       # --- digitalPinToInterrupt(pin) ---
       - blockly:
           type: cpp_digital_pin_to_interrupt
-          message0: "digitalPinToInterrupt pin %1"
+          message0:
+            en: "digitalPinToInterrupt pin %1"
+            it: "digitalPinToInterrupt pin %1"
           args0:
             - type: input_value
               name: PIN
               check: ["Number", "int", "unsigned int", "byte", "word", "uint8_t", "uint16_t", "uint32_t"]
           output: Number
           inputsInline: true
-          tooltip: "Translate a digital pin number to the matching interrupt number for attachInterrupt."
+          tooltip:
+            en: "Translate a digital pin number to the matching interrupt number for attachInterrupt."
+            it: "Converte un numero di pin digitale nel corrispondente numero di interrupt per attachInterrupt."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/external-interrupts/digitalPinToInterrupt/"
         codegen:
           body:
@@ -77,7 +89,9 @@ implementations:
       # --- interrupts / noInterrupts (consolidated, dropdown) ---
       - blockly:
           type: cpp_interrupts
-          message0: "%1 interrupts"
+          message0:
+            en: "%1 interrupts"
+            it: "%1 interrupt"
           args0:
             - type: field_dropdown
               name: FUNC
@@ -86,7 +100,9 @@ implementations:
                 - ["disable", "noInterrupts"]
           previousStatement: null
           nextStatement: null
-          tooltip: "Enable (interrupts) or disable (noInterrupts) interrupts globally. Keep disabled sections short."
+          tooltip:
+            en: "Enable (interrupts) or disable (noInterrupts) interrupts globally. Keep disabled sections short."
+            it: "Abilita (interrupts) o disabilita (noInterrupts) gli interrupt globalmente. Mantieni brevi le sezioni disabilitate."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/interrupts/interrupts/"
         codegen:
           body:

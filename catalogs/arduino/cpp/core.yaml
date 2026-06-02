@@ -14,11 +14,15 @@ implementations:
     blocks:
       - blockly:
           type: code_setup
-          message0: "setup %1"
+          message0:
+            en: "setup %1"
+            it: "setup %1"
           args0:
             - type: input_statement
               name: MEMBERS
-          tooltip: "Blocks inside run once at startup, in setup(). Use for begin()/init calls and pinMode()."
+          tooltip:
+            en: "Blocks inside run once at startup, in setup(). Use for begin()/init calls and pinMode()."
+            it: "I blocchi all'interno vengono eseguiti una sola volta all'avvio, in setup(). Usalo per le chiamate begin()/init e pinMode()."
         generator: code_setup
 ---
 # Arduino named constants as a value literal (HIGH/LOW, pin modes, LED_BUILTIN).
@@ -32,7 +36,9 @@ implementations:
     blocks:
       - blockly:
           type: cpp_constant
-          message0: "%1"
+          message0:
+            en: "%1"
+            it: "%1"
           args0:
             - type: field_dropdown
               name: CONST
@@ -44,7 +50,9 @@ implementations:
                 - ["INPUT_PULLUP", "INPUT_PULLUP"]
                 - ["LED_BUILTIN", "LED_BUILTIN"]
           output: null
-          tooltip: "An Arduino named constant: HIGH/LOW, pin modes (INPUT/OUTPUT/INPUT_PULLUP), or LED_BUILTIN."
+          tooltip:
+            en: "An Arduino named constant: HIGH/LOW, pin modes (INPUT/OUTPUT/INPUT_PULLUP), or LED_BUILTIN."
+            it: "Una costante Arduino: HIGH/LOW, modalità pin (INPUT/OUTPUT/INPUT_PULLUP) o LED_BUILTIN."
           helpUrl: "https://docs.arduino.cc/language-reference/en/variables/constants/highLow/"
         codegen:
           body:
@@ -61,7 +69,9 @@ implementations:
     blocks:
       - blockly:
           type: cpp_led_builtin
-          message0: "turn built-in LED %1"
+          message0:
+            en: "turn built-in LED %1"
+            it: "imposta LED integrato %1"
           args0:
             - type: field_dropdown
               name: STATE
@@ -70,7 +80,9 @@ implementations:
                 - ["off", "LOW"]
           previousStatement: null
           nextStatement: null
-          tooltip: "Turn the board's built-in LED on or off. Sets LED_BUILTIN to OUTPUT in setup automatically."
+          tooltip:
+            en: "Turn the board's built-in LED on or off. Sets LED_BUILTIN to OUTPUT in setup automatically."
+            it: "Accendi o spegni il LED integrato della scheda. Imposta automaticamente LED_BUILTIN come OUTPUT nel setup."
           helpUrl: "https://docs.arduino.cc/built-in-examples/basics/Blink/"
         codegen:
           setup:

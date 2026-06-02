@@ -12,14 +12,18 @@ implementations:
       # --- analogRead ---
       - blockly:
           type: cpp_analog_read
-          message0: "analogRead %1"
+          message0:
+            en: "analogRead %1"
+            it: "analogRead %1"
           args0:
             - type: input_value
               name: PIN
               check: ["Number", "int", "unsigned int", "long", "unsigned long", "byte", "word", "uint8_t", "uint16_t", "uint32_t", "int8_t", "int16_t", "int32_t"]
           output: Number
           inputsInline: true
-          tooltip: "Read the analog voltage on a pin (0–4095 at 12-bit resolution)."
+          tooltip:
+            en: "Read the analog voltage on a pin (0–4095 at 12-bit resolution)."
+            it: "Leggi la tensione analogica su un pin (0–4095 a risoluzione 12 bit)."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/analog-io/analogRead/"
         codegen:
           body:
@@ -31,7 +35,9 @@ implementations:
       # --- analogWrite (PWM) ---
       - blockly:
           type: cpp_analog_write
-          message0: "analogWrite pin %1 value %2"
+          message0:
+            en: "analogWrite pin %1 value %2"
+            it: "analogWrite pin %1 valore %2"
           args0:
             - type: input_value
               name: PIN
@@ -42,7 +48,9 @@ implementations:
           previousStatement: null
           nextStatement: null
           inputsInline: true
-          tooltip: "Write a PWM value (0–255) to a pin."
+          tooltip:
+            en: "Write a PWM value (0–255) to a pin."
+            it: "Scrivi un valore PWM (0–255) su un pin."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/analog-io/analogWrite/"
         codegen:
           body:
@@ -54,7 +62,9 @@ implementations:
       # --- analogReference (setup-only) ---
       - blockly:
           type: cpp_analog_reference
-          message0: "analogReference %1"
+          message0:
+            en: "analogReference %1"
+            it: "analogReference %1"
           args0:
             - type: field_dropdown
               name: TYPE
@@ -66,7 +76,9 @@ implementations:
                 - ["EXTERNAL", "EXTERNAL"]
           previousStatement: null
           nextStatement: null
-          tooltip: "Configure the reference voltage for analogRead. Place inside a 'setup' block to run once at startup."
+          tooltip:
+            en: "Configure the reference voltage for analogRead. Place inside a 'setup' block to run once at startup."
+            it: "Configura la tensione di riferimento per analogRead. Posiziona dentro un blocco 'setup' per eseguirlo una sola volta all'avvio."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/analog-io/analogReference/"
         codegen:
           body:
@@ -77,7 +89,9 @@ implementations:
       # function and the board. ADC (read): 10/12/14; PWM (write): 8/10/12.
       - blockly:
           type: cpp_analog_resolution
-          message0: "set analog %1 resolution %2 bits"
+          message0:
+            en: "set analog %1 resolution %2 bits"
+            it: "imposta risoluzione analogica %1 %2 bit"
           args0:
             - type: field_dropdown
               name: FUNC
@@ -94,7 +108,9 @@ implementations:
           previousStatement: null
           nextStatement: null
           inputsInline: true
-          tooltip: "Set the ADC (read) or PWM (write) resolution in bits. Valid range depends on function/board. Place inside a 'setup' block."
+          tooltip:
+            en: "Set the ADC (read) or PWM (write) resolution in bits. Valid range depends on function/board. Place inside a 'setup' block."
+            it: "Imposta la risoluzione ADC (lettura) o PWM (scrittura) in bit. L'intervallo valido dipende dalla funzione e dalla scheda. Posiziona dentro un blocco 'setup'."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/zero-due-mkr-family/analogReadResolution/"
         codegen:
           body:

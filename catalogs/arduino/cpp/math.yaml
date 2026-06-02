@@ -9,7 +9,9 @@ implementations:
       # --- min / max (consolidated, dropdown) ---
       - blockly:
           type: cpp_math_minmax
-          message0: "%1 of %2 and %3"
+          message0:
+            en: "%1 of %2 and %3"
+            it: "%1 tra %2 e %3"
           args0:
             - type: field_dropdown
               name: FUNC
@@ -24,7 +26,9 @@ implementations:
               check: ["Number", "int", "unsigned int", "long", "unsigned long", "byte", "word", "float", "double", "uint8_t", "uint16_t", "uint32_t", "int8_t", "int16_t", "int32_t"]
           output: Number
           inputsInline: true
-          tooltip: "Smaller (min) or larger (max) of two numbers."
+          tooltip:
+            en: "Smaller (min) or larger (max) of two numbers."
+            it: "Il minore (min) o il maggiore (max) tra due numeri."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/math/min/"
         codegen:
           body:
@@ -37,7 +41,9 @@ implementations:
       # --- constrain ---
       - blockly:
           type: cpp_constrain
-          message0: "constrain %1 between %2 and %3"
+          message0:
+            en: "constrain %1 between %2 and %3"
+            it: "limita %1 tra %2 e %3"
           args0:
             - type: input_value
               name: X
@@ -50,7 +56,9 @@ implementations:
               check: ["Number", "int", "unsigned int", "long", "unsigned long", "byte", "word", "float", "double", "uint8_t", "uint16_t", "uint32_t", "int8_t", "int16_t", "int32_t"]
           output: Number
           inputsInline: true
-          tooltip: "Constrain a number to stay within the inclusive range [low, high]."
+          tooltip:
+            en: "Constrain a number to stay within the inclusive range [low, high]."
+            it: "Limita un numero affinché resti nell'intervallo inclusivo [minimo, massimo]."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/math/constrain/"
         codegen:
           body:
@@ -64,7 +72,9 @@ implementations:
       # --- map ---
       - blockly:
           type: cpp_map
-          message0: "map %1 from %2 .. %3 to %4 .. %5"
+          message0:
+            en: "map %1 from %2 .. %3 to %4 .. %5"
+            it: "mappa %1 da %2 .. %3 a %4 .. %5"
           args0:
             - type: input_value
               name: VALUE
@@ -79,7 +89,9 @@ implementations:
               name: TOHIGH
           output: Number
           inputsInline: true
-          tooltip: "Re-map a number from one range to another (integer math)."
+          tooltip:
+            en: "Re-map a number from one range to another (integer math)."
+            it: "Rimappa un numero da un intervallo a un altro (matematica intera)."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/math/map/"
         codegen:
           body:

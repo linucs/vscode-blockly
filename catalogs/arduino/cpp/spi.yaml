@@ -11,7 +11,9 @@ implementations:
       # --- SPISettings(clock, bitOrder, dataMode) ---
       - blockly:
           type: cpp_spi_settings
-          message0: "SPISettings clock %1 order %2 mode %3"
+          message0:
+            en: "SPISettings clock %1 order %2 mode %3"
+            it: "SPISettings clock %1 ordine %2 modo %3"
           args0:
             - type: input_value
               name: CLOCK
@@ -29,7 +31,9 @@ implementations:
                 - ["SPI_MODE3", "SPI_MODE3"]
           output: null
           inputsInline: true
-          tooltip: "Bundle SPI clock speed, bit order, and data mode for use with beginTransaction."
+          tooltip:
+            en: "Bundle SPI clock speed, bit order, and data mode for use with beginTransaction."
+            it: "Raggruppa velocita di clock SPI, ordine dei bit e modalita dati per l'uso con beginTransaction."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/communication/SPI/SPISettings/"
         codegen:
           body:
@@ -41,11 +45,15 @@ implementations:
       # --- SPI.begin (place in a setup block) ---
       - blockly:
           type: cpp_spi_begin
-          message0: "SPI.begin"
+          message0:
+            en: "SPI.begin"
+            it: "SPI.begin"
           args0: []
           previousStatement: null
           nextStatement: null
-          tooltip: "Initialize the SPI bus (SCK, MOSI, SS as output). Place inside a 'setup' block."
+          tooltip:
+            en: "Initialize the SPI bus (SCK, MOSI, SS as output). Place inside a 'setup' block."
+            it: "Inizializza il bus SPI (SCK, MOSI, SS come uscita). Posiziona dentro un blocco 'setup'."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/communication/SPI/begin/"
         codegen:
           body:
@@ -54,11 +62,15 @@ implementations:
       # --- SPI.end ---
       - blockly:
           type: cpp_spi_end
-          message0: "SPI.end"
+          message0:
+            en: "SPI.end"
+            it: "SPI.end"
           args0: []
           previousStatement: null
           nextStatement: null
-          tooltip: "Disable the SPI bus."
+          tooltip:
+            en: "Disable the SPI bus."
+            it: "Disabilita il bus SPI."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/communication/SPI/end/"
         codegen:
           body:
@@ -67,14 +79,18 @@ implementations:
       # --- SPI.beginTransaction(settings) ---
       - blockly:
           type: cpp_spi_begin_transaction
-          message0: "SPI.beginTransaction %1"
+          message0:
+            en: "SPI.beginTransaction %1"
+            it: "SPI.beginTransaction %1"
           args0:
             - type: input_value
               name: SETTINGS
           previousStatement: null
           nextStatement: null
           inputsInline: true
-          tooltip: "Begin using the SPI bus with the given SPISettings (reconfigures and holds the bus)."
+          tooltip:
+            en: "Begin using the SPI bus with the given SPISettings (reconfigures and holds the bus)."
+            it: "Inizia a utilizzare il bus SPI con le SPISettings fornite (riconfigura e mantiene il bus)."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/communication/SPI/beginTransaction/"
         codegen:
           body:
@@ -85,11 +101,15 @@ implementations:
       # --- SPI.endTransaction ---
       - blockly:
           type: cpp_spi_end_transaction
-          message0: "SPI.endTransaction"
+          message0:
+            en: "SPI.endTransaction"
+            it: "SPI.endTransaction"
           args0: []
           previousStatement: null
           nextStatement: null
-          tooltip: "Stop using the SPI bus, allowing other libraries to use it."
+          tooltip:
+            en: "Stop using the SPI bus, allowing other libraries to use it."
+            it: "Termina l'uso del bus SPI, consentendo ad altre librerie di utilizzarlo."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/communication/SPI/endTransaction/"
         codegen:
           body:
@@ -98,7 +118,9 @@ implementations:
       # --- SPI.transfer / transfer16 (consolidated, dropdown) ---
       - blockly:
           type: cpp_spi_transfer
-          message0: "SPI.transfer %1 %2"
+          message0:
+            en: "SPI.transfer %1 %2"
+            it: "SPI.transfer %1 %2"
           args0:
             - type: field_dropdown
               name: FUNC
@@ -109,7 +131,9 @@ implementations:
               name: VALUE
           output: Number
           inputsInline: true
-          tooltip: "Simultaneously send and receive one byte (transfer) or 16-bit word (transfer16) over SPI."
+          tooltip:
+            en: "Simultaneously send and receive one byte (transfer) or 16-bit word (transfer16) over SPI."
+            it: "Invia e ricevi simultaneamente un byte (transfer) o una word a 16 bit (transfer16) tramite SPI."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/communication/SPI/transfer/"
         codegen:
           body:
@@ -121,7 +145,9 @@ implementations:
       # --- SPI.usingInterrupt(n) ---
       - blockly:
           type: cpp_spi_using_interrupt
-          message0: "SPI.usingInterrupt %1"
+          message0:
+            en: "SPI.usingInterrupt %1"
+            it: "SPI.usingInterrupt %1"
           args0:
             - type: input_value
               name: N
@@ -129,7 +155,9 @@ implementations:
           previousStatement: null
           nextStatement: null
           inputsInline: true
-          tooltip: "Register an interrupt that uses SPI so the library disables it during transactions."
+          tooltip:
+            en: "Register an interrupt that uses SPI so the library disables it during transactions."
+            it: "Registra un interrupt che utilizza SPI in modo che la libreria lo disabiliti durante le transazioni."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/communication/SPI/usingInterrupt/"
         codegen:
           body:
@@ -140,7 +168,9 @@ implementations:
       # --- SPI.setBitOrder (legacy) ---
       - blockly:
           type: cpp_spi_set_bit_order
-          message0: "SPI.setBitOrder %1"
+          message0:
+            en: "SPI.setBitOrder %1"
+            it: "SPI.setBitOrder %1"
           args0:
             - type: field_dropdown
               name: ORDER
@@ -149,7 +179,9 @@ implementations:
                 - ["LSBFIRST", "LSBFIRST"]
           previousStatement: null
           nextStatement: null
-          tooltip: "(Legacy) Set whether data is shifted MSB- or LSB-first. Prefer SPISettings/beginTransaction."
+          tooltip:
+            en: "(Legacy) Set whether data is shifted MSB- or LSB-first. Prefer SPISettings/beginTransaction."
+            it: "(Legacy) Imposta se i dati vengono trasmessi dal bit piu significativo o dal meno significativo. Preferire SPISettings/beginTransaction."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/communication/SPI/setBitOrder/"
         codegen:
           body:
@@ -158,7 +190,9 @@ implementations:
       # --- SPI.setClockDivider (legacy) ---
       - blockly:
           type: cpp_spi_set_clock_divider
-          message0: "SPI.setClockDivider %1"
+          message0:
+            en: "SPI.setClockDivider %1"
+            it: "SPI.setClockDivider %1"
           args0:
             - type: field_dropdown
               name: DIVIDER
@@ -172,7 +206,9 @@ implementations:
                 - ["DIV128", "SPI_CLOCK_DIV128"]
           previousStatement: null
           nextStatement: null
-          tooltip: "(Legacy) Set the SPI clock relative to the system clock. Prefer SPISettings/beginTransaction."
+          tooltip:
+            en: "(Legacy) Set the SPI clock relative to the system clock. Prefer SPISettings/beginTransaction."
+            it: "(Legacy) Imposta il clock SPI rispetto al clock di sistema. Preferire SPISettings/beginTransaction."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/communication/SPI/setClockDivider/"
         codegen:
           body:
@@ -181,7 +217,9 @@ implementations:
       # --- SPI.setDataMode (legacy) ---
       - blockly:
           type: cpp_spi_set_data_mode
-          message0: "SPI.setDataMode %1"
+          message0:
+            en: "SPI.setDataMode %1"
+            it: "SPI.setDataMode %1"
           args0:
             - type: field_dropdown
               name: MODE
@@ -192,7 +230,9 @@ implementations:
                 - ["SPI_MODE3", "SPI_MODE3"]
           previousStatement: null
           nextStatement: null
-          tooltip: "(Legacy) Set clock polarity and phase (SPI modes 0–3). Prefer SPISettings/beginTransaction."
+          tooltip:
+            en: "(Legacy) Set clock polarity and phase (SPI modes 0–3). Prefer SPISettings/beginTransaction."
+            it: "(Legacy) Imposta polarita e fase del clock (modalita SPI 0-3). Preferire SPISettings/beginTransaction."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/communication/SPI/setDataMode/"
         codegen:
           body:

@@ -28,7 +28,7 @@ export async function enableClaudeCodeIntegration(context: vscode.ExtensionConte
     const root = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
     if (!root) {
         vscode.window.showWarningMessage(
-            'Blocks Editor: open a workspace folder before enabling Claude Code integration.'
+            vscode.l10n.t('Open a workspace folder before enabling Claude Code integration.')
         );
         return;
     }
@@ -57,21 +57,25 @@ export async function enableClaudeCodeIntegration(context: vscode.ExtensionConte
         await fs.writeFile(mcpJsonPath, JSON.stringify(config, null, 2) + '\n', 'utf-8');
     } catch (err) {
         vscode.window.showErrorMessage(
-            `Blocks Editor: failed to write .mcp.json: ${err instanceof Error ? err.message : String(err)}`
+            vscode.l10n.t('Failed to write .mcp.json: {0}', err instanceof Error ? err.message : String(err))
         );
         return;
     }
 
     const skillResult = await installSkill(context.extensionPath, root);
 
+    const skillSuffix = skillResult.ok
+        ? vscode.l10n.t(' (block-author skill installed). ')
+        : vscode.l10n.t('. ');
+    const openLabel = vscode.l10n.t('Open .mcp.json');
     const choice = await vscode.window.showInformationMessage(
-        'Blocks Editor: Claude Code integration enabled' +
-        (skillResult.ok ? ' (block-author skill installed). ' : '. ') +
-        'In a Claude Code session for this project, run /mcp and approve the "blocks-editor" server. ' +
-        'Re-run this command after upgrading the extension to refresh the server path and skill.',
-        'Open .mcp.json'
+        vscode.l10n.t(
+            'Claude Code integration enabled{0}. In a Claude Code session for this project, run /mcp and approve the "blocks-editor" server. Re-run this command after upgrading the extension to refresh the server path and skill.',
+            skillSuffix
+        ),
+        openLabel
     );
-    if (choice === 'Open .mcp.json') {
+    if (choice === openLabel) {
         const doc = await vscode.workspace.openTextDocument(mcpJsonPath);
         await vscode.window.showTextDocument(doc);
     }
@@ -95,7 +99,7 @@ async function installSkill(extensionPath: string, root: string): Promise<{ ok: 
     } catch (err) {
         // Non-fatal: the MCP server still works without the skill installed.
         vscode.window.showWarningMessage(
-            `Blocks Editor: MCP configured, but the block-author skill could not be installed: ${err instanceof Error ? err.message : String(err)}`
+            vscode.l10n.t('MCP configured, but the block-author skill could not be installed: {0}', err instanceof Error ? err.message : String(err))
         );
         return { ok: false };
     }

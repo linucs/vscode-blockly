@@ -21,17 +21,17 @@ if (!Blockly.Blocks['controls_switch_case']) {
 
             this.appendValueInput('SWITCH_EXPR')
                 .appendField(createPlusField())
-                .appendField('switch')
+                .appendField(Blockly.Msg['SWITCH_LABEL'] ?? 'switch')
                 .setAlign(Align.RIGHT);
 
-            this.appendDummyInput('DEFAULT_LABEL').appendField('default');
+            this.appendDummyInput('DEFAULT_LABEL').appendField(Blockly.Msg['SWITCH_DEFAULT_LABEL'] ?? 'default');
             this.appendStatementInput('DEFAULT_BODY');
 
             this.setStyle(blockStyleFor('Logic'));
             this.setPreviousStatement(true);
             this.setNextStatement(true);
             this.setTooltip(
-                'Switch on an expression. Use [+] to add cases and [−] to remove them.',
+                Blockly.Msg['SWITCH_TOOLTIP'] ?? 'Switch on an expression. Use [+] to add cases and [−] to remove them.',
             );
 
             this.addCase_();
@@ -49,9 +49,9 @@ if (!Blockly.Blocks['controls_switch_case']) {
         addCase_(this: SwitchCaseBlock): void {
             const i = this.caseCount_++;
             this.appendValueInput(`CASE_${i}_VAL`)
-                .appendField('case')
+                .appendField(Blockly.Msg['SWITCH_CASE_LABEL'] ?? 'case')
                 .setAlign(Align.RIGHT);
-            this.appendStatementInput(`CASE_${i}_BODY`).appendField('do');
+            this.appendStatementInput(`CASE_${i}_BODY`).appendField(Blockly.Msg['SWITCH_DO_LABEL'] ?? 'do');
             this.moveInputBefore('DEFAULT_LABEL', null);
             this.moveInputBefore('DEFAULT_BODY', null);
             this.updateMinus_();

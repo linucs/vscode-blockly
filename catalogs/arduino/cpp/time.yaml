@@ -14,7 +14,9 @@ implementations:
       # --- delay ---
       - blockly:
           type: cpp_delay
-          message0: "delay %1 ms"
+          message0:
+            en: "delay %1 ms"
+            it: "delay %1 ms"
           args0:
             - type: input_value
               name: DURATION
@@ -22,7 +24,9 @@ implementations:
           previousStatement: null
           nextStatement: null
           inputsInline: true
-          tooltip: "Pause execution for the given number of milliseconds."
+          tooltip:
+            en: "Pause execution for the given number of milliseconds."
+            it: "Metti in pausa l'esecuzione per il numero di millisecondi indicato."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/time/delay/"
         codegen:
           body:
@@ -33,7 +37,9 @@ implementations:
       # --- delayMicroseconds ---
       - blockly:
           type: cpp_delay_microseconds
-          message0: "delayMicroseconds %1 µs"
+          message0:
+            en: "delayMicroseconds %1 µs"
+            it: "delayMicroseconds %1 µs"
           args0:
             - type: input_value
               name: US
@@ -41,7 +47,9 @@ implementations:
           previousStatement: null
           nextStatement: null
           inputsInline: true
-          tooltip: "Pause execution for the given number of microseconds."
+          tooltip:
+            en: "Pause execution for the given number of microseconds."
+            it: "Metti in pausa l'esecuzione per il numero di microsecondi indicato."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/time/delayMicroseconds/"
         codegen:
           body:
@@ -52,7 +60,9 @@ implementations:
       # --- time since start: millis / micros (consolidated, dropdown) ---
       - blockly:
           type: cpp_time_since_start
-          message0: "time since start %1"
+          message0:
+            en: "time since start %1"
+            it: "tempo dall'avvio %1"
           args0:
             - type: field_dropdown
               name: UNIT
@@ -60,7 +70,9 @@ implementations:
                 - ["milliseconds", "millis"]
                 - ["microseconds", "micros"]
           output: Number
-          tooltip: "Number of milliseconds (millis) or microseconds (micros) since the board started running."
+          tooltip:
+            en: "Number of milliseconds (millis) or microseconds (micros) since the board started running."
+            it: "Numero di millisecondi (millis) o microsecondi (micros) da quando la scheda ha iniziato a funzionare."
           helpUrl: "https://docs.arduino.cc/language-reference/en/functions/time/millis/"
         codegen:
           body:

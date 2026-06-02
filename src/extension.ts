@@ -16,13 +16,13 @@ export async function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(async e => {
         if (e.affectsConfiguration('blocks-editor.catalogPaths')) {
             await catalogManager.reloadCatalogs();
-            vscode.window.showInformationMessage('Blocks Editor: Catalogs reloaded.');
+            vscode.window.showInformationMessage(vscode.l10n.t('Catalogs reloaded.'));
         }
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand('blocks-editor.refreshCatalogs', async () => {
         await catalogManager.forceRefreshRemote();
-        vscode.window.showInformationMessage('Blocks Editor: Remote catalogs re-downloaded and reloaded.');
+        vscode.window.showInformationMessage(vscode.l10n.t('Remote catalogs re-downloaded and reloaded.'));
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand('blocks-editor.enableClaudeCodeIntegration', () =>

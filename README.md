@@ -1,66 +1,106 @@
 # Blocks Editor
 
-Visual block programming for embedded projects in VS Code.
+**Build programs for Arduino by dragging colorful blocks — like Scratch, but it writes real code for you.**
 
-Drag-and-drop blocks generate real C++ code that compiles and uploads through your toolchain. No syntax to memorize, no boilerplate to write — the blocks are the source of truth, and the generated code stays in sync automatically.
+No syntax to memorize. No semicolons to forget. You snap blocks together, and Blocks Editor turns them into working C++ that compiles and uploads to your board.
 
-Blocks Editor works with multiple backends. Today it supports **PlatformIO** (`platformio.ini`) and the **Arduino CLI** (`sketch.yaml`), and its architecture is designed so additional toolchains and frameworks can be added over time.
+![Drag a block, see the code appear](images/demo.gif)
 
-## Features
+> **New to coding?** That's exactly who this is for. If you can drag and drop, you can build a program.
 
-- **Custom editor for source files** — right-click any `.cpp`, `.ino`, or `.c` file and choose "Open With... > Blocks Editor" to switch to the visual editor.
-- **Real-time code generation** — blocks produce valid Arduino/C++ code as you build. The generated `setup()` and `loop()` functions update live.
-- **Multi-backend toolchain support** — detects whether your project is driven by PlatformIO (`platformio.ini`) or the Arduino CLI (`sketch.yaml`). When both are present, you choose which to use.
-- **Board-aware toolbox** — reads your project config to detect the active board and framework, then shows only the blocks that apply.
-- **Automatic dependency management** — when you use a block that requires a library, its dependencies are merged into your project config automatically (add-only, never removes your entries). For PlatformIO this manages `lib_deps`; for the Arduino CLI it manages `libraries` in `sketch.yaml`.
-- **Extensible block catalogs** — blocks are defined in YAML files. Load additional catalogs from local directories or remote URLs to add support for new sensors, actuators, and libraries.
-- **Persistent block state** — your block layout is saved in a companion `.blk` file next to the source (e.g. `main.cpp` + `main.blk`). The `.cpp` is a generated artifact; the `.blk` is the real project file.
-- **Built-in Arduino blocks** — Digital I/O, Analog I/O, Serial, SPI, Wire (I2C), Math, Strings, Time, Interrupts, and more.
-- **Standard Blockly blocks** — Logic, Loops, Math, Text, Variables, Arrays, and Functions are always available.
-- **Workspace minimap** — optional bird's-eye overview of large block programs.
-- **Toolbox search** — type to filter blocks across all categories.
-- **Customizable category colors** — override toolbox colors to match your preferences.
+## Why you'll like it
 
-## Requirements
-
-- **VS Code 1.120+**
-- A supported project backend:
-  - **PlatformIO** — a valid `platformio.ini` with at least one `[env:...]` section that specifies a `board` and `framework = arduino`. The [PlatformIO IDE extension](https://platformio.org/install/ide?install=vscode) is recommended for building and uploading.
-  - **Arduino CLI** — a valid `sketch.yaml` with at least one profile defining an FQBN-based board. The [Arduino CLI](https://arduino.github.io/arduino-cli/) (or the Arduino IDE 2.x, which uses it) is recommended for building and uploading.
+- 🧩 **Drag-and-drop, not typing** — pick blocks from a menu and connect them. The hard part (the code) is handled automatically.
+- 👀 **See it work instantly** — every time you change a block, the program updates live.
+- 🔌 **Knows your board** — it reads your project and shows only the blocks that make sense for the hardware you're using.
+- 📦 **Installs libraries for you** — use a block that needs an extra library? It gets added to your project automatically. You don't have to hunt for it.
+- 💾 **Saves your work automatically** — nothing to remember, nothing to lose.
 
 ## Getting Started
 
-1. Install this extension, plus the toolchain you intend to use (PlatformIO IDE and/or Arduino CLI).
-2. Open (or create) a project with a `platformio.ini` or a `sketch.yaml`.
-3. Right-click a `.cpp` or `.ino` source file in the Explorer.
-4. Select **"Open With..."** and pick **"Blocks Editor"**.
-5. Drag blocks from the toolbox on the left and connect them to build your program.
-6. The generated C++ code is written to the source file automatically — compile and upload with your toolchain as usual.
+### What you need first
 
-### How it works
+Blocks Editor sits on top of one of two free tools that actually build and upload your code to the board. You need **one** of them:
+
+- **[PlatformIO](https://platformio.org/install/ide?install=vscode)** — a popular extension for VS Code. (Easiest if you're already in VS Code.)
+- **[Arduino CLI](https://arduino.github.io/arduino-cli/)** — or the Arduino IDE 2.x, which uses it under the hood.
+
+You also need a **project folder** that tells the tools which board you have. If you're using PlatformIO or the Arduino IDE, creating a new project sets this up for you automatically.
+
+> **Don't have a project yet?** In VS Code, install PlatformIO, click the 🐜 ant icon in the sidebar → **New Project**, pick your board, and you're ready.
+
+### Build your first program
+
+1. Install this extension (plus PlatformIO or the Arduino CLI).
+2. Open your project folder in VS Code.
+3. In the file explorer, **right-click** your main source file (it ends in `.cpp` or `.ino`).
+4. Choose **"Open With…"** → **"Blocks Editor"**.
+5. Drag blocks from the menu on the left and click them together to build your program.
+6. Build and upload to your board the way you normally would — the code is already written for you.
+
+That's it. The code file updates itself every time you move a block.
+
+## Frequently asked questions
+
+**Do I need to know how to program?**
+No. That's the whole point. The blocks describe what you want to happen, and the extension writes the code.
+
+**Will it break my project or delete my files?**
+No. It only ever *adds* the libraries your blocks need — it never removes anything you set up. Your block layout is saved safely in its own file.
+
+**The code file says "do not edit" — why?**
+Because the blocks are in charge. The code file is generated from your blocks, so if you edited it by hand, your changes would be replaced the next time you move a block. Edit the blocks, not the code.
+
+**What gets saved where?**
+Two files sit next to each other, e.g. `main.cpp` and `main.blk`:
 
 ```
-Blocks (visual editor)
-   |
-   ├──> main.cpp   (generated C++ — read-only, do not edit by hand)
-   ├──> main.blk   (block state — commit this to version control)
-   └──> platformio.ini / sketch.yaml  (dependencies added automatically for blocks in use)
+🧩 Your blocks  ─────►  main.cpp   the code (written for you — don't edit by hand)
+                ─────►  main.blk   your block layout (this is your real work)
 ```
 
-Every top-level block sequence becomes the body of `void loop()`. Blocks placed inside a **code_setup** container run once in `void setup()`. There are no separate setup/loop scaffold blocks — placement determines where the code goes.
+If you use version control (like Git), commit **both** files.
 
-## Extension Settings
+**Where does setup-once code go?**
+Most blocks run over and over (that's the `loop`). For things that should happen **once at startup** (like turning on the serial monitor), there's a special **"setup"** container block — drop those blocks inside it.
 
-| Setting | Default | Description |
-|---------|---------|-------------|
-| `blocks-editor.generateOnChange` | `true` | Generate code automatically whenever blocks change. When `false`, code is only generated when the **Generate C++** button is pressed. |
-| `blocks-editor.showMinimap` | `false` | Show a minimap overview of the workspace in the bottom-right corner. |
-| `blocks-editor.catalogPaths` | `[]` | Additional local directories or remote URLs containing block catalog YAML files. Local paths are scanned recursively. Remote URLs are cached in the project's `.blocks/` folder. |
-| `blocks-editor.categoryColors` | `{}` | Map category labels to hex colors to customize the toolbox appearance. Example: `{ "Sensors": "#26A69A" }` |
+## What's included
 
-## Custom Block Catalogs
+- **Arduino building blocks** — Digital pins, Analog pins, Serial monitor, SPI, I2C (Wire), Math, Text, Time, Interrupts, and more.
+- **Classic blocks** — Logic (if/else), Loops, Math, Text, Variables, Lists, and Functions — always available.
+- **Handy extras** — a search box to find blocks fast, an optional minimap for big programs, and customizable category colors.
 
-Blocks are defined in YAML files validated against a JSON Schema. A minimal catalog looks like this:
+## Settings
+
+You can leave everything at its defaults. If you want to tweak things, open VS Code Settings and search for "Blocks Editor":
+
+| Setting | Default | What it does |
+|---------|---------|--------------|
+| `blocks-editor.generateOnChange` | `true` | Update the code automatically as you build. Turn off if you'd rather press a **Generate C++** button yourself. |
+| `blocks-editor.showMinimap` | `false` | Show a small overview map of your blocks in the corner — handy for large programs. |
+| `blocks-editor.catalogPaths` | `[]` | Add extra blocks from a folder or a web link (see below). |
+| `blocks-editor.categoryColors` | `{}` | Recolor the block categories to your taste, e.g. `{ "Sensors": "#26A69A" }`. |
+
+## Requirements
+
+- **VS Code 1.120 or newer**
+- One supported toolchain:
+  - **PlatformIO** — a `platformio.ini` with at least one `[env:...]` that sets a `board` and `framework = arduino`.
+  - **Arduino CLI** — a `sketch.yaml` with at least one profile defining an FQBN-based board.
+
+## Good to know
+
+- Right now Blocks Editor supports the **Arduino** framework with C++. Other frameworks (ESP-IDF, STM32Cube, …) aren't supported yet.
+- The PlatformIO project reader doesn't yet understand advanced `platformio.ini` features (`extends`, `${...}` variables, file includes).
+- Don't hand-edit the generated source file — your block layout is the real source, and edits to the code will be overwritten.
+
+---
+
+## For developers: creating your own blocks
+
+> This section is for people who want to **add new blocks** (for a specific sensor, board, or library). If you just want to *use* the editor, you can stop reading here.
+
+Blocks are defined in **YAML catalog files**, validated against a JSON Schema. A minimal catalog looks like this:
 
 ```yaml
 id: my-sensor
@@ -103,31 +143,27 @@ Add directories or URLs to the `blocks-editor.catalogPaths` setting:
 }
 ```
 
-Use the command **"Blocks Editor: Refresh Remote Catalogs"** to re-download remote catalogs after they are updated upstream.
+Run the command **"Blocks Editor: Refresh Remote Catalogs"** to re-download remote catalogs after they change upstream.
 
 ### Catalog key concepts
 
 - **`runtime`** — catalogs are filtered by the active framework and language (e.g. `arduino:cpp`). Blocks for a different runtime are hidden automatically.
-- **`dependencies`** — declares libraries merged into the project config when any block from this implementation is used. They become `lib_deps` in `platformio.ini` for PlatformIO projects, or `libraries` in `sketch.yaml` for Arduino CLI projects. (Build flags are intentionally not block metadata — they are a project setup concern.)
+- **`dependencies`** — libraries merged into the project config when any block from this implementation is used. They become `lib_deps` in `platformio.ini`, or `libraries` in `sketch.yaml`. (Build flags are intentionally not block metadata — they're a project-setup concern.)
 - **`category`** — supports `::` nesting for sub-categories (e.g. `"Input / Output::Digital"`).
 - **`codegen`** sections — `body` (inline expression or statement), `imports`, `declarations`, `setup`, `helpers` (standalone functions). Use `{{FIELD_NAME}}` placeholders to reference block field values.
 - **`inputDefaults`** — fallback values for unconnected inputs, so blocks are valid even before the user attaches a value.
 
+### Block Author assistant
+
+The extension ships a `@blocks` chat participant that helps research a hardware library and generate a catalog for it. Type `@blocks` in the Chat view to get started.
+
 ## Version Control
 
-Commit both the `.blk` files and the generated `.cpp` files. The `.blk` is the authoritative source; the `.cpp` lets collaborators (and CI) compile without the extension installed.
-
-Do **not** commit the `.blocks/` folder (remote catalog cache) — add it to `.gitignore`.
-
-## Known Limitations
-
-- Only the `arduino` framework with C++ is supported. Other frameworks (ESP-IDF, STM32Cube, etc.) are not yet implemented.
-- The PlatformIO INI parser does not support `extends`, `${...}` variable interpolation, or file includes.
-- The generated source file should not be edited by hand — changes will be overwritten on the next block update.
+Commit both the `.blk` files and the generated `.cpp` files. The `.blk` is the authoritative source; the `.cpp` lets collaborators (and CI) compile without the extension installed. Add the `.blocks/` folder (remote-catalog cache) to `.gitignore`.
 
 ## Contributing
 
-Contributions are welcome. See the [repository](https://github.com/linucs/blocks-editor) for build instructions and development setup.
+Contributions are welcome. See the [repository](https://github.com/linucs/vscode-blockly) for build instructions and development setup.
 
 ## License
 

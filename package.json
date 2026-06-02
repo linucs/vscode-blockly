@@ -1,18 +1,27 @@
 {
   "name": "blocks-editor",
   "displayName": "Blocks Editor",
-  "description": "Visual block programming for PlatformIO and Arduino CLI using Blockly",
+  "description": "Drag-and-drop block programming for Arduino — build programs visually and Blocks Editor writes the C++ for you. Works with PlatformIO and the Arduino CLI.",
   "version": "0.0.1",
   "license": "MIT",
+  "icon": "images/icon.png",
   "repository": {
     "type": "git",
-    "url": "https://github.com/linucs/blocks-editor"
+    "url": "https://github.com/linucs/vscode-blockly"
   },
   "keywords": [
     "arduino",
     "blockly",
     "platformio",
+    "arduino-cli",
     "visual-programming",
+    "block-programming",
+    "no-code",
+    "scratch",
+    "embedded",
+    "microcontroller",
+    "esp32",
+    "stem",
     "education"
   ],
   "engines": {
@@ -65,7 +74,9 @@
               "description": "The URL to fetch"
             }
           },
-          "required": ["url"]
+          "required": [
+            "url"
+          ]
         }
       },
       {
@@ -80,7 +91,9 @@
               "description": "Library name or keyword to search"
             }
           },
-          "required": ["query"]
+          "required": [
+            "query"
+          ]
         }
       },
       {
@@ -95,7 +108,9 @@
               "description": "Library name to look up"
             }
           },
-          "required": ["libraryName"]
+          "required": [
+            "libraryName"
+          ]
         }
       },
       {
@@ -110,7 +125,9 @@
               "description": "The YAML catalog content to validate"
             }
           },
-          "required": ["yaml"]
+          "required": [
+            "yaml"
+          ]
         }
       },
       {
@@ -130,7 +147,10 @@
               "description": "The YAML content to save"
             }
           },
-          "required": ["filename", "content"]
+          "required": [
+            "filename",
+            "content"
+          ]
         }
       }
     ],
@@ -138,12 +158,16 @@
       {
         "command": "blocks-editor.refreshCatalogs",
         "title": "Blocks Editor: Refresh Remote Catalogs"
+      },
+      {
+        "command": "blocks-editor.enableClaudeCodeIntegration",
+        "title": "Blocks Editor: Enable Claude Code integration"
       }
     ],
     "customEditors": [
       {
         "viewType": "blocks-editor.editor",
-        "displayName": "Blocks Editor Editor",
+        "displayName": "Blocks Editor",
         "selector": [
           {
             "filenamePattern": "*.cpp"
@@ -244,10 +268,12 @@
     "@blockly/workspace-backpack": "^7.0.11",
     "@blockly/workspace-minimap": "^0.3.9",
     "@mit-app-inventor/blockly-plugin-workspace-multiselect": "^1.0.2",
+    "@modelcontextprotocol/sdk": "^1.29.0",
     "@vscode/webview-ui-toolkit": "^1.4.0",
     "ajv": "^8.20.0",
     "ajv-formats": "^3.0.1",
     "blockly": "^12.5.1",
-    "js-yaml": "^4.1.1"
+    "js-yaml": "^4.1.1",
+    "zod": "^4.4.3"
   }
 }

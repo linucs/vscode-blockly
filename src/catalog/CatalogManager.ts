@@ -17,6 +17,10 @@ export class CatalogManager {
     /** Fires whenever the loaded catalog set changes, so open editors can refresh their toolbox. */
     public readonly onDidChangeCatalogs = this._onDidChangeCatalogs.event;
 
+    private readonly _onDidRequestRemoteRefresh = new vscode.EventEmitter<void>();
+    /** Fires when a forced re-download of remote catalogs is requested (e.g. the user command). */
+    public readonly onDidRequestRemoteRefresh = this._onDidRequestRemoteRefresh.event;
+
     constructor(private readonly extensionContext: vscode.ExtensionContext) {
         this.ajv = new Ajv({ allErrors: true });
         // The schema uses "format": "uri" for docs links. Ajv v8 moved formats
@@ -35,21 +39,17 @@ export class CatalogManager {
         }
     }
 
-    public async reloadCatalogs(forceDownload = false): Promise<void> {
+    public async reloadCatalogs(): Promise<void> {
         this.entries = [];
 
-        // 1. Load built-in catalogs (if we put any in the extension)
+        // 1. Load built-in catalogs shipped with the extension
         const builtInPath = vscode.Uri.joinPath(this.extensionContext.extensionUri, 'catalogs');
         await this.loadCatalogsFromDirectory(builtInPath.fsPath);
 
-        // 2. Download remote catalogs from URLs in settings to .blocks/
-        await this.syncRemoteCatalogs(forceDownload);
-
-        // 3. Load all catalogs from the project .blocks/ directory
-        const blocksDir = this.getBlocksDir();
-        if (blocksDir) await this.loadCatalogsFromDirectory(blocksDir);
-
-        // 4. Load custom catalogs from local paths in settings
+        // 2. Load custom catalogs from local directory paths in settings
+        //    (Project-local .blocks/ dirs are NOT loaded here — each editor
+        //     instance loads its own project's .blocks/ via loadEntriesFrom(),
+        //     so there is exactly one load path and no duplicates.)
         const config = vscode.workspace.getConfiguration('blocks-editor');
         const customPaths: string[] = config.get('catalogPaths') || [];
 
@@ -80,16 +80,22 @@ export class CatalogManager {
         this._onDidChangeCatalogs.fire();
     }
 
-    private getBlocksDir(): string | undefined {
-        const folders = vscode.workspace.workspaceFolders;
-        if (!folders || folders.length === 0) return undefined;
-        return path.join(folders[0].uri.fsPath, '.blocks');
+    /**
+     * Reload built-in/custom catalogs and tell each open editor to
+     * re-download remote catalogs into its project's `.blocks/` dir.
+     */
+    public async forceRefreshRemote(): Promise<void> {
+        await this.reloadCatalogs();
+        this._onDidRequestRemoteRefresh.fire();
     }
 
-    private async syncRemoteCatalogs(force: boolean): Promise<void> {
-        const blocksDir = this.getBlocksDir();
-        if (!blocksDir) return;
-
+    /**
+     * Download remote catalog URLs from settings into `destDir`.
+     * Called by the editor provider per-project so each project's `.blocks/`
+     * receives the remote files, rather than dumping everything into one
+     * workspace-root directory.
+     */
+    public async syncRemoteCatalogs(destDir: string, force = false): Promise<void> {
         const config = vscode.workspace.getConfiguration('blocks-editor');
         const paths: string[] = config.get('catalogPaths') || [];
         const urls = paths.map(p => p.trim()).filter(isUrl);
@@ -97,7 +103,7 @@ export class CatalogManager {
 
         for (const url of urls) {
             try {
-                await downloadCatalog(url, blocksDir, force);
+                await downloadCatalog(url, destDir, force);
             } catch (err) {
                 const msg = err instanceof Error ? err.message : String(err);
                 vscode.window.showErrorMessage(`Blocks Editor: failed to download catalog from ${url}: ${msg}`);

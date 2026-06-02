@@ -1,65 +1,10 @@
 import * as vscode from 'vscode';
 import { buildSystemPrompt } from './systemPrompt';
-import { FetchUrlTool } from './tools/fetchUrl';
-import { SearchPioRegistryTool } from './tools/searchPioRegistry';
-import { CheckArduinoRegistryTool } from './tools/checkArduinoRegistry';
-import { ValidateCatalogTool } from './tools/validateCatalog';
-import { SaveCatalogTool } from './tools/saveCatalog';
+import { registerLmTools, isOwnLmTool } from './lmTools';
 import type { CatalogManager } from '../catalog/CatalogManager';
 
 const PARTICIPANT_ID = 'blocks-editor.blockAuthor';
 const MAX_TOOL_ROUNDS = 20;
-
-const TOOL_DEFS: vscode.LanguageModelChatTool[] = [
-    {
-        name: 'blocks-editor-fetch-url',
-        description: 'Fetch any URL and return its text content. Use for reading library documentation, GitHub raw files (.h, .cpp, library.properties), and example sketches.',
-        inputSchema: {
-            type: 'object',
-            properties: { url: { type: 'string', description: 'The URL to fetch' } },
-            required: ['url']
-        }
-    },
-    {
-        name: 'blocks-editor-search-pio-registry',
-        description: 'Search the PlatformIO library registry. Returns matching libraries with versions and descriptions.',
-        inputSchema: {
-            type: 'object',
-            properties: { query: { type: 'string', description: 'Library name or keyword to search' } },
-            required: ['query']
-        }
-    },
-    {
-        name: 'blocks-editor-check-arduino-registry',
-        description: 'Check if a library is in the Arduino Library Registry (installable via arduino-cli lib install). PIO and Arduino registries do not fully overlap — check both.',
-        inputSchema: {
-            type: 'object',
-            properties: { libraryName: { type: 'string', description: 'Library name to look up' } },
-            required: ['libraryName']
-        }
-    },
-    {
-        name: 'blocks-editor-validate-catalog',
-        description: 'Validate multi-document YAML against the block catalog schema and run structural checks (duplicate types, precedence, placeholders). Always validate before saving.',
-        inputSchema: {
-            type: 'object',
-            properties: { yaml: { type: 'string', description: 'The YAML catalog content to validate' } },
-            required: ['yaml']
-        }
-    },
-    {
-        name: 'blocks-editor-save-catalog',
-        description: 'Save a YAML catalog file to the workspace .blocks/ directory. The extension auto-reloads catalogs when new files appear.',
-        inputSchema: {
-            type: 'object',
-            properties: {
-                filename: { type: 'string', description: 'Filename (e.g. "wifinina.yaml")' },
-                content: { type: 'string', description: 'The YAML content to save' }
-            },
-            required: ['filename', 'content']
-        }
-    }
-];
 
 const COMMAND_PREFIXES: Record<string, string> = {
     research: 'Start Phase 1 NOW. You MUST call these tools before responding:\n' +
@@ -80,16 +25,13 @@ const COMMAND_PREFIXES: Record<string, string> = {
 };
 
 function gatherTools(): vscode.LanguageModelChatTool[] {
-    const tools = [...TOOL_DEFS];
-    for (const tool of vscode.lm.tools) {
-        if (TOOL_DEFS.some(t => t.name === tool.name)) continue;
-        tools.push({
-            name: tool.name,
-            description: tool.description,
-            inputSchema: tool.inputSchema
-        });
-    }
-    return tools;
+    // Our own tools (declared in package.json, registered via registerLmTools)
+    // and any tools contributed by other extensions all appear in vscode.lm.tools.
+    return vscode.lm.tools.map(tool => ({
+        name: tool.name,
+        description: tool.description,
+        inputSchema: tool.inputSchema,
+    }));
 }
 
 function createHandler(catalogManager: CatalogManager): vscode.ChatRequestHandler {
@@ -121,7 +63,7 @@ function buildMessages(
     const messages: vscode.LanguageModelChatMessage[] = [];
 
     let systemPrompt = buildSystemPrompt(builtinEntries);
-    const externalTools = tools.filter(t => !TOOL_DEFS.some(d => d.name === t.name));
+    const externalTools = tools.filter(t => !isOwnLmTool(t.name));
     if (externalTools.length > 0) {
         const lines = externalTools.map(t => `- **${t.name}**: ${t.description}`);
         systemPrompt += `\n\n## Additional Tools (from other extensions)\n\n` +
@@ -213,10 +155,6 @@ export function registerBlockAuthorParticipant(context: vscode.ExtensionContext,
 
     return [
         participant,
-        vscode.lm.registerTool('blocks-editor-fetch-url', new FetchUrlTool()),
-        vscode.lm.registerTool('blocks-editor-search-pio-registry', new SearchPioRegistryTool()),
-        vscode.lm.registerTool('blocks-editor-check-arduino-registry', new CheckArduinoRegistryTool()),
-        vscode.lm.registerTool('blocks-editor-validate-catalog', new ValidateCatalogTool()),
-        vscode.lm.registerTool('blocks-editor-save-catalog', new SaveCatalogTool()),
+        ...registerLmTools(),
     ];
 }

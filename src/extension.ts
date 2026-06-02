@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { BlocksEditorProvider } from './BlocksEditorProvider';
 import { CatalogManager } from './catalog/CatalogManager';
 import { registerBlockAuthorParticipant } from './chat/blockAuthorParticipant';
+import { enableClaudeCodeIntegration } from './mcp/enableIntegration';
 
 export async function activate(context: vscode.ExtensionContext) {
 	console.log('Blocks Editor extension is now active.');
@@ -20,9 +21,13 @@ export async function activate(context: vscode.ExtensionContext) {
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand('blocks-editor.refreshCatalogs', async () => {
-        await catalogManager.reloadCatalogs(true);
+        await catalogManager.forceRefreshRemote();
         vscode.window.showInformationMessage('Blocks Editor: Remote catalogs re-downloaded and reloaded.');
     }));
+
+    context.subscriptions.push(vscode.commands.registerCommand('blocks-editor.enableClaudeCodeIntegration', () =>
+        enableClaudeCodeIntegration(context)
+    ));
 
     const blocksWatcher = vscode.workspace.createFileSystemWatcher('**/.blocks/**/*.{yaml,yml}');
     const onBlocksChange = () => { void catalogManager.reloadCatalogs(); };

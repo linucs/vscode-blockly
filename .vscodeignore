@@ -15,6 +15,7 @@ vsc-extension-quickstart.md
 test/**
 webview/**
 .claude/**
+!.claude/skills/block-author/**
 **/.pio/**
 **/.blocks/**
 CLAUDE.md

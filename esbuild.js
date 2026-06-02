@@ -36,6 +36,7 @@ async function main() {
 		platform: 'node',
 		outfile: 'dist/extension.js',
 		external: ['vscode'],
+		loader: { '.md': 'text' },
 		logLevel: 'silent',
 		plugins: [
 			/* add to the end of plugins array */
@@ -60,11 +61,31 @@ async function main() {
 		],
 	});
 
+	// Standalone MCP server bundle. Spawned by Claude Code as a separate Node
+	// process (stdio transport). The MCP SDK (ESM) and zod are bundled in.
+	const mcpServerCtx = await esbuild.context({
+		entryPoints: [
+			'src/mcp/server.ts'
+		],
+		bundle: true,
+		format: 'cjs',
+		minify: production,
+		sourcemap: !production,
+		sourcesContent: false,
+		platform: 'node',
+		outfile: 'dist/mcp-server.js',
+		banner: { js: '#!/usr/bin/env node' },
+		logLevel: 'silent',
+		plugins: [
+			esbuildProblemMatcherPlugin,
+		],
+	});
+
 	if (watch) {
-		await Promise.all([extensionCtx.watch(), webviewCtx.watch()]);
+		await Promise.all([extensionCtx.watch(), webviewCtx.watch(), mcpServerCtx.watch()]);
 	} else {
-		await Promise.all([extensionCtx.rebuild(), webviewCtx.rebuild()]);
-		await Promise.all([extensionCtx.dispose(), webviewCtx.dispose()]);
+		await Promise.all([extensionCtx.rebuild(), webviewCtx.rebuild(), mcpServerCtx.rebuild()]);
+		await Promise.all([extensionCtx.dispose(), webviewCtx.dispose(), mcpServerCtx.dispose()]);
 	}
 }
 

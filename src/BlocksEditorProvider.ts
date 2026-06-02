@@ -89,6 +89,7 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
             project = await loadProjectConfig(sourceUri.fsPath);
             if (project) {
                 const projectBlocksDir = path.join(path.dirname(project.configPath), '.blocks');
+                await this.catalogManager.syncRemoteCatalogs(projectBlocksDir);
                 projectLocalEntries = await this.catalogManager.loadEntriesFrom(projectBlocksDir);
             } else {
                 projectLocalEntries = [];
@@ -96,7 +97,22 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
             sendCatalog();
         };
 
-        const changeCatalogSubscription = this.catalogManager.onDidChangeCatalogs(() => sendCatalog());
+        const changeCatalogSubscription = this.catalogManager.onDidChangeCatalogs(async () => {
+            if (project) {
+                const projectBlocksDir = path.join(path.dirname(project.configPath), '.blocks');
+                projectLocalEntries = await this.catalogManager.loadEntriesFrom(projectBlocksDir);
+            }
+            sendCatalog();
+        });
+
+        const remoteRefreshSubscription = this.catalogManager.onDidRequestRemoteRefresh(async () => {
+            if (project) {
+                const projectBlocksDir = path.join(path.dirname(project.configPath), '.blocks');
+                await this.catalogManager.syncRemoteCatalogs(projectBlocksDir, true);
+                projectLocalEntries = await this.catalogManager.loadEntriesFrom(projectBlocksDir);
+                sendCatalog();
+            }
+        });
 
         const iniWatcher = vscode.workspace.createFileSystemWatcher('**/platformio.ini');
         const yamlWatcher = vscode.workspace.createFileSystemWatcher('**/sketch.yaml');
@@ -141,6 +157,7 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
 
         webviewPanel.onDidDispose(() => {
             changeCatalogSubscription.dispose();
+            remoteRefreshSubscription.dispose();
             iniWatcher.dispose();
             yamlWatcher.dispose();
             configSubscription.dispose();

@@ -19,4 +19,5 @@ webview/**
 **/.pio/**
 **/.blocks/**
 CLAUDE.md
+PUBLISHING.md
 yarn.lock

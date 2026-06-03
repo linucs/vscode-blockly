@@ -10,6 +10,9 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      VSCE_PAT: ${{ secrets.VSCE_PAT }}
+      OVSX_PAT: ${{ secrets.OVSX_PAT }}
     steps:
       - uses: actions/checkout@v4
 
@@ -29,3 +32,16 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh release upload ${{ github.event.release.tag_name }} blocks-editor-${{ github.event.release.tag_name }}.vsix
+
+      # --- Publish to marketplaces ---
+      # Skipped automatically for prereleases (e.g. v0.1.0-beta.1) and when the
+      # matching secret is not configured, so a release still succeeds (and just
+      # uploads the VSIX to GitHub) before the publishing tokens exist.
+
+      - name: Publish to VS Code Marketplace
+        if: ${{ !github.event.release.prerelease && env.VSCE_PAT != '' }}
+        run: npx @vscode/vsce publish --no-dependencies --packagePath blocks-editor-${{ github.event.release.tag_name }}.vsix
+
+      - name: Publish to Open VSX
+        if: ${{ !github.event.release.prerelease && env.OVSX_PAT != '' }}
+        run: npx ovsx publish blocks-editor-${{ github.event.release.tag_name }}.vsix --pat "$OVSX_PAT"

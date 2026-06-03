@@ -80,7 +80,17 @@ category: "Input / Output::Digital"      # spaces are allowed
 
 When a catalog category has the same name as a built-in L1 category (e.g. `"Math"`, `"Code"`), their blocks are **merged** into a single toolbox section. Otherwise the catalog category appears as a standalone section below the L1 categories.
 
-Category colors are resolved in this order: user setting `categoryColors` > built-in palette > neutral gray default.
+Category colors are resolved in this order: YAML `colour` > built-in palette > neutral gray default.
+
+### `colour` (optional)
+
+Hex colour for the toolbox category. Applied to the top-level category (the part before `::`). When multiple entries define a colour for the same category, the last one loaded wins.
+
+```yaml
+colour: "#00979D"
+```
+
+**Format**: `#RRGGBB` (6-digit hex, case-insensitive). If omitted, the category uses the theme default.
 
 ### `docs` (optional)
 
@@ -563,6 +573,7 @@ A board-specific library (WiFiNINA) with `targets`, `dependencies`, shared `impo
 
 id: wifinina-connectivity
 category: "WiFi"
+colour: "#1565C0"
 docs:
   library: "https://www.arduino.cc/reference/en/libraries/wifinina/"
 implementations:

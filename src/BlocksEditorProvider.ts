@@ -131,18 +131,11 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
         const getAutoGenerate = () =>
             vscode.workspace.getConfiguration('blocks-editor').get<boolean>('generateOnChange', true);
 
-        const getCategoryColors = () =>
-            vscode.workspace.getConfiguration('blocks-editor').get<Record<string, string>>('categoryColors', {});
-
         const getShowMinimap = () =>
             vscode.workspace.getConfiguration('blocks-editor').get<boolean>('showMinimap', false);
 
         const sendMode = () => {
             webviewPanel.webview.postMessage({ type: 'set_mode', autoGenerate: getAutoGenerate() });
-        };
-
-        const sendCategoryColors = () => {
-            webviewPanel.webview.postMessage({ type: 'set_category_colors', colors: getCategoryColors() });
         };
 
         const sendMinimap = () => {
@@ -151,7 +144,6 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
 
         const configSubscription = vscode.workspace.onDidChangeConfiguration(e => {
             if (e.affectsConfiguration('blocks-editor.generateOnChange')) sendMode();
-            if (e.affectsConfiguration('blocks-editor.categoryColors')) sendCategoryColors();
             if (e.affectsConfiguration('blocks-editor.showMinimap')) sendMinimap();
         });
 
@@ -185,7 +177,6 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
                     await reloadProject();
                     await updateWebview();
                     sendMode();
-                    sendCategoryColors();
                     sendMinimap();
                     return;
                 case 'select_env':

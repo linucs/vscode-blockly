@@ -2,7 +2,7 @@ import * as Blockly from 'blockly';
 import { applyBlockCodegen, applyCodegenSections } from './templateEngine';
 import { RuntimeGenerator } from './runtimeGenerator';
 import { getRuntimeGenerator } from './generatorRegistry';
-import { resolveColor, categoryStyleFor, ensureCategoryRegistered } from '../ThemeAdapter';
+import { resolveColor, categoryStyleFor, ensureCategoryRegistered, setCatalogColor, resetCatalogState } from '../ThemeAdapter';
 import { FIRST_PARTY_GENERATORS } from './firstPartyGenerators';
 import { preprocessCatalogI18n } from './catalogI18nPreprocess';
 
@@ -50,6 +50,7 @@ export class CodeFactory {
         // and the category tree must not accumulate duplicates.
         this.categoryTree.clear();
         this.seenThisLoad.clear();
+        resetCatalogState();
         if (!this.rg) return;
 
         preprocessCatalogI18n(entries, locale);
@@ -59,6 +60,8 @@ export class CodeFactory {
             // matching implementation and register its blocks onto that generator.
             const impl = entry.implementations.find((i: any) => i.runtime === this.rg!.runtime);
             if (!impl) continue;
+
+            if (entry.colour) setCatalogColor(entry.category, entry.colour);
 
             const categoryColour = resolveColor(entry.category);
 

@@ -349,9 +349,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 autoGenerate = message.autoGenerate !== false;
                 updateButtonVisibility();
                 break;
-            case 'set_category_colors':
-                themeAdapter.setCustomColors(message.colors ?? {});
-                break;
             case 'theme_changed':
                 themeAdapter.onThemeChanged();
                 if (minimap) minimap.applyDarkTheme(workspace);

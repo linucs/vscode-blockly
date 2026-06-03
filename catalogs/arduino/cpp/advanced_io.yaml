@@ -2,6 +2,7 @@
 # Consolidated: pulseIn/pulseInLong share signature -> one dropdown block.
 id: arduino_advanced_io
 category: "Input / Output::Advanced"
+colour: "#FFB300"
 implementations:
   - runtime: "arduino:cpp"
     blocks:

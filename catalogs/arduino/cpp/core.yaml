@@ -9,6 +9,7 @@
 # generator is registered first-party in webview/codegen/firstPartyGenerators.ts.
 id: arduino_code_setup
 category: Control
+colour: "#78909C"
 implementations:
   - runtime: arduino:cpp
     blocks:

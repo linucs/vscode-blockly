@@ -214,15 +214,6 @@
           "default": false,
           "description": "%config.showMinimap%"
         },
-        "blocks-editor.categoryColors": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string",
-            "pattern": "^#[0-9A-Fa-f]{6}$"
-          },
-          "default": {},
-          "markdownDescription": "%config.categoryColors%"
-        },
         "blocks-editor.catalogPaths": {
           "type": "array",
           "items": {

@@ -1,6 +1,7 @@
 export interface CatalogEntry {
     id: string;
     category: string;
+    colour?: string;
     docs?: Record<string, string>;
     implementations: Implementation[];
 }

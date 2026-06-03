@@ -6,6 +6,7 @@
 #    them inside a `code_setup` container — no automatic routing to setup().
 id: arduino_analog_io
 category: "Input / Output::Analog"
+colour: "#FFB300"
 implementations:
   - runtime: "arduino:cpp"
     blocks:

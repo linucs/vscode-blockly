@@ -20,9 +20,9 @@ const BUILTIN_DEFAULTS: Record<string, string> = {
     'Loops':     '#C586C0',   // VS Code control-flow purple
     'Math':      '#B5CEA8',   // VS Code number-literal green
     'Text':      '#CE9178',   // VS Code string-literal orange
-    'Variables': '#9CDCFE',   // VS Code variable cyan
+    'Variables': '#4DB6D4',   // Deeper cyan (readable white text)
     'Arrays':    '#4EC9B0',   // VS Code type-annotation teal
-    'Functions': '#DCDCAA',   // VS Code function-name yellow
+    'Functions': '#B8A848',   // Deeper olive-yellow (readable white text)
 };
 
 /** Fallback colour for catalog-defined categories with no explicit colour. */
@@ -93,24 +93,30 @@ function styleKey(label: string): string {
 
 // ── Colour resolution ───────────────────────────────────────────────────────
 
-let customColors: Record<string, string> = {};
+let catalogColors: Record<string, string> = {};
 /** Category labels discovered from catalog YAML — need theme styles too. */
-const catalogLabels = new Set<string>();
+let catalogLabels = new Set<string>();
 
 /**
  * Resolve the colour for a category label.
- * Priority: user override → built-in default → catalog default.
+ * Priority: catalog YAML → built-in default → fallback.
  */
 export function resolveColor(categoryLabel: string): string {
-    if (customColors[categoryLabel]) return customColors[categoryLabel];
-
     const top = categoryLabel.split('::')[0];
-    if (top !== categoryLabel && customColors[top]) return customColors[top];
+
+    if (catalogColors[categoryLabel]) return catalogColors[categoryLabel];
+    if (top !== categoryLabel && catalogColors[top]) return catalogColors[top];
 
     if (BUILTIN_DEFAULTS[categoryLabel]) return BUILTIN_DEFAULTS[categoryLabel];
     if (top !== categoryLabel && BUILTIN_DEFAULTS[top]) return BUILTIN_DEFAULTS[top];
 
     return CATALOG_DEFAULT_COLOUR;
+}
+
+/** Register a catalog-declared category colour (from YAML `colour` field). */
+export function setCatalogColor(categoryLabel: string, colour: string): void {
+    const top = categoryLabel.split('::')[0];
+    catalogColors[top] = colour;
 }
 
 /** Return the Blockly block style name for a category label. */
@@ -133,6 +139,12 @@ export function ensureCategoryRegistered(label: string): void {
     catalogLabels.add(label);
 }
 
+/** Clear catalog-sourced labels and colours. Called at the start of each catalog reload. */
+export function resetCatalogState(): void {
+    catalogLabels = new Set<string>();
+    catalogColors = {};
+}
+
 // ── Theme builder ───────────────────────────────────────────────────────────
 
 /**
@@ -149,7 +161,7 @@ function buildStyles(): {
     // Collect all known category labels (built-in + user overrides + catalog)
     const allLabels = new Set<string>([
         ...Object.keys(BUILTIN_DEFAULTS),
-        ...Object.keys(customColors),
+        ...Object.keys(catalogColors),
         ...catalogLabels,
     ]);
 
@@ -173,15 +185,6 @@ export class ThemeAdapter {
     private workspace: Blockly.WorkspaceSvg | null = null;
 
     constructor() {}
-
-    /**
-     * Update category colours from user settings and re-apply the theme.
-     * Called when the extension host sends `set_category_colors`.
-     */
-    public setCustomColors(colors: Record<string, string>): void {
-        customColors = colors;
-        this.applyTheme();
-    }
 
     public init(workspace: Blockly.WorkspaceSvg) {
         this.workspace = workspace;

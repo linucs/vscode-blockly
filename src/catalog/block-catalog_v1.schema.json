@@ -16,6 +16,11 @@
       "type": "string",
       "description": "Toolbox category for this entry's blocks. Use '::' to create subcategories (e.g. 'I/O::Digital', 'Communication::Serial'). Single-level values (e.g. 'Modulino', 'Detection') produce flat categories."
     },
+    "colour": {
+      "type": "string",
+      "pattern": "^#[0-9a-fA-F]{6}$",
+      "description": "Hex colour for this entry's toolbox category. Optional — if omitted, the category uses its default colour from the theme. When multiple entries define a colour for the same category, the last one loaded wins."
+    },
     "docs": {
       "type": "object",
       "description": "External documentation links.",

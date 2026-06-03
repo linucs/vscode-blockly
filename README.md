@@ -79,7 +79,6 @@ You can leave everything at its defaults. If you want to tweak things, open VS C
 | `blocks-editor.generateOnChange` | `true` | Update the code automatically as you build. Turn off if you'd rather press a **Generate C++** button yourself. |
 | `blocks-editor.showMinimap` | `false` | Show a small overview map of your blocks in the corner — handy for large programs. |
 | `blocks-editor.catalogPaths` | `[]` | Add extra blocks from a folder or a web link (see below). |
-| `blocks-editor.categoryColors` | `{}` | Recolor the block categories to your taste, e.g. `{ "Sensors": "#26A69A" }`. |
 
 ## Requirements
 

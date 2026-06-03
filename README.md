@@ -222,6 +222,10 @@ The skill has the same workflow (research → design → generate) and the same 
 
 Commit both the `.blk` files and the generated `.cpp` files. The `.blk` is the authoritative source; the `.cpp` lets collaborators (and CI) compile without the extension installed. Add the `.blocks/` folder (remote-catalog cache) to `.gitignore`.
 
+## Community
+
+Questions, ideas, or just want to show what you built? Join the [GitHub Discussions](https://github.com/linucs/vscode-blockly/discussions).
+
 ## Contributing
 
 Contributions are welcome. See the [repository](https://github.com/linucs/vscode-blockly) for build instructions and development setup.

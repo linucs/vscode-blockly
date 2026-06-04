@@ -4,6 +4,18 @@ All notable changes to the "Blocks Editor" extension will be documented in this 
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.1.0] - 2026-06-04
+
+### Added
+
+- **Community catalog browser** — a new activity-bar view that lists block catalogs from a community registry. Browse available catalogs, search them, refresh the list, and download a catalog into your workspace with one click.
+- **Configurable registry source** — point the browser at any registry index via the `blocks-editor.catalogRegistryUrl` setting (defaults to the official community catalog).
+
+### Changed
+
+- Refinements across the built-in Arduino catalogs (Digital/Analog I/O, Serial, SPI, Wire, Math, Strings, Time, Interrupts, and others).
+- Added a **Community** section to the README pointing to GitHub Discussions.
+
 ## [0.0.1] - 2026-06-02
 
 First public preview.
@@ -21,4 +33,5 @@ First public preview.
 - **Workspace conveniences** — optional minimap, toolbox search, and customizable category colors.
 - **Block Author chat participant** (`@blocks`) — assists in creating new block catalogs for hardware libraries.
 
+[0.1.0]: https://github.com/linucs/vscode-blockly/releases/tag/v0.1.0
 [0.0.1]: https://github.com/linucs/vscode-blockly/releases/tag/v0.0.1

@@ -1,13 +1,14 @@
 export interface CatalogEntry {
     id: string;
     category: string;
+    description?: string | Record<string, string>;
     colour?: string;
     docs?: Record<string, string>;
     implementations: Implementation[];
 }
 
 export interface Implementation {
-    runtime: 'arduino:cpp';
+    runtime: string;
     dependencies?: Dependency[];
     targets?: string[];
     codegen?: CodegenSections;

@@ -21,3 +21,4 @@ webview/**
 CLAUDE.md
 PUBLISHING.md
 yarn.lock
+*.code-workspace

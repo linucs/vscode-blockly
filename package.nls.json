@@ -24,5 +24,11 @@
   "tool.validateCatalog.description": "Validate multi-document YAML against the block catalog schema and run structural checks (duplicate types, precedence, placeholders). Always validate before saving.",
   "tool.saveCatalog.displayName": "Save Catalog",
   "tool.saveCatalog.userDescription": "Save a block catalog YAML file to the workspace .blocks/ directory",
-  "tool.saveCatalog.description": "Save a YAML catalog file to the workspace .blocks/ directory. The extension auto-reloads catalogs when new files appear."
+  "tool.saveCatalog.description": "Save a YAML catalog file to the workspace .blocks/ directory. The extension auto-reloads catalogs when new files appear.",
+  "viewContainer.catalogBrowser.title": "Block Catalogs",
+  "view.catalogRegistry.name": "Community Catalog",
+  "command.refreshRegistry": "Blocks Editor: Refresh Community Catalog",
+  "command.downloadCatalog": "Download Catalog",
+  "command.searchRegistry": "Blocks Editor: Search Community Catalog",
+  "config.catalogRegistryUrl": "URL of the community block catalog index (index.json). Change to use a private or self-hosted registry."
 }

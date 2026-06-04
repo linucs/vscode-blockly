@@ -1,5 +1,4 @@
-# Built-in catalog — SPI (arduino:cpp). Requires <SPI.h> (bundled with the core).
-# Consolidated: transfer/transfer16 -> one dropdown. Legacy set* kept separate.
+# yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
 id: arduino_spi
 category: "Communication::SPI"
 implementations:

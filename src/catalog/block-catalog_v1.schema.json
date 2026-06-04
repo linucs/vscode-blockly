@@ -16,6 +16,16 @@
       "type": "string",
       "description": "Toolbox category for this entry's blocks. Use '::' to create subcategories (e.g. 'I/O::Digital', 'Communication::Serial'). Single-level values (e.g. 'Modulino', 'Detection') produce flat categories."
     },
+    "description": {
+      "oneOf": [
+        { "type": "string" },
+        {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        }
+      ],
+      "description": "Human-readable description of this catalog entry. Used in the community catalog browser. Accepts a plain string or a locale map {en: '...', it: '...'}."
+    },
     "colour": {
       "type": "string",
       "pattern": "^#[0-9a-fA-F]{6}$",
@@ -40,8 +50,8 @@
       "properties": {
         "runtime": {
           "type": "string",
-          "enum": ["arduino:cpp"],
-          "description": "Target runtime. 'arduino:cpp' → Arduino C++ sketch."
+          "pattern": "^[a-z][a-z0-9]*:[a-z][a-z0-9]*$",
+          "description": "Target runtime as <framework>:<language> (e.g. 'arduino:cpp'). Implementations with unsupported runtimes are silently ignored."
         },
         "dependencies": {
           "type": "array",

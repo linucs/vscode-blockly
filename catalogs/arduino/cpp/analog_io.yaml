@@ -1,9 +1,4 @@
-# Built-in catalog — Analog I/O (arduino:cpp).
-# Ported from arduino-app-lab (tested), adapted to this repo:
-#  - normalized helpUrl base to docs.arduino.cc.
-#  - WYSIWYG placement: config blocks (analogReference, analog*Resolution) emit
-#    where they sit (codegen.body). To run them once at startup the user places
-#    them inside a `code_setup` container — no automatic routing to setup().
+# yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
 id: arduino_analog_io
 category: "Input / Output::Analog"
 colour: "#FFB300"

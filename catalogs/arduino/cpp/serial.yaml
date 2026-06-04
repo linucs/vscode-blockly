@@ -1,14 +1,4 @@
-# Built-in catalog — Serial (arduino:cpp).
-# Ported from arduino-app-lab (cpp_serial.yaml, tested), adapted to this repo:
-#  - category renamed "Messaging::Serial" -> "Communication::Serial" (groups
-#    Serial/SPI/I2C under Communication, matching the Arduino reference).
-#  - WYSIWYG: Serial.begin and Serial.setTimeout moved from codegen.setup to
-#    codegen.body — the user places them inside a `code_setup` container; no
-#    automatic routing to setup().
-#  - normalized helpUrl/docs base to docs.arduino.cc.
-#  - NOTE (App Lab looseness, kept as-is): Serial.readString returns String and
-#    Serial.find returns bool, but both keep output: null (untyped) like the rest
-#    of this repo's value blocks — lenient, connects anywhere.
+# yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
 id: arduino_serial
 category: "Communication::Serial"
 colour: "#5C6BC0"

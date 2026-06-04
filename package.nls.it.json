@@ -24,5 +24,11 @@
   "tool.validateCatalog.description": "Valida YAML multi-documento rispetto allo schema del catalogo blocchi ed esegue controlli strutturali (tipi duplicati, precedenza, placeholder). Valida sempre prima di salvare.",
   "tool.saveCatalog.displayName": "Salva Catalogo",
   "tool.saveCatalog.userDescription": "Salva un file YAML di catalogo blocchi nella cartella .blocks/ del workspace",
-  "tool.saveCatalog.description": "Salva un file YAML di catalogo nella cartella .blocks/ del workspace. L'estensione ricarica automaticamente i cataloghi quando compaiono nuovi file."
+  "tool.saveCatalog.description": "Salva un file YAML di catalogo nella cartella .blocks/ del workspace. L'estensione ricarica automaticamente i cataloghi quando compaiono nuovi file.",
+  "viewContainer.catalogBrowser.title": "Cataloghi Blocchi",
+  "view.catalogRegistry.name": "Catalogo Community",
+  "command.refreshRegistry": "Editor a Blocchi: Aggiorna catalogo community",
+  "command.downloadCatalog": "Scarica catalogo",
+  "command.searchRegistry": "Editor a Blocchi: Cerca nel catalogo community",
+  "config.catalogRegistryUrl": "URL dell'indice del catalogo blocchi community (index.json). Modificalo per usare un registro privato o self-hosted."
 }

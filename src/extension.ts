@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { BlocksEditorProvider } from './BlocksEditorProvider';
 import { CatalogManager } from './catalog/CatalogManager';
+import { CatalogRegistryProvider } from './catalog/CatalogRegistryProvider';
 import { registerBlockAuthorParticipant } from './chat/blockAuthorParticipant';
 import { enableClaudeCodeIntegration } from './mcp/enableIntegration';
 
@@ -12,6 +13,18 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(BlocksEditorProvider.register(context, catalogManager));
 	context.subscriptions.push(...registerBlockAuthorParticipant(context, catalogManager));
+
+    const registryProvider = new CatalogRegistryProvider(context);
+    const registryTreeView = vscode.window.createTreeView('blocks-editor.catalogRegistry', {
+        treeDataProvider: registryProvider,
+        showCollapseAll: true,
+    });
+    context.subscriptions.push(registryTreeView);
+    context.subscriptions.push(
+        vscode.commands.registerCommand('blocks-editor.refreshRegistry', () => registryProvider.refresh()),
+        vscode.commands.registerCommand('blocks-editor.searchRegistry', () => registryProvider.search()),
+        vscode.commands.registerCommand('blocks-editor.downloadCatalog', (item) => registryProvider.download(item)),
+    );
 
     context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(async e => {
         if (e.affectsConfiguration('blocks-editor.catalogPaths')) {

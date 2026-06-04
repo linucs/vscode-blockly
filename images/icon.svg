@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+  <!-- Top block -->
+  <rect x="2" y="3" width="20" height="4" rx="1" fill="#C5C5C5"/>
+  <!-- Connector tab top→middle -->
+  <rect x="10" y="7" width="4" height="2" rx="1" fill="#C5C5C5"/>
+  <!-- Middle block -->
+  <rect x="2" y="9" width="20" height="4" rx="1" fill="#C5C5C5"/>
+  <!-- Connector tab middle→bottom -->
+  <rect x="10" y="13" width="4" height="2" rx="1" fill="#C5C5C5"/>
+  <!-- Bottom block -->
+  <rect x="2" y="15" width="20" height="4" rx="1" fill="#C5C5C5"/>
+</svg>

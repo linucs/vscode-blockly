@@ -1,6 +1,4 @@
-# Built-in catalog — Wire / I2C (arduino:cpp). Requires <Wire.h> (bundled).
-# Consolidated: onReceive/onRequest -> one dropdown. begin takes an optional
-# address (empty = join as controller; address = join as peripheral).
+# yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
 id: arduino_wire
 category: "Communication::I2C"
 implementations:

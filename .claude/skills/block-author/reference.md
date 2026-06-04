@@ -421,7 +421,7 @@ Every value block MUST specify `precedence`.
 Every generated file MUST start with the schema reference for linter validation:
 
 ```yaml
-# yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/master/src/catalog/block-catalog_v1.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
 ```
 
 For multi-document files, add the schema reference before the FIRST document only.
@@ -431,7 +431,7 @@ For multi-document files, add the schema reference before the FIRST document onl
 Use `---` to separate subcategories. Each document is an independent catalog entry.
 
 ```yaml
-# yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/master/src/catalog/block-catalog_v1.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
 
 # === Section A ===
 id: myboard-section-a
@@ -521,7 +521,7 @@ board-specific file. When several libraries are mentioned together, classify eac
 ## Worked Example (random.yaml)
 
 ```yaml
-# yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/master/src/catalog/block-catalog_v1.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
 id: arduino_math_random
 category: "Math::Random"
 colour: "#B5CEA8"
@@ -635,5 +635,5 @@ Common prerequisites to check and document:
 - PlatformIO Registry: https://registry.platformio.org/
 - Arduino Library Reference: https://www.arduino.cc/reference/en/libraries/
 - Arduino Library Index (JSON): https://downloads.arduino.cc/libraries/library_index.json
-- Block Catalog Schema: https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/master/src/catalog/block-catalog_v1.schema.json
+- Block Catalog Schema: https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
 - Blockly Block Anatomy: https://developers.google.com/blockly/guides/create-custom-blocks/define/block-anatomy

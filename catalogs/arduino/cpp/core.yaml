@@ -1,12 +1,4 @@
-# Built-in catalog for the arduino:cpp runtime.
-#
-# Structural blocks owned by the Arduino sketch assembler. This file seeds the
-# L2 catalog; domain blocks (Digital I/O, Time, Serial, …) are added alongside.
-#
-# `code_setup` uses the imperative tier (`generator:`) because it is a "phantom
-# container" — it re-routes its nested blocks into setup() rather than emitting
-# wrapping syntax, which the declarative template engine cannot express. The
-# generator is registered first-party in webview/codegen/firstPartyGenerators.ts.
+# yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
 id: arduino_code_setup
 category: Control
 colour: "#78909C"
@@ -26,10 +18,7 @@ implementations:
             it: "I blocchi all'interno vengono eseguiti una sola volta all'avvio, in setup(). Usalo per le chiamate begin()/init e pinMode()."
         generator: code_setup
 ---
-# Arduino named constants as a value literal (HIGH/LOW, pin modes, LED_BUILTIN).
-# Essentially a curated `symbol_literal` (the generic L1 block) restricted to the
-# constants from the Arduino Language Reference > Variables > Constants. Slightly
-# redundant with symbol_literal, kept for discoverability/completeness.
+# yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
 id: arduino_constants
 category: Control
 implementations:
@@ -60,9 +49,7 @@ implementations:
             - "{{CONST}}"
           precedence: ATOMIC
 ---
-# Built-in LED on/off — the simplest Arduino demo. Self-contained: sets
-# LED_BUILTIN to OUTPUT in setup (internal init of the block, not a separate
-# config block), and writes HIGH/LOW where placed.
+# yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
 id: arduino_builtin_led
 category: Control
 implementations:

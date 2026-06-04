@@ -56,7 +56,7 @@ own bundled schema and code, so they stay in sync with the installed version:
 **Fallback when the `blocks-editor` server is NOT connected** (e.g. Claude.ai chat, or a project
 where integration was never enabled):
 - **Schema** — fetch it live and validate against it:
-  `https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/master/src/catalog/block-catalog_v1.schema.json`
+  `https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json`
 - **Output** — present files as fenced code blocks with suggested filenames.
 
 The user can enable the server from VS Code via the command **"Blocks Editor: Enable Claude Code

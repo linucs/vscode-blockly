@@ -1,10 +1,4 @@
-# Built-in catalog — Digital I/O (arduino:cpp).
-# Ported from arduino-app-lab (tested), adapted to this repo:
-#  - added inputsInline for visual consistency with Analog I/O.
-#  - WYSIWYG placement: every block emits where it sits (codegen.body). To run a
-#    config block once at startup, the user places it inside a `code_setup`
-#    container — NO automatic routing to setup() (App Lab forced pinMode into
-#    setup via codegen.setup; we don't, so setup vs loop stays explicit).
+# yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
 id: arduino_digital_io
 category: "Input / Output::Digital"
 colour: "#FFB300"

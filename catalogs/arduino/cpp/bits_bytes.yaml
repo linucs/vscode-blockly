@@ -1,5 +1,4 @@
-# Built-in catalog — Bits and Bytes (arduino:cpp).
-# Consolidated: bitSet/bitClear -> one dropdown block; highByte/lowByte -> one.
+# yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
 id: arduino_bits_bytes
 category: "Math::Bits and Bytes"
 implementations:

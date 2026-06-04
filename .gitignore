@@ -9,3 +9,4 @@ CLAUDE.md
 .claude/skills/*
 !.claude/skills/block-author/
 test/
+*.code-workspace

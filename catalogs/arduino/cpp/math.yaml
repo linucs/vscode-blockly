@@ -1,6 +1,4 @@
-# Built-in catalog — Math (arduino:cpp).
-# Only the Arduino math functions NOT already covered by L1 (abs, pow, sq, sqrt,
-# sin, cos, tan are L1). min/max consolidated into one dropdown block.
+# yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
 id: arduino_math
 category: "Math::Arduino"
 implementations:

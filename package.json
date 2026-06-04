@@ -44,6 +44,44 @@
   "main": "./dist/extension.js",
   "l10n": "./l10n",
   "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "blocks-catalog-browser",
+          "title": "%viewContainer.catalogBrowser.title%",
+          "icon": "images/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "blocks-catalog-browser": [
+        {
+          "id": "blocks-editor.catalogRegistry",
+          "name": "%view.catalogRegistry.name%"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "blocks-editor.searchRegistry",
+          "when": "view == blocks-editor.catalogRegistry",
+          "group": "navigation@1"
+        },
+        {
+          "command": "blocks-editor.refreshRegistry",
+          "when": "view == blocks-editor.catalogRegistry",
+          "group": "navigation@2"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "blocks-editor.downloadCatalog",
+          "when": "view == blocks-editor.catalogRegistry && viewItem == catalogEntry",
+          "group": "inline"
+        }
+      ]
+    },
     "chatParticipants": [
       {
         "id": "blocks-editor.blockAuthor",
@@ -172,6 +210,21 @@
       {
         "command": "blocks-editor.enableClaudeCodeIntegration",
         "title": "%command.enableClaudeCode%"
+      },
+      {
+        "command": "blocks-editor.refreshRegistry",
+        "title": "%command.refreshRegistry%",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "blocks-editor.downloadCatalog",
+        "title": "%command.downloadCatalog%",
+        "icon": "$(cloud-download)"
+      },
+      {
+        "command": "blocks-editor.searchRegistry",
+        "title": "%command.searchRegistry%",
+        "icon": "$(search)"
       }
     ],
     "customEditors": [
@@ -221,6 +274,11 @@
           },
           "default": [],
           "description": "%config.catalogPaths%"
+        },
+        "blocks-editor.catalogRegistryUrl": {
+          "type": "string",
+          "default": "https://raw.githubusercontent.com/linucs/blocks-community-catalog/main/index.json",
+          "description": "%config.catalogRegistryUrl%"
         }
       }
     }

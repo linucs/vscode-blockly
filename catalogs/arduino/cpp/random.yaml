@@ -1,6 +1,4 @@
-# Built-in catalog — Random Numbers (arduino:cpp).
-# random(max) and random(min,max) are overloads of one function → one block
-# with both bounds (set min to 0 for the single-arg behavior).
+# yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
 id: arduino_math_random
 category: "Math::Random"
 implementations:

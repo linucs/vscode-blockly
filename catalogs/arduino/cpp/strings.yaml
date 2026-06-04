@@ -1,10 +1,4 @@
-# Built-in catalog — Arduino String class (arduino:cpp).
-# Per decision: L1 Text blocks stay; L2 adds ONLY String methods NOT covered by
-# L1 (length/charAt/indexOf/substring/changeCase/trim/concat are L1 → omitted).
-# Consolidated: equals/equalsIgnoreCase/startsWith/endsWith -> 1 dropdown;
-# toInt/toFloat/toDouble -> 1 dropdown.
-# Omitted by design (buffer/pointer args, not block-friendly): toCharArray, getBytes.
-# All blocks operate on a target String (the STR input).
+# yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
 id: arduino_string
 category: "Text::String"
 implementations:

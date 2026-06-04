@@ -1,6 +1,4 @@
-# Built-in catalog — Interrupts (arduino:cpp).
-# Covers External Interrupts + global Interrupts. interrupts()/noInterrupts()
-# consolidated into one dropdown block (both parameterless, same domain).
+# yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
 id: arduino_interrupts
 category: "Control::Interrupts"
 implementations:

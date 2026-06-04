@@ -1,6 +1,4 @@
-# Built-in catalog — Characters (arduino:cpp).
-# Consolidated: the 13 Arduino is*() character-classification functions (all
-# share signature `bool isX(int c)`) collapse into ONE block with a dropdown.
+# yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
 id: arduino_characters
 category: "Text::Characters"
 implementations:

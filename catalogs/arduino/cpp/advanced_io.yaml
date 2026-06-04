@@ -1,5 +1,4 @@
-# Built-in catalog — Advanced I/O (arduino:cpp).
-# Consolidated: pulseIn/pulseInLong share signature -> one dropdown block.
+# yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
 id: arduino_advanced_io
 category: "Input / Output::Advanced"
 colour: "#FFB300"

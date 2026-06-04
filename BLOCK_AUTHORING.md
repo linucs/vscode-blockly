@@ -25,7 +25,7 @@ For a beginner-friendly overview, see the "For developers" section in [README.md
 A catalog file is a **multi-document YAML** file. Each YAML document (separated by `---`) is one catalog **entry** — an independent group of blocks sharing a category and an implementation.
 
 ```yaml
-# yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/master/src/catalog/block-catalog_v1.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
 
 id: my-library-sensors
 category: "My Library::Sensors"
@@ -569,7 +569,7 @@ The validator warns if implementation-level `codegen.setup` contains init calls.
 A board-specific library (WiFiNINA) with `targets`, `dependencies`, shared `imports`, a helper function, and internationalized strings:
 
 ```yaml
-# yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/master/src/catalog/block-catalog_v1.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
 
 id: wifinina-connectivity
 category: "WiFi"
@@ -696,7 +696,7 @@ Key observations:
 
 ## Reference links
 
-- [Block Catalog JSON Schema](https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/master/src/catalog/block-catalog_v1.schema.json)
+- [Block Catalog JSON Schema](https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json)
 - [Blockly JSON Block Definition](https://developers.google.com/blockly/guides/create-custom-blocks/define/block-anatomy)
 - [PlatformIO Registry](https://registry.platformio.org/)
 - [Arduino Library Index](https://downloads.arduino.cc/libraries/library_index.json)

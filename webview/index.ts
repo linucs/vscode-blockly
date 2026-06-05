@@ -282,11 +282,12 @@ document.addEventListener("DOMContentLoaded", () => {
         for (const env of envs) {
             const opt = document.createElement('vscode-option');
             opt.setAttribute('value', env.name);
+            const label = env.name || l10n.t('Default');
             const detail = env.board ? ` (${env.board})` : env.platform ? ` (${env.platform})` : '';
-            opt.textContent = env.name + detail;
+            opt.textContent = label + detail;
             envSelect.appendChild(opt);
         }
-        if (selected) (envSelect as any).value = selected;
+        if (selected !== undefined) (envSelect as any).value = selected;
         suppressEnvEvent = false;
     }
 

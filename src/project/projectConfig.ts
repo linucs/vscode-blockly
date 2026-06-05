@@ -1,3 +1,6 @@
+/** Sentinel name for a synthesized default env (no named profile/environment). */
+export const DEFAULT_ENV_NAME = '';
+
 /** Resolved configuration for a single build environment / profile. */
 export interface ProjectEnv {
     /** Environment or profile name. */
@@ -33,7 +36,7 @@ export interface BoardContext {
 
 /** Pick the active env: a requested one if valid, else defaultEnvs[0], else the first env. */
 export function resolveActiveEnv(project: ProjectConfig, requested?: string): ProjectEnv | undefined {
-    if (requested) {
+    if (requested !== undefined) {
         const found = project.envs.find(e => e.name === requested);
         if (found) return found;
     }

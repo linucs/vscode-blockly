@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as fs from 'fs/promises';
 import * as yaml from 'js-yaml';
-import { ProjectConfig, ProjectEnv } from '../projectConfig';
+import { ProjectConfig, ProjectEnv, DEFAULT_ENV_NAME } from '../projectConfig';
 
 interface SketchProfile {
     fqbn?: string;
@@ -35,6 +35,13 @@ export function parseSketchYaml(content: string): { envs: ProjectEnv[]; defaultE
             if (!profile || typeof profile !== 'object') continue;
             envs.push(profileToEnv(name, profile));
         }
+    }
+
+    // Synthesize a default env from default_fqbn when no profiles exist.
+    // This covers the common case of `arduino-cli board attach` which only
+    // writes default_fqbn/default_port/default_protocol — no profiles.
+    if (envs.length === 0 && doc.default_fqbn && typeof doc.default_fqbn === 'string') {
+        envs.push(profileToEnv(DEFAULT_ENV_NAME, { fqbn: doc.default_fqbn.trim() }));
     }
 
     const defaultEnvs: string[] = [];

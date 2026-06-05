@@ -1,0 +1,22 @@
+<svg width="300" height="200" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="300" height="200" fill="#1e1e1e" rx="8"/>
+  <!-- YAML file -->
+  <rect x="30" y="40" width="110" height="120" rx="4" stroke="#555" fill="none" stroke-width="1"/>
+  <text x="40" y="60" font-size="9" font-family="monospace" fill="#8b8b8b">id:</text>
+  <text x="56" y="60" font-size="9" font-family="monospace" fill="#ce9178"> my-sensor</text>
+  <text x="40" y="75" font-size="9" font-family="monospace" fill="#8b8b8b">category:</text>
+  <text x="40" y="90" font-size="9" font-family="monospace" fill="#ce9178">  "Sensors"</text>
+  <text x="40" y="105" font-size="9" font-family="monospace" fill="#8b8b8b">docs:</text>
+  <text x="40" y="120" font-size="9" font-family="monospace" fill="#8b8b8b">blocks:</text>
+  <text x="50" y="135" font-size="9" font-family="monospace" fill="#8b8b8b">- blockly:</text>
+  <text x="60" y="150" font-size="9" font-family="monospace" fill="#ce9178">    type: ...</text>
+  <!-- Plus sign -->
+  <circle cx="175" cy="100" r="18" stroke="#555" fill="none" stroke-width="2"/>
+  <text x="175" y="108" text-anchor="middle" font-size="24" font-weight="300" fill="#3794ff">+</text>
+  <!-- Chat bubble -->
+  <rect x="210" y="55" width="70" height="90" rx="8" stroke="#555" fill="none" stroke-width="1"/>
+  <text x="245" y="80" text-anchor="middle" font-size="10" font-family="sans-serif" fill="#3794ff">@blocks</text>
+  <text x="220" y="100" font-size="8" font-family="sans-serif" fill="#8b8b8b">create</text>
+  <text x="220" y="112" font-size="8" font-family="sans-serif" fill="#8b8b8b">blocks for</text>
+  <text x="220" y="124" font-size="8" font-family="sans-serif" fill="#ce9178">BME280</text>
+</svg>

@@ -44,6 +44,43 @@
   "main": "./dist/extension.js",
   "l10n": "./l10n",
   "contributes": {
+    "walkthroughs": [
+      {
+        "id": "blocks-editor.welcome",
+        "title": "%walkthrough.title%",
+        "description": "%walkthrough.description%",
+        "steps": [
+          {
+            "id": "openWithBlocks",
+            "title": "%walkthrough.openWithBlocks.title%",
+            "description": "%walkthrough.openWithBlocks.description%",
+            "media": { "svg": "images/walkthrough/open-with-blocks.svg" },
+            "completionEvents": ["onView:blocks-editor.editor"]
+          },
+          {
+            "id": "authorBlocks",
+            "title": "%walkthrough.authorBlocks.title%",
+            "description": "%walkthrough.authorBlocks.description%",
+            "media": { "svg": "images/walkthrough/author-blocks.svg" },
+            "completionEvents": ["onCommand:blocks-editor.enableClaudeCodeIntegration"]
+          },
+          {
+            "id": "communityCatalog",
+            "title": "%walkthrough.communityCatalog.title%",
+            "description": "%walkthrough.communityCatalog.description%",
+            "media": { "svg": "images/walkthrough/community-catalog.svg" },
+            "completionEvents": ["onView:blocks-editor.catalogRegistry"]
+          },
+          {
+            "id": "contribute",
+            "title": "%walkthrough.contribute.title%",
+            "description": "%walkthrough.contribute.description%",
+            "media": { "svg": "images/walkthrough/contribute.svg" },
+            "completionEvents": ["onLink:https://github.com/linucs/vscode-blockly"]
+          }
+        ]
+      }
+    ],
     "viewsContainers": {
       "activitybar": [
         {

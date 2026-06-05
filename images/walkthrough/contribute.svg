@@ -1,0 +1,16 @@
+<svg width="300" height="200" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="300" height="200" fill="#1e1e1e" rx="8"/>
+  <!-- Git branch -->
+  <circle cx="100" cy="60" r="8" stroke="#555" fill="none" stroke-width="1.5"/>
+  <circle cx="100" cy="130" r="8" stroke="#555" fill="none" stroke-width="1.5"/>
+  <circle cx="150" cy="95" r="8" stroke="#555" fill="none" stroke-width="1.5"/>
+  <line x1="100" y1="68" x2="100" y2="122" stroke="#555" stroke-width="1.5"/>
+  <path d="M108 65 Q130 70 145 88" stroke="#3794ff" stroke-width="1.5" fill="none"/>
+  <path d="M145 102 Q130 120 108 125" stroke="#3794ff" stroke-width="1.5" fill="none"/>
+  <!-- Labels -->
+  <text x="175" y="60" font-size="10" font-family="sans-serif" fill="#d4d4d4">Report issues</text>
+  <text x="175" y="80" font-size="10" font-family="sans-serif" fill="#d4d4d4">Submit blocks</text>
+  <text x="175" y="100" font-size="10" font-family="sans-serif" fill="#d4d4d4">Improve code</text>
+  <text x="175" y="130" font-size="10" font-family="sans-serif" fill="#3794ff">github.com/</text>
+  <text x="175" y="145" font-size="10" font-family="sans-serif" fill="#3794ff">linucs/vscode-blockly</text>
+</svg>

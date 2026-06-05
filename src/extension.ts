@@ -48,6 +48,17 @@ export async function activate(context: vscode.ExtensionContext) {
     blocksWatcher.onDidChange(onBlocksChange);
     blocksWatcher.onDidDelete(onBlocksChange);
     context.subscriptions.push(blocksWatcher);
+
+    const currentVersion: string = context.extension.packageJSON.version;
+    const lastVersion = context.globalState.get<string>('lastVersion');
+    if (lastVersion !== currentVersion) {
+        context.globalState.update('lastVersion', currentVersion);
+        vscode.commands.executeCommand(
+            'workbench.action.openWalkthrough',
+            'linucs.blocks-editor#blocks-editor.welcome',
+            false
+        );
+    }
 }
 
 export function deactivate() {}

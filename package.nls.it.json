@@ -30,5 +30,15 @@
   "command.refreshRegistry": "Editor a Blocchi: Aggiorna catalogo community",
   "command.downloadCatalog": "Scarica catalogo",
   "command.searchRegistry": "Editor a Blocchi: Cerca nel catalogo community",
-  "config.catalogRegistryUrl": "URL dell'indice del catalogo blocchi community (index.json). Modificalo per usare un registro privato o self-hosted."
+  "config.catalogRegistryUrl": "URL dell'indice del catalogo blocchi community (index.json). Modificalo per usare un registro privato o self-hosted.",
+  "walkthrough.title": "Inizia con l'Editor a Blocchi",
+  "walkthrough.description": "Impara a costruire programmi Arduino visualmente con blocchi drag-and-drop.",
+  "walkthrough.openWithBlocks.title": "Apri un file con l'Editor a Blocchi",
+  "walkthrough.openWithBlocks.description": "Fai clic destro su qualsiasi file `.cpp` o `.ino` → **Apri con…** → **Editor a Blocchi**.\n\nTrascina i blocchi per costruire il tuo programma — il codice C++ viene generato automaticamente.",
+  "walkthrough.authorBlocks.title": "Crea blocchi personalizzati",
+  "walkthrough.authorBlocks.description": "Crea cataloghi di blocchi per nuove librerie hardware. Usa il partecipante chat **@blocks** o scrivi YAML a mano.\n\n[Abilita integrazione Claude Code](command:blocks-editor.enableClaudeCodeIntegration)",
+  "walkthrough.communityCatalog.title": "Sfoglia i cataloghi community",
+  "walkthrough.communityCatalog.description": "Scopri e scarica cataloghi di blocchi contribuiti dalla community.\n\n[Apri Catalogo Community](command:blocks-editor.catalogRegistry.focus)",
+  "walkthrough.contribute.title": "Aiuta gli altri a imparare — contribuisci",
+  "walkthrough.contribute.description": "Credo che Arduino e la programmazione a blocchi possano davvero aiutare i principianti a imparare concetti avanzati — inclusa l'AI on the edge. Ma sono un solo sviluppatore, e non posso creare blocchi per ogni dispositivo hardware e caso d'uso.\n\nSe anche tu credi nella condivisione e nell'aiutare gli altri a imparare, **contribuisci**: invia i tuoi cataloghi di blocchi, apri issue o manda pull request. Ogni contributo rende la programmazione visuale accessibile a più persone.\n\n[Contribuisci su GitHub](https://github.com/linucs/vscode-blockly)"
 }

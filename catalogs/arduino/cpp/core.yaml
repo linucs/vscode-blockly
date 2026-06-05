@@ -1,5 +1,7 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
 id: arduino_code_setup
+docs:
+  reference: "https://docs.arduino.cc/language-reference/"
 category: Control
 colour: "#78909C"
 implementations:

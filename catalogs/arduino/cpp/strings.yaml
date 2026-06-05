@@ -1,6 +1,8 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
 id: arduino_string
 category: "Text::String"
+docs:
+  library: "https://docs.arduino.cc/language-reference/en/variables/data-types/stringObject/"
 implementations:
   - runtime: "arduino:cpp"
     blocks:

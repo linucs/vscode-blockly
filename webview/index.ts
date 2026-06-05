@@ -24,6 +24,15 @@ Blockly.setLocale(BLOCKLY_LOCALES[locale] ?? En);
 provideVSCodeDesignSystem().register(vsCodeButton(), vsCodeDropdown(), vsCodeOption());
 
 interface EnvInfo { name: string; platform?: string; board?: string; framework?: string; }
+interface DocLink { label: string; url: string }
+interface DocGroup { title: string; links: DocLink[] }
+
+let catalogDocs: DocGroup[] = [];
+
+function titleCase(s: string): string {
+    return s.replace(/(^|[-_ ])(\w)/g, (_, sep, c) =>
+        (sep === '-' || sep === '_' ? ' ' : sep) + c.toUpperCase());
+}
 
 // Acquire VSCode API for messaging
 const vscode = acquireVsCodeApi();
@@ -127,6 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const envSelect = document.getElementById('envSelect') as HTMLElement & { value?: string };
     const envLabel = document.getElementById('envLabel');
     const generateBtn = document.getElementById('generateBtn') as (HTMLElement & { disabled?: boolean }) | null;
+    const docsBtn = document.getElementById('docsBtn');
 
     const updateButtonVisibility = () => {
         if (!generateBtn) return;
@@ -325,6 +335,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 codeFactory.loadCatalogEntries(message.entries ?? [], locale);
 
+                catalogDocs = [];
+                for (const entry of (message.entries ?? [])) {
+                    if (!entry.docs || Object.keys(entry.docs).length === 0) continue;
+                    const desc = entry.description;
+                    const title = typeof desc === 'object' && desc !== null
+                        ? ((desc as Record<string, string>)[locale] ?? (desc as Record<string, string>)['en'] ?? titleCase(entry.id))
+                        : (typeof desc === 'string' ? desc : titleCase(entry.id));
+                    catalogDocs.push({
+                        title,
+                        links: Object.entries(entry.docs as Record<string, string>).map(([key, url]) => ({
+                            label: titleCase(key), url
+                        })),
+                    });
+                }
+                if (docsBtn) docsBtn.style.display = catalogDocs.length > 0 ? '' : 'none';
+
                 // Merge catalog categories into language categories that share a
                 // name (e.g. a catalog "Code" folds into the built-in "Code"
                 // instead of rendering a duplicate). Catalog categories with no
@@ -440,5 +466,11 @@ document.addEventListener("DOMContentLoaded", () => {
         const state = Blockly.serialization.workspaces.save(workspace);
         lastSentState = JSON.stringify(state);
         vscode.postMessage({ type: 'change', state, code: generate() });
+    });
+
+    docsBtn?.addEventListener('click', () => {
+        if (catalogDocs.length > 0) {
+            vscode.postMessage({ type: 'show_docs', docs: catalogDocs });
+        }
     });
 });

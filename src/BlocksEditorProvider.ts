@@ -210,6 +210,27 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
                     }
                     return;
                 }
+                case 'show_docs': {
+                    const groups: Array<{ title: string; links: Array<{ label: string; url: string }> }> = e.docs ?? [];
+                    if (!groups.length) return;
+
+                    const items: (vscode.QuickPickItem & { url?: string })[] = [];
+                    for (const group of groups) {
+                        items.push({ label: group.title, kind: vscode.QuickPickItemKind.Separator });
+                        for (const link of group.links) {
+                            items.push({ label: `$(link-external) ${link.label}`, description: link.url, url: link.url });
+                        }
+                    }
+
+                    const picked = await vscode.window.showQuickPick(items, {
+                        placeHolder: vscode.l10n.t('Open documentation…'),
+                        matchOnDescription: true,
+                    });
+                    if (picked && 'url' in picked && typeof picked.url === 'string') {
+                        vscode.env.openExternal(vscode.Uri.parse(picked.url));
+                    }
+                    return;
+                }
                 case 'dialog_prompt': {
                     const value = await vscode.window.showInputBox({
                         prompt: e.message,
@@ -392,6 +413,7 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
                 <div id="toolbar">
                     <label id="envLabel" for="envSelect" style="display:none">${vscode.l10n.t('Environment')}</label>
                     <vscode-dropdown id="envSelect" style="display:none"></vscode-dropdown>
+                    <vscode-button id="docsBtn" appearance="icon" title="${vscode.l10n.t('Documentation')}" style="display:none"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M14.5 1h-11a1.5 1.5 0 0 0-1.5 1.5v11a1.5 1.5 0 0 0 1.5 1.5h11a.5.5 0 0 0 .5-.5V1.5a.5.5 0 0 0-.5-.5zM3.5 2H14v12H3.5a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5zM5 4h7v1H5V4zm0 2h7v1H5V6zm0 2h4v1H5V8z"/></svg></vscode-button>
                     <span class="spacer"></span>
                     <vscode-button id="generateBtn" disabled>${vscode.l10n.t('Generate C++')}</vscode-button>
                 </div>

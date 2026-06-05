@@ -1,6 +1,8 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
 id: arduino_wire
 category: "Communication::I2C"
+docs:
+  library: "https://docs.arduino.cc/language-reference/en/functions/communication/wire/"
 implementations:
   - runtime: "arduino:cpp"
     codegen:

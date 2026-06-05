@@ -4,6 +4,20 @@ All notable changes to the "Blocks Editor" extension will be documented in this 
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.1.2] - 2026-06-05
+
+### Added
+
+- **Arduino CLI default environment** — sketches that only declare `default_fqbn` (the common result of `arduino-cli board attach`, with no named profiles) now work out of the box: a default environment is synthesized from the FQBN so the board-aware toolbox loads without requiring a hand-written profile.
+
+### Changed
+
+- When dependencies are merged into a sketch that has no profiles, a profile is now created automatically from `default_fqbn` (named after the board) and set as `default_profile`.
+
+### Fixed
+
+- The environment selector now shows a localized "Default" label for the synthesized default environment instead of a blank entry.
+
 ## [0.1.1] - 2026-06-05
 
 ### Added
@@ -46,6 +60,7 @@ First public preview.
 - **Workspace conveniences** — optional minimap, toolbox search, and customizable category colors.
 - **Block Author chat participant** (`@blocks`) — assists in creating new block catalogs for hardware libraries.
 
+[0.1.2]: https://github.com/linucs/vscode-blockly/releases/tag/v0.1.2
 [0.1.1]: https://github.com/linucs/vscode-blockly/releases/tag/v0.1.1
 [0.1.0]: https://github.com/linucs/vscode-blockly/releases/tag/v0.1.0
 [0.0.1]: https://github.com/linucs/vscode-blockly/releases/tag/v0.0.1

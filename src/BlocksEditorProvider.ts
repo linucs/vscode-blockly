@@ -203,6 +203,13 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
                     }
                     return;
                 }
+                case 'open_url': {
+                    const url = e.url;
+                    if (typeof url === 'string' && /^https?:\/\//.test(url)) {
+                        vscode.env.openExternal(vscode.Uri.parse(url));
+                    }
+                    return;
+                }
                 case 'dialog_prompt': {
                     const value = await vscode.window.showInputBox({
                         prompt: e.message,

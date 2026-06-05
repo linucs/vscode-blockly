@@ -28,6 +28,18 @@ interface EnvInfo { name: string; platform?: string; board?: string; framework?:
 // Acquire VSCode API for messaging
 const vscode = acquireVsCodeApi();
 
+// ── Sandbox workaround: redirect window.open to extension host ─────────────
+// VS Code webviews block window.open (no allow-popups). Blockly's showHelp()
+// calls window.open(helpUrl), so we intercept and route via postMessage.
+const _origWindowOpen = window.open;
+window.open = function (url?: string | URL, ...rest: any[]) {
+    if (url) {
+        vscode.postMessage({ type: 'open_url', url: String(url) });
+        return null;
+    }
+    return _origWindowOpen.call(window, url, ...rest);
+} as typeof window.open;
+
 // ── Blockly dialog overrides ────────────────────────────────────────────────
 // VS Code webviews do not support window.prompt / window.confirm / window.alert.
 // Override Blockly's dialog functions to round-trip through postMessage so the

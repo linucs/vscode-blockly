@@ -53,8 +53,12 @@ export class CatalogRegistryProvider implements vscode.TreeDataProvider<CatalogR
         const desc = resolveLocaleString(entry.description);
         const item = new vscode.TreeItem(titleCase(entry.id), vscode.TreeItemCollapsibleState.None);
         item.description = desc;
+        const title = entry.version
+            ? `**${titleCase(entry.id)}** \`v${entry.version}\``
+            : `**${titleCase(entry.id)}**`;
+        const author = entry.author ? `*${entry.author}*\n\n` : '';
         item.tooltip = new vscode.MarkdownString(
-            `**${titleCase(entry.id)}**\n\n${desc}\n\n` +
+            `${title}\n\n${author}${desc}\n\n` +
             `Category: ${entry.category}  \n` +
             `Runtimes: ${entry.runtimes.join(', ')}  \n` +
             `Targets: ${entry.targets.length ? entry.targets.join(', ') : 'universal'}  \n` +

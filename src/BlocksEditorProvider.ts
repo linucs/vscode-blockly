@@ -334,7 +334,7 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
                 <title>Blocks Editor</title>
                 <style>
                     body, html { margin: 0; padding: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
-                    #toolbar { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-bottom: 1px solid var(--vscode-editorWidget-border, #454545); }
+                    #toolbar { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-bottom: 1px solid var(--vscode-editorWidget-border, #454545); position: relative; z-index: 100; }
                     #toolbar .spacer { flex: 1; }
                     #toolbar label { font-size: 12px; opacity: 0.8; }
                     #editorArea { position: relative; flex-grow: 1; width: 100%; }

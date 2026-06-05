@@ -3,6 +3,8 @@ export interface CatalogEntry {
     category: string;
     description?: string | Record<string, string>;
     colour?: string;
+    author?: string;
+    version?: string;
     docs?: Record<string, string>;
     implementations: Implementation[];
 }

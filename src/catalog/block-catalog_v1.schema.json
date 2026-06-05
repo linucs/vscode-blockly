@@ -31,6 +31,16 @@
       "pattern": "^#[0-9a-fA-F]{6}$",
       "description": "Hex colour for this entry's toolbox category. Optional — if omitted, the category uses its default colour from the theme. When multiple entries define a colour for the same category, the last one loaded wins."
     },
+    "author": {
+      "type": "string",
+      "maxLength": 50,
+      "description": "Name or handle of the catalog author (e.g. 'Arduino', 'Jane Doe'). Shown in the community catalog browser."
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version of this catalog entry (e.g. '1.0.0'). Used to detect available updates in the community catalog browser."
+    },
     "docs": {
       "type": "object",
       "description": "External documentation links.",

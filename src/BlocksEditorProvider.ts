@@ -287,6 +287,12 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
         const uri = vscode.Uri.file(project.configPath);
         let content: string;
         try {
+            // Read fresh from disk immediately before the (synchronous) merge and
+            // write below — never from a cached copy. The optional vscode-arduino-cli
+            // extension also writes this file (its daemon reformats the whole
+            // sketch.yaml on profileLibAdd/Remove); reading right before writing
+            // keeps our add-only merge starting from the current on-disk content and
+            // minimizes the lost-update window. Do not hoist this read.
             content = Buffer.from(await vscode.workspace.fs.readFile(uri)).toString('utf8');
         } catch {
             return;

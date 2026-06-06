@@ -78,6 +78,50 @@
 				"npm: watch-tests"
 			],
 			"problemMatcher": []
+		},
+		{
+			// Background watch for the sibling vscode-arduino-cli extension. Runs its
+			// esbuild + tsc watch in that folder so its dist/ rebuilds on edits. Its
+			// esbuild prints the same [watch] build started/finished markers, so the
+			// background matcher below lets a preLaunchTask know when it is ready.
+			"label": "watch: arduino-cli",
+			"type": "shell",
+			"command": "yarn --cwd /Users/linucs/Projects/vscode-arduino-cli watch",
+			"isBackground": true,
+			"problemMatcher": {
+				"owner": "custom",
+				"pattern": [
+					{
+						"regexp": "^✘ \\[ERROR\\] (.*)$",
+						"message": 1
+					},
+					{
+						"regexp": "^    (.*):(\\d+):(\\d+):$",
+						"file": 1,
+						"line": 2,
+						"column": 3
+					}
+				],
+				"background": {
+					"activeOnStart": true,
+					"beginsPattern": "^\\[watch\\] build started",
+					"endsPattern": "^\\[watch\\] build finished"
+				}
+			},
+			"presentation": {
+				"group": "watch",
+				"reveal": "never"
+			}
+		},
+		{
+			// preLaunchTask for the "Run Extension + Arduino CLI" config: build/watch
+			// both extensions. Manual fallback: run `yarn watch` in each repo.
+			"label": "watch + arduino-cli",
+			"dependsOn": [
+				"watch",
+				"watch: arduino-cli"
+			],
+			"problemMatcher": []
 		}
 	]
 }

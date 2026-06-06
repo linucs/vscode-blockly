@@ -122,8 +122,17 @@ export function mergeSketchLibraries(
     const deps = additions.libDeps ?? [];
     if (deps.length === 0) return { content, changed: false };
 
+    // No real profile exists (the active env is the in-memory env synthesized
+    // from `default_fqbn` — see parseSketchYaml). In that case the project is in
+    // arduino-cli's profile-less/global mode, where libraries are resolved by
+    // `#include` discovery against globally-installed libraries, not from
+    // sketch.yaml. Writing a synthesized profile here would manufacture an
+    // incomplete profile (no `platforms:`) and overstep arduino-cli's ownership
+    // of profile creation, so we write nothing. Profile completeness is
+    // arduino-cli's responsibility (ProfileCreate); blockly only ever appends
+    // libraries to an already-existing profile.
     if (profileName === DEFAULT_ENV_NAME) {
-        return createProfileFromDefaults(content, deps);
+        return { content, changed: false };
     }
 
     const eol = detectEol(content);
@@ -179,68 +188,4 @@ function findProfileEndForInsertion(lines: string[], profileStart: number): numb
         if (/^\s{2}\S/.test(lines[i]) && !lines[i].trim().startsWith('-')) return i;
     }
     return lines.length;
-}
-
-/**
- * Create a new profile from `default_fqbn` when no profiles exist yet.
- * Derives the profile name from the FQBN board segment (3rd part).
- * Inserts `profiles:`, the profile entry with `fqbn:` + `libraries:`,
- * and sets `default_profile:`.
- */
-function createProfileFromDefaults(
-    content: string,
-    pioDeps: string[]
-): { content: string; changed: boolean } {
-    const eol = detectEol(content);
-    const lines = content.split(/\r?\n/);
-
-    // Extract default_fqbn
-    let fqbn: string | undefined;
-    for (const line of lines) {
-        const m = /^default_fqbn:\s*(.+)$/.exec(line);
-        if (m) { fqbn = m[1].trim(); break; }
-    }
-    if (!fqbn) return { content, changed: false };
-
-    const parts = fqbn.split(':');
-    const profileName = parts.length >= 3 ? parts[2] : 'default';
-
-    const converted = pioDeps.map(pioToSketchLib);
-    const libLines = converted.map(lib => `      - ${lib}`);
-
-    const profileBlock = [
-        'profiles:',
-        `  ${profileName}:`,
-        `    fqbn: ${fqbn}`,
-        '    libraries:',
-        ...libLines,
-    ];
-
-    // Find insertion point: before trailing blank lines
-    let insertIdx = lines.length;
-    while (insertIdx > 0 && lines[insertIdx - 1].trim() === '') insertIdx--;
-
-    // Insert a blank line separator if needed
-    if (insertIdx > 0 && lines[insertIdx - 1].trim() !== '') {
-        lines.splice(insertIdx, 0, '');
-        insertIdx++;
-    }
-    lines.splice(insertIdx, 0, ...profileBlock);
-
-    // Add or update default_profile
-    let hasDefaultProfile = false;
-    for (let i = 0; i < lines.length; i++) {
-        if (/^default_profile:/.test(lines[i])) {
-            lines[i] = `default_profile: ${profileName}`;
-            hasDefaultProfile = true;
-            break;
-        }
-    }
-    if (!hasDefaultProfile) {
-        // Insert after the profile block
-        const afterBlock = insertIdx + profileBlock.length;
-        lines.splice(afterBlock, 0, `default_profile: ${profileName}`);
-    }
-
-    return { content: lines.join(eol), changed: true };
 }

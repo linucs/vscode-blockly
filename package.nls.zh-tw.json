@@ -35,6 +35,8 @@
   "walkthrough.description": "學習如何透過拖放積木以視覺化方式建構 Arduino 程式。",
   "walkthrough.openWithBlocks.title": "使用 Blocks Editor 開啟檔案",
   "walkthrough.openWithBlocks.description": "在任何 `.cpp` 或 `.ino` 檔案上按右鍵 → **開啟方式…** → **Blocks Editor**。\n\n拖放積木以建構你的程式 — C++ 程式碼會自動產生。",
+  "walkthrough.arduinoCli.title": "使用 Arduino CLI IDE 編譯並上傳",
+  "walkthrough.arduinoCli.description": "積木編輯器專注於視覺化程式設計 — 它不會編譯或燒錄你的開發板。安裝搭配的 **Arduino CLI IDE** 擴充功能，即可直接從編輯器工具列編譯、上傳和監看你的草稿碼，無需離開 VS Code。\n\n[安裝 Arduino CLI IDE](command:extension.open?%22linucs.vscode-arduino-cli-ide%22)",
   "walkthrough.authorBlocks.title": "撰寫自訂積木",
   "walkthrough.authorBlocks.description": "為新的硬體程式庫建立積木目錄。使用 **@blocks** 聊天參與者，或手動撰寫 YAML。\n\n[啟用 Claude Code 整合](command:blocks-editor.enableClaudeCodeIntegration)",
   "walkthrough.communityCatalog.title": "瀏覽社群目錄",

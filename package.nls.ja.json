@@ -35,6 +35,8 @@
   "walkthrough.description": "ドラッグ＆ドロップのブロックで Arduino プログラムを視覚的に構築する方法を学びます。",
   "walkthrough.openWithBlocks.title": "Blocks Editor でファイルを開く",
   "walkthrough.openWithBlocks.description": "任意の `.cpp` または `.ino` ファイルを右クリック → **Open With…** → **Blocks Editor**。\n\nブロックをドラッグしてプログラムを構築します — C++ コードは自動的に生成されます。",
+  "walkthrough.arduinoCli.title": "Arduino CLI IDE でコンパイル・アップロード",
+  "walkthrough.arduinoCli.description": "ブロックエディターはビジュアルプログラミングに特化しており、ボードのコンパイルや書き込みは行いません。コンパニオン拡張機能 **Arduino CLI IDE** をインストールすると、VS Code を離れることなく、エディターのツールバーから直接スケッチのコンパイル・アップロード・モニターができます。\n\n[Arduino CLI IDE をインストール](command:extension.open?%22linucs.vscode-arduino-cli-ide%22)",
   "walkthrough.authorBlocks.title": "カスタムブロックを作成する",
   "walkthrough.authorBlocks.description": "新しいハードウェアライブラリ用のブロックカタログを作成します。**@blocks** チャット参加者を使うか、YAML を手書きします。\n\n[Claude Code 連携を有効化](command:blocks-editor.enableClaudeCodeIntegration)",
   "walkthrough.communityCatalog.title": "コミュニティカタログを閲覧する",

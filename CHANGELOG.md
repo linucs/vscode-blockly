@@ -4,6 +4,17 @@ All notable changes to the "Blocks Editor" extension will be documented in this 
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.2.0] - 2026-06-07
+
+### Added
+
+- **Multi-language support** — the extension is now fully localized in 14 languages besides English: Czech, German, Spanish, French, Hungarian, Italian, Japanese, Korean, Polish, Brazilian Portuguese, Russian, Turkish, Simplified Chinese, and Traditional Chinese. Manifest, extension UI, webview, Blockly's built-in UI, and the custom blocks all follow VS Code's display language.
+- **"Compile & upload" walkthrough step** — the welcome walkthrough now includes a step explaining that Blocks Editor focuses on visual programming and pointing to the companion **Arduino CLI IDE** extension for compiling, uploading, and monitoring.
+
+### Changed
+
+- The `sketch.yaml` library merge now reads the file fresh from disk immediately before writing, minimizing the lost-update window when the optional Arduino CLI daemon rewrites the same file.
+
 ## [0.1.2] - 2026-06-05
 
 ### Added

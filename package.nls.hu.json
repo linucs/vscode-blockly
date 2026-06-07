@@ -35,6 +35,8 @@
   "walkthrough.description": "Tanuld meg, hogyan építhetsz Arduino-programokat vizuálisan, drag-and-drop blokkokkal.",
   "walkthrough.openWithBlocks.title": "Fájl megnyitása a Blokkszerkesztővel",
   "walkthrough.openWithBlocks.description": "Kattints jobb gombbal bármely `.cpp` vagy `.ino` fájlra → **Megnyitás ezzel…** → **Blokkszerkesztő**.\n\nHúzd a blokkokat a programod felépítéséhez — a C++ kód automatikusan generálódik.",
+  "walkthrough.arduinoCli.title": "Fordítás és feltöltés az Arduino CLI IDE-vel",
+  "walkthrough.arduinoCli.description": "A Blokk Szerkesztő a vizuális programozásra összpontosít — nem fordítja le és nem tölti fel a kódot a panelra. Telepítsd a kiegészítő **Arduino CLI IDE** bővítményt a vázlat fordításához, feltöltéséhez és figyeléséhez közvetlenül a szerkesztő eszköztáráról, a VS Code elhagyása nélkül.\n\n[Arduino CLI IDE telepítése](command:extension.open?%22linucs.vscode-arduino-cli-ide%22)",
   "walkthrough.authorBlocks.title": "Egyéni blokkok létrehozása",
   "walkthrough.authorBlocks.description": "Hozz létre blokk-katalógusokat új hardverkönyvtárakhoz. Használd a **@blocks** chat-résztvevőt, vagy írj YAML-t kézzel.\n\n[Claude Code integráció engedélyezése](command:blocks-editor.enableClaudeCodeIntegration)",
   "walkthrough.communityCatalog.title": "Közösségi katalógusok böngészése",

@@ -35,6 +35,8 @@
   "walkthrough.description": "Sürükle-bırak bloklarla Arduino programlarını görsel olarak oluşturmayı öğrenin.",
   "walkthrough.openWithBlocks.title": "Bir dosyayı Blok Editörü ile açın",
   "walkthrough.openWithBlocks.description": "Herhangi bir `.cpp` veya `.ino` dosyasına sağ tıklayın → **Birlikte Aç…** → **Blok Editörü**.\n\nProgramınızı oluşturmak için blokları sürükleyin — C++ kodu otomatik olarak oluşturulur.",
+  "walkthrough.arduinoCli.title": "Arduino CLI IDE ile derle ve yükle",
+  "walkthrough.arduinoCli.description": "Blok Düzenleyici görsel programlamaya odaklanır — kartınızı derlemez veya ona yazmaz. Eskizinizi VS Code'dan ayrılmadan doğrudan düzenleyici araç çubuğundan derlemek, yüklemek ve izlemek için tamamlayıcı **Arduino CLI IDE** uzantısını yükleyin.\n\n[Arduino CLI IDE'yi yükle](command:extension.open?%22linucs.vscode-arduino-cli-ide%22)",
   "walkthrough.authorBlocks.title": "Özel bloklar oluşturun",
   "walkthrough.authorBlocks.description": "Yeni donanım kitaplıkları için blok katalogları oluşturun. **@blocks** sohbet katılımcısını kullanın veya YAML'yi elle yazın.\n\n[Claude Code entegrasyonunu etkinleştir](command:blocks-editor.enableClaudeCodeIntegration)",
   "walkthrough.communityCatalog.title": "Topluluk kataloglarına göz atın",

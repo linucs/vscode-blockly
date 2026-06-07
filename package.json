@@ -2,7 +2,7 @@
   "name": "blocks-editor",
   "displayName": "%displayName%",
   "description": "%description%",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "license": "MIT",
   "publisher": "linucs",
   "icon": "images/icon.png",
@@ -56,6 +56,13 @@
             "description": "%walkthrough.openWithBlocks.description%",
             "media": { "svg": "images/walkthrough/open-with-blocks.svg" },
             "completionEvents": ["onView:blocks-editor.editor"]
+          },
+          {
+            "id": "arduinoCli",
+            "title": "%walkthrough.arduinoCli.title%",
+            "description": "%walkthrough.arduinoCli.description%",
+            "media": { "svg": "images/walkthrough/compile-upload.svg" },
+            "completionEvents": ["onExtensionInstalled:linucs.vscode-arduino-cli-ide"]
           },
           {
             "id": "authorBlocks",

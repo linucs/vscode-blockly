@@ -35,6 +35,8 @@
   "walkthrough.description": "드래그 앤 드롭 블록으로 Arduino 프로그램을 시각적으로 만드는 방법을 배웁니다.",
   "walkthrough.openWithBlocks.title": "Blocks Editor로 파일 열기",
   "walkthrough.openWithBlocks.description": "임의의 `.cpp` 또는 `.ino` 파일을 마우스 오른쪽 버튼으로 클릭 → **Open With…** → **Blocks Editor**.\n\n블록을 드래그하여 프로그램을 만드세요 — C++ 코드가 자동으로 생성됩니다.",
+  "walkthrough.arduinoCli.title": "Arduino CLI IDE로 컴파일 및 업로드",
+  "walkthrough.arduinoCli.description": "블록 에디터는 비주얼 프로그래밍에 중점을 두며, 보드를 컴파일하거나 플래시하지 않습니다. 보조 확장 **Arduino CLI IDE**를 설치하면 VS Code를 벗어나지 않고 에디터 도구 모음에서 바로 스케치를 컴파일, 업로드, 모니터링할 수 있습니다.\n\n[Arduino CLI IDE 설치](command:extension.open?%22linucs.vscode-arduino-cli-ide%22)",
   "walkthrough.authorBlocks.title": "사용자 지정 블록 작성",
   "walkthrough.authorBlocks.description": "새 하드웨어 라이브러리를 위한 블록 카탈로그를 만드세요. **@blocks** 채팅 참가자를 사용하거나 YAML을 직접 작성하세요.\n\n[Claude Code 통합 활성화](command:blocks-editor.enableClaudeCodeIntegration)",
   "walkthrough.communityCatalog.title": "커뮤니티 카탈로그 둘러보기",

@@ -35,6 +35,8 @@
   "walkthrough.description": "Learn how to build Arduino programs visually with drag-and-drop blocks.",
   "walkthrough.openWithBlocks.title": "Open a file with Blocks Editor",
   "walkthrough.openWithBlocks.description": "Right-click any `.cpp` or `.ino` file → **Open With…** → **Blocks Editor**.\n\nDrag blocks to build your program — the C++ code is generated automatically.",
+  "walkthrough.arduinoCli.title": "Compile & upload with Arduino CLI IDE",
+  "walkthrough.arduinoCli.description": "Blocks Editor focuses on visual programming — it doesn't compile or flash your board. Install the companion **Arduino CLI IDE** extension to compile, upload, and monitor your sketch right from the editor toolbar, without leaving VS Code.\n\n[Install Arduino CLI IDE](command:extension.open?%22linucs.vscode-arduino-cli-ide%22)",
   "walkthrough.authorBlocks.title": "Author custom blocks",
   "walkthrough.authorBlocks.description": "Create block catalogs for new hardware libraries. Use the **@blocks** chat participant or write YAML by hand.\n\n[Enable Claude Code integration](command:blocks-editor.enableClaudeCodeIntegration)",
   "walkthrough.communityCatalog.title": "Browse community catalogs",

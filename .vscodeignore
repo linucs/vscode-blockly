@@ -16,6 +16,8 @@ test/**
 webview/**
 .claude/**
 !.claude/skills/block-author/**
+.github/**
+RELEASE_NOTES.md
 **/.pio/**
 **/.blocks/**
 CLAUDE.md

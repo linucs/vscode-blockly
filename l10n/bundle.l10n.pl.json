@@ -36,5 +36,9 @@
   "Code": "Kod",
   "Documentation": "Dokumentacja",
   "Open documentation…": "Otwórz dokumentację…",
-  "Default": "Domyślny"
+  "Default": "Domyślny",
+  "Search community catalogs…": "Szukaj katalogów społeczności…",
+  "Open a project folder first to download catalogs.": "Najpierw otwórz folder projektu, aby pobrać katalogi.",
+  "Catalog \"{0}\" downloaded.": "Pobrano katalog \"{0}\".",
+  "Failed to download catalog \"{0}\": {1}": "Nie udało się pobrać katalogu \"{0}\": {1}"
 }

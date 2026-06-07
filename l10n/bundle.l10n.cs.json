@@ -36,5 +36,9 @@
   "Code": "Kód",
   "Documentation": "Dokumentace",
   "Open documentation…": "Otevřít dokumentaci…",
-  "Default": "Výchozí"
+  "Default": "Výchozí",
+  "Search community catalogs…": "Hledat katalogy komunity…",
+  "Open a project folder first to download catalogs.": "Nejprve otevřete složku projektu pro stažení katalogů.",
+  "Catalog \"{0}\" downloaded.": "Katalog \"{0}\" stažen.",
+  "Failed to download catalog \"{0}\": {1}": "Nepodařilo se stáhnout katalog \"{0}\": {1}"
 }

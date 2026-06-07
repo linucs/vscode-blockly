@@ -36,5 +36,9 @@
   "Code": "コード",
   "Documentation": "ドキュメント",
   "Open documentation…": "ドキュメントを開く…",
-  "Default": "デフォルト"
+  "Default": "デフォルト",
+  "Search community catalogs…": "コミュニティカタログを検索…",
+  "Open a project folder first to download catalogs.": "カタログをダウンロードするには、先にプロジェクトフォルダーを開いてください。",
+  "Catalog \"{0}\" downloaded.": "カタログ \"{0}\" をダウンロードしました。",
+  "Failed to download catalog \"{0}\": {1}": "カタログ \"{0}\" のダウンロードに失敗しました: {1}"
 }

@@ -339,6 +339,7 @@
     "pretest": "yarn run compile-tests && yarn run compile && yarn run lint",
     "check-types": "tsc --noEmit",
     "lint": "eslint src",
+    "check-i18n": "node scripts/check-i18n.js",
     "test": "vscode-test",
     "vsix": "vsce package --no-dependencies",
     "publish:vsce": "vsce publish --no-dependencies",

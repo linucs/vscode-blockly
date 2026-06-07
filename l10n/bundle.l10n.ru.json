@@ -36,5 +36,9 @@
   "Code": "Код",
   "Documentation": "Документация",
   "Open documentation…": "Открыть документацию…",
-  "Default": "По умолчанию"
+  "Default": "По умолчанию",
+  "Search community catalogs…": "Поиск каталогов сообщества…",
+  "Open a project folder first to download catalogs.": "Сначала откройте папку проекта, чтобы скачать каталоги.",
+  "Catalog \"{0}\" downloaded.": "Каталог \"{0}\" скачан.",
+  "Failed to download catalog \"{0}\": {1}": "Не удалось скачать каталог \"{0}\": {1}"
 }

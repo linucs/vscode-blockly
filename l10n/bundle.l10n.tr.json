@@ -36,5 +36,9 @@
   "Code": "Kod",
   "Documentation": "Belgeler",
   "Open documentation…": "Belgeleri aç…",
-  "Default": "Varsayılan"
+  "Default": "Varsayılan",
+  "Search community catalogs…": "Topluluk kataloglarında ara…",
+  "Open a project folder first to download catalogs.": "Katalogları indirmek için önce bir proje klasörü açın.",
+  "Catalog \"{0}\" downloaded.": "\"{0}\" kataloğu indirildi.",
+  "Failed to download catalog \"{0}\": {1}": "\"{0}\" kataloğu indirilemedi: {1}"
 }

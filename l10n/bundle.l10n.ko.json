@@ -36,5 +36,9 @@
   "Code": "코드",
   "Documentation": "문서",
   "Open documentation…": "문서 열기…",
-  "Default": "기본값"
+  "Default": "기본값",
+  "Search community catalogs…": "커뮤니티 카탈로그 검색…",
+  "Open a project folder first to download catalogs.": "카탈로그를 다운로드하려면 먼저 프로젝트 폴더를 여세요.",
+  "Catalog \"{0}\" downloaded.": "카탈로그 \"{0}\"을(를) 다운로드했습니다.",
+  "Failed to download catalog \"{0}\": {1}": "카탈로그 \"{0}\" 다운로드에 실패했습니다: {1}"
 }

@@ -36,5 +36,9 @@
   "Code": "Código",
   "Documentation": "Documentação",
   "Open documentation…": "Abrir documentação…",
-  "Default": "Padrão"
+  "Default": "Padrão",
+  "Search community catalogs…": "Pesquisar catálogos da comunidade…",
+  "Open a project folder first to download catalogs.": "Abra primeiro uma pasta de projeto para baixar catálogos.",
+  "Catalog \"{0}\" downloaded.": "Catálogo \"{0}\" baixado.",
+  "Failed to download catalog \"{0}\": {1}": "Falha ao baixar o catálogo \"{0}\": {1}"
 }

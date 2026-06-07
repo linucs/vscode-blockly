@@ -36,5 +36,9 @@
   "Code": "Kód",
   "Documentation": "Dokumentáció",
   "Open documentation…": "Dokumentáció megnyitása…",
-  "Default": "Alapértelmezett"
+  "Default": "Alapértelmezett",
+  "Search community catalogs…": "Közösségi katalógusok keresése…",
+  "Open a project folder first to download catalogs.": "Először nyiss meg egy projektmappát a katalógusok letöltéséhez.",
+  "Catalog \"{0}\" downloaded.": "A(z) \"{0}\" katalógus letöltve.",
+  "Failed to download catalog \"{0}\": {1}": "A(z) \"{0}\" katalógus letöltése sikertelen: {1}"
 }

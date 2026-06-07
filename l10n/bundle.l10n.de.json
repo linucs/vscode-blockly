@@ -36,5 +36,9 @@
   "Code": "Code",
   "Documentation": "Dokumentation",
   "Open documentation…": "Dokumentation öffnen…",
-  "Default": "Standard"
+  "Default": "Standard",
+  "Search community catalogs…": "Community-Kataloge durchsuchen…",
+  "Open a project folder first to download catalogs.": "Öffne zuerst einen Projektordner, um Kataloge herunterzuladen.",
+  "Catalog \"{0}\" downloaded.": "Katalog \"{0}\" heruntergeladen.",
+  "Failed to download catalog \"{0}\": {1}": "Download des Katalogs \"{0}\" fehlgeschlagen: {1}"
 }

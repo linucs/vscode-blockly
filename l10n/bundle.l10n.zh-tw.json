@@ -36,5 +36,9 @@
   "Code": "程式碼",
   "Documentation": "文件",
   "Open documentation…": "開啟文件…",
-  "Default": "預設"
+  "Default": "預設",
+  "Search community catalogs…": "搜尋社群目錄…",
+  "Open a project folder first to download catalogs.": "請先開啟一個專案資料夾以下載目錄。",
+  "Catalog \"{0}\" downloaded.": "目錄 \"{0}\" 已下載。",
+  "Failed to download catalog \"{0}\": {1}": "下載目錄 \"{0}\" 失敗：{1}"
 }

@@ -2,7 +2,7 @@
   "displayName": "Éditeur de Blocs",
   "description": "Programmation Arduino par glisser-déposer de blocs — construisez vos programmes visuellement et l'Éditeur de Blocs écrit le C++ pour vous. Compatible avec PlatformIO et Arduino CLI.",
   "config.title": "Éditeur de Blocs",
-  "config.generateOnChange": "Génère le code automatiquement à chaque modification des blocs. Si désactivé, le code n'est généré qu'à la pression du bouton Générer le C++.",
+  "config.generateOnChange": "Génère le code automatiquement à chaque modification des blocs. Si désactivé, le code n'est généré qu'à la pression du bouton Générer le code.",
   "config.showMinimap": "Affiche une minicarte du plan de travail des blocs dans le coin inférieur droit.",
   "config.catalogPaths": "Répertoires locaux ou URL distantes pour les fichiers YAML des catalogues de blocs. Les chemins locaux (relatifs à la racine du workspace, ou absolus) sont analysés de manière récursive. Les URL (http/https) sont téléchargées dans le dossier .blocks/ du projet au premier chargement ; utilisez la commande \"Actualiser les catalogues distants\" pour forcer un nouveau téléchargement.",
   "command.refreshCatalogs": "Éditeur de Blocs : Actualiser les catalogues distants",

@@ -2,7 +2,7 @@
   "displayName": "Blocks Editor",
   "description": "Arduino 向けのドラッグ＆ドロップによるブロックプログラミング — プログラムを視覚的に構築すると、Blocks Editor が C++ コードを自動生成します。PlatformIO と Arduino CLI に対応しています。",
   "config.title": "Blocks Editor",
-  "config.generateOnChange": "ブロックが変更されるたびにコードを自動生成します。無効にすると、コードは「Generate C++」ボタンを押したときにのみ生成されます。",
+  "config.generateOnChange": "ブロックが変更されるたびにコードを自動生成します。無効にすると、コードは「コードを生成」ボタンを押したときにのみ生成されます。",
   "config.showMinimap": "ブロックワークスペースの全体を示すミニマップを右下隅に表示します。",
   "config.catalogPaths": "ブロックカタログ YAML ファイルのローカルディレクトリまたはリモート URL。ローカルパス（ワークスペースルートからの相対パス、または絶対パス）は再帰的にスキャンされます。URL（http/https）は初回読み込み時にプロジェクトの .blocks/ フォルダーにダウンロードされます。再ダウンロードを強制するには「Refresh Remote Catalogs」コマンドを使用してください。",
   "command.refreshCatalogs": "Blocks Editor: リモートカタログを更新",

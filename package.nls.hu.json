@@ -2,7 +2,7 @@
   "displayName": "Blokkszerkesztő",
   "description": "Drag-and-drop blokkprogramozás Arduinóhoz — építsd fel a programokat vizuálisan, a Blokkszerkesztő pedig megírja helyetted a C++ kódot. Működik a PlatformIO és az Arduino CLI mellett.",
   "config.title": "Blokkszerkesztő",
-  "config.generateOnChange": "Kód automatikus generálása minden alkalommal, amikor a blokkok megváltoznak. Ha le van tiltva, a kód csak a Generate C++ gomb megnyomásakor generálódik.",
+  "config.generateOnChange": "Kód automatikus generálása minden alkalommal, amikor a blokkok megváltoznak. Ha le van tiltva, a kód csak a Kód generálása gomb megnyomásakor generálódik.",
   "config.showMinimap": "A blokk-munkaterület minitérkép-áttekintésének megjelenítése a jobb alsó sarokban.",
   "config.catalogPaths": "Helyi könyvtárak vagy távoli URL-ek a blokk-katalógus YAML-fájljaihoz. A helyi útvonalakat (a munkaterület gyökeréhez viszonyítva vagy abszolút módon) rekurzívan vizsgálja át. Az URL-eket (http/https) az első betöltéskor letölti a projekt .blocks/ mappájába; használd a \"Refresh Remote Catalogs\" parancsot az újraletöltés kikényszerítéséhez.",
   "command.refreshCatalogs": "Blokkszerkesztő: Távoli katalógusok frissítése",

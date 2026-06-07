@@ -2,7 +2,7 @@
   "displayName": "Blocks Editor",
   "description": "Programování Arduina pomocí bloků metodou táhni a pusť — sestav programy vizuálně a Blocks Editor za tebe napíše C++. Funguje s PlatformIO a Arduino CLI.",
   "config.title": "Blocks Editor",
-  "config.generateOnChange": "Generovat kód automaticky při každé změně bloků. Když je vypnuto, kód se generuje pouze po stisknutí tlačítka Generovat C++.",
+  "config.generateOnChange": "Generovat kód automaticky při každé změně bloků. Když je vypnuto, kód se generuje pouze po stisknutí tlačítka Generovat kód.",
   "config.showMinimap": "Zobrazit minimapu s přehledem pracovní plochy bloků v pravém dolním rohu.",
   "config.catalogPaths": "Místní adresáře nebo vzdálené URL pro soubory YAML katalogu bloků. Místní cesty (relativní vůči kořeni workspace nebo absolutní) se prohledávají rekurzivně. URL (http/https) se při prvním načtení stáhnou do složky projektu .blocks/; pro vynucení opětovného stažení použij příkaz \"Obnovit vzdálené katalogy\".",
   "command.refreshCatalogs": "Blocks Editor: Obnovit vzdálené katalogy",

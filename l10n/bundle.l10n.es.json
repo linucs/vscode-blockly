@@ -21,7 +21,7 @@
   "This environment does not set \"framework\" in platformio.ini, so no code can be generated. Add a framework (e.g. framework = arduino).": "Este environment no establece \"framework\" en platformio.ini, por lo que no se puede generar código. Añade un framework (p. ej. framework = arduino).",
   "Framework \"{0}\" not yet supported": "Framework \"{0}\" aún no compatible",
   "Block generation for the \"{0}\" runtime is not implemented yet. Currently supported: arduino:cpp.": "La generación de bloques para el runtime \"{0}\" aún no está implementada. Actualmente compatible: arduino:cpp.",
-  "Generate C++": "Generar C++",
+  "Generate Code": "Generar código",
   "Generated ✓": "Generado ✓",
   "Error: {0}": "Error: {0}",
   "Generation failed": "Generación fallida",

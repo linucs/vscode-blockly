@@ -21,7 +21,7 @@
   "This environment does not set \"framework\" in platformio.ini, so no code can be generated. Add a framework (e.g. framework = arduino).": "この environment は platformio.ini で \"framework\" を設定していないため、コードを生成できません。フレームワークを追加してください（例: framework = arduino）。",
   "Framework \"{0}\" not yet supported": "フレームワーク \"{0}\" はまだサポートされていません",
   "Block generation for the \"{0}\" runtime is not implemented yet. Currently supported: arduino:cpp.": "\"{0}\" ランタイムのブロック生成はまだ実装されていません。現在サポートされているのは arduino:cpp です。",
-  "Generate C++": "C++ を生成",
+  "Generate Code": "コードを生成",
   "Generated ✓": "生成完了 ✓",
   "Error: {0}": "エラー: {0}",
   "Generation failed": "生成に失敗しました",

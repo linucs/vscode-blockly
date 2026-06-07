@@ -16,14 +16,14 @@ No syntax to memorize. No semicolons to forget. You snap blocks together, and Bl
 - 📦 **Installs libraries for you** — use a block that needs an extra library? It gets added to your project automatically. You don't have to hunt for it.
 - 💾 **Saves your work automatically** — nothing to remember, nothing to lose.
 
-## Getting Started
+## Getting started
 
 ### What you need first
 
 Blocks Editor sits on top of one of two free tools that actually build and upload your code to the board. You need **one** of them:
 
 - **[PlatformIO](https://platformio.org/install/ide?install=vscode)** — a popular extension for VS Code. (Easiest if you're already in VS Code.)
-- **[Arduino CLI](https://arduino.github.io/arduino-cli/)** — or the Arduino IDE 2.x, which uses it under the hood.
+- **[Arduino CLI](https://arduino.github.io/arduino-cli/)** — or the Arduino IDE 2.x, which uses it under the hood. Pair it with the sister extension **[Arduino CLI IDE](https://marketplace.visualstudio.com/items?itemName=linucs.vscode-arduino-cli-ide)** to get Compile and Upload buttons right inside VS Code.
 
 You also need a **project folder** that tells the tools which board you have. If you're using PlatformIO or the Arduino IDE, creating a new project sets this up for you automatically.
 

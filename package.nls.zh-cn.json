@@ -2,7 +2,7 @@
   "displayName": "Blocks Editor",
   "description": "面向 Arduino 的拖放式积木编程 —— 可视化构建程序，由 Blocks Editor 为你生成 C++ 代码。支持 PlatformIO 和 Arduino CLI。",
   "config.title": "Blocks Editor",
-  "config.generateOnChange": "在积木发生变化时自动生成代码。禁用后，仅在按下“生成 C++”按钮时才生成代码。",
+  "config.generateOnChange": "在积木发生变化时自动生成代码。禁用后，仅在按下“生成代码”按钮时才生成代码。",
   "config.showMinimap": "在右下角显示积木工作区的小地图概览。",
   "config.catalogPaths": "积木目录 YAML 文件的本地目录或远程 URL。本地路径（相对于工作区根目录或绝对路径）会被递归扫描。URL（http/https）会在首次加载时下载到项目的 .blocks/ 文件夹；使用“刷新远程目录”命令可强制重新下载。",
   "command.refreshCatalogs": "Blocks Editor: 刷新远程目录",

@@ -421,7 +421,7 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
                     <vscode-dropdown id="envSelect" style="display:none"></vscode-dropdown>
                     <vscode-button id="docsBtn" appearance="icon" title="${vscode.l10n.t('Documentation')}" style="display:none"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M14.5 1h-11a1.5 1.5 0 0 0-1.5 1.5v11a1.5 1.5 0 0 0 1.5 1.5h11a.5.5 0 0 0 .5-.5V1.5a.5.5 0 0 0-.5-.5zM3.5 2H14v12H3.5a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5zM5 4h7v1H5V4zm0 2h7v1H5V6zm0 2h4v1H5V8z"/></svg></vscode-button>
                     <span class="spacer"></span>
-                    <vscode-button id="generateBtn" disabled>${vscode.l10n.t('Generate C++')}</vscode-button>
+                    <vscode-button id="generateBtn" disabled>${vscode.l10n.t('Generate Code')}</vscode-button>
                 </div>
                 <div id="editorArea">
                     <div id="blocklyDiv"></div>

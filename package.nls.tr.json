@@ -2,7 +2,7 @@
   "displayName": "Blok Editörü",
   "description": "Arduino için sürükle-bırak blok programlama — programları görsel olarak oluşturun, Blok Editörü C++ kodunu sizin için yazsın. PlatformIO ve Arduino CLI ile çalışır.",
   "config.title": "Blok Editörü",
-  "config.generateOnChange": "Bloklar her değiştiğinde kodu otomatik olarak oluştur. Devre dışı bırakıldığında, kod yalnızca C++ Oluştur düğmesine basıldığında oluşturulur.",
+  "config.generateOnChange": "Bloklar her değiştiğinde kodu otomatik olarak oluştur. Devre dışı bırakıldığında, kod yalnızca Kod oluştur düğmesine basıldığında oluşturulur.",
   "config.showMinimap": "Blok çalışma alanının küçük bir genel görünümünü sağ alt köşede göster.",
   "config.catalogPaths": "Blok kataloğu YAML dosyaları için yerel dizinler veya uzak URL'ler. Yerel yollar (çalışma alanı köküne göre veya mutlak) özyinelemeli olarak taranır. URL'ler (http/https) ilk yüklemede projenin .blocks/ klasörüne indirilir; yeniden indirmeyi zorlamak için \"Uzak Katalogları Yenile\" komutunu kullanın.",
   "command.refreshCatalogs": "Blok Editörü: Uzak Katalogları Yenile",

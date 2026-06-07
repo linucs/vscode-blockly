@@ -456,7 +456,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Generate C++ from the current workspace, tolerating generator errors.
+    // Generate code from the current workspace, tolerating generator errors.
     const generate = (): string => {
         try {
             return codeFactory.generateCode(workspace);

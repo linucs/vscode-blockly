@@ -21,7 +21,7 @@
   "This environment does not set \"framework\" in platformio.ini, so no code can be generated. Add a framework (e.g. framework = arduino).": "此 environment 未在 platformio.ini 中设置 \"framework\"，因此无法生成代码。请添加一个框架（例如 framework = arduino）。",
   "Framework \"{0}\" not yet supported": "尚不支持框架 \"{0}\"",
   "Block generation for the \"{0}\" runtime is not implemented yet. Currently supported: arduino:cpp.": "尚未实现针对 \"{0}\" runtime 的积木生成。当前支持：arduino:cpp。",
-  "Generate C++": "生成 C++",
+  "Generate Code": "生成代码",
   "Generated ✓": "已生成 ✓",
   "Error: {0}": "错误：{0}",
   "Generation failed": "生成失败",

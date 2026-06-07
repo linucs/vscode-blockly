@@ -2,7 +2,7 @@
   "displayName": "Blocks Editor",
   "description": "Drag-and-drop block programming for Arduino — build programs visually and Blocks Editor writes the C++ for you. Works with PlatformIO and the Arduino CLI.",
   "config.title": "Blocks Editor",
-  "config.generateOnChange": "Generate code automatically whenever blocks change. When disabled, code is generated only when the Generate C++ button is pressed.",
+  "config.generateOnChange": "Generate code automatically whenever blocks change. When disabled, code is generated only when the Generate Code button is pressed.",
   "config.showMinimap": "Show a minimap overview of the block workspace in the bottom-right corner.",
   "config.catalogPaths": "Local directories or remote URLs for block catalog YAML files. Local paths (relative to the workspace root, or absolute) are scanned recursively. URLs (http/https) are downloaded to the project .blocks/ folder on first load; use the \"Refresh Remote Catalogs\" command to force re-download.",
   "command.refreshCatalogs": "Blocks Editor: Refresh Remote Catalogs",

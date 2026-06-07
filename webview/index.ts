@@ -1,6 +1,19 @@
 import * as Blockly from 'blockly';
 import * as En from 'blockly/msg/en';
 import * as It from 'blockly/msg/it';
+import * as ZhHans from 'blockly/msg/zh-hans';
+import * as ZhHant from 'blockly/msg/zh-hant';
+import * as Fr from 'blockly/msg/fr';
+import * as De from 'blockly/msg/de';
+import * as Es from 'blockly/msg/es';
+import * as Ja from 'blockly/msg/ja';
+import * as Ko from 'blockly/msg/ko';
+import * as Ru from 'blockly/msg/ru';
+import * as PtBr from 'blockly/msg/pt-br';
+import * as Tr from 'blockly/msg/tr';
+import * as Pl from 'blockly/msg/pl';
+import * as Cs from 'blockly/msg/cs';
+import * as Hu from 'blockly/msg/hu';
 import * as l10n from '@vscode/l10n';
 import { provideVSCodeDesignSystem, vsCodeButton, vsCodeDropdown, vsCodeOption } from "@vscode/webview-ui-toolkit";
 import { ThemeAdapter, categoryStyleFor } from './ThemeAdapter';
@@ -17,7 +30,14 @@ const locale: string = l10nLocaleEl ? JSON.parse(l10nLocaleEl.textContent || '"e
 
 l10n.config({ contents: l10nContents });
 
-const BLOCKLY_LOCALES: Record<string, typeof En> = { en: En, it: It };
+// Keys are VS Code locale identifiers (vscode.env.language); Chinese maps to
+// Blockly's script-based codes (zh-cn → zh-hans, zh-tw → zh-hant).
+const BLOCKLY_LOCALES: Record<string, typeof En> = {
+    en: En, it: It,
+    'zh-cn': ZhHans, 'zh-tw': ZhHant,
+    fr: Fr, de: De, es: Es, ja: Ja, ko: Ko, ru: Ru,
+    'pt-br': PtBr, tr: Tr, pl: Pl, cs: Cs, hu: Hu,
+};
 Blockly.setLocale(BLOCKLY_LOCALES[locale] ?? En);
 
 // Register VSCode UI Toolkit components

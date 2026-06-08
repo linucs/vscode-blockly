@@ -1,0 +1,760 @@
+# =============================================================================
+# Blockly Block Definition — Complete Field Reference
+# =============================================================================
+# Source: RaspberryPiFoundation/blockly (https://github.com/raspberrypifoundation/blockly)
+#         Official docs: https://docs.blockly.com/guides/create-custom-blocks/
+# =============================================================================
+# This file documents every possible field in a JSON block definition,
+# including top-level block properties, args entries (inputs and fields),
+# and their allowed values.
+# =============================================================================
+
+block_definition:
+
+  # ---------------------------------------------------------------------------
+  # IDENTITY
+  # ---------------------------------------------------------------------------
+
+  type:
+    description: >
+      Unique string identifier for the block. Used as the key in Blockly.Blocks
+      and as the prototype name when creating block instances. Must be unique
+      across all blocks registered in the same Blockly environment.
+      Conventional naming follows the pattern "[category]_[blockname]"
+      (e.g. "math_number", "controls_if"), though any non-empty string is valid.
+    type: string
+    required: true
+    example: "controls_if"
+
+  # ---------------------------------------------------------------------------
+  # MESSAGE / ARGS PAIRS  (messageN + argsN, repeated for N = 0, 1, 2, ...)
+  # ---------------------------------------------------------------------------
+  # A block is composed of one or more message/args pairs. Most blocks need
+  # only message0/args0. Each pair describes one logical row or visual segment.
+
+  messageN:
+    description: >
+      Template string that defines the visible text and the positions of
+      inputs/fields on the Nth row of the block. Plain text is converted to
+      label fields; interpolation tokens (%1, %2, ...) mark where items from the
+      corresponding argsN array are inserted. Tokens do NOT have to appear in
+      numeric order in the string — they can be reordered to support
+      localisation/RTL languages.
+
+      Special characters:
+        - %N  → interpolation token referencing argsN[N-1]
+        - %%  → literal "%" character (avoids confusion with tokens)
+        - \n  → automatically replaced by an input_end_row, forcing the
+                following content to a new row
+
+      Text on either side of a token is whitespace-trimmed.
+      Uses BKY_ prefix to look up values in Blockly.Msg (e.g. "%{BKY_LISTS_CREATE_WITH_INPUT_WITH}").
+    type: string
+    required: false  # required only if argsN is also present; at least message0 is needed
+    example: "set %1 to %2"
+
+  argsN:
+    description: >
+      Array of objects corresponding to the interpolation tokens in messageN.
+      Each object has a "type" property that distinguishes between input types
+      and field types. The number of objects must exactly match the number of
+      %N tokens in messageN (no omissions, no duplicates).
+      See sub-sections "inputs" and "fields" below for all possible types and
+      their individual properties.
+    type: array
+    items:
+      oneOf:
+        - $ref: "#/inputs"
+        - $ref: "#/fields"
+
+  implicitAlignN:
+    description: >
+      Alignment for the automatically-created trailing dummy input that Blockly
+      adds when messageN ends with text (i.e. after the last explicit
+      interpolation token). Also applies to any end-of-row inputs that replace
+      \n newline characters in the message string.
+      For RTL languages (Arabic, Hebrew) "RIGHT" and "LEFT" are reversed.
+      The deprecated alias lastDummyAlign0 behaves identically for message0.
+    type: string
+    values:
+      LEFT:   "Default. Left-aligns the trailing dummy row."
+      RIGHT:  "Right-aligns the trailing dummy row."
+      CENTRE: "Centre-aligns the trailing dummy row."
+    default: LEFT
+
+  # ---------------------------------------------------------------------------
+  # TOP-LEVEL CONNECTIONS
+  # ---------------------------------------------------------------------------
+
+  output:
+    description: >
+      Declares a value output connector (the male jigsaw tab on the left edge).
+      A block with an output is called a "value block" and can be plugged into
+      value inputs of other blocks. Mutually exclusive with previousStatement:
+      a block cannot have both an output connector and a previous-statement notch.
+
+      Value:
+        null   → untyped output; accepts any value input connection
+        string → typed output (e.g. "Number", "String", "Boolean", "Array")
+        array  → accepts any of the listed types (e.g. ["Number", "String"])
+
+      Type checking is enforced when connecting blocks; the types must be
+      compatible between the output and the receiving input_value's "check".
+    type: "null | string | string[]"
+    default: null  # (absent = no output connector)
+    example_untyped: null
+    example_typed: "Number"
+    example_multi: ["Number", "String"]
+
+  previousStatement:
+    description: >
+      Declares a previous-statement notch at the top of the block, allowing it
+      to be stacked below another statement block. A block with a previous
+      connection is called a "statement block". Mutually exclusive with output.
+
+      Value:
+        null   → untyped; connects to any next-statement point
+        string → typed (rare; e.g. "Action") — only connects to matching types
+        array  → accepts any of the listed types
+    type: "null | string | string[]"
+    default: null  # (absent = no previous notch)
+    example_untyped: null
+    example_typed: "Action"
+
+  nextStatement:
+    description: >
+      Declares a next-statement point at the bottom of the block, allowing other
+      statement blocks to be stacked below it. A block with a next connection
+      but no previous connection typically represents an event block and can
+      optionally be rendered with a "hat" (rounded top).
+
+      Value:
+        null   → untyped; accepts any previous-statement notch
+        string → typed (rare); only connects to matching types
+        array  → accepts any of the listed types
+    type: "null | string | string[]"
+    default: null  # (absent = no next point)
+    example_untyped: null
+    example_typed: "Action"
+
+  # ---------------------------------------------------------------------------
+  # APPEARANCE
+  # ---------------------------------------------------------------------------
+
+  colour:
+    description: >
+      The colour of the block body. Three formats are accepted:
+        1. HSV hue value (integer 0–360): e.g. 160 → a teal/green hue. The
+           saturation and value are fixed by the active theme.
+        2. Hex RGB string: "#RRGGBB", e.g. "#4a90d9".
+        3. Message reference: "%{BKY_MATH_HUE}" — looks up a key in Blockly.Msg,
+           which should resolve to an integer or #RRGGBB string.
+      This field sets only the hue. Full colour control is available via themes.
+    type: "number (0–360) | string (#RRGGBB) | string (%{BKY_KEY})"
+    example_hue: 160
+    example_hex: "#4a90d9"
+    example_msg: "%{BKY_MATH_HUE}"
+
+  style:
+    description: >
+      Name of a block style defined in the active Blockly Theme. A block style
+      encapsulates colour (hat, body, border), making it easy to apply a
+      consistent look across many blocks. When "style" is set it takes
+      precedence over the "colour" property.
+      Theme styles are defined in Blockly.Theme.BlockStyle objects.
+    type: string
+    example: "logic_blocks"
+
+  tooltip:
+    description: >
+      Text shown in a tooltip popup when the user hovers over the block.
+      Supports BKY_ message references (e.g. "%{BKY_LISTS_SORT_TOOLTIP}").
+      In the JavaScript API this can also be a function (for dynamic tooltips).
+    type: string
+    example: "Returns the sum of two numbers."
+
+  helpUrl:
+    description: >
+      URL opened when the user clicks "Help" from the block's context menu.
+      Supports BKY_ message references. An empty string ("") disables the
+      help menu item.
+    type: string
+    example: "https://developer.mozilla.org/docs/Web/JavaScript/Reference/Operators/Addition"
+
+  # ---------------------------------------------------------------------------
+  # LAYOUT
+  # ---------------------------------------------------------------------------
+
+  inputsInline:
+    description: >
+      Controls whether value inputs are rendered inline (horizontally, within
+      the same row as their label) or external (vertically, each on its own
+      row below the block).
+      true  → inline: all inputs appear inline with their labels on the same row
+      false → external: each value input is on a separate indented row
+      When absent, Blockly chooses automatically based on the block's structure.
+    type: boolean
+    default: "(auto, determined by Blockly)"
+    example_inline: true
+    example_external: false
+
+  # ---------------------------------------------------------------------------
+  # EXTENSIONS & MUTATORS
+  # ---------------------------------------------------------------------------
+
+  extensions:
+    description: >
+      Array of extension names to apply to the block after it is initialised.
+      An extension is a mixin registered with Blockly.Extensions.register() that
+      adds or overrides methods on the block prototype. Common use-cases:
+        - Adding onChange / onchange handlers
+        - Setting up dynamic tooltips
+        - Configuring dropdown-dependent appearance
+      Extensions are applied in array order. Each entry must be the string name
+      passed to Blockly.Extensions.register().
+    type: string[]
+    example: ["parent_tooltip_when_inline"]
+
+  mutator:
+    description: >
+      Name of a mutator mixin registered with Blockly.Extensions.registerMutator().
+      A mutator allows a block to change its shape dynamically — for example,
+      adding or removing inputs via a popup editor. The mutator adds serialisation
+      hooks (saveExtraState / loadExtraState for JSON, or mutationToDom /
+      domToMutation for XML) and optionally a UI (compose / decompose functions).
+      Only one mutator can be specified per block.
+    type: string
+    example: "controls_if_mutator"
+
+  # ---------------------------------------------------------------------------
+  # INLINE INPUTS SECTION: "inputs" (args object type = input_*)
+  # ---------------------------------------------------------------------------
+
+inputs:
+
+  input_value:
+    description: >
+      A value input: renders a female jigsaw socket that accepts value blocks
+      (blocks with an output connection). The socket appears at the end of the
+      input's row. All fields that precede the %N token in the message string
+      (back to the previous input or the start of the message) belong to this
+      input's row.
+    properties:
+      type:
+        value: "input_value"
+        required: true
+      name:
+        description: Unique string identifier for this input within the block.
+        type: string
+        required: true
+        example: "VALUE"
+      check:
+        description: >
+          Type constraint on the connection. Only output blocks whose output
+          type matches will be allowed to connect. null or absent means untyped
+          (accepts anything). Can be a string (single type) or array (any of).
+        type: "null | string | string[]"
+        example_single: "Number"
+        example_multi: ["Number", "String"]
+      align:
+        description: >
+          Horizontal alignment of the fields on this input's row.
+          LEFT (default), RIGHT, or CENTRE.
+        type: string
+        values: [LEFT, RIGHT, CENTRE]
+        default: LEFT
+
+  input_statement:
+    description: >
+      A statement input: renders a C-shaped notch that accepts a vertical stack
+      of statement blocks. The inner connection point is at the top of the
+      indented area. Used to contain sequences of blocks (e.g. the body of an
+      if-statement or a loop).
+    properties:
+      type:
+        value: "input_statement"
+        required: true
+      name:
+        description: Unique string identifier for this input within the block.
+        type: string
+        required: true
+        example: "DO"
+      check:
+        description: >
+          Type constraint on what statement blocks may be stacked inside.
+          null or absent means untyped. Rarely used in standard blocks.
+        type: "null | string | string[]"
+      align:
+        description: Horizontal alignment of the fields on this input's row.
+        type: string
+        values: [LEFT, RIGHT, CENTRE]
+        default: LEFT
+
+  input_dummy:
+    description: >
+      A dummy input: a row with no connection socket. It is used to hold fields
+      (labels, dropdowns, etc.) that do not need a connection. Blockly
+      automatically appends a dummy input for any trailing text after the last
+      interpolation token, so explicit dummy inputs are rarely required in JSON.
+    properties:
+      type:
+        value: "input_dummy"
+        required: true
+      name:
+        description: >
+          Optional identifier. Useful when programmatically accessing the input
+          after block creation.
+        type: string
+        required: false
+      align:
+        description: Horizontal alignment of the fields on this row.
+        type: string
+        values: [LEFT, RIGHT, CENTRE]
+        default: LEFT
+
+  input_end_row:
+    description: >
+      An end-of-row input: forces everything after it to render on a new row.
+      It holds fields (including the label that follows it) and causes the next
+      input to start on a fresh line. Equivalent to using a \n newline in the
+      message string — Blockly automatically converts \n to input_end_row.
+      Useful for multi-row block layouts without needing multiple message/args pairs.
+    properties:
+      type:
+        value: "input_end_row"
+        required: true
+      name:
+        description: Optional identifier.
+        type: string
+        required: false
+      align:
+        description: Horizontal alignment of the fields on this row.
+        type: string
+        values: [LEFT, RIGHT, CENTRE]
+        default: LEFT
+
+  # ---------------------------------------------------------------------------
+  # FIELDS (args object type = field_*)
+  # ---------------------------------------------------------------------------
+
+fields:
+
+  # ---- Shared properties present on ALL field types ----
+  _common_field_properties:
+    type:
+      description: >
+        Identifies the field type. Must match a registered field name.
+        Built-in values: field_input, field_dropdown, field_checkbox,
+        field_number, field_variable, field_label, field_label_serializable,
+        field_image. Additional types available as plugins.
+      type: string
+      required: true
+    name:
+      description: >
+        Unique string identifier for this field within the block. Used to read
+        the field's value in code generators (block.getFieldValue('NAME')).
+        Not required for field_label (labels have no runtime value) but
+        recommended for all other field types.
+      type: string
+      required: false  # required for data-bearing fields; optional for labels
+    alt:
+      description: >
+        Fallback field definition object used when Blockly does not recognise
+        the specified "type". Allows graceful degradation to simpler field types
+        in older Blockly versions. The alt object itself may contain its own
+        alt, enabling a chain of fallbacks. If Blockly cannot create any object
+        in the chain, the field is silently skipped.
+      type: object (field definition)
+      example:
+        type: "field_input"
+        name: "FALLBACK"
+        text: "default"
+    tooltip:
+      description: >
+        Custom tooltip text shown when hovering over this specific field.
+        Overrides the block-level tooltip for this field. Supports BKY_ references.
+      type: string
+
+  field_input:
+    description: >
+      A text-input field (single line). The user can click to open an inline
+      editor and type arbitrary text. Also referred to as field_textinput in
+      some legacy documentation.
+    properties:
+      type:
+        value: "field_input"
+      name:
+        type: string
+        required: true
+      text:
+        description: Default (initial) text value of the field.
+        type: string
+        default: ""
+      spellcheck:
+        description: >
+          Whether spell-checking is enabled in the text editor for this field.
+        type: boolean
+        default: true
+
+  field_number:
+    description: >
+      A numeric text-input field. Displays a number and opens an inline number
+      editor when clicked. Supports optional minimum/maximum bounds and a
+      decimal precision constraint.
+    properties:
+      type:
+        value: "field_number"
+      name:
+        type: string
+        required: true
+      value:
+        description: Default numeric value.
+        type: number
+        default: 0
+      min:
+        description: Minimum allowed value (inclusive). Absent or -Infinity means no lower bound.
+        type: number
+        default: -Infinity
+      max:
+        description: Maximum allowed value (inclusive). Absent or Infinity means no upper bound.
+        type: number
+        default: Infinity
+      precision:
+        description: >
+          Constrains the value to multiples of this number. For example,
+          precision: 0.01 rounds to 2 decimal places; precision: 10 allows
+          only multiples of 10. 0 (default) means no rounding constraint.
+        type: number
+        default: 0
+
+  field_dropdown:
+    description: >
+      A dropdown selector field. Presents a list of static options; the user
+      picks one. Each option is an [displayText, machineValue] pair.
+      The "displayText" is shown in the UI; the "machineValue" is the string
+      returned by block.getFieldValue().
+    properties:
+      type:
+        value: "field_dropdown"
+      name:
+        type: string
+        required: true
+      options:
+        description: >
+          Array of [displayText, machineValue] pairs.
+          displayText may be a human-readable string or an image object
+          { src, width, height, alt } for icon-based dropdowns.
+          machineValue must be a non-empty, all-caps string by convention
+          (e.g. "ADD", "MINUS"). The first option is selected by default.
+        type: "Array<[string | ImageObject, string]>"
+        example:
+          - ["addition", "ADD"]
+          - ["subtraction", "MINUS"]
+
+  field_checkbox:
+    description: >
+      A checkbox field. Toggles between checked (true / "TRUE") and unchecked
+      (false / "FALSE"). The value stored and returned is the string "TRUE" or
+      "FALSE" (not a JavaScript boolean), unless the block reads it as a boolean.
+    properties:
+      type:
+        value: "field_checkbox"
+      name:
+        type: string
+        required: true
+      checked:
+        description: Initial checked state of the checkbox.
+        type: boolean
+        default: false
+
+  field_variable:
+    description: >
+      A variable selector dropdown. Displays the currently selected variable
+      name and lets the user pick from existing variables or create new ones.
+      Variables are workspace-scoped and shared across blocks. The field stores
+      the variable's ID (not its name) internally.
+    properties:
+      type:
+        value: "field_variable"
+      name:
+        type: string
+        required: true
+      variable:
+        description: >
+          Default variable name shown when the block is first created. If no
+          variable with this name exists, one is automatically created.
+        type: string
+        default: "item"
+      variableTypes:
+        description: >
+          Array of variable type strings this field accepts. An empty string
+          ("") represents the default untyped variable. Only variables of
+          matching types appear in the dropdown. Absent means all types.
+        type: string[]
+        example: ["", "Number"]
+      defaultType:
+        description: >
+          The type assigned to a newly created variable from this field.
+          Must be one of the values in variableTypes. Defaults to "" (untyped).
+        type: string
+        default: ""
+
+  field_label:
+    description: >
+      A static text label displayed inline in the block. Not editable and has
+      no serialised value. Plain text in a message string is automatically
+      converted to labels; field_label is only needed in args when you want
+      to explicitly name or reference a label.
+    properties:
+      type:
+        value: "field_label"
+      name:
+        description: Optional identifier (rarely needed; labels have no runtime value).
+        type: string
+        required: false
+      text:
+        description: The display text of the label. Supports BKY_ references.
+        type: string
+        default: ""
+      class:
+        description: >
+          Optional CSS class name applied to the label SVG element for styling.
+        type: string
+
+  field_label_serializable:
+    description: >
+      Like field_label but its value IS serialised with the block. Useful for
+      dynamic labels whose text is set programmatically and must survive
+      save/load cycles (e.g. procedure definition blocks that persist their name).
+    properties:
+      type:
+        value: "field_label_serializable"
+      name:
+        type: string
+        required: true
+      text:
+        description: Default text value.
+        type: string
+        default: ""
+
+  field_image:
+    description: >
+      A static image rendered inline in the block. Not editable. Useful for
+      icons, logos, or decorative elements within a block's label row.
+    properties:
+      type:
+        value: "field_image"
+      name:
+        description: Optional identifier.
+        type: string
+        required: false
+      src:
+        description: URL of the raster image to display (PNG, GIF, etc.).
+        type: string
+        required: true
+      width:
+        description: >
+          Display width of the image in workspace units (pixels at 1× zoom).
+          Must be a positive non-zero number.
+        type: number
+        required: true
+      height:
+        description: >
+          Display height of the image in workspace units. Must be positive.
+        type: number
+        required: true
+      alt:
+        description: >
+          Accessible alt text for the image, also used as the block's label
+          when the block is collapsed. Defaults to empty string if absent.
+        type: string
+        default: ""
+      flipRtl:
+        description: >
+          If true, the image is horizontally mirrored when the workspace is
+          in right-to-left (RTL) mode (e.g. for Arabic/Hebrew layouts).
+        type: boolean
+        default: false
+
+  # ---------------------------------------------------------------------------
+  # PLUGIN / OPTIONAL BUILT-IN FIELDS (registered separately)
+  # ---------------------------------------------------------------------------
+
+  field_angle:
+    description: >
+      An angle-picker field (available as the @blockly/field-angle plugin).
+      Displays a degree value and opens a circular angle picker on click.
+    properties:
+      type:
+        value: "field_angle"
+      name:
+        type: string
+        required: true
+      angle:
+        description: Default angle in degrees.
+        type: number
+        default: 90
+      mode:
+        description: >
+          Measurement convention.
+          "degrees" → clockwise from the right (0° = right, 90° = down).
+          "radians" → not directly supported in JSON; set via JS API.
+        type: string
+        values: [degrees, compass]
+        default: degrees
+      clockwise:
+        description: >
+          Direction in which increasing values rotate. true = clockwise (default
+          for the "compass" mode), false = counter-clockwise (default for
+          "degrees" mode).
+        type: boolean
+
+  field_colour:
+    description: >
+      A colour-picker field (available as the @blockly/field-colour plugin).
+      Displays a colour swatch and opens a colour grid picker on click.
+      Stores values as "#rrggbb" strings.
+    properties:
+      type:
+        value: "field_colour"
+      name:
+        type: string
+        required: true
+      colour:
+        description: Default colour as a "#rrggbb" hex string.
+        type: string
+        default: "#ff0000"
+      colourOptions:
+        description: >
+          Array of "#rrggbb" strings defining the available colour swatches.
+          Overrides the default palette.
+        type: string[]
+      colourTitles:
+        description: >
+          Array of tooltip strings, one per colour in colourOptions. Matched
+          by index. If colourOptions is longer, extra colours use their #rrggbb
+          value as the tooltip.
+        type: string[]
+      columns:
+        description: Number of columns in the colour picker grid.
+        type: number
+        default: 7
+
+# =============================================================================
+# SERIALISATION / WORKSPACE-STATE PROPERTIES
+# (not part of the JSON block definition passed to defineBlocksWithJsonArray,
+#  but appear in serialised block JSON saved/loaded from workspaces)
+# =============================================================================
+
+serialised_block_properties:
+  description: >
+    The following properties appear in JSON produced by Blockly's serialiser
+    (Blockly.serialization) when saving a workspace. They are NOT part of the
+    prototype definition but are useful context when reading saved state.
+
+  id:
+    description: >
+      Unique identifier string assigned to a specific block instance on the
+      workspace. Auto-generated (UUID-like) if not provided. Used to reference
+      blocks in serialised connections.
+    type: string
+
+  data:
+    description: >
+      Arbitrary string payload attached to a block instance. Survives
+      serialisation, copy/paste, and duplication. Intended for associating a
+      block with an external resource (e.g. a database record UUID). Set in
+      code via block.data = '...'.
+    type: string
+    example: "16dcb3a4-bd39-11e4-8dfc-aa07a5b093db"
+
+  x:
+    description: X coordinate of the block's top-left corner on the workspace (in workspace units).
+    type: number
+
+  y:
+    description: Y coordinate of the block's top-left corner on the workspace (in workspace units).
+    type: number
+
+  collapsed:
+    description: >
+      Whether the block is displayed in its collapsed (minimised) form.
+      Collapsed blocks show only their first row and hide inputs.
+    type: boolean
+    default: false
+
+  disabled:
+    description: >
+      Whether the block (and any blocks it generates code for) is disabled.
+      Disabled blocks are greyed out and excluded from code generation.
+    type: boolean
+    default: false
+
+  deletable:
+    description: >
+      When false, the user cannot delete the block through the UI. Blocks are
+      deletable by default on an editable workspace; set to false to "pin" a
+      block (e.g. a required starter block in a tutorial).
+    type: boolean
+    default: true
+
+  movable:
+    description: >
+      When false, the block cannot be dragged by the user. An immovable block
+      that is a child of another block cannot be disconnected, but moves with
+      its parent. Default is true on an editable workspace.
+    type: boolean
+    default: true
+
+  editable:
+    description: >
+      When false, the block's fields (dropdowns, text inputs, checkboxes, etc.)
+      become read-only. The block can still be moved and connected. Default is
+      true on an editable workspace.
+    type: boolean
+    default: true
+
+  inline:
+    description: >
+      Serialised counterpart of inputsInline. Represents the current inline/
+      external state of the block's value inputs in saved workspace state.
+    type: boolean
+
+# =============================================================================
+# FULL ANNOTATED EXAMPLE
+# =============================================================================
+
+example_block_definition:
+  description: >
+    A fully annotated example showing most features of a JSON block definition.
+    This hypothetical block computes a range between two numbers with an
+    optional step, demonstrating message/args pairs, inline inputs, output
+    typing, colour, tooltip, helpUrl, extensions, and a mutator.
+
+  definition:
+    type: "math_range"
+    message0: "range from %1 to %2"
+    args0:
+      - type: "input_value"
+        name: "FROM"
+        check: "Number"
+        align: LEFT
+      - type: "input_value"
+        name: "TO"
+        check: "Number"
+        align: LEFT
+    message1: "step %1"
+    args1:
+      - type: "field_number"
+        name: "STEP"
+        value: 1
+        min: 0.001
+        precision: 0
+    implicitAlign1: RIGHT
+    output: "Array"
+    colour: 230
+    inputsInline: true
+    tooltip: "Creates a list of numbers between FROM and TO with the given STEP."
+    helpUrl: "https://docs.example.com/math_range"
+    extensions: []
+    mutator: "math_range_mutator"

@@ -5,6 +5,7 @@
   "Unknown block type \"{0}\". The .blk file references a block that is not in any loaded catalog. Check that the required catalog is present in the project's .blocks/ folder or in blocks-editor.catalogPaths.": "Tipo de bloque desconocido \"{0}\". El archivo .blk hace referencia a un bloque que no está en ningún catálogo cargado. Comprueba que el catálogo necesario esté presente en la carpeta .blocks/ del proyecto o en blocks-editor.catalogPaths.",
   "Failed to load workspace — {0}": "Error al cargar el workspace — {0}",
   "Open a workspace folder before enabling Claude Code integration.": "Abre una carpeta de workspace antes de habilitar la integración con Claude Code.",
+  "Select the folder to enable Claude Code integration in": "Selecciona la carpeta donde habilitar la integración con Claude Code",
   "Failed to write .mcp.json: {0}": "Error al escribir .mcp.json: {0}",
   "Claude Code integration enabled{0}. In a Claude Code session for this project, run /mcp and approve the \"blocks-editor\" server. Re-run this command after upgrading the extension to refresh the server path and skill.": "Integración con Claude Code habilitada{0}. En una sesión de Claude Code para este proyecto, ejecuta /mcp y aprueba el servidor \"blocks-editor\". Vuelve a ejecutar este comando tras actualizar la extensión para refrescar la ruta del servidor y la skill.",
   " (block-author skill installed). ": " (skill block-author instalada). ",
@@ -39,6 +40,7 @@
   "Default": "Predeterminado",
   "Search community catalogs…": "Buscar catálogos de la comunidad…",
   "Open a project folder first to download catalogs.": "Abre primero una carpeta de proyecto para descargar catálogos.",
+  "Select the folder to download the catalog into": "Selecciona la carpeta donde descargar el catálogo",
   "Catalog \"{0}\" downloaded.": "Catálogo \"{0}\" descargado.",
   "Failed to download catalog \"{0}\": {1}": "Error al descargar el catálogo \"{0}\": {1}"
 }

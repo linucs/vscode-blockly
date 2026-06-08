@@ -12,41 +12,30 @@ description: >
 
 # Block Author
 
-Create declarative block catalog YAML files that turn a hardware library's API into visual
-programming blocks for platformio-blocks.
+Create declarative block catalog YAML files that turn a hardware library's API or a combination of APIs into visual programming blocks for platformio-blocks.
 
 ## Overview
 
 Such blocks expose board/component-specific features that go beyond the standard Arduino API
-(already covered by built-in L1/L2 blocks). The skill researches the target library, designs
+(already covered by built-in blocks). The skill researches the target library, designs
 blocks for its public API, and generates a validated YAML catalog file.
 
-**The output is one or more `.yaml` catalogs** (multi-document YAML, one document per
-subcategory). The user places them in their project's `.blocks/` directory (or whichever path is
-configured in `platformio-blocks.catalogPaths`).
+**The output is one or more `.yaml` catalogs** (single or multi-document YAML, one document per subcategory). The user places them in their project's `.blocks/` directory (or whichever path is configured in `config.catalogPaths`).
 
-**Environment-aware output:** if a filesystem is available (e.g. Claude Code), ask the user where
-to save the files (or use the save tool below). If not (e.g. Claude chat), present each file as a
-fenced code block with a suggested filename. Never hardcode a destination path.
+**Environment-aware output:** if a filesystem is available (e.g. Claude Code), ask the user where to save the files (or use the save tool below). If not (e.g. Claude chat), present each file as a fenced code block with a suggested filename. Never hardcode a destination path.
 
 ## Reference — read this first
 
 **`reference.md`** (in this skill's directory) is the single source of truth for the authoring
-**workflow** (Phases 0–3) and the complete **reference**: block archetypes, field types (standard,
-`@blockly` plugins, and custom fields), C++ type-check groups, codegen sections and precedence,
-YAML file structure, naming conventions, dependencies, authoring rules, the validation structural
-checks, project prerequisites, and a worked example. Consult it before designing or generating —
-do not rely on memorized field names or structures.
+**workflow** (Phases 0–3) and the complete **reference**: block archetypes, field types (standard, `@blockly` plugins, and custom fields), C++ type-check groups, codegen sections and precedence, YAML file structure, naming conventions, dependencies, authoring rules, the validation structural checks, project prerequisites, and a worked example. Consult it before designing or generating — do not rely on memorized field names or structures.
 
 ## Tooling (blocks-editor MCP server)
 
-The platformio-blocks extension ships an MCP server named **`blocks-editor`**. When it is connected
-(check your available tools), **prefer these tools** over manual steps — they use the extension's
-own bundled schema and code, so they stay in sync with the installed version:
+The platformio-blocks extension ships an MCP server named **`blocks-editor`**. When it is connected (check your available tools), **prefer these tools** over manual steps — they use the extension's own bundled schema and code, so they stay in sync with the installed version:
 
 | Tool | Use for | Replaces the manual step of |
 |------|---------|------------------------------|
-| `list-builtin-blocks` | what L1/L2 blocks already exist | guessing — call FIRST in Phase 2, never recreate a listed block |
+| `list-builtin-blocks` | what blocks already exist | guessing — call FIRST in Phase 2, never recreate a listed block |
 | `fetch-url` | reading `.h` / `library.properties` / docs | ad-hoc fetching (strips HTML, truncates) |
 | `search-pio-registry` | the PlatformIO dependency format | guessing `name` vs `url`+`ref` |
 | `check-arduino-registry` | Arduino CLI installability | guessing (registries don't fully overlap) |

@@ -5,6 +5,7 @@
   "Unknown block type \"{0}\". The .blk file references a block that is not in any loaded catalog. Check that the required catalog is present in the project's .blocks/ folder or in blocks-editor.catalogPaths.": "Neznámý typ bloku \"{0}\". Soubor .blk odkazuje na blok, který není v žádném načteném katalogu. Zkontrolujte, zda je požadovaný katalog ve složce .blocks/ projektu nebo v blocks-editor.catalogPaths.",
   "Failed to load workspace — {0}": "Nepodařilo se načíst pracovní prostor — {0}",
   "Open a workspace folder before enabling Claude Code integration.": "Před povolením integrace Claude Code otevřete složku pracovního prostoru.",
+  "Select the folder to enable Claude Code integration in": "Vyberte složku, ve které se má povolit integrace Claude Code",
   "Failed to write .mcp.json: {0}": "Nepodařilo se zapsat .mcp.json: {0}",
   "Claude Code integration enabled{0}. In a Claude Code session for this project, run /mcp and approve the \"blocks-editor\" server. Re-run this command after upgrading the extension to refresh the server path and skill.": "Integrace Claude Code povolena{0}. V relaci Claude Code pro tento projekt spusťte /mcp a schvalte server \"blocks-editor\". Po aktualizaci rozšíření spusťte tento příkaz znovu, aby se obnovila cesta k serveru a skill.",
   " (block-author skill installed). ": " (skill block-author nainstalován). ",
@@ -39,6 +40,7 @@
   "Default": "Výchozí",
   "Search community catalogs…": "Hledat katalogy komunity…",
   "Open a project folder first to download catalogs.": "Nejprve otevřete složku projektu pro stažení katalogů.",
+  "Select the folder to download the catalog into": "Vyberte složku, do které se má katalog stáhnout",
   "Catalog \"{0}\" downloaded.": "Katalog \"{0}\" stažen.",
   "Failed to download catalog \"{0}\": {1}": "Nepodařilo se stáhnout katalog \"{0}\": {1}"
 }

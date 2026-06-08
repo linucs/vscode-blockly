@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs/promises';
 import * as path from 'path';
+import { resolveActiveWorkspaceRoot } from '../util/workspaceRoot';
 
 const SERVER_KEY = 'blocks-editor';
 const SKILL_REL = path.join('.claude', 'skills', 'block-author');
@@ -25,7 +26,9 @@ interface McpConfig {
  * upgrade refreshes it. Existing entries in `.mcp.json` are preserved.
  */
 export async function enableClaudeCodeIntegration(context: vscode.ExtensionContext): Promise<void> {
-    const root = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
+    const root = await resolveActiveWorkspaceRoot(
+        vscode.l10n.t('Select the folder to enable Claude Code integration in')
+    );
     if (!root) {
         vscode.window.showWarningMessage(
             vscode.l10n.t('Open a workspace folder before enabling Claude Code integration.')

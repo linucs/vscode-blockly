@@ -5,6 +5,7 @@
   "Unknown block type \"{0}\". The .blk file references a block that is not in any loaded catalog. Check that the required catalog is present in the project's .blocks/ folder or in blocks-editor.catalogPaths.": "不明なブロックタイプ \"{0}\"。.blk ファイルが、読み込まれたどのカタログにも存在しないブロックを参照しています。必要なカタログがプロジェクトの .blocks/ フォルダー、または blocks-editor.catalogPaths に存在することを確認してください。",
   "Failed to load workspace — {0}": "ワークスペースの読み込みに失敗しました — {0}",
   "Open a workspace folder before enabling Claude Code integration.": "Claude Code 連携を有効にする前に、ワークスペースフォルダーを開いてください。",
+  "Select the folder to enable Claude Code integration in": "Claude Code 連携を有効にするフォルダーを選択してください",
   "Failed to write .mcp.json: {0}": ".mcp.json の書き込みに失敗しました: {0}",
   "Claude Code integration enabled{0}. In a Claude Code session for this project, run /mcp and approve the \"blocks-editor\" server. Re-run this command after upgrading the extension to refresh the server path and skill.": "Claude Code 連携を有効にしました{0}。このプロジェクトの Claude Code セッションで /mcp を実行し、\"blocks-editor\" サーバーを承認してください。サーバーのパスとスキルを更新するには、拡張機能をアップグレードした後にこのコマンドを再実行してください。",
   " (block-author skill installed). ": "（block-author スキルをインストールしました）。",
@@ -39,6 +40,7 @@
   "Default": "デフォルト",
   "Search community catalogs…": "コミュニティカタログを検索…",
   "Open a project folder first to download catalogs.": "カタログをダウンロードするには、先にプロジェクトフォルダーを開いてください。",
+  "Select the folder to download the catalog into": "カタログをダウンロードするフォルダーを選択してください",
   "Catalog \"{0}\" downloaded.": "カタログ \"{0}\" をダウンロードしました。",
   "Failed to download catalog \"{0}\": {1}": "カタログ \"{0}\" のダウンロードに失敗しました: {1}"
 }

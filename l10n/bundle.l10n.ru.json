@@ -5,6 +5,7 @@
   "Unknown block type \"{0}\". The .blk file references a block that is not in any loaded catalog. Check that the required catalog is present in the project's .blocks/ folder or in blocks-editor.catalogPaths.": "Неизвестный тип блока \"{0}\". Файл .blk ссылается на блок, отсутствующий в любом загруженном каталоге. Убедитесь, что нужный каталог находится в папке .blocks/ проекта или в blocks-editor.catalogPaths.",
   "Failed to load workspace — {0}": "Не удалось загрузить рабочую область — {0}",
   "Open a workspace folder before enabling Claude Code integration.": "Откройте папку рабочей области перед включением интеграции с Claude Code.",
+  "Select the folder to enable Claude Code integration in": "Выберите папку для включения интеграции с Claude Code",
   "Failed to write .mcp.json: {0}": "Не удалось записать .mcp.json: {0}",
   "Claude Code integration enabled{0}. In a Claude Code session for this project, run /mcp and approve the \"blocks-editor\" server. Re-run this command after upgrading the extension to refresh the server path and skill.": "Интеграция с Claude Code включена{0}. В сессии Claude Code для этого проекта выполните /mcp и одобрите сервер \"blocks-editor\". Запустите эту команду повторно после обновления расширения, чтобы обновить путь к серверу и skill.",
   " (block-author skill installed). ": " (skill block-author установлена). ",
@@ -39,6 +40,7 @@
   "Default": "По умолчанию",
   "Search community catalogs…": "Поиск каталогов сообщества…",
   "Open a project folder first to download catalogs.": "Сначала откройте папку проекта, чтобы скачать каталоги.",
+  "Select the folder to download the catalog into": "Выберите папку для загрузки каталога",
   "Catalog \"{0}\" downloaded.": "Каталог \"{0}\" скачан.",
   "Failed to download catalog \"{0}\": {1}": "Не удалось скачать каталог \"{0}\": {1}"
 }

@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { TOOL_DEFINITIONS, type ToolDefinition, type ToolContext } from '../tools/registry';
+import { resolveActiveWorkspaceRoot } from '../util/workspaceRoot';
 
 /** Prefix mapping a registry tool `name` to its `vscode.lm` tool id. */
 export const LM_TOOL_PREFIX = 'blocks-editor-';
@@ -37,7 +38,9 @@ class RegistryLmTool implements vscode.LanguageModelTool<Record<string, unknown>
         _token: vscode.CancellationToken
     ): Promise<vscode.LanguageModelToolResult> {
         const ctx: ToolContext = {
-            workspaceRoot: vscode.workspace.workspaceFolders?.[0]?.uri.fsPath ?? '',
+            // Prefer the folder of the document being edited; no prompt — an LM
+            // tool call shouldn't block on UI, so fall back to the first folder.
+            workspaceRoot: (await resolveActiveWorkspaceRoot()) ?? '',
             builtinCatalogDirs: [], // list-builtin-blocks is not exposed to the LM host
         };
         const text = await this.def.run(options.input, ctx);

@@ -13,39 +13,53 @@ It is **host-neutral**: it never names a specific tool. Each host maps the gener
 
 ## Workflow
 
-Follow these phases. Wherever a phase says "fetch", "look up the registry", "validate", or
-"save", use whichever concrete tool your host provides for that action.
+Follow these phases. Wherever a phase says "fetch", "look up the registry", "validate", or "save", use whichever concrete tool your host provides for that action.
 
 ### Phase 0: Scoping & objectives
 
 Before research, ask the user:
-1. **What should these blocks do?** — a 1:1 wrapper of the library API, or higher-level use-case
-   blocks that encapsulate multiple calls? A catalog can mix both.
-2. **Who is the target audience?** — beginners (fewer blocks, generous defaults) or advanced users
-   (granular access to every parameter)?
+1. **What should these blocks do?** — a 1:1 wrapper of the library API, or higher-level use-case blocks that encapsulate multiple calls? A catalog can mix both.
+2. **Who is the target audience?** — beginners (fewer blocks, generous defaults) or advanced users (granular access to every parameter)?
 3. **Where is the reference documentation?** — docs/API/tutorial/example URLs.
 4. **Are there example sketches** that represent the expected outcome?
+5. **What development environment are we targeting?** - we might be creating blocks for the Arduino CLI/IDE, PlatformIO (PIO). Each has its own library registry, and registries do not fully overlap.
 
 ### Phase 1: Research the target (do NOT design from memory)
 
 1. **Fetch the documentation** the user pointed to — reveals intended usage patterns.
-2. **Fetch the library source** — the main header (`.h`) and implementation (`.cpp`) via raw
-   GitHub URLs. The header is the source of truth for class names, method signatures, return
-   types, enum values, and constants. Try the `main` branch, then `master`.
-3. **Fetch `library.properties`** (or `library.json`) for declared dependencies and architectures.
-4. **Look up the PlatformIO registry** for the library and each dependency → determines the
-   dependency format (`name` + `minVersion` vs `name` + `url` + `ref`). **Record the current
-   version** — you will use it as `minVersion` in the catalog.
-5. **Look up the Arduino Library Registry** (installable via `arduino-cli lib install`) — the PIO
-   and Arduino registries do not fully overlap. **Record the version** from whichever registry has it.
-6. **Determine `targets`** from `architectures` and compatible board IDs.
+2. **Fetch the library source** — ALWAYS traverse ALL the source repositories files via raw GitHub URLs, to acquire a comprehensive knowledge of the library
+3. **Classes, interfaces, methods and signatures**: use main header (`.h`) and implementation (`.cpp`) files to understand what each API does. The header is the source of truth for class names, method signatures, return types, enum values, and constants. Try the `main` branch, then `master`.
+4. **Dependencies and architectures**: look for files that declare dependencies (e.g. `library.properties` or `library.json`).
+5. **Look up the Arduino Library Registry** — if targeting this development environment. It describes the library and each dependency → determines the dependency format (`name` + `minVersion` vs `name` + `url` + `ref`). **Record the current version** — you will use it as `minVersion` in the catalog.
+5. **Look up the PlatformIO registry** - if targeting this environment. It describes the library and each dependency → determines the dependency format (`name` + `minVersion` vs `name` + `url` + `ref`). **Record the current version** — you will use it as `minVersion` in the catalog.
+7. **Determine `targets`** (build targets) and compatible board IDs, from `architectures`.
 
 Every class/method/enum/return type in the output must come from the fetched source, not memory.
 
-### Phase 1.5: Choose a category colour
+### Phase 2: Consolidate the findings and refine the scope of the design phase
 
-Pick a distinctive hex colour for the toolbox category. The colour is declared once in the YAML
-(`colour: "#RRGGBB"`) and applies to all blocks in that category. Guidelines:
+In view of the next phases, group APis into consistent categories, to let the user decide which areas/functionalities shall be designed as blocks.
+Present the findings into a clear, structured table for review, with this columns:
+- **Index** - use letters to refer to the n-th category listed in the table
+- **Category name**
+- **Category scope** - explain why APIs shall be grouped into this category
+- **List of APis** - quick comma-separated list of classes, methods, interfaces, variables, public contants etc.
+
+Ask the user to review and iteratively refine the design scoping.
+**Do NOT proceed to the next phases until the scoping is confirmed by the user**.
+
+### Phase 3: Design, generate and validate the blocks
+
+Design and block generation follows an iterative process, one category at a time:
+
+- design all the blocks in the category
+- get approval from the user
+- generate and validate the blocks
+- get approval from the user
+
+#### Phase 3.1: Choose a category colour
+
+Pick a distinctive hex colour for the toolbox category. The colour is declared once in the YAML (`colour: "#RRGGBB"`) and applies to all blocks in that category. Guidelines:
 
 - **Hardware boards/shields** — use the brand colour (e.g. Arduino teal `#00979D`, Adafruit purple
   `#7B2D8B`, SparkFun red `#E31B23`).
@@ -56,33 +70,46 @@ Pick a distinctive hex colour for the toolbox category. The colour is declared o
 - **Displays** — purples (`#6A1B9A`, `#4A148C`).
 - **Storage/memory** — browns/ambers (`#4E342E`, `#FF8F00`).
 
-When multiple entries share the same top-level category, only one needs to declare the colour
-(last-loaded wins). Subcategories inherit the top-level category's colour.
+When multiple entries share the same top-level category, only one needs to declare the colour (last-loaded wins). Subcategories inherit the top-level category's colour.
+If a suitable brand colour isn't obvious, choose one that contrasts well with existing categories visible in the toolbox.
 
-If a suitable brand colour isn't obvious, choose one that contrasts well with existing categories
-visible in the toolbox.
+#### Phase 3.2: Design the blocks
 
-### Phase 2: Design the blocks
-
-Group related functionality into subcategories (one YAML document each). For each API method or
-use case, choose the archetype and design the visual layout + codegen (see the reference below).
+Group related functionality into subcategories (one YAML document each).
+For each API method or use case, choose the archetype and design the visual layout + codegen (see the reference below).
 
 Design principles:
-- One block per logical action — don't combine unrelated operations.
-- `field_dropdown` for fixed option sets; `input_value` for dynamic/computed parameters.
+- **One block per logical action** — don't combine unrelated operations.
+- Use `field_dropdown` for fixed option sets; `input_value` or `field_*` for dynamic/computed parameters.
 - Provide `inputDefaults` for inputs that commonly have a standard value.
-- Group init/begin blocks with a `setup` tag — the user places them in setup containers.
-- Implementation-level `codegen.imports` for the shared `#include` (emitted once); block-level
-  `codegen.declarations` for shared objects (deduplicated by exact string).
-- For use-case blocks, leverage `codegen.helpers` (utility functions) so `body` stays readable.
+- Use implementation-level `codegen.imports` for the shared `#include` (emitted once)
+- Use block-level `codegen.declarations` for shared objects (deduplicated by exact string).
+- Use block-level `codegen.setup` for init/begin functions that require no parameters to be specified by the user (deduplicated by exact string).
+- **Avoid duplicate init.** If you provide a dedicated "begin" block, do NOT also emit the same
+  `.begin()` from implementation-level `codegen.setup`. Pick one approach.
+- Tag blocks with init/begin functions that require parameters with a `setup` tag and put the code in the block-lebel `codegen.body` section — the user will specify the parameters and place them in setup containers.
+- For use-case blocks, leverage `codegen.helpers` (utility functions, callback functions) so `body` stays readable.
+- **Runtime is always `arduino:cpp`.** The extension generates C++ only. Never offer Python; never
+  ask which runtime — always set `runtime: "arduino:cpp"`.
+- **`targets` is mandatory for board-specific libraries.** If a library is not universal, the
+  implementation MUST include a `targets` array of board identifiers. Omitting it makes the blocks
+  appear for ALL boards.
+- **`tags` go on every relevant block**, not just the last one.
+- **Validate enum/constant scoping.** `MyClass::VALUE` differs from `VALUE`. Take exact scoping
+  from the header source, never from memory.
 
-### Phase 2.5: Confirm the plan
+Present the user a table listing **ALL** the blocks you are going to create.
+You **MUST** show a section for each block: start with an intro containing, ID, Description/usage and **ALL** the message(s) included in the block (`implementations[].blocks[].blockly.messageX`)
+End the section with a table listing ALL the blocks' parameters ((`implementations[].blocks[].blockly.argsX`)), containing:
+- name
+- type
+- checks
 
 Before writing YAML, present and **wait for confirmation**: file plan (board-specific vs general
 library); supported boards (`targets`) with the source of each determination; block inventory per
 file (subcategories, counts, names); chosen category colour (with rationale); key design decisions.
 
-### Phase 3: Generate and validate
+#### Phase 3.3: Generate and validate
 
 1. Generate the YAML (with the schema front matter).
 2. **Validate** it (schema + structural checks below). Fix issues and re-validate.
@@ -91,9 +118,16 @@ file (subcategories, counts, names); chosen category colour (with rationale); ke
 4. Report a summary table: file → subcategory → block count.
 5. Document project prerequisites (see below).
 
+Inform the user of the created/updated YAML file. Ask to test it and report back a feedback to refine the generated blocks.
+
 ---
 
 ## Block Anatomy Reference
+
+### Reference — read this first
+
+**`blockly_schema.yaml`** (in this skill's directory) contains the schema and the description of blocks'anatomy.
+Refer to it in order to understand how to build blocks to put under the `implementations[].blocks[].blockly`.
 
 ### The 5 block archetypes
 
@@ -104,7 +138,7 @@ Every block belongs to exactly one archetype, determined by which connection slo
 | **Value** | `output` only | Sensor reads, calculations, getters | REQUIRES `precedence`. No `;` in body. |
 | **Statement** | `previousStatement` + `nextStatement` | Commands, setters, actions | Body lines end with `;` |
 | **Terminal** | `previousStatement` only | `break`, `return`, power off | Nothing stacks below |
-| **Hat/Event** | `nextStatement` only | Event handlers, program entry | Add `"extensions": ["hat_event_style"]` |
+| **Hat/Event** | `nextStatement` only | Event handlers, program entry. Usually encapsulates other code blocks | Add `"extensions": ["hat_event_style"]` |
 | **Standalone** | None | Config blocks, annotations | Rare in hardware contexts |
 
 **Critical rule**: `output` and `previousStatement` are mutually exclusive — a block is either a
@@ -128,63 +162,9 @@ previousStatement: null
 # (no nextStatement)
 ```
 
-### Input types
-
-Inputs are the sockets where other blocks connect. They appear in `args0` with a `type` key.
-
-| Input | Purpose | Renders as | Template syntax |
-|-------|---------|-----------|----------------|
-| `input_value` | Accepts one value block | Round/diamond socket | `{{NAME}}` → generated code of connected block; falls back to `inputDefaults[NAME]` if unconnected |
-| `input_statement` | Accepts a chain of statement blocks | C-shaped notch | `{{NAME}}` → indented code of the full chain |
-| `input_dummy` | Fields only, no socket | No socket | No template — starts a new visual row |
-| `input_end_row` | Explicit line break in layout | No socket | No template |
-
-```yaml
-args0:
-  - type: input_value
-    name: SPEED
-    check: ["Number", "int"]
-  - type: input_statement
-    name: BODY
-  - type: input_dummy
-  - type: field_dropdown
-    name: MODE
-    options: [["fast", "FAST"], ["slow", "SLOW"]]
-```
-
-### Field types — Standard Blockly
-
-Fields are inline UI controls inside inputs. They appear in `args0` alongside inputs.
-
-| Field | Key properties | Template resolves to |
-|-------|---------------|---------------------|
-| `field_dropdown` | `options: [["label", "VALUE"], ...]` | The selected VALUE string |
-| `field_number` | `value`, `min`, `max`, `precision` | The number as string |
-| `field_input` | `text` (default) | The entered string |
-| `field_checkbox` | `checked: true/false` | `"TRUE"` or `"FALSE"` (uppercase string) |
-| `field_variable` | `variable: "varname"` | Language-safe variable name (tracks renames) |
-| `field_label` | `text` | N/A (display only) |
-| `field_image` | `src`, `width`, `height`, `alt` | N/A (display only) |
-
-```yaml
-- type: field_dropdown
-  name: BAUD
-  options: [["9600", "9600"], ["115200", "115200"]]
-- type: field_number
-  name: DELAY_MS
-  value: 100
-  min: 0
-  max: 60000
-  precision: 1   # 1 = integers only; omit for any decimal
-- type: field_checkbox
-  name: PULLUP
-  checked: true
-```
-`field_checkbox` in codegen: `"digitalRead({{PIN}}, {{PULLUP}} == TRUE ? INPUT_PULLUP : INPUT)"`.
-
 ### Field types — Official @blockly plugins
 
-Installed npm packages, auto-registered at startup.
+Installed as npm packages, Blockly plugins (auto-registered at startup) add the following additional input types:
 
 | Field | Purpose | Template resolves to |
 |-------|---------|---------------------|
@@ -396,19 +376,57 @@ or other init calls here — provide explicit init blocks instead (WYSIWYG princ
 
 ### Precedence (value blocks only)
 
-Every value block MUST specify `precedence`.
+Every value block MUST specify `codegen.precedence`.
 
-| Precedence | When to use |
-|-----------|-------------|
-| `ATOMIC` | Function calls, variable reads, constants — most common |
-| `UNARY_PREFIX` | Unary operators like `!x`, `-x` |
-| `MULTIPLICATION` | `a * b`, `a / b` |
-| `ADDITION` | `a + b`, `a - b` |
-| `RELATIONAL` | `a < b`, `a > b`, `a <= b`, `a >= b` |
-| `EQUALITY` | `a == b`, `a != b` |
-| `LOGICAL_AND` | `a && b` |
-| `LOGICAL_OR` | `a \|\| b` |
-| `NONE` | Lowest precedence |
+When the code generator serialises nested blocks into text, it needs to know whether the inner expression requires parentheses to preserve the correct evaluation order. For example:
+
+```
+(2 + 3) * 4   ← parentheses required
+2 * 3 + 4     ← parentheses not required
+```
+
+Every call to the code generator takes an argument — the minimum precedence the caller can tolerate from the inner block.
+The generator compares that value against the precedence the inner block declares for its own output. If the inner block's precedence is weaker than what the outer block needs, the code is automatically wrapped in parentheses.
+
+We use `codegen.precedence` from following operator precedence table:
+
+| Precedence | Value | Operator |
+|---|---|---|
+| `ATOMIC` | 0 | literals, identifiers |
+| `NEW` | 1.1 | `new` |
+| `MEMBER` | 1.2 | `.` `[]` |
+| `FUNCTION_CALL` | 2 | `()` |
+| `INCREMENT` | 3 | `++` |
+| `DECREMENT` | 3 | `--` |
+| `BITWISE_NOT` | 4.1 | `~` |
+| `UNARY_PLUS` | 4.2 | `+` (unary) |
+| `UNARY_NEGATION` | 4.3 | `-` (unary) |
+| `LOGICAL_NOT` | 4.4 | `!` |
+| `TYPEOF` | 4.5 | `typeof` |
+| `VOID` | 4.6 | `void` |
+| `DELETE` | 4.7 | `delete` |
+| `AWAIT` | 4.8 | `await` |
+| `EXPONENTIATION` | 5.0 | `**` |
+| `MULTIPLICATION` | 5.1 | `*` |
+| `DIVISION` | 5.2 | `/` |
+| `MODULUS` | 5.3 | `%` |
+| `SUBTRACTION` | 6.1 | `-` |
+| `ADDITION` | 6.2 | `+` |
+| `BITWISE_SHIFT` | 7 | `<<` `>>` `>>>` |
+| `RELATIONAL` | 8 | `<` `<=` `>` `>=` |
+| `IN` | 8 | `in` |
+| `INSTANCEOF` | 8 | `instanceof` |
+| `EQUALITY` | 9 | `==` `!=` `===` `!==` |
+| `BITWISE_AND` | 10 | `&` |
+| `BITWISE_XOR` | 11 | `^` |
+| `BITWISE_OR` | 12 | `\|` |
+| `LOGICAL_AND` | 13 | `&&` |
+| `LOGICAL_OR` | 14 | `\|\|` |
+| `CONDITIONAL` | 15 | `?:` |
+| `ASSIGNMENT` | 16 | `=` `+=` `-=` `**=` etc. |
+| `YIELD` | 17 | `yield` |
+| `COMMA` | 18 | `,` |
+| `NONE` | 99 | always parenthesise |
 
 **When in doubt, use `ATOMIC`.**
 
@@ -495,26 +513,6 @@ Each independently reusable library gets its own `.yaml` file. A library is "ind
 reusable" if it works on boards other than the one mentioned (e.g. WiFiNINA, ArduinoBLE,
 ArduinoMqttClient). Board/carrier-specific libraries (e.g. Arduino_MKRIoTCarrier) go in a
 board-specific file. When several libraries are mentioned together, classify each and split.
-
----
-
-## Authoring Rules
-
-- **Runtime is always `arduino:cpp`.** The extension generates C++ only. Never offer Python; never
-  ask which runtime — always set `runtime: "arduino:cpp"`.
-- **No auto-routing to `setup()` (WYSIWYG).** Do NOT use implementation-level `codegen.setup` for
-  init calls like `.begin()`. Provide explicit "begin/init" statement blocks the user places in a
-  setup container. Implementation-level `codegen` should hold only `imports` and `declarations`.
-- **Avoid duplicate init.** If you provide a dedicated "begin" block, do NOT also emit the same
-  `.begin()` from implementation-level `codegen.setup`. Pick one approach.
-- **`targets` is mandatory for board-specific libraries.** If a library is not universal, the
-  implementation MUST include a `targets` array of board identifiers. Omitting it makes the blocks
-  appear for ALL boards.
-- **`inputDefaults` are for `input_value` only.** Do not put dropdown field names in
-  `inputDefaults` — dropdowns already default to their first option.
-- **`tags` go on every relevant block**, not just the last one.
-- **Validate enum/constant scoping.** `MyClass::VALUE` differs from `VALUE`. Take exact scoping
-  from the header source, never from memory.
 
 ---
 

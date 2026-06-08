@@ -3,6 +3,7 @@ import * as path from 'path';
 import * as fs from 'fs/promises';
 import { RegistryIndex, RegistryEntry } from './CatalogRegistryTypes';
 import { httpGet } from './remoteCatalog';
+import { activeDocumentUri, resolveActiveWorkspaceRoot } from '../util/workspaceRoot';
 
 const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
 
@@ -138,17 +139,22 @@ export class CatalogRegistryProvider implements vscode.TreeDataProvider<CatalogR
     async download(item: CatalogRegistryItem): Promise<void> {
         if (item.kind !== 'entry') return;
 
-        const folders = vscode.workspace.workspaceFolders;
-        if (!folders || folders.length === 0) {
-            vscode.window.showErrorMessage(
-                vscode.l10n.t('Open a project folder first to download catalogs.')
-            );
+        const root = await resolveActiveWorkspaceRoot(
+            vscode.l10n.t('Select the folder to download the catalog into')
+        );
+        if (!root) {
+            // No folder open → guide the user; picker dismissed → silent no-op.
+            if (!vscode.workspace.workspaceFolders?.length) {
+                vscode.window.showErrorMessage(
+                    vscode.l10n.t('Open a project folder first to download catalogs.')
+                );
+            }
             return;
         }
 
         const { entry } = item;
         const relativePath = entry.path.replace(/^catalogs\//, '');
-        const destPath = path.join(folders[0].uri.fsPath, '.blocks', relativePath);
+        const destPath = path.join(root, '.blocks', relativePath);
 
         try {
             await fs.mkdir(path.dirname(destPath), { recursive: true });
@@ -173,7 +179,12 @@ export class CatalogRegistryProvider implements vscode.TreeDataProvider<CatalogR
     private resolveBlocksDir(): string | undefined {
         const folders = vscode.workspace.workspaceFolders;
         if (!folders || folders.length === 0) return undefined;
-        return path.join(folders[0].uri.fsPath, '.blocks');
+        // Match download(): prefer the active document's folder so the tree's
+        // "installed" markers reflect the project you're working in. Passive
+        // scan — no prompt, fall back to the first folder.
+        const activeUri = activeDocumentUri();
+        const folder = activeUri ? vscode.workspace.getWorkspaceFolder(activeUri) : undefined;
+        return path.join((folder ?? folders[0]).uri.fsPath, '.blocks');
     }
 
     private async scanInstalledPaths(): Promise<void> {

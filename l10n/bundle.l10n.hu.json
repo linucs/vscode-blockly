@@ -5,6 +5,7 @@
   "Unknown block type \"{0}\". The .blk file references a block that is not in any loaded catalog. Check that the required catalog is present in the project's .blocks/ folder or in blocks-editor.catalogPaths.": "Ismeretlen blokktípus: \"{0}\". A .blk fájl olyan blokkra hivatkozik, amely egyik betöltött katalógusban sincs benne. Ellenőrizd, hogy a szükséges katalógus jelen van-e a projekt .blocks/ mappájában vagy a blocks-editor.catalogPaths beállításban.",
   "Failed to load workspace — {0}": "A munkaterület betöltése sikertelen — {0}",
   "Open a workspace folder before enabling Claude Code integration.": "Nyiss meg egy munkaterület-mappát a Claude Code integráció engedélyezése előtt.",
+  "Select the folder to enable Claude Code integration in": "Válaszd ki a mappát, ahol engedélyezni szeretnéd a Claude Code integrációt",
   "Failed to write .mcp.json: {0}": "A .mcp.json írása sikertelen: {0}",
   "Claude Code integration enabled{0}. In a Claude Code session for this project, run /mcp and approve the \"blocks-editor\" server. Re-run this command after upgrading the extension to refresh the server path and skill.": "Claude Code integráció engedélyezve{0}. Egy ehhez a projekthez tartozó Claude Code munkamenetben futtasd a /mcp parancsot, és hagyd jóvá a \"blocks-editor\" szervert. Az bővítmény frissítése után futtasd újra ezt a parancsot a szerver elérési útjának és a skill frissítéséhez.",
   " (block-author skill installed). ": " (block-author skill telepítve). ",
@@ -39,6 +40,7 @@
   "Default": "Alapértelmezett",
   "Search community catalogs…": "Közösségi katalógusok keresése…",
   "Open a project folder first to download catalogs.": "Először nyiss meg egy projektmappát a katalógusok letöltéséhez.",
+  "Select the folder to download the catalog into": "Válaszd ki a mappát, ahová a katalógust letöltöd",
   "Catalog \"{0}\" downloaded.": "A(z) \"{0}\" katalógus letöltve.",
   "Failed to download catalog \"{0}\": {1}": "A(z) \"{0}\" katalógus letöltése sikertelen: {1}"
 }

@@ -5,6 +5,7 @@
   "Unknown block type \"{0}\". The .blk file references a block that is not in any loaded catalog. Check that the required catalog is present in the project's .blocks/ folder or in blocks-editor.catalogPaths.": "未知的積木類型 \"{0}\"。.blk 檔案參照了一個不在任何已載入目錄中的積木。請檢查所需的目錄是否存在於專案的 .blocks/ 資料夾中，或位於 blocks-editor.catalogPaths。",
   "Failed to load workspace — {0}": "載入工作區失敗 — {0}",
   "Open a workspace folder before enabling Claude Code integration.": "啟用 Claude Code 整合前請先開啟工作區資料夾。",
+  "Select the folder to enable Claude Code integration in": "選擇要啟用 Claude Code 整合的資料夾",
   "Failed to write .mcp.json: {0}": "寫入 .mcp.json 失敗：{0}",
   "Claude Code integration enabled{0}. In a Claude Code session for this project, run /mcp and approve the \"blocks-editor\" server. Re-run this command after upgrading the extension to refresh the server path and skill.": "已啟用 Claude Code 整合{0}。在此專案的 Claude Code 工作階段中，執行 /mcp 並核准 \"blocks-editor\" 伺服器。升級擴充功能後請重新執行此命令，以更新伺服器路徑與 skill。",
   " (block-author skill installed). ": " （已安裝 block-author skill）。 ",
@@ -39,6 +40,7 @@
   "Default": "預設",
   "Search community catalogs…": "搜尋社群目錄…",
   "Open a project folder first to download catalogs.": "請先開啟一個專案資料夾以下載目錄。",
+  "Select the folder to download the catalog into": "選擇要下載目錄的資料夾",
   "Catalog \"{0}\" downloaded.": "目錄 \"{0}\" 已下載。",
   "Failed to download catalog \"{0}\": {1}": "下載目錄 \"{0}\" 失敗：{1}"
 }

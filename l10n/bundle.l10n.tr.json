@@ -5,6 +5,7 @@
   "Unknown block type \"{0}\". The .blk file references a block that is not in any loaded catalog. Check that the required catalog is present in the project's .blocks/ folder or in blocks-editor.catalogPaths.": "Bilinmeyen blok türü \"{0}\". .blk dosyası, yüklenen hiçbir katalogda bulunmayan bir bloğa başvuruyor. Gerekli kataloğun projenin .blocks/ klasöründe veya blocks-editor.catalogPaths içinde bulunduğunu doğrulayın.",
   "Failed to load workspace — {0}": "Çalışma alanı yüklenemedi — {0}",
   "Open a workspace folder before enabling Claude Code integration.": "Claude Code entegrasyonunu etkinleştirmeden önce bir çalışma alanı klasörü açın.",
+  "Select the folder to enable Claude Code integration in": "Claude Code entegrasyonunun etkinleştirileceği klasörü seçin",
   "Failed to write .mcp.json: {0}": ".mcp.json yazılamadı: {0}",
   "Claude Code integration enabled{0}. In a Claude Code session for this project, run /mcp and approve the \"blocks-editor\" server. Re-run this command after upgrading the extension to refresh the server path and skill.": "Claude Code entegrasyonu etkinleştirildi{0}. Bu projeye yönelik bir Claude Code oturumunda /mcp komutunu çalıştırın ve \"blocks-editor\" sunucusunu onaylayın. Sunucu yolunu ve skill'i yenilemek için uzantıyı yükselttikten sonra bu komutu yeniden çalıştırın.",
   " (block-author skill installed). ": " (block-author skill'i kuruldu). ",
@@ -39,6 +40,7 @@
   "Default": "Varsayılan",
   "Search community catalogs…": "Topluluk kataloglarında ara…",
   "Open a project folder first to download catalogs.": "Katalogları indirmek için önce bir proje klasörü açın.",
+  "Select the folder to download the catalog into": "Kataloğun indirileceği klasörü seçin",
   "Catalog \"{0}\" downloaded.": "\"{0}\" kataloğu indirildi.",
   "Failed to download catalog \"{0}\": {1}": "\"{0}\" kataloğu indirilemedi: {1}"
 }

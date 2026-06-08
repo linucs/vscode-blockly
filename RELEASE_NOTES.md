@@ -6,6 +6,11 @@ Build programs for Arduino by **dragging colorful blocks** — like Scratch, but
 
 ---
 
+## v0.2.1 — 2026-06-08
+
+- **"Generate Code"** — the button (and its setting) that was labelled "Generate C++" is now "Generate Code" in every language, since the editor picks the right code generator from your board's runtime, not just the file type.
+- **Plays nicely with multi-root workspaces** — downloading a community catalog or enabling the Claude Code integration now asks which folder to use instead of guessing, so the right project gets the files.
+
 ## v0.2.0 — 2026-06-07
 
 - **Now speaks 14 more languages** — Blocks Editor is fully localized in Czech, German, Spanish, French, Hungarian, Italian, Japanese, Korean, Polish, Brazilian Portuguese, Russian, Turkish, Simplified Chinese, and Traditional Chinese. The whole experience — menus, blocks, toolbox, and Blockly's own UI — follows your VS Code display language.

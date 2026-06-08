@@ -4,6 +4,16 @@ All notable changes to the "Blocks Editor" extension will be documented in this 
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.2.1] - 2026-06-08
+
+### Changed
+
+- The "Generate C++" button and the corresponding setting are now labelled **"Generate Code"** across all 15 languages, reflecting that the generation engine is selected by runtime rather than by language.
+
+### Fixed
+
+- **Multi-root workspaces** — downloading a community catalog and enabling the Claude Code integration now prompt for which workspace folder to target instead of assuming the first one. Folder resolution is centralized in a new `workspaceRoot` utility.
+
 ## [0.2.0] - 2026-06-07
 
 ### Added

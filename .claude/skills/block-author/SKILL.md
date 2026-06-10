@@ -12,41 +12,28 @@ description: >
 
 # Block Author
 
-Create declarative block catalog YAML files that turn a hardware library's API or a combination of APIs into visual programming blocks for platformio-blocks.
+Author block catalog YAML for a hardware board, component, sensor, or actuator.
 
-## Overview
+## MANDATORY — every time, no exceptions
 
-Such blocks expose board/component-specific features that go beyond the standard Arduino API
-(already covered by built-in blocks). The skill researches the target library, designs
-blocks for its public API, and generates a validated YAML catalog file.
+Before you design, generate, or edit ANY block, you MUST read BOTH of these files. Open and read
+them yourself, automatically, without asking the user for permission (a one-line preamble is fine).
+Do NOT rely on memory. Do NOT skip them. Do NOT decide they are unnecessary.
 
-**The output is one or more `.yaml` catalogs** (single or multi-document YAML, one document per subcategory). The user places them in their project's `.blocks/` directory (or whichever path is configured in `config.catalogPaths`).
+1. **`.claude/skills/block-author/blockly_schema.yaml`** — READ THIS FIRST. The schema and anatomy
+   of a Blockly block; the ONLY authority for which keys and shapes are valid under
+   `implementations[].blocks[].blockly`. Re-read it for EVERY block you author. NEVER invent a field
+   or structure from memory.
+2. **`.claude/skills/block-author/reference.md`** — the authoring workflow (Phases 0–3) and the full
+   catalog reference (archetypes, field types, type-checks, codegen, file structure, naming,
+   dependencies, structural checks, worked example). Follow its workflow EXACTLY, in order.
 
-**Environment-aware output:** if a filesystem is available (e.g. Claude Code), ask the user where to save the files (or use the save tool below). If not (e.g. Claude chat), present each file as a fenced code block with a suggested filename. Never hardcode a destination path.
+## MANDATORY — tooling (`blocks-editor` MCP server, in both Claude Code and Copilot)
 
-## Reference — read this first
+- Call **`list-builtin-blocks`** BEFORE designing. NEVER recreate a block it already lists.
+- Validate EVERY catalog with **`validate-catalog`** BEFORE saving. Do NOT eyeball validity. Fix
+  every error and re-validate until it passes clean.
 
-**`reference.md`** (in this skill's directory) is the single source of truth for the authoring
-**workflow** (Phases 0–3) and the complete **reference**: block archetypes, field types (standard, `@blockly` plugins, and custom fields), C++ type-check groups, codegen sections and precedence, YAML file structure, naming conventions, dependencies, authoring rules, the validation structural checks, project prerequisites, and a worked example. Consult it before designing or generating — do not rely on memorized field names or structures.
-
-## Tooling (blocks-editor MCP server)
-
-The platformio-blocks extension ships an MCP server named **`blocks-editor`**. When it is connected (check your available tools), **prefer these tools** over manual steps — they use the extension's own bundled schema and code, so they stay in sync with the installed version:
-
-| Tool | Use for | Replaces the manual step of |
-|------|---------|------------------------------|
-| `list-builtin-blocks` | what blocks already exist | guessing — call FIRST in Phase 2, never recreate a listed block |
-| `fetch-url` | reading `.h` / `library.properties` / docs | ad-hoc fetching (strips HTML, truncates) |
-| `search-pio-registry` | the PlatformIO dependency format | guessing `name` vs `url`+`ref` |
-| `check-arduino-registry` | Arduino CLI installability | guessing (registries don't fully overlap) |
-| `validate-catalog` | real AJV + structural validation | fetching the schema and validating by hand |
-| `save-catalog` | writing into the project `.blocks/` | generic filesystem writes (auto-reloads) |
-
-**Fallback when the `blocks-editor` server is NOT connected** (e.g. Claude.ai chat, or a project
-where integration was never enabled):
-- **Schema** — fetch it live and validate against it:
-  `https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json`
-- **Output** — present files as fenced code blocks with suggested filenames.
-
-The user can enable the server from VS Code via the command **"Blocks Editor: Enable Claude Code
-integration"**, which also installs this skill into the project's `.claude/skills/`.
+Output: save validated `.yaml` files into the project's `.blocks/` directory (filename ends in
+`.yaml`/`.yml`, no path separators, no `..`). If no filesystem is available, present each file as a
+fenced code block with a suggested filename. Never hardcode a destination path.

@@ -3,7 +3,7 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { TOOL_DEFINITIONS, type ToolContext } from '../tools/registry';
 
-/** Project root the server operates on (for save-catalog and project .blocks/). */
+/** Project root the server operates on (for resolving the project `.blocks/`). */
 function workspaceRoot(): string {
     return process.env.BLOCKS_WORKSPACE_ROOT || process.cwd();
 }
@@ -17,7 +17,7 @@ function builtinCatalogDirs(): string[] {
 }
 
 function toolContext(): ToolContext {
-    return { workspaceRoot: workspaceRoot(), builtinCatalogDirs: builtinCatalogDirs() };
+    return { builtinCatalogDirs: builtinCatalogDirs() };
 }
 
 function text(value: string) {

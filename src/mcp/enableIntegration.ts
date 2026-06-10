@@ -5,7 +5,7 @@ import { resolveActiveWorkspaceRoot } from '../util/workspaceRoot';
 
 const SERVER_KEY = 'blocks-editor';
 const SKILL_REL = path.join('.claude', 'skills', 'block-author');
-const SKILL_FILES = ['SKILL.md', 'reference.md'];
+const COPILOT_INSTRUCTIONS_REL = path.join('.github', 'instructions', 'block-author.instructions.md');
 
 interface McpServerEntry {
     type: string;
@@ -85,19 +85,29 @@ export async function enableClaudeCodeIntegration(context: vscode.ExtensionConte
 }
 
 /**
- * Copy the bundled block-author skill (SKILL.md + reference.md) into the user's
- * project at `.claude/skills/block-author/`, so Claude Code discovers it. The
- * skill is shipped in the .vsix via a `.vscodeignore` exception.
+ * Materialise the bundled block-author skill for both AI hosts. The single
+ * source of truth is the skill at `.claude/skills/block-author/` (`SKILL.md`,
+ * `reference.md`, `blockly_schema.yaml`), shipped in the .vsix via a
+ * `.vscodeignore` exception. The two hosts discover guidance differently:
+ *
+ * - **Claude Code** natively discovers Agent Skills under `.claude/skills/`,
+ *   reads `SKILL.md`, and lazily loads `reference.md`/the schema only when the
+ *   skill triggers. We just copy the whole skill dir (recursive) so EVERY file
+ *   it ships — and any future resource — lands in the workspace, no per-file
+ *   list to keep in sync.
+ * - **GitHub Copilot** does NOT read `.claude/skills/`. In VS Code it reads
+ *   instruction files from `.github/instructions/*.instructions.md`, gated by an
+ *   `applyTo` glob. We generate that file with `applyTo: "**"` (injected on every
+ *   request) pointing Copilot at the SAME copied `reference.md`/schema — so both
+ *   hosts share one source of truth instead of a duplicated, drift-prone copy.
  */
 async function installSkill(extensionPath: string, root: string): Promise<{ ok: boolean }> {
     const srcDir = path.join(extensionPath, SKILL_REL);
     const destDir = path.join(root, SKILL_REL);
 
     try {
-        await fs.mkdir(destDir, { recursive: true });
-        for (const file of SKILL_FILES) {
-            await fs.copyFile(path.join(srcDir, file), path.join(destDir, file));
-        }
+        await fs.cp(srcDir, destDir, { recursive: true });
+        await writeCopilotInstructions(srcDir, root);
         return { ok: true };
     } catch (err) {
         // Non-fatal: the MCP server still works without the skill installed.
@@ -106,4 +116,54 @@ async function installSkill(extensionPath: string, root: string): Promise<{ ok: 
         );
         return { ok: false };
     }
+}
+
+/**
+ * Generate the Copilot instructions file by DERIVING it from the skill's own
+ * `SKILL.md` — strip the YAML frontmatter, prepend an `applyTo: "**"` header (so
+ * Copilot injects it on every request) plus an auto-read directive. This keeps
+ * the two AI hosts' entry points mirrored from one source: Claude Code reads
+ * `SKILL.md` natively, Copilot reads this derived copy. There is no separate
+ * hand-written string to drift out of sync.
+ *
+ * Why a derivation works without rewriting any paths: `SKILL.md` references its
+ * sibling docs by their **workspace-root-relative** paths (e.g.
+ * `.claude/skills/block-author/reference.md`), which BOTH hosts resolve from the
+ * workspace root — even though this generated file lives under `.github/`. The
+ * heavy docs (`reference.md`, `blockly_schema.yaml`) are pointed at, never
+ * inlined, so they load only when a block-authoring task is actually in play.
+ *
+ * Fully generated → overwritten wholesale on re-install.
+ */
+async function writeCopilotInstructions(srcDir: string, root: string): Promise<void> {
+    const skill = await fs.readFile(path.join(srcDir, 'SKILL.md'), 'utf-8');
+
+    const header = [
+        '---',
+        'applyTo: "**"',
+        '---',
+        '',
+        '<!-- Generated from .claude/skills/block-author/SKILL.md by the Blocks Editor extension',
+        '     ("Blocks Editor: Set Up AI Assistants"). Edits here are overwritten on re-install —',
+        '     change the skill instead. -->',
+        '',
+        'The following is MANDATORY whenever the user asks to create, design, or generate block',
+        'catalog YAML for a hardware board, component, sensor, or actuator. Follow it exactly — the',
+        'directives below are not optional.',
+        '',
+        '---',
+        '',
+    ].join('\n');
+
+    const content = header + stripFrontmatter(skill).trimStart() + '\n';
+
+    const destPath = path.join(root, COPILOT_INSTRUCTIONS_REL);
+    await fs.mkdir(path.dirname(destPath), { recursive: true });
+    await fs.writeFile(destPath, content, 'utf-8');
+}
+
+/** Drop a leading `---`…`---` YAML frontmatter block, if present. */
+function stripFrontmatter(md: string): string {
+    const m = /^---\r?\n[\s\S]*?\r?\n---\r?\n/.exec(md);
+    return m ? md.slice(m[0].length) : md;
 }

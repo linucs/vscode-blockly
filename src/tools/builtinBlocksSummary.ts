@@ -2,9 +2,8 @@ import type { CatalogEntry } from '../catalog/CatalogTypes';
 
 /**
  * Build the "Already Built-in Blocks" markdown section from a set of catalog
- * entries. Host-agnostic — consumed by both the Copilot system prompt
- * (buildSystemPrompt) and the MCP `list-builtin-blocks` tool, so it must NOT
- * import any host (vscode / MCP) or heavy (reference.md) dependency.
+ * entries. Host-agnostic — consumed by the MCP `list-builtin-blocks` tool, so it
+ * must NOT import any host (vscode / MCP) or heavy dependency.
  */
 export function summarizeBuiltinBlocks(entries: CatalogEntry[]): string {
     const lines: string[] = [];

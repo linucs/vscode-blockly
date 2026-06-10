@@ -1,13 +1,17 @@
 # Block Authoring Reference
 
 Canonical reference for authoring platformio-blocks catalog YAML. This file is the **single
-source of truth** shared by two hosts:
+source of truth** shared by two hosts, each of which reads it directly from the workspace at
+`.claude/skills/block-author/reference.md`:
 
-- the Copilot chat participant (inlined into its system prompt at build time);
-- the Claude Code `block-author` skill (read directly from the skill directory).
+- **Claude Code** — via the `block-author` skill (discovered under `.claude/skills/`);
+- **GitHub Copilot** — via the generated `.github/instructions/block-author.instructions.md`,
+  which points here.
 
-It is **host-neutral**: it never names a specific tool. Each host maps the generic actions
-("fetch the header", "validate the catalog", "save the file") to its own tools.
+It is **host-neutral**: it never names a host-specific tool for the generic actions ("fetch the
+header", "save the file"). Each host maps those to its own capability. The one exception is the
+`blocks-editor` MCP server, available to BOTH hosts, which provides the deterministic
+`validate-catalog` and `list-builtin-blocks` tools.
 
 ---
 
@@ -114,7 +118,9 @@ file (subcategories, counts, names); chosen category colour (with rationale); ke
 1. Generate the YAML (with the schema front matter).
 2. **Validate** it (schema + structural checks below). Fix issues and re-validate.
 3. Output: **save** the file(s) if a filesystem/tool is available; otherwise present as fenced
-   code blocks with suggested filenames. Never hardcode a destination path.
+   code blocks with suggested filenames. Save into the project `.blocks/` directory only — the
+   filename must end in `.yaml`/`.yml` with no path separators and no `..`. Never hardcode a
+   destination path.
 4. Report a summary table: file → subcategory → block count.
 5. Document project prerequisites (see below).
 
@@ -126,8 +132,9 @@ Inform the user of the created/updated YAML file. Ask to test it and report back
 
 ### Reference — read this first
 
-**`blockly_schema.yaml`** (in this skill's directory) contains the schema and the description of blocks'anatomy.
-Refer to it in order to understand how to build blocks to put under the `implementations[].blocks[].blockly`.
+**`.claude/skills/block-author/blockly_schema.yaml`** contains the schema and the description of
+blocks' anatomy. Read it first and refer back to it whenever you build the
+`implementations[].blocks[].blockly` object — it is the authority for which keys and shapes are valid.
 
 ### The 5 block archetypes
 
@@ -579,6 +586,10 @@ Note: `randomSeed %1` is not translated because the message is just the function
 
 ## Validation — Structural Checks
 
+Always validate with the host's `validate-catalog` tool (the `blocks-editor` MCP server). If no such
+tool is available (e.g. Claude.ai chat with no MCP server), fall back to fetching the schema
+(see Reference URLs) and validating against it by hand, then check the rules below.
+
 Beyond JSON-schema validation, verify these logical rules (a schema cannot express them):
 
 1. **No duplicate `blockly.type`** across ALL documents in the file.
@@ -630,7 +641,9 @@ Common prerequisites to check and document:
 
 ## Reference URLs
 
-- PlatformIO Registry: https://registry.platformio.org/
+- PlatformIO Registry (human): https://registry.platformio.org/
+- PlatformIO Registry search API: `https://api.registry.platformio.org/v3/packages?query=<name>`
+- Arduino Library Registry (raw list): https://raw.githubusercontent.com/arduino/library-registry/main/repositories.txt
 - Arduino Library Reference: https://www.arduino.cc/reference/en/libraries/
 - Arduino Library Index (JSON): https://downloads.arduino.cc/libraries/library_index.json
 - Block Catalog Schema: https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json

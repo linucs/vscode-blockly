@@ -7,7 +7,7 @@
   "config.catalogPaths": "积木目录 YAML 文件的本地目录或远程 URL。本地路径（相对于工作区根目录或绝对路径）会被递归扫描。URL（http/https）会在首次加载时下载到项目的 .blocks/ 文件夹；使用“刷新远程目录”命令可强制重新下载。",
   "command.refreshCatalogs": "Blocks Editor: 刷新远程目录",
   "command.enableClaudeCode": "Blocks Editor: 启用 Claude Code 集成",
-  "editor.displayName": "Blocks Editor",
+  "editor.displayName": "Blocks Editor (可视化编程)",
   "chat.blockAuthor.fullName": "积木作者",
   "chat.blockAuthor.description": "为硬件库创建积木目录 YAML 文件",
   "chat.command.research": "研究某个硬件库以创建积木目录",

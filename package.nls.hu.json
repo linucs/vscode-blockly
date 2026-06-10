@@ -7,7 +7,7 @@
   "config.catalogPaths": "Helyi könyvtárak vagy távoli URL-ek a blokk-katalógus YAML-fájljaihoz. A helyi útvonalakat (a munkaterület gyökeréhez viszonyítva vagy abszolút módon) rekurzívan vizsgálja át. Az URL-eket (http/https) az első betöltéskor letölti a projekt .blocks/ mappájába; használd a \"Refresh Remote Catalogs\" parancsot az újraletöltés kikényszerítéséhez.",
   "command.refreshCatalogs": "Blokkszerkesztő: Távoli katalógusok frissítése",
   "command.enableClaudeCode": "Blokkszerkesztő: Claude Code integráció engedélyezése",
-  "editor.displayName": "Blokkszerkesztő",
+  "editor.displayName": "Blokkszerkesztő (Vizuális programozás)",
   "chat.blockAuthor.fullName": "Blokkszerző",
   "chat.blockAuthor.description": "Blokk-katalógus YAML-fájlok létrehozása hardverkönyvtárakhoz",
   "chat.command.research": "Hardverkönyvtár elemzése blokk-katalógus létrehozásához",

@@ -7,7 +7,7 @@
   "config.catalogPaths": "Místní adresáře nebo vzdálené URL pro soubory YAML katalogu bloků. Místní cesty (relativní vůči kořeni workspace nebo absolutní) se prohledávají rekurzivně. URL (http/https) se při prvním načtení stáhnou do složky projektu .blocks/; pro vynucení opětovného stažení použij příkaz \"Obnovit vzdálené katalogy\".",
   "command.refreshCatalogs": "Blocks Editor: Obnovit vzdálené katalogy",
   "command.enableClaudeCode": "Blocks Editor: Povolit integraci Claude Code",
-  "editor.displayName": "Blocks Editor",
+  "editor.displayName": "Blocks Editor (Vizuální programování)",
   "chat.blockAuthor.fullName": "Autor bloků",
   "chat.blockAuthor.description": "Vytváří soubory YAML katalogu bloků pro hardwarové knihovny",
   "chat.command.research": "Prozkoumat hardwarovou knihovnu pro vytvoření katalogu bloků",

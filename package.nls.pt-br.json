@@ -7,7 +7,7 @@
   "config.catalogPaths": "Diretórios locais ou URLs remotas para os arquivos YAML dos catálogos de blocos. Os caminhos locais (relativos à raiz do workspace ou absolutos) são verificados recursivamente. As URLs (http/https) são baixadas para a pasta .blocks/ do projeto no primeiro carregamento; use o comando \"Atualizar catálogos remotos\" para forçar um novo download.",
   "command.refreshCatalogs": "Blocks Editor: Atualizar catálogos remotos",
   "command.enableClaudeCode": "Blocks Editor: Ativar integração com Claude Code",
-  "editor.displayName": "Blocks Editor",
+  "editor.displayName": "Blocks Editor (Programação Visual)",
   "chat.blockAuthor.fullName": "Autor de Blocos",
   "chat.blockAuthor.description": "Crie arquivos YAML de catálogo de blocos para bibliotecas de hardware",
   "chat.command.research": "Pesquise uma biblioteca de hardware para criar um catálogo de blocos",

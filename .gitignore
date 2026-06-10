@@ -3,10 +3,9 @@ dist
 node_modules
 .vscode-test/
 *.vsix
-CLAUDE.md
-.claude/*
+.claude/**
 !.claude/skills/
-.claude/skills/*
 !.claude/skills/block-author/
-test/
+!.claude/skills/block-author/**
+CLAUDE.md
 *.code-workspace

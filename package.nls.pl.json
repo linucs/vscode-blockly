@@ -7,7 +7,7 @@
   "config.catalogPaths": "Lokalne katalogi lub zdalne adresy URL plików YAML katalogów bloków. Ścieżki lokalne (względne wobec katalogu głównego workspace lub bezwzględne) są skanowane rekurencyjnie. Adresy URL (http/https) są pobierane do folderu projektu .blocks/ przy pierwszym wczytaniu; użyj polecenia \"Odśwież zdalne katalogi\", aby wymusić ponowne pobranie.",
   "command.refreshCatalogs": "Edytor Bloków: Odśwież zdalne katalogi",
   "command.enableClaudeCode": "Edytor Bloków: Włącz integrację z Claude Code",
-  "editor.displayName": "Edytor Bloków",
+  "editor.displayName": "Edytor Bloków (Programowanie wizualne)",
   "chat.blockAuthor.fullName": "Autor Bloków",
   "chat.blockAuthor.description": "Twórz pliki YAML katalogów bloków dla bibliotek sprzętowych",
   "chat.command.research": "Zbadaj bibliotekę sprzętową na potrzeby tworzenia katalogu bloków",

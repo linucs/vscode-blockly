@@ -7,7 +7,7 @@
   "config.catalogPaths": "ブロックカタログ YAML ファイルのローカルディレクトリまたはリモート URL。ローカルパス（ワークスペースルートからの相対パス、または絶対パス）は再帰的にスキャンされます。URL（http/https）は初回読み込み時にプロジェクトの .blocks/ フォルダーにダウンロードされます。再ダウンロードを強制するには「Refresh Remote Catalogs」コマンドを使用してください。",
   "command.refreshCatalogs": "Blocks Editor: リモートカタログを更新",
   "command.enableClaudeCode": "Blocks Editor: Claude Code 連携を有効化",
-  "editor.displayName": "Blocks Editor",
+  "editor.displayName": "Blocks Editor (ビジュアルプログラミング)",
   "chat.blockAuthor.fullName": "Block Author",
   "chat.blockAuthor.description": "ハードウェアライブラリ用のブロックカタログ YAML ファイルを作成します",
   "chat.command.research": "ブロックカタログ作成のためにハードウェアライブラリを調査します",

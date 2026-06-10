@@ -7,7 +7,7 @@
   "config.catalogPaths": "Blok kataloğu YAML dosyaları için yerel dizinler veya uzak URL'ler. Yerel yollar (çalışma alanı köküne göre veya mutlak) özyinelemeli olarak taranır. URL'ler (http/https) ilk yüklemede projenin .blocks/ klasörüne indirilir; yeniden indirmeyi zorlamak için \"Uzak Katalogları Yenile\" komutunu kullanın.",
   "command.refreshCatalogs": "Blok Editörü: Uzak Katalogları Yenile",
   "command.enableClaudeCode": "Blok Editörü: Claude Code entegrasyonunu etkinleştir",
-  "editor.displayName": "Blok Editörü",
+  "editor.displayName": "Blok Editörü (Görsel Programlama)",
   "chat.blockAuthor.fullName": "Blok Yazarı",
   "chat.blockAuthor.description": "Donanım kitaplıkları için blok kataloğu YAML dosyaları oluştur",
   "chat.command.research": "Blok kataloğu oluşturmak için bir donanım kitaplığını araştır",

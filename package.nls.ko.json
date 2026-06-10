@@ -7,7 +7,7 @@
   "config.catalogPaths": "블록 카탈로그 YAML 파일을 위한 로컬 디렉터리 또는 원격 URL입니다. 로컬 경로(워크스페이스 루트 기준 상대 경로 또는 절대 경로)는 재귀적으로 검색됩니다. URL(http/https)은 처음 로드할 때 프로젝트 .blocks/ 폴더로 다운로드됩니다. 다시 다운로드를 강제하려면 \"Refresh Remote Catalogs\" 명령을 사용하세요.",
   "command.refreshCatalogs": "Blocks Editor: 원격 카탈로그 새로 고침",
   "command.enableClaudeCode": "Blocks Editor: Claude Code 통합 활성화",
-  "editor.displayName": "Blocks Editor",
+  "editor.displayName": "Blocks Editor (비주얼 프로그래밍)",
   "chat.blockAuthor.fullName": "블록 작성자",
   "chat.blockAuthor.description": "하드웨어 라이브러리를 위한 블록 카탈로그 YAML 파일을 만듭니다",
   "chat.command.research": "블록 카탈로그 생성을 위해 하드웨어 라이브러리를 조사합니다",

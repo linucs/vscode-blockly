@@ -7,7 +7,7 @@
   "config.catalogPaths": "Локальные каталоги или удалённые URL для YAML-файлов каталогов блоков. Локальные пути (относительно корня рабочей области или абсолютные) сканируются рекурсивно. URL-адреса (http/https) загружаются в папку проекта .blocks/ при первой загрузке; используйте команду «Обновить удалённые каталоги», чтобы принудительно перезагрузить их.",
   "command.refreshCatalogs": "Blocks Editor: Обновить удалённые каталоги",
   "command.enableClaudeCode": "Blocks Editor: Включить интеграцию с Claude Code",
-  "editor.displayName": "Blocks Editor",
+  "editor.displayName": "Blocks Editor (Визуальное программирование)",
   "chat.blockAuthor.fullName": "Автор блоков",
   "chat.blockAuthor.description": "Создавать YAML-файлы каталогов блоков для аппаратных библиотек",
   "chat.command.research": "Изучить аппаратную библиотеку для создания каталога блоков",

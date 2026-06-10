@@ -7,7 +7,7 @@
   "config.catalogPaths": "Local directories or remote URLs for block catalog YAML files. Local paths (relative to the workspace root, or absolute) are scanned recursively. URLs (http/https) are downloaded to the project .blocks/ folder on first load; use the \"Refresh Remote Catalogs\" command to force re-download.",
   "command.refreshCatalogs": "Blocks Editor: Refresh Remote Catalogs",
   "command.enableClaudeCode": "Blocks Editor: Enable Claude Code integration",
-  "editor.displayName": "Blocks Editor",
+  "editor.displayName": "Blocks Editor (Visual Programming)",
   "chat.blockAuthor.fullName": "Block Author",
   "chat.blockAuthor.description": "Create block catalog YAML files for hardware libraries",
   "chat.command.research": "Research a hardware library for block catalog creation",

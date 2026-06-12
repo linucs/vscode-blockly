@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { validateCatalogYaml } from './validateCatalog';
+import { validateCatalogYaml } from '../catalog/validateCatalog';
 import { listBuiltinBlocks } from './listBuiltinBlocks';
 
 /**

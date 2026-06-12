@@ -1,7 +1,7 @@
 import * as path from 'path';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { TOOL_DEFINITIONS, type ToolContext } from '../tools/registry';
+import { TOOL_DEFINITIONS, type ToolContext } from './registry';
 
 /** Project root the server operates on (for resolving the project `.blocks/`). */
 function workspaceRoot(): string {

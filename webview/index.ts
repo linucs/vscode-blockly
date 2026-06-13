@@ -21,6 +21,9 @@ import { CodeFactory } from './codegen/core/CodeFactory';
 import { isRuntimeSupported } from './codegen/core/generatorRegistry';
 import { initTypedVariableModal, initWorkspacePlugins, pluginInjectOptions, CPP_VARIABLE_TYPES, ThemedMinimap } from './plugins';
 import { initCppProcedureFlyout } from './custom-blocks/cppProcedureBlocks';
+// Registers the `hat_event_style` block extension as a side effect, so catalog
+// blocks referencing it (e.g. hat-style attachInterrupt) define without throwing.
+import './custom-blocks/hatEventStyle';
 
 // ── i18n bootstrap (must happen before any Blockly block defs or UI) ───────
 const l10nDataEl = document.getElementById('l10n-data');

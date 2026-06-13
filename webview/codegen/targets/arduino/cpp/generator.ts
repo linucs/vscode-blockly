@@ -1,8 +1,9 @@
 import * as Blockly from 'blockly';
-import { registerCppLanguageBlocks, CPP_KEYWORDS } from '../cppLanguageBlocks';
-import { FieldTypedParamInput } from '../../custom-fields/FieldTypedParamInput';
-import { categorizeDefinitions, assembleSketch } from '../../../src/codegen/assembleSketch';
-import { RuntimeGenerator } from '../runtimeGenerator';
+import { cppLanguageProfile } from '../../../languages/cpp';
+import { FieldTypedParamInput } from '../../../../custom-fields/FieldTypedParamInput';
+import { categorizeDefinitions, assembleSketch } from '../../../../../src/codegen/targets/arduino/cpp/assemble';
+import { RuntimeGenerator } from '../../../core/runtimeGenerator';
+import { FIRST_PARTY_GENERATORS } from './firstParty';
 
 export const ARDUINO_CPP_RUNTIME = 'arduino:cpp';
 
@@ -11,7 +12,7 @@ let paramVarIds: Set<string> = new Set();
 export function createArduinoCppGenerator(): RuntimeGenerator {
     const g = new Blockly.CodeGenerator('arduino_cpp');
     g.INDENT = '  ';
-    g.addReservedWords(CPP_KEYWORDS.join(','));
+    g.addReservedWords(cppLanguageProfile.reservedWords.join(','));
 
     const baseInit = (Blockly.CodeGenerator.prototype as any).init;
 
@@ -66,11 +67,16 @@ export function createArduinoCppGenerator(): RuntimeGenerator {
         return code;
     };
 
-    registerCppLanguageBlocks(g, paramVarIds);
+    // Preserve the existing wiring exactly: registration captures the current
+    // module-level `paramVarIds` reference; init() reassigns the module variable
+    // per run. Do not change this timing — behavior must stay identical.
+    cppLanguageProfile.registerLanguageBlocks(g, { paramVarIds });
 
     return {
         runtime: ARDUINO_CPP_RUNTIME,
         generator: g,
+        language: cppLanguageProfile,
+        firstPartyGenerators: FIRST_PARTY_GENERATORS,
         generate: (workspace: Blockly.Workspace) => g.workspaceToCode(workspace),
     };
 }

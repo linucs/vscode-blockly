@@ -1,20 +1,15 @@
-import * as Blockly from 'blockly';
+import { FirstPartyGenerator } from '../../../core/runtimeGenerator';
 
 /**
- * First-party imperative block generators, selected by a catalog block's
- * `generator:` field (the imperative tier — community catalogs may only use the
- * declarative `codegen:` tier). Each function receives the active runtime's
- * generator and returns the block's code, with side effects on `definitions_`.
+ * First-party imperative block generators for the `arduino:cpp` runtime,
+ * selected by a catalog block's `generator:` field (the imperative tier —
+ * community catalogs may only use the declarative `codegen:` tier).
  *
  * Use this only for blocks the declarative engine genuinely cannot express —
  * today, "phantom container" blocks that re-route their nested statements into a
  * sketch section (e.g. `code_setup` → setup()) rather than emitting wrapping
  * syntax inline.
  */
-export type FirstPartyGenerator = (
-    block: Blockly.Block,
-    generator: Blockly.CodeGenerator,
-) => string | [string, number];
 
 /**
  * `code_setup`: nested blocks run once in setup(). Uses blockToCode (not

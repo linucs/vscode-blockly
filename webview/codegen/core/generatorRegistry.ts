@@ -1,5 +1,5 @@
 import { RuntimeGenerator } from './runtimeGenerator';
-import { createArduinoCppGenerator, ARDUINO_CPP_RUNTIME } from './generators/arduinoCpp';
+import { createArduinoCppGenerator, ARDUINO_CPP_RUNTIME } from '../targets/arduino/cpp/generator';
 
 /**
  * Registry of generation engines keyed by `runtime` (`<framework>:<language>`).

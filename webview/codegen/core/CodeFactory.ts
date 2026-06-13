@@ -2,23 +2,10 @@ import * as Blockly from 'blockly';
 import { applyBlockCodegen, applyCodegenSections } from './templateEngine';
 import { RuntimeGenerator } from './runtimeGenerator';
 import { getRuntimeGenerator } from './generatorRegistry';
-import { resolveColor, categoryStyleFor, ensureCategoryRegistered, setCatalogColor, resetCatalogState } from '../ThemeAdapter';
-import { FIRST_PARTY_GENERATORS } from './firstPartyGenerators';
+import { resolveColor, categoryStyleFor, ensureCategoryRegistered, setCatalogColor, resetCatalogState } from '../../ThemeAdapter';
 import { preprocessCatalogI18n } from './catalogI18nPreprocess';
 
 const registeredBlockTypes = new Set<string>();
-
-const PRECEDENCE: Record<string, number> = {
-  ATOMIC: 0,
-  UNARY_PREFIX: 3,
-  MULTIPLICATION: 5,
-  ADDITION: 6,
-  RELATIONAL: 9,
-  EQUALITY: 10,
-  LOGICAL_AND: 14,
-  LOGICAL_OR: 15,
-  NONE: 99,
-};
 
 export class CodeFactory {
     private categoryTree = new Map<string, any>();
@@ -118,19 +105,22 @@ export class CodeFactory {
         const codegen = blockDef.codegen;
         const implCodegen = impl.codegen;
         const isValueBlock = 'output' in blockDef.blockly;
-        const precedence = codegen?.precedence !== undefined ? PRECEDENCE[codegen.precedence] : undefined;
         const generator = this.rg!.generator;
+        // Precedence is a language concern: the active runtime's language profile
+        // owns the catalog precedence vocabulary → numeric level mapping.
+        const precedenceLevels = this.rg!.language.precedence;
+        const precedence = codegen?.precedence !== undefined ? precedenceLevels[codegen.precedence] : undefined;
 
         // Imperative tier: a `generator:` field selects a first-party function
         // instead of the declarative codegen wrapper (for blocks the template
-        // engine can't express, e.g. code_setup). First-party only.
+        // engine can't express, e.g. code_setup). Supplied per-runtime.
         if (blockDef.generator) {
-            const fn = FIRST_PARTY_GENERATORS[blockDef.generator];
+            const fn = this.rg!.firstPartyGenerators[blockDef.generator];
             if (fn) {
                 generator.forBlock[blockType] = (block: Blockly.Block) => fn(block, generator);
             } else {
                 console.warn(`[CodeFactory] unknown first-party generator "${blockDef.generator}" for block "${blockType}"`);
-                generator.forBlock[blockType] = () => (isValueBlock ? ['', PRECEDENCE.NONE] : '');
+                generator.forBlock[blockType] = () => (isValueBlock ? ['', precedenceLevels.NONE] : '');
             }
             return true;
         }
@@ -138,7 +128,7 @@ export class CodeFactory {
         // Register code generator onto the active runtime's generator.
         generator.forBlock[blockType] = (block: Blockly.Block) => {
             if (implCodegen) applyCodegenSections(implCodegen, generator);
-            if (!codegen) return isValueBlock ? ['', PRECEDENCE.NONE] : '';
+            if (!codegen) return isValueBlock ? ['', precedenceLevels.NONE] : '';
 
             const bodyCode = applyBlockCodegen(codegen, block, generator);
 

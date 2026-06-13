@@ -12,12 +12,15 @@ export interface ProjectEnv {
     fqbn?: string;
 }
 
+/** Which toolchain/backend a project uses (selects the packaging strategy). */
+export type ProjectConfigType = 'platformio' | 'arduino';
+
 /** Parsed project configuration from either platformio.ini or sketch.yaml. */
 export interface ProjectConfig {
     /** Absolute path to the config file that was parsed. */
     configPath: string;
     /** Which toolchain this project uses. */
-    configType: 'platformio' | 'arduino';
+    configType: ProjectConfigType;
     /** All environments/profiles, in file order. */
     envs: ProjectEnv[];
     /** Fallback environment names in priority order. */

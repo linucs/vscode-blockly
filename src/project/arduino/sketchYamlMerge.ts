@@ -1,4 +1,5 @@
 import { DEFAULT_ENV_NAME } from '../projectConfig';
+import { LibraryDependency } from '../../catalog/CatalogTypes';
 
 /**
  * Non-destructive merge of library dependencies into a specific profile
@@ -9,7 +10,6 @@ import { DEFAULT_ENV_NAME } from '../projectConfig';
  * Like iniMerge.ts, this operates on raw lines to preserve formatting.
  *
  * sketch.yaml library format (index libs):   `- LibName (version)`
- * PIO lib_deps format:                       `LibName@^version` or `LibName=url#ref`
  */
 
 /**
@@ -25,24 +25,14 @@ function sketchLibIdentity(entry: string): string {
 }
 
 /**
- * Convert a PIO-style lib_dep string to sketch.yaml format.
- * `Name@^1.2.3` → `Name (1.2.3)`
- * `Name=url#ref` → `Name` (VCS libs have no version in sketch.yaml)
- * `Name` → `Name`
+ * Format a structured library dependency in sketch.yaml format.
+ * registry lib with version → `Name (1.2.3)`
+ * VCS lib (has url)         → `Name` (VCS libs carry no version in sketch.yaml)
+ * registry lib, no version  → `Name`
  */
-function pioToSketchLib(pioDep: string): string {
-    const eqIdx = pioDep.indexOf('=');
-    if (eqIdx !== -1) {
-        return pioDep.slice(0, eqIdx).trim();
-    }
-    const atIdx = pioDep.indexOf('@');
-    if (atIdx !== -1) {
-        const name = pioDep.slice(0, atIdx).trim();
-        let version = pioDep.slice(atIdx + 1).trim();
-        if (version.startsWith('^') || version.startsWith('~')) version = version.slice(1);
-        return `${name} (${version})`;
-    }
-    return pioDep.trim();
+function sketchLibFromDep(dep: LibraryDependency): string {
+    if (dep.url) return dep.name;
+    return dep.minVersion ? `${dep.name} (${dep.minVersion})` : dep.name;
 }
 
 function detectEol(content: string): string {
@@ -117,10 +107,9 @@ function escapeRegex(s: string): string {
 export function mergeSketchLibraries(
     content: string,
     profileName: string,
-    additions: { libDeps?: string[] }
+    libraries: LibraryDependency[]
 ): { content: string; changed: boolean } {
-    const deps = additions.libDeps ?? [];
-    if (deps.length === 0) return { content, changed: false };
+    if (libraries.length === 0) return { content, changed: false };
 
     // No real profile exists (the active env is the in-memory env synthesized
     // from `default_fqbn` — see parseSketchYaml). In that case the project is in
@@ -153,7 +142,7 @@ export function mergeSketchLibraries(
     }
 
     const seen = new Set(existing.map(sketchLibIdentity));
-    const converted = deps.map(pioToSketchLib);
+    const converted = libraries.map(sketchLibFromDep);
     const missing = converted.filter(lib => !seen.has(sketchLibIdentity(lib)));
     if (missing.length === 0) return { content, changed: false };
 

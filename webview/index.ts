@@ -17,8 +17,8 @@ import * as Hu from 'blockly/msg/hu';
 import * as l10n from '@vscode/l10n';
 import { provideVSCodeDesignSystem, vsCodeButton, vsCodeDropdown, vsCodeOption } from "@vscode/webview-ui-toolkit";
 import { ThemeAdapter, categoryStyleFor } from './ThemeAdapter';
-import { CodeFactory } from './codegen/CodeFactory';
-import { isRuntimeSupported } from './codegen/generatorRegistry';
+import { CodeFactory } from './codegen/core/CodeFactory';
+import { isRuntimeSupported } from './codegen/core/generatorRegistry';
 import { initTypedVariableModal, initWorkspacePlugins, pluginInjectOptions, CPP_VARIABLE_TYPES, ThemedMinimap } from './plugins';
 import { initCppProcedureFlyout } from './custom-blocks/cppProcedureBlocks';
 

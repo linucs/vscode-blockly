@@ -1,5 +1,5 @@
 import * as Blockly from 'blockly';
-import { ORDER } from './cppOrder';
+import { ORDER } from './order';
 
 /**
  * L2 generators for Blockly's built-in text blocks, retargeted at the Arduino

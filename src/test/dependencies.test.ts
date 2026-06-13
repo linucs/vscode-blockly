@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 import { collectUsedBlockTypes } from '../project/blockUsage';
-import { collectRequirements, composePioLibDep } from '../catalog/requirements';
-import { mergeEnvLists } from '../project/pio/iniMerge';
+import { collectRequirements } from '../catalog/requirements';
+import { mergeEnvLists, composePioLibDep } from '../project/pio/iniMerge';
 import { mergeSketchLibraries } from '../project/arduino/sketchYamlMerge';
 import { CatalogEntry } from '../catalog/CatalogTypes';
 
@@ -79,19 +79,21 @@ suite('collectRequirements', () => {
         );
     });
 
-    test('collects lib_deps for used cpp blocks', () => {
+    test('collects library deps for used cpp blocks', () => {
         const r = collectRequirements(entries, ['thermo_read'], 'arduino:cpp');
-        assert.deepStrictEqual(r.libDeps, ['Arduino_Modulino@^0.8.0']);
+        assert.deepStrictEqual(r.library, [{ type: 'library', name: 'Arduino_Modulino', minVersion: '0.8.0' }]);
+        assert.deepStrictEqual(r.pip, []);
+        assert.deepStrictEqual(r.brick, []);
     });
 
     test('ignores implementations whose blocks are not used', () => {
         const r = collectRequirements(entries, ['unrelated'], 'arduino:cpp');
-        assert.deepStrictEqual(r, { libDeps: [] });
+        assert.deepStrictEqual(r, { library: [], pip: [], brick: [] });
     });
 
-    test('ignores non-matching runtimes and non-library deps', () => {
+    test('ignores non-matching runtimes', () => {
         const r = collectRequirements(entries, ['cloud_pub'], 'arduino:cpp');
-        assert.deepStrictEqual(r, { libDeps: [] });
+        assert.deepStrictEqual(r, { library: [], pip: [], brick: [] });
     });
 });
 
@@ -179,49 +181,49 @@ suite('mergeSketchLibraries', () => {
     ].join('\n');
 
     test('adds a library to an existing libraries section', () => {
-        const { content, changed } = mergeSketchLibraries(sketchYaml, 'nanorp', {
-            libDeps: ['NewLib@^1.0.0'],
-        });
+        const { content, changed } = mergeSketchLibraries(sketchYaml, 'nanorp', [
+            { type: 'library', name: 'NewLib', minVersion: '1.0.0' },
+        ]);
         assert.strictEqual(changed, true);
         assert.ok(content.includes('- NewLib (1.0.0)'), content);
         assert.ok(content.includes('- ArduinoIoTCloud (1.0.2)'), content);
     });
 
     test('de-dupes by library name (case-insensitive)', () => {
-        const { changed } = mergeSketchLibraries(sketchYaml, 'nanorp', {
-            libDeps: ['ArduinoIoTCloud@^2.0.0'],
-        });
+        const { changed } = mergeSketchLibraries(sketchYaml, 'nanorp', [
+            { type: 'library', name: 'ArduinoIoTCloud', minVersion: '2.0.0' },
+        ]);
         assert.strictEqual(changed, false);
     });
 
-    test('converts PIO VCS format (name=url#ref) to just the name', () => {
-        const { content, changed } = mergeSketchLibraries(sketchYaml, 'nanorp', {
-            libDeps: ['MyLib=https://github.com/foo/MyLib.git#v1.0.0'],
-        });
+    test('formats a VCS library (has url) as just the name', () => {
+        const { content, changed } = mergeSketchLibraries(sketchYaml, 'nanorp', [
+            { type: 'library', name: 'MyLib', url: 'https://github.com/foo/MyLib.git', ref: 'v1.0.0' },
+        ]);
         assert.strictEqual(changed, true);
         assert.ok(content.includes('- MyLib'), content);
         assert.ok(!content.includes('github.com'), content);
     });
 
     test('adds a libraries section when the profile has none', () => {
-        const { content, changed } = mergeSketchLibraries(sketchYaml, 'uno', {
-            libDeps: ['Servo@^1.2.0'],
-        });
+        const { content, changed } = mergeSketchLibraries(sketchYaml, 'uno', [
+            { type: 'library', name: 'Servo', minVersion: '1.2.0' },
+        ]);
         assert.strictEqual(changed, true);
         assert.ok(content.includes('libraries:'), content);
         assert.ok(content.includes('- Servo (1.2.0)'), content);
     });
 
     test('returns unchanged when the profile does not exist', () => {
-        const { content, changed } = mergeSketchLibraries(sketchYaml, 'nonexistent', {
-            libDeps: ['X@^1.0.0'],
-        });
+        const { content, changed } = mergeSketchLibraries(sketchYaml, 'nonexistent', [
+            { type: 'library', name: 'X', minVersion: '1.0.0' },
+        ]);
         assert.strictEqual(changed, false);
         assert.strictEqual(content, sketchYaml);
     });
 
     test('handles empty additions', () => {
-        const { changed } = mergeSketchLibraries(sketchYaml, 'nanorp', { libDeps: [] });
+        const { changed } = mergeSketchLibraries(sketchYaml, 'nanorp', []);
         assert.strictEqual(changed, false);
     });
 });

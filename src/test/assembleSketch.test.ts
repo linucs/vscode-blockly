@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import { categorizeDefinitions, assembleSketch, SketchSections } from '../codegen/assembleSketch';
+import { categorizeDefinitions, assembleSketch, SketchSections } from '../codegen/targets/arduino/cpp/assemble';
 
 suite('categorizeDefinitions', () => {
     test('splits definitions by key prefix, preserving order', () => {

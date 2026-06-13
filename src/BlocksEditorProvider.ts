@@ -8,8 +8,7 @@ import { companionUriFor, readCompanionWorkspace, writeCompanionWorkspace, compa
 import { languageForFile } from './codegen/sourceLanguage';
 import { collectUsedBlockTypes } from './project/blockUsage';
 import { collectRequirements } from './catalog/requirements';
-import { mergeEnvLists } from './project/pio/iniMerge';
-import { mergeSketchLibraries } from './project/arduino/sketchYamlMerge';
+import { getBackend } from './project/backendRegistry';
 import * as fs from 'fs/promises';
 
 /**
@@ -282,38 +281,29 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
         const localEntries = await this.catalogManager.loadEntriesFrom(projectBlocksDir);
         const allEntries = [...this.catalogManager.getEntries(), ...localEntries];
         const reqs = collectRequirements(allEntries, collectUsedBlockTypes(state), runtime);
-        if (reqs.libDeps.length === 0) return;
 
-        const uri = vscode.Uri.file(project.configPath);
-        let content: string;
-        try {
-            // Read fresh from disk immediately before the (synchronous) merge and
-            // write below — never from a cached copy. The optional vscode-arduino-cli
-            // extension also writes this file (its daemon reformats the whole
-            // sketch.yaml on profileLibAdd/Remove); reading right before writing
-            // keeps our add-only merge starting from the current on-disk content and
-            // minimizes the lost-update window. Do not hoist this read.
-            content = Buffer.from(await vscode.workspace.fs.readFile(uri)).toString('utf8');
-        } catch {
-            return;
-        }
+        // Packaging (which files to write, in which format) is the backend's job.
+        // The backend reads each file fresh immediately before merging and
+        // writing it — see ProjectBackend.sync / the injected readFile below.
+        const backend = getBackend(project.configType);
+        if (!backend) return;
 
-        let merged: string;
-        let changed: boolean;
-
-        if (project.configType === 'arduino') {
-            ({ content: merged, changed } = mergeSketchLibraries(content, activeEnv.name, {
-                libDeps: reqs.libDeps,
-            }));
-        } else {
-            ({ content: merged, changed } = mergeEnvLists(content, activeEnv.name, {
-                libDeps: reqs.libDeps,
-            }));
-        }
-
-        if (changed) {
-            await vscode.workspace.fs.writeFile(uri, Buffer.from(merged, 'utf8'));
-        }
+        await backend.sync({
+            project,
+            activeEnv,
+            requirements: reqs,
+            readFile: async (absPath) => {
+                try {
+                    const bytes = await vscode.workspace.fs.readFile(vscode.Uri.file(absPath));
+                    return Buffer.from(bytes).toString('utf8');
+                } catch {
+                    return undefined;
+                }
+            },
+            writeFile: async (absPath, fileContent) => {
+                await vscode.workspace.fs.writeFile(vscode.Uri.file(absPath), Buffer.from(fileContent, 'utf8'));
+            },
+        });
     }
 
     private writeSource(document: vscode.TextDocument, code: string) {

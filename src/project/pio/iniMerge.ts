@@ -1,3 +1,5 @@
+import { LibraryDependency } from '../../catalog/CatalogTypes';
+
 /**
  * Non-destructive merge of lib_deps into a specific [env:NAME] section of a
  * platformio.ini. Add-only: never removes user entries, only the targeted env
@@ -7,6 +9,21 @@
  * The targeted key is rewritten in normalized multi-line form; everything else
  * in the file is left byte-for-byte intact.
  */
+
+/**
+ * Compose a PlatformIO lib_deps spec from a structured library dependency.
+ *
+ * Registry libraries → `name@^minVersion` (caret = recommended by PIO).
+ * VCS libraries (not in the PIO registry, e.g. Arduino_Nesso_N1) → PIO's
+ * `name=url#ref` form, which gives the library a stable local name while
+ * fetching from git. See .claude/docs/01-library-resolution.md.
+ */
+export function composePioLibDep(dep: LibraryDependency): string {
+    if (dep.url) {
+        return `${dep.name}=${dep.url}${dep.ref ? `#${dep.ref}` : ''}`;
+    }
+    return dep.minVersion ? `${dep.name}@^${dep.minVersion}` : dep.name;
+}
 
 interface KeySpec {
     /** Split a raw value (one line's worth) into tokens. */

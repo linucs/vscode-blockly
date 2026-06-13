@@ -139,27 +139,28 @@ suite('sketch.yaml merge — default env (no profile)', () => {
             'default_protocol: serial',
         ].join('\n');
 
-        const { content, changed } = mergeSketchLibraries(input, DEFAULT_ENV_NAME, {
-            libDeps: ['Servo@^1.2.1'],
-        });
+        const { content, changed } = mergeSketchLibraries(input, DEFAULT_ENV_NAME, [
+            { type: 'library', name: 'Servo', minVersion: '1.2.1' },
+        ]);
         assert.ok(!changed);
         assert.strictEqual(content, input);
     });
 
     test('is a no-op when default_fqbn is missing', () => {
         const input = 'default_port: /dev/cu.usbmodem11101\n';
-        const { content, changed } = mergeSketchLibraries(input, DEFAULT_ENV_NAME, {
-            libDeps: ['Servo@^1.2.1'],
-        });
+        const { content, changed } = mergeSketchLibraries(input, DEFAULT_ENV_NAME, [
+            { type: 'library', name: 'Servo', minVersion: '1.2.1' },
+        ]);
         assert.ok(!changed);
         assert.strictEqual(content, input);
     });
 
     test('is a no-op with multiple libraries (no profile synthesized)', () => {
         const input = 'default_fqbn: esp32:esp32:esp32dev\n';
-        const { content, changed } = mergeSketchLibraries(input, DEFAULT_ENV_NAME, {
-            libDeps: ['WiFi', 'ArduinoJson@^6.21.0'],
-        });
+        const { content, changed } = mergeSketchLibraries(input, DEFAULT_ENV_NAME, [
+            { type: 'library', name: 'WiFi' },
+            { type: 'library', name: 'ArduinoJson', minVersion: '6.21.0' },
+        ]);
         assert.ok(!changed);
         assert.strictEqual(content, input);
         assert.ok(!content.includes('profiles:'));

@@ -1,32 +1,31 @@
-import { CatalogEntry, Dependency } from './CatalogTypes';
-
-export interface ProjectRequirements {
-    /** lib_deps strings, e.g. `Arduino_Modulino@^0.8.0`. */
-    libDeps: string[];
-}
+import { CatalogEntry, LibraryDependency, PipDependency, BrickDependency } from './CatalogTypes';
 
 /**
- * Compose a PlatformIO lib_deps spec from a library dependency.
- *
- * Registry libraries → `name@^minVersion` (caret = recommended by PIO).
- * VCS libraries (not in the PIO registry, e.g. Arduino_Nesso_N1) → PIO's
- * `name=url#ref` form, which gives the library a stable local name while
- * fetching from git. See .claude/docs/01-library-resolution.md.
+ * Dependencies required by the blocks in use, bucketed by dependency type and
+ * kept as structured deps (NOT pre-formatted). Each project backend formats and
+ * routes the buckets it supports into its own config file(s):
+ *   - `library` → platformio.ini `lib_deps` / sketch.yaml `libraries`
+ *   - `pip`     → requirements.txt   (arduino-app backend, future)
+ *   - `brick`   → app.yaml           (arduino-app backend, future)
+ * Buckets a given backend doesn't support are simply ignored.
  */
-export function composePioLibDep(dep: Extract<Dependency, { type: 'library' }>): string {
-    if (dep.url) {
-        return `${dep.name}=${dep.url}${dep.ref ? `#${dep.ref}` : ''}`;
-    }
-    return dep.minVersion ? `${dep.name}@^${dep.minVersion}` : dep.name;
+export interface ProjectRequirements {
+    library: LibraryDependency[];
+    pip: PipDependency[];
+    brick: BrickDependency[];
+}
+
+function libraryKey(dep: LibraryDependency): string {
+    return `${dep.name}|${dep.url ?? ''}|${dep.ref ?? ''}|${dep.minVersion ?? ''}`;
 }
 
 /**
- * Gather the lib_deps required by the blocks currently in use.
+ * Gather the dependencies required by the blocks currently in use.
  *
  * Dependencies live at the implementation level, so an implementation
  * contributes its requirements if ANY of its block types is used. Only
- * implementations matching the active runtime are considered; only `library`
- * dependencies map to lib_deps (pip/brick are irrelevant to a C++ build).
+ * implementations matching the active runtime are considered. Deps are returned
+ * structured and de-duplicated per type; formatting is the backend's concern.
  */
 export function collectRequirements(
     entries: CatalogEntry[],
@@ -34,7 +33,16 @@ export function collectRequirements(
     runtime: string
 ): ProjectRequirements {
     const used = new Set(usedBlockTypes);
-    const libDeps = new Set<string>();
+    const library: LibraryDependency[] = [];
+    const pip: PipDependency[] = [];
+    const brick: BrickDependency[] = [];
+    const seen = { library: new Set<string>(), pip: new Set<string>(), brick: new Set<string>() };
+
+    const addUnique = <T>(bucket: T[], set: Set<string>, key: string, dep: T): void => {
+        if (set.has(key)) return;
+        set.add(key);
+        bucket.push(dep);
+    };
 
     for (const entry of entries) {
         const impl = entry.implementations.find(i => i.runtime.trim().toLowerCase() === runtime);
@@ -42,9 +50,19 @@ export function collectRequirements(
         if (!impl.blocks.some(b => used.has(b.blockly?.type))) continue;
 
         for (const dep of impl.dependencies ?? []) {
-            if (dep.type === 'library') libDeps.add(composePioLibDep(dep));
+            switch (dep.type) {
+                case 'library':
+                    addUnique(library, seen.library, libraryKey(dep), dep);
+                    break;
+                case 'pip':
+                    addUnique(pip, seen.pip, `${dep.name}|${dep.minVersion ?? ''}`, dep);
+                    break;
+                case 'brick':
+                    addUnique(brick, seen.brick, `${dep.name}|${JSON.stringify(dep.variables ?? {})}`, dep);
+                    break;
+            }
         }
     }
 
-    return { libDeps: [...libDeps] };
+    return { library, pip, brick };
 }

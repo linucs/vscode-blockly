@@ -1,10 +1,10 @@
 import * as Blockly from 'blockly';
 
-import { FieldTypedParamInput } from '../custom-fields/FieldTypedParamInput';
-import { createMinusField, createPlusField } from '../custom-fields/blocklyFieldHelpers';
-import { blockStyleFor } from '../ThemeAdapter';
-import { ORDER } from './cppOrder';
-import { registerArduinoStringGenerators } from './arduinoStringGenerators';
+import { FieldTypedParamInput } from '../../../custom-fields/FieldTypedParamInput';
+import { createMinusField, createPlusField } from '../../../custom-fields/blocklyFieldHelpers';
+import { blockStyleFor } from '../../../ThemeAdapter';
+import { ORDER } from './order';
+import { registerArduinoStringGenerators } from './strings';
 
 export const CPP_KEYWORDS = [
     'auto', 'break', 'case', 'catch', 'char', 'class', 'const', 'constexpr',

@@ -30,7 +30,6 @@ Blockly.fieldRegistry.register('field_colour_hsv_sliders', FieldColourHsvSliders
 import './custom-fields/FieldCombobox';
 import './custom-fields/FieldTypedParamInput';
 import './custom-fields/FieldCode';
-import './custom-blocks/switchCaseBlock';
 import './custom-blocks/cppProcedureBlocks';
 
 export const CPP_VARIABLE_TYPES: [string, string][] = [

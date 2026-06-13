@@ -1,7 +1,10 @@
 import * as Blockly from 'blockly';
 
 import { FieldTypedParamInput } from '../custom-fields/FieldTypedParamInput';
+import { createMinusField, createPlusField } from '../custom-fields/blocklyFieldHelpers';
 import { blockStyleFor } from '../ThemeAdapter';
+import { ORDER } from './cppOrder';
+import { registerArduinoStringGenerators } from './arduinoStringGenerators';
 
 export const CPP_KEYWORDS = [
     'auto', 'break', 'case', 'catch', 'char', 'class', 'const', 'constexpr',
@@ -16,20 +19,6 @@ export const CPP_KEYWORDS = [
     'concept', 'consteval', 'constinit', 'co_await', 'co_return', 'co_yield',
     'requires', 'char8_t',
 ];
-
-const ORDER = {
-    ATOMIC: 0,
-    FUNCTION_CALL: 2,
-    UNARY: 3,
-    MULTIPLICATIVE: 5,
-    ADDITIVE: 6,
-    RELATIONAL: 9,
-    EQUALITY: 10,
-    LOGICAL_AND: 14,
-    LOGICAL_OR: 15,
-    CONDITIONAL: 16,
-    NONE: 99,
-} as const;
 
 function cppTypeInfo(
     block: Blockly.Block,
@@ -197,6 +186,110 @@ function defineCustomBlocks(): void {
 
     Blockly.common.defineBlocksWithJsonArray(defs);
     for (const d of defs) customBlocksDefined.add((d as { type: string }).type);
+
+    defineSwitchCaseBlock();
+}
+
+interface SwitchCaseBlock extends Blockly.Block {
+    caseCount_: number;
+    plus(): void;
+    minus(_idx: number): void;
+    addCase_(): void;
+    removeCase_(): void;
+    updateMinus_(): void;
+}
+
+// controls_switch_case: a variadic switch block with [+]/[−] case management.
+// Defined imperatively (mutator methods + saveExtraState/loadExtraState), so it
+// cannot be a JSON-array entry. Its generator lives in registerCppLanguageBlocks
+// (f['controls_switch_case']).
+function defineSwitchCaseBlock(): void {
+    const { Align } = Blockly.inputs;
+    if (Blockly.Blocks['controls_switch_case']) return;
+
+    Blockly.Blocks['controls_switch_case'] = {
+        init(this: SwitchCaseBlock): void {
+            this.caseCount_ = 0;
+
+            this.appendValueInput('SWITCH_EXPR')
+                .appendField(createPlusField())
+                .appendField(Blockly.Msg['SWITCH_LABEL'] ?? 'switch')
+                .setAlign(Align.RIGHT);
+
+            this.appendDummyInput('DEFAULT_LABEL').appendField(Blockly.Msg['SWITCH_DEFAULT_LABEL'] ?? 'default');
+            this.appendStatementInput('DEFAULT_BODY');
+
+            this.setStyle(blockStyleFor('Logic'));
+            this.setPreviousStatement(true);
+            this.setNextStatement(true);
+            this.setTooltip(
+                Blockly.Msg['SWITCH_TOOLTIP'] ?? 'Switch on an expression. Use [+] to add cases and [−] to remove them.',
+            );
+
+            this.addCase_();
+        },
+
+        plus(this: SwitchCaseBlock): void {
+            this.addCase_();
+        },
+
+        minus(this: SwitchCaseBlock, _idx: number): void {
+            if (this.caseCount_ <= 1) return;
+            this.removeCase_();
+        },
+
+        addCase_(this: SwitchCaseBlock): void {
+            const i = this.caseCount_++;
+            this.appendValueInput(`CASE_${i}_VAL`)
+                .appendField(Blockly.Msg['SWITCH_CASE_LABEL'] ?? 'case')
+                .setAlign(Align.RIGHT);
+            this.appendStatementInput(`CASE_${i}_BODY`).appendField(Blockly.Msg['SWITCH_DO_LABEL'] ?? 'do');
+            this.moveInputBefore('DEFAULT_LABEL', null);
+            this.moveInputBefore('DEFAULT_BODY', null);
+            this.updateMinus_();
+        },
+
+        removeCase_(this: SwitchCaseBlock): void {
+            this.caseCount_--;
+            this.removeInput(`CASE_${this.caseCount_}_BODY`);
+            this.removeInput(`CASE_${this.caseCount_}_VAL`);
+            this.updateMinus_();
+        },
+
+        updateMinus_(this: SwitchCaseBlock): void {
+            const header = this.getInput('SWITCH_EXPR')!;
+            const hasMinus = Boolean(this.getField('MINUS'));
+            if (!hasMinus && this.caseCount_ > 1) {
+                header.insertFieldAt(1, createMinusField(), 'MINUS');
+            } else if (hasMinus && this.caseCount_ <= 1) {
+                (header as unknown as { removeField(n: string): void }).removeField('MINUS');
+            }
+        },
+
+        saveExtraState(this: SwitchCaseBlock): object {
+            return { caseCount: this.caseCount_ };
+        },
+
+        loadExtraState(
+            this: SwitchCaseBlock,
+            state: { caseCount: number },
+        ): void {
+            for (let i = 0; i < this.caseCount_; i++) {
+                this.removeInput(`CASE_${i}_BODY`);
+                this.removeInput(`CASE_${i}_VAL`);
+            }
+            this.caseCount_ = 0;
+            if (this.getField('MINUS')) {
+                const header = this.getInput('SWITCH_EXPR')!;
+                (header as unknown as { removeField(n: string): void }).removeField('MINUS');
+            }
+
+            const count = state.caseCount ?? 1;
+            for (let i = 0; i < count; i++) {
+                this.addCase_();
+            }
+        },
+    };
 }
 
 export function registerCppLanguageBlocks(
@@ -476,61 +569,13 @@ export function registerCppLanguageBlocks(
         return `${name} += ${delta};\n`;
     };
 
-    // ── Functions (standard Blockly procedures) ──────────────────────────────
-
-    const buildProcedureDef = (
-        block: Blockly.Block,
-        returnType: 'void' | 'int',
-    ): null => {
-        const name = g.getProcedureName(block.getFieldValue('NAME'));
-        const varModels = block.getVarModels() ?? [];
-        const paramList = varModels
-            .map((model) => {
-                const varName = g.getVariableName(model.getId());
-                const { type } = cppTypeInfo(block, model.getId());
-                return `${type} ${varName}`;
-            })
-            .join(', ');
-        const body = g.statementToCode(block, 'STACK') || '';
-        const returnValue =
-            returnType === 'int'
-                ? g.valueToCode(block, 'RETURN', ORDER.NONE) || '0'
-                : '';
-        const returnLine =
-            returnType === 'int' ? `${g.INDENT}return ${returnValue};\n` : '';
-        (g as any).definitions_[`func_${name}`] =
-            `${returnType} ${name}(${paramList}) {\n${body}${returnLine}}\n`;
-        return null;
-    };
-
-    f['procedures_defnoreturn'] = (block) => buildProcedureDef(block, 'void');
-    f['procedures_defreturn']   = (block) => buildProcedureDef(block, 'int');
+    // ── Functions (C++ procedures) ───────────────────────────────────────────
 
     const buildCallArgs = (block: Blockly.Block): string => {
         const argIds = block.getVars();
         return argIds
             .map((_id, i) => g.valueToCode(block, `ARG${i}`, ORDER.NONE) || '0')
             .join(', ');
-    };
-
-    f['procedures_callnoreturn'] = (block) => {
-        const name = g.getProcedureName(block.getFieldValue('NAME'));
-        return `${name}(${buildCallArgs(block)});\n`;
-    };
-
-    f['procedures_callreturn'] = (block) => {
-        const name = g.getProcedureName(block.getFieldValue('NAME'));
-        return [`${name}(${buildCallArgs(block)})`, ORDER.FUNCTION_CALL];
-    };
-
-    f['procedures_ifreturn'] = (block) => {
-        const cond = val(block, 'CONDITION', ORDER.NONE, 'false');
-        const hasReturn = (block as Blockly.Block & { hasReturnValue_?: boolean })
-            .hasReturnValue_;
-        const value = hasReturn
-            ? g.valueToCode(block, 'VALUE', ORDER.NONE) || '0'
-            : '';
-        return `if (${cond}) {\n${g.INDENT}return${value ? ` ${value}` : ''};\n}\n`;
     };
 
     // ── Typed C++ procedures ─────────────────────────────────────────────────
@@ -581,7 +626,15 @@ export function registerCppLanguageBlocks(
         return [`${name}(${buildCallArgs(block)})`, ORDER.FUNCTION_CALL];
     };
 
-    f['cpp_procedures_ifreturn'] = f['procedures_ifreturn'];
+    f['cpp_procedures_ifreturn'] = (block) => {
+        const cond = val(block, 'CONDITION', ORDER.NONE, 'false');
+        const hasReturn = (block as Blockly.Block & { hasReturnValue_?: boolean })
+            .hasReturnValue_;
+        const value = hasReturn
+            ? g.valueToCode(block, 'VALUE', ORDER.NONE) || '0'
+            : '';
+        return `if (${cond}) {\n${g.INDENT}return${value ? ` ${value}` : ''};\n}\n`;
+    };
 
     // ── do...while ──────────────────────────────────────────────────────────
 
@@ -642,109 +695,8 @@ export function registerCppLanguageBlocks(
         return `${name}[${index}] = ${value};\n`;
     };
 
-    // ── Text operations (Blockly built-in blocks) ───────────────────────────
-
-    f['text_join'] = (b) => {
-        const itemCount = (b as any).itemCount_ ?? 0;
-        if (itemCount === 0) return ['""', ORDER.ATOMIC];
-        if (itemCount === 1) {
-            const item = g.valueToCode(b, 'ADD0', ORDER.NONE) || '""';
-            return [`String(${item})`, ORDER.FUNCTION_CALL];
-        }
-        const parts: string[] = [];
-        for (let i = 0; i < itemCount; i++) {
-            const item = g.valueToCode(b, 'ADD' + i, ORDER.NONE);
-            parts.push(item ? `String(${item})` : '""');
-        }
-        return [parts.join(' + '), ORDER.ADDITIVE];
-    };
-
-    f['text_append'] = (b) => {
-        const varId = b.getFieldValue('VAR');
-        const name = g.getVariableName(varId);
-        const text = val(b, 'TEXT', ORDER.NONE, '""');
-        if (!paramVarIds.has(varId)) {
-            (g as any).definitions_[`decl_var_${name}`] = `String ${name} = "";`;
-        }
-        return `${name} += String(${text});\n`;
-    };
-
-    f['text_length'] = (b) => {
-        const text = val(b, 'VALUE', ORDER.NONE, '""');
-        return [`String(${text}).length()`, ORDER.FUNCTION_CALL];
-    };
-
-    f['text_isEmpty'] = (b) => {
-        const text = val(b, 'VALUE', ORDER.NONE, '""');
-        return [`(String(${text}).length() == 0)`, ORDER.EQUALITY];
-    };
-
-    f['text_indexOf'] = (b) => {
-        const operator = b.getFieldValue('END') === 'FIRST' ? 'indexOf' : 'lastIndexOf';
-        const substring = val(b, 'FIND', ORDER.NONE, '""');
-        const text = val(b, 'VALUE', ORDER.NONE, '""');
-        return [`String(${text}).${operator}(${substring})`, ORDER.FUNCTION_CALL];
-    };
-
-    f['text_charAt'] = (b) => {
-        const where = b.getFieldValue('WHERE') || 'FROM_START';
-        const text = val(b, 'VALUE', ORDER.NONE, '""');
-        switch (where) {
-            case 'FIRST':
-                return [`String(${text}).charAt(0)`, ORDER.FUNCTION_CALL];
-            case 'LAST':
-                return [`String(${text}).charAt(String(${text}).length() - 1)`, ORDER.FUNCTION_CALL];
-            case 'FROM_START': {
-                const at = val(b, 'AT', ORDER.NONE, '0');
-                return [`String(${text}).charAt(${at})`, ORDER.FUNCTION_CALL];
-            }
-            case 'FROM_END': {
-                const at = val(b, 'AT', ORDER.NONE, '0');
-                return [`String(${text}).charAt(String(${text}).length() - 1 - ${at})`, ORDER.FUNCTION_CALL];
-            }
-            default:
-                return [`String(${text}).charAt(0)`, ORDER.FUNCTION_CALL];
-        }
-    };
-
-    f['text_getSubstring'] = (b) => {
-        const text = val(b, 'STRING', ORDER.NONE, '""');
-        const where1 = b.getFieldValue('WHERE1') || 'FROM_START';
-        const where2 = b.getFieldValue('WHERE2') || 'FROM_START';
-
-        let from: string;
-        switch (where1) {
-            case 'FIRST':      from = '0'; break;
-            case 'FROM_START': from = val(b, 'AT1', ORDER.NONE, '0'); break;
-            case 'FROM_END':   from = `String(${text}).length() - 1 - ${val(b, 'AT1', ORDER.NONE, '0')}`; break;
-            default:           from = '0';
-        }
-
-        let to: string;
-        switch (where2) {
-            case 'LAST':       to = `String(${text}).length()`; break;
-            case 'FROM_START': to = `${val(b, 'AT2', ORDER.NONE, '0')} + 1`; break;
-            case 'FROM_END':   to = `String(${text}).length() - ${val(b, 'AT2', ORDER.NONE, '0')}`; break;
-            default:           to = `String(${text}).length()`;
-        }
-
-        return [`String(${text}).substring(${from}, ${to})`, ORDER.FUNCTION_CALL];
-    };
-
-    f['text_changeCase'] = (b) => {
-        const operator = b.getFieldValue('CASE');
-        const text = val(b, 'TEXT', ORDER.NONE, '""');
-        switch (operator) {
-            case 'UPPERCASE':  return [`String(${text}).toUpperCase()`, ORDER.FUNCTION_CALL];
-            case 'LOWERCASE':  return [`String(${text}).toLowerCase()`, ORDER.FUNCTION_CALL];
-            default:           return [`String(${text})`, ORDER.FUNCTION_CALL];
-        }
-    };
-
-    f['text_trim'] = (b) => {
-        const text = val(b, 'TEXT', ORDER.NONE, '""');
-        return [`String(${text}).trim()`, ORDER.FUNCTION_CALL];
-    };
+    // ── Text operations → L2 Arduino String generators (arduinoStringGenerators.ts) ──
+    registerArduinoStringGenerators(g, paramVarIds);
 
     // ── Symbol literal ──────────────────────────────────────────────────
 

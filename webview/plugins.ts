@@ -383,6 +383,12 @@ export function initWorkspacePlugins(workspace: Blockly.WorkspaceSvg): () => voi
     multiselect.init({
         useDoubleClick: false,
         bumpNeighbours: false,
+        // Default is true: a mouseenter on the injection div forces
+        // workspace.focus(). In a webview that steals focus from open
+        // context menus / dropdown editors (which Blockly 12 routes through
+        // the focus manager's ephemeral focus), so right-clicking a variable
+        // resolves the wrong focused node and the menu misbehaves. Disable it.
+        workspaceAutoFocus: false,
         multiselectIcon: { hideIcon: false, weight: 3 },
     });
 

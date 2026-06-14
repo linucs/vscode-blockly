@@ -5,6 +5,7 @@
   "config.generateOnChange": "Code automatisch generieren, sobald sich Blöcke ändern. Wenn deaktiviert, wird der Code nur beim Drücken der Schaltfläche „Code generieren“ erzeugt.",
   "config.showMinimap": "Eine Minimap-Übersicht des Block-Workspace in der unteren rechten Ecke anzeigen.",
   "config.catalogPaths": "Lokale Verzeichnisse oder Remote-URLs für YAML-Dateien von Blockkatalogen. Lokale Pfade (relativ zum Workspace-Stammverzeichnis oder absolut) werden rekursiv durchsucht. URLs (http/https) werden beim ersten Laden in den Projektordner .blocks/ heruntergeladen; verwende den Befehl „Remote-Kataloge aktualisieren“, um einen erneuten Download zu erzwingen.",
+  "command.openInBlocksEditor": "Im Blockeditor öffnen",
   "command.refreshCatalogs": "Blockeditor: Remote-Kataloge aktualisieren",
   "command.enableClaudeCode": "Blockeditor: KI-Assistenten einrichten (Copilot & Claude Code)",
   "editor.displayName": "Blockeditor (Visuelle Programmierung)",

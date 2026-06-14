@@ -5,6 +5,7 @@
   "config.generateOnChange": "ブロックが変更されるたびにコードを自動生成します。無効にすると、コードは「コードを生成」ボタンを押したときにのみ生成されます。",
   "config.showMinimap": "ブロックワークスペースの全体を示すミニマップを右下隅に表示します。",
   "config.catalogPaths": "ブロックカタログ YAML ファイルのローカルディレクトリまたはリモート URL。ローカルパス（ワークスペースルートからの相対パス、または絶対パス）は再帰的にスキャンされます。URL（http/https）は初回読み込み時にプロジェクトの .blocks/ フォルダーにダウンロードされます。再ダウンロードを強制するには「Refresh Remote Catalogs」コマンドを使用してください。",
+  "command.openInBlocksEditor": "ブロックエディターで開く",
   "command.refreshCatalogs": "Blocks Editor: リモートカタログを更新",
   "command.enableClaudeCode": "Blocks Editor: AIアシスタントを設定 (Copilot と Claude Code)",
   "editor.displayName": "Blocks Editor (ビジュアルプログラミング)",

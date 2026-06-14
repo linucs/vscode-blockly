@@ -5,6 +5,7 @@
   "config.generateOnChange": "每當積木變更時自動產生程式碼。停用時，僅在按下「產生程式碼」按鈕時才會產生程式碼。",
   "config.showMinimap": "在右下角顯示積木工作區的縮圖概覽。",
   "config.catalogPaths": "積木目錄 YAML 檔案的本機目錄或遠端 URL。本機路徑（相對於工作區根目錄，或絕對路徑）會以遞迴方式掃描。URL（http/https）在首次載入時會下載到專案的 .blocks/ 資料夾；使用「重新整理遠端目錄」命令可強制重新下載。",
+  "command.openInBlocksEditor": "在區塊編輯器中開啟",
   "command.refreshCatalogs": "Blocks Editor: 重新整理遠端目錄",
   "command.enableClaudeCode": "Blocks Editor: 設定 AI 助理（Copilot 與 Claude Code）",
   "editor.displayName": "Blocks Editor (視覺化程式設計)",

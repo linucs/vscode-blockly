@@ -5,6 +5,7 @@
   "config.generateOnChange": "Genera il codice automaticamente a ogni modifica dei blocchi. Se disabilitato, il codice viene generato solo alla pressione del pulsante Genera codice.",
   "config.showMinimap": "Mostra una minimappa del workspace dei blocchi nell'angolo in basso a destra.",
   "config.catalogPaths": "Cartelle locali o URL remoti per i file YAML dei cataloghi blocchi. I percorsi locali (relativi alla root del workspace o assoluti) vengono scansionati ricorsivamente. Gli URL (http/https) vengono scaricati nella cartella .blocks/ del progetto al primo caricamento; usa il comando \"Aggiorna cataloghi remoti\" per forzare il ri-download.",
+  "command.openInBlocksEditor": "Apri nell'editor a blocchi",
   "command.refreshCatalogs": "Editor a Blocchi: Aggiorna cataloghi remoti",
   "command.enableClaudeCode": "Editor a Blocchi: Configura assistenti AI (Copilot e Claude Code)",
   "editor.displayName": "Editor a Blocchi (Programmazione Visuale)",

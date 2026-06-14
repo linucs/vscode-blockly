@@ -2,20 +2,21 @@ import * as path from 'path';
 
 /**
  * Maps a source-file extension to its codegen language. The blocks editor opens
- * directly on a source file (via "Open With…"); that file's extension — not a
- * global mapping — decides the generation language and which catalog
- * implementations apply.
+ * directly on a source file (via "Open in Blocks Editor" / "Open With…"); that
+ * file's extension — not a global mapping — decides the generation language and
+ * which catalog implementations apply.
  *
- *   .cpp / .ino  -> cpp   (Arduino framework compiles C++; PlatformIO recommends .cpp)
- *   .py          -> python
+ *   .ino / .pde / .cpp  -> cpp   (Arduino sketch / PlatformIO src/main.cpp)
+ *   .py                 -> python
+ *
+ * This set must stay in sync with the `customEditors` selector and the
+ * "Open in Blocks Editor" menu `when` clauses in package.json — enforced by
+ * scripts/check-editor-extensions.js (yarn check-editor-ext).
  */
 export const SOURCE_LANGUAGE_BY_EXT: Readonly<Record<string, string>> = {
-    '.cpp': 'cpp',
-    '.cc': 'cpp',
-    '.cxx': 'cpp',
-    '.c': 'cpp',
     '.ino': 'cpp',
     '.pde': 'cpp',
+    '.cpp': 'cpp',
     '.py': 'python',
 };
 

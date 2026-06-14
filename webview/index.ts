@@ -24,6 +24,9 @@ import { initCppProcedureFlyout } from './custom-blocks/cppProcedureBlocks';
 // Registers the `hat_event_style` block extension as a side effect, so catalog
 // blocks referencing it (e.g. hat-style attachInterrupt) define without throwing.
 import './custom-blocks/hatEventStyle';
+// Registers the `field_param_input` field as a side effect, so arduino:python
+// callback-parameter blocks define without throwing regardless of active runtime.
+import './custom-fields/FieldParamInput';
 
 // ── i18n bootstrap (must happen before any Blockly block defs or UI) ───────
 const l10nDataEl = document.getElementById('l10n-data');
@@ -144,6 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
             'Text': () => l10n.t('Text'),
             'Variables': () => l10n.t('Variables'),
             'Arrays': () => l10n.t('Arrays'),
+            'Lists': () => l10n.t('Lists'),
             'Functions': () => l10n.t('Functions'),
             'Code': () => l10n.t('Code'),
         };
@@ -293,6 +297,95 @@ document.addEventListener("DOMContentLoaded", () => {
         },
     ];
 
+    // Toolbox for the `arduino:python` runtime. Uses Blockly's stock Python L1
+    // blocks (Lists instead of C++ Arrays, no do-while, text_print) and the
+    // built-in VARIABLE/PROCEDURE flyouts (Python procedures are stock Blockly,
+    // not the typed C++ ones). The shared `controls_switch_case` block is reused
+    // (its Python generator emits match/case). The `code_*` family is merged in
+    // from the arduino:python catalog (catalogs/arduino/python/code.yaml) via the
+    // name-matched "Code" category below.
+    const PYTHON_LANGUAGE_CATEGORIES = [
+        {
+            kind: 'category', _key: 'Logic', name: translateCategory('Logic'), categorystyle: categoryStyleFor('Logic'),
+            contents: [
+                { kind: 'block', type: 'controls_if' },
+                { kind: 'block', type: 'controls_switch_case' },
+                { kind: 'block', type: 'logic_compare' },
+                { kind: 'block', type: 'logic_operation' },
+                { kind: 'block', type: 'logic_negate' },
+                { kind: 'block', type: 'logic_boolean' },
+                { kind: 'block', type: 'logic_null' },
+                { kind: 'block', type: 'logic_ternary' },
+            ]
+        },
+        {
+            kind: 'category', _key: 'Loops', name: translateCategory('Loops'), categorystyle: categoryStyleFor('Loops'),
+            contents: [
+                { kind: 'block', type: 'controls_repeat_ext' },
+                { kind: 'block', type: 'controls_whileUntil' },
+                { kind: 'block', type: 'controls_for' },
+                { kind: 'block', type: 'controls_flow_statements' },
+            ]
+        },
+        {
+            kind: 'category', _key: 'Math', name: translateCategory('Math'), categorystyle: categoryStyleFor('Math'),
+            contents: [
+                { kind: 'block', type: 'math_number' },
+                { kind: 'block', type: 'math_arithmetic' },
+                { kind: 'block', type: 'math_single' },
+                { kind: 'block', type: 'math_trig' },
+                { kind: 'block', type: 'math_constant' },
+                { kind: 'block', type: 'math_round' },
+                { kind: 'block', type: 'math_modulo' },
+                { kind: 'block', type: 'math_constrain' },
+                { kind: 'block', type: 'math_random_int' },
+                { kind: 'block', type: 'math_random_float' },
+                { kind: 'block', type: 'math_number_property' },
+            ]
+        },
+        {
+            kind: 'category', _key: 'Text', name: translateCategory('Text'), categorystyle: categoryStyleFor('Text'),
+            contents: [
+                { kind: 'block', type: 'text' },
+                { kind: 'block', type: 'text_join' },
+                { kind: 'block', type: 'text_length' },
+                { kind: 'block', type: 'text_isEmpty' },
+                { kind: 'block', type: 'text_indexOf' },
+                { kind: 'block', type: 'text_charAt' },
+                { kind: 'block', type: 'text_getSubstring' },
+                { kind: 'block', type: 'text_changeCase' },
+                { kind: 'block', type: 'text_trim' },
+                { kind: 'block', type: 'text_print' },
+            ]
+        },
+        {
+            kind: 'category', _key: 'Lists', name: translateCategory('Lists'), categorystyle: categoryStyleFor('Arrays'),
+            contents: [
+                { kind: 'block', type: 'lists_create_with' },
+                { kind: 'block', type: 'lists_repeat' },
+                { kind: 'block', type: 'lists_length' },
+                { kind: 'block', type: 'lists_isEmpty' },
+                { kind: 'block', type: 'lists_indexOf' },
+                { kind: 'block', type: 'lists_getIndex' },
+                { kind: 'block', type: 'lists_setIndex' },
+            ]
+        },
+        {
+            kind: 'category', _key: 'Variables', name: translateCategory('Variables'), categorystyle: categoryStyleFor('Variables'),
+            custom: 'VARIABLE',
+        },
+        {
+            kind: 'category', _key: 'Functions', name: translateCategory('Functions'), categorystyle: categoryStyleFor('Functions'),
+            custom: 'PROCEDURE',
+        },
+        {
+            // Empty contents: filled by the arduino:python catalog's Code family
+            // through the name-matched category merge in init_catalog.
+            kind: 'category', _key: 'Code', name: translateCategory('Code'), categorystyle: categoryStyleFor('Text'),
+            contents: [] as Array<{ kind: string; type: string }>,
+        },
+    ];
+
     function populateEnvSelector(envs: EnvInfo[], selected?: string) {
         if (!envSelect || !envLabel) return;
         const show = envs.length > 0;
@@ -330,7 +423,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (!hasBoard) {
                     showBlocked(
                         l10n.t('No board detected'),
-                        l10n.t('Open this file inside a project containing a platformio.ini or sketch.yaml to load the blocks compatible with your board.')
+                        l10n.t('Open this file inside a project containing a platformio.ini, sketch.yaml, or app.yaml to load the blocks compatible with your board.')
                     );
                     break;
                 }
@@ -347,9 +440,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (!isRuntimeSupported(runtime) || !codeFactory.setRuntime(runtime)) {
                     showBlocked(
                         l10n.t('Framework "{0}" not yet supported', framework),
-                        l10n.t('Block generation for the "{0}" runtime is not implemented yet. Currently supported: arduino:cpp.', runtime)
+                        l10n.t('Block generation for the "{0}" runtime is not implemented yet. Currently supported: arduino:cpp, arduino:python.', runtime)
                     );
                     break;
+                }
+
+                // The raw-code field title is language-specific. The block is
+                // shared across runtimes, so drop the "(C++)" suffix when the
+                // active runtime is not C++.
+                if (runtime !== 'arduino:cpp' && Blockly.Msg['FIELD_CODE_TITLE']) {
+                    Blockly.Msg['FIELD_CODE_TITLE'] = Blockly.Msg['FIELD_CODE_TITLE'].replace(/\s*\(C\+\+\)\s*$/, '');
                 }
 
                 // Supported runtime: show the toolbox and enable generation.
@@ -387,7 +487,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 const catalogCategories = codeFactory.getCatalogToolboxCategories();
                 const merged = new Set<string>();
-                const languageCategories = LANGUAGE_CATEGORIES.map(cat => {
+                const baseCategories = runtime === 'arduino:python' ? PYTHON_LANGUAGE_CATEGORIES : LANGUAGE_CATEGORIES;
+                const languageCategories = baseCategories.map(cat => {
                     const key = (cat as any)._key as string;
                     const match = catalogCategories.find(c => c._key === key && Array.isArray(c.contents));
                     if (!match || !Array.isArray((cat as any).contents)) return cat;

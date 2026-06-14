@@ -13,7 +13,7 @@ export interface ProjectEnv {
 }
 
 /** Which toolchain/backend a project uses (selects the packaging strategy). */
-export type ProjectConfigType = 'platformio' | 'arduino';
+export type ProjectConfigType = 'platformio' | 'arduino' | 'app-lab';
 
 /** Parsed project configuration from either platformio.ini or sketch.yaml. */
 export interface ProjectConfig {

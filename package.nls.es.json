@@ -5,6 +5,7 @@
   "config.generateOnChange": "Genera el código automáticamente cada vez que cambian los bloques. Si está deshabilitado, el código se genera solo al pulsar el botón Generar código.",
   "config.showMinimap": "Muestra un minimapa del área de trabajo de bloques en la esquina inferior derecha.",
   "config.catalogPaths": "Directorios locales o URL remotas para los archivos YAML de catálogos de bloques. Las rutas locales (relativas a la raíz del workspace, o absolutas) se exploran de forma recursiva. Las URL (http/https) se descargan a la carpeta .blocks/ del proyecto en la primera carga; usa el comando \"Actualizar catálogos remotos\" para forzar la nueva descarga.",
+  "command.openInBlocksEditor": "Abrir en el editor de bloques",
   "command.refreshCatalogs": "Editor de Bloques: Actualizar catálogos remotos",
   "command.enableClaudeCode": "Editor de Bloques: Configurar asistentes de IA (Copilot y Claude Code)",
   "editor.displayName": "Editor de Bloques (Programación Visual)",

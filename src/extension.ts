@@ -34,6 +34,14 @@ export async function activate(context: vscode.ExtensionContext) {
         }
     }));
 
+    context.subscriptions.push(vscode.commands.registerCommand('blocks-editor.openInBlocksEditor', async (uri?: vscode.Uri) => {
+        const target = uri ?? vscode.window.activeTextEditor?.document.uri;
+        if (!target) {
+            return;
+        }
+        await vscode.commands.executeCommand('vscode.openWith', target, 'blocks-editor.editor');
+    }));
+
     context.subscriptions.push(vscode.commands.registerCommand('blocks-editor.refreshCatalogs', async () => {
         await catalogManager.forceRefreshRemote();
         vscode.window.showInformationMessage(vscode.l10n.t('Remote catalogs re-downloaded and reloaded.'));

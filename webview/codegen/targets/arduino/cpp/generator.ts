@@ -2,6 +2,7 @@ import * as Blockly from 'blockly';
 import { cppLanguageProfile } from '../../../languages/cpp';
 import { FieldTypedParamInput } from '../../../../custom-fields/FieldTypedParamInput';
 import { categorizeDefinitions, assembleSketch } from '../../../../../src/codegen/targets/arduino/cpp/assemble';
+import { formatGeneratedAt } from '../../../../../src/codegen/generatedAt';
 import { RuntimeGenerator } from '../../../core/runtimeGenerator';
 import { FIRST_PARTY_GENERATORS } from './firstParty';
 
@@ -56,7 +57,7 @@ export function createArduinoCppGenerator(): RuntimeGenerator {
         this.isInitialized = false;
         if (this.nameDB_) this.nameDB_.reset();
         paramVarIds = new Set();
-        return assembleSketch(sections, code);
+        return assembleSketch(sections, code, formatGeneratedAt(new Date()));
     };
 
     (g as any).scrub_ = function (block: Blockly.Block, code: string, thisOnly?: boolean) {

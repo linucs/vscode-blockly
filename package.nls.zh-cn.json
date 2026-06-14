@@ -5,6 +5,7 @@
   "config.generateOnChange": "在积木发生变化时自动生成代码。禁用后，仅在按下“生成代码”按钮时才生成代码。",
   "config.showMinimap": "在右下角显示积木工作区的小地图概览。",
   "config.catalogPaths": "积木目录 YAML 文件的本地目录或远程 URL。本地路径（相对于工作区根目录或绝对路径）会被递归扫描。URL（http/https）会在首次加载时下载到项目的 .blocks/ 文件夹；使用“刷新远程目录”命令可强制重新下载。",
+  "command.openInBlocksEditor": "在块编辑器中打开",
   "command.refreshCatalogs": "Blocks Editor: 刷新远程目录",
   "command.enableClaudeCode": "Blocks Editor: 设置 AI 助手（Copilot 和 Claude Code）",
   "editor.displayName": "Blocks Editor (可视化编程)",

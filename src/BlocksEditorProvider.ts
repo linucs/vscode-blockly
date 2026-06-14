@@ -119,6 +119,7 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
 
         const iniWatcher = vscode.workspace.createFileSystemWatcher('**/platformio.ini');
         const yamlWatcher = vscode.workspace.createFileSystemWatcher('**/sketch.yaml');
+        const appYamlWatcher = vscode.workspace.createFileSystemWatcher('**/app.yaml');
         const onConfigChange = () => { void reloadProject(); };
         iniWatcher.onDidCreate(onConfigChange);
         iniWatcher.onDidChange(onConfigChange);
@@ -126,6 +127,9 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
         yamlWatcher.onDidCreate(onConfigChange);
         yamlWatcher.onDidChange(onConfigChange);
         yamlWatcher.onDidDelete(onConfigChange);
+        appYamlWatcher.onDidCreate(onConfigChange);
+        appYamlWatcher.onDidChange(onConfigChange);
+        appYamlWatcher.onDidDelete(onConfigChange);
 
         const getAutoGenerate = () =>
             vscode.workspace.getConfiguration('blocks-editor').get<boolean>('generateOnChange', true);
@@ -155,6 +159,7 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
             remoteRefreshSubscription.dispose();
             iniWatcher.dispose();
             yamlWatcher.dispose();
+            appYamlWatcher.dispose();
             configSubscription.dispose();
             themeSubscription.dispose();
         });
@@ -417,7 +422,7 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
                     <div id="blocklyDiv"></div>
                     <div id="emptyState">
                         <div class="title">No board detected</div>
-                        <div class="hint">Open this file inside a project containing a <code>platformio.ini</code> or <code>sketch.yaml</code> to load the blocks compatible with your board.</div>
+                        <div class="hint">Open this file inside a project containing a <code>platformio.ini</code>, <code>sketch.yaml</code>, or <code>app.yaml</code> to load the blocks compatible with your board.</div>
                     </div>
                 </div>
                 <script id="l10n-data" type="application/json">${l10nBundle}</script>

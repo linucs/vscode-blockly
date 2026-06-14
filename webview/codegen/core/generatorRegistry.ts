@@ -1,5 +1,6 @@
 import { RuntimeGenerator } from './runtimeGenerator';
 import { createArduinoCppGenerator, ARDUINO_CPP_RUNTIME } from '../targets/arduino/cpp/generator';
+import { createArduinoPythonGenerator, ARDUINO_PYTHON_RUNTIME } from '../targets/arduino/python/generator';
 
 /**
  * Registry of generation engines keyed by `runtime` (`<framework>:<language>`).
@@ -7,6 +8,7 @@ import { createArduinoCppGenerator, ARDUINO_CPP_RUNTIME } from '../targets/ardui
  */
 const builders: Record<string, () => RuntimeGenerator> = {
     [ARDUINO_CPP_RUNTIME]: createArduinoCppGenerator,
+    [ARDUINO_PYTHON_RUNTIME]: createArduinoPythonGenerator,
 };
 
 const cache = new Map<string, RuntimeGenerator>();

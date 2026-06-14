@@ -5,6 +5,7 @@
   "config.generateOnChange": "Bloklar her değiştiğinde kodu otomatik olarak oluştur. Devre dışı bırakıldığında, kod yalnızca Kod oluştur düğmesine basıldığında oluşturulur.",
   "config.showMinimap": "Blok çalışma alanının küçük bir genel görünümünü sağ alt köşede göster.",
   "config.catalogPaths": "Blok kataloğu YAML dosyaları için yerel dizinler veya uzak URL'ler. Yerel yollar (çalışma alanı köküne göre veya mutlak) özyinelemeli olarak taranır. URL'ler (http/https) ilk yüklemede projenin .blocks/ klasörüne indirilir; yeniden indirmeyi zorlamak için \"Uzak Katalogları Yenile\" komutunu kullanın.",
+  "command.openInBlocksEditor": "Blok Düzenleyicide Aç",
   "command.refreshCatalogs": "Blok Editörü: Uzak Katalogları Yenile",
   "command.enableClaudeCode": "Blok Editörü: Yapay zekâ asistanlarını ayarla (Copilot ve Claude Code)",
   "editor.displayName": "Blok Editörü (Görsel Programlama)",

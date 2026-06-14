@@ -106,6 +106,20 @@
       ]
     },
     "menus": {
+      "explorer/context": [
+        {
+          "command": "blocks-editor.openInBlocksEditor",
+          "when": "resourceExtname == .ino || resourceExtname == .pde || resourceExtname == .cpp || resourceExtname == .py",
+          "group": "navigation@10"
+        }
+      ],
+      "editor/title/context": [
+        {
+          "command": "blocks-editor.openInBlocksEditor",
+          "when": "resourceExtname == .ino || resourceExtname == .pde || resourceExtname == .cpp || resourceExtname == .py",
+          "group": "1_open@10"
+        }
+      ],
       "view/title": [
         {
           "command": "blocks-editor.searchRegistry",
@@ -133,6 +147,11 @@
       }
     ],
     "commands": [
+      {
+        "command": "blocks-editor.openInBlocksEditor",
+        "title": "%command.openInBlocksEditor%",
+        "icon": "$(symbol-structure)"
+      },
       {
         "command": "blocks-editor.refreshCatalogs",
         "title": "%command.refreshCatalogs%"
@@ -163,22 +182,16 @@
         "displayName": "%editor.displayName%",
         "selector": [
           {
-            "filenamePattern": "*.cpp"
-          },
-          {
-            "filenamePattern": "*.cc"
-          },
-          {
-            "filenamePattern": "*.cxx"
-          },
-          {
-            "filenamePattern": "*.c"
-          },
-          {
             "filenamePattern": "*.ino"
           },
           {
             "filenamePattern": "*.pde"
+          },
+          {
+            "filenamePattern": "*.cpp"
+          },
+          {
+            "filenamePattern": "*.py"
           }
         ],
         "priority": "option"
@@ -215,7 +228,7 @@
   },
   "scripts": {
     "vscode:prepublish": "yarn run package",
-    "compile": "yarn run check-types && yarn run lint && node esbuild.js",
+    "compile": "yarn run check-editor-ext && yarn run check-types && yarn run lint && node esbuild.js",
     "watch": "npm-run-all -p watch:*",
     "watch:esbuild": "node esbuild.js --watch",
     "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
@@ -226,6 +239,7 @@
     "check-types": "tsc --noEmit",
     "lint": "eslint src",
     "check-i18n": "node scripts/check-i18n.js",
+    "check-editor-ext": "node scripts/check-editor-extensions.js",
     "test": "vscode-test",
     "vsix": "vsce package --no-dependencies",
     "publish:vsce": "vsce publish --no-dependencies",

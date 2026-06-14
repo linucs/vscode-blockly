@@ -27,5 +27,7 @@
   "walkthrough.communityCatalog.description": "Entdecke und lade Blockkataloge herunter, die von der Community beigetragen wurden.\n\n[Community-Katalog öffnen](command:blocks-editor.catalogRegistry.focus)",
   "walkthrough.contribute.title": "Hilf anderen beim Lernen — trage bei",
   "walkthrough.contribute.description": "Ich glaube, dass Arduino und Blockprogrammierung Anfängern wirklich helfen können, fortgeschrittene Konzepte zu erlernen — einschließlich Edge AI. Aber ich bin ein einzelner Entwickler und kann nicht für jedes Hardware-Gerät und jeden Anwendungsfall Blöcke erstellen.\n\nWenn auch du daran glaubst, Wissen zu teilen und anderen beim Lernen zu helfen, **trage bitte bei**: reiche deine Blockkataloge ein, eröffne Issues oder sende Pull Requests. Jeder Beitrag macht visuelle Programmierung für mehr Menschen zugänglich.\n\n[Teile deine Blöcke](https://github.com/linucs/blocks-community-catalog)",
-  "mcp.blocksEditor.label": "Blocks Editor"
+  "mcp.blocksEditor.label": "Blocks Editor",
+  "command.contributeCatalog": "Blocks Editor: Katalog zur Community beitragen…",
+  "config.contributionRepo": "GitHub-Repository (owner/repo), zu dem erstellte Kataloge beigetragen werden. Ändern, um auf einen Fork oder einen privaten Community-Katalog zu verweisen."
 }

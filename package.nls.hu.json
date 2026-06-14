@@ -27,5 +27,7 @@
   "walkthrough.communityCatalog.description": "Fedezd fel és töltsd le a közösség által hozzájárult blokk-katalógusokat.\n\n[Közösségi katalógus megnyitása](command:blocks-editor.catalogRegistry.focus)",
   "walkthrough.contribute.title": "Segíts másoknak tanulni — járulj hozzá",
   "walkthrough.contribute.description": "Hiszem, hogy az Arduino és a blokkprogramozás valóban segíthet a kezdőknek fejlett fogalmak elsajátításában — beleértve az edge AI-t is. De egyedüli fejlesztő vagyok, és nem tudok blokkokat készíteni minden hardvereszközhöz és felhasználási esethez.\n\nHa te is hiszel a tudás megosztásában és abban, hogy másoknak segíts tanulni, **járulj hozzá**: küldd be a blokk-katalógusaidat, nyiss issue-kat vagy küldj pull requesteket. Minden hozzájárulás több ember számára teszi elérhetővé a vizuális programozást.\n\n[Oszd meg a blokkjaidat](https://github.com/linucs/blocks-community-catalog)",
-  "mcp.blocksEditor.label": "Blocks Editor"
+  "mcp.blocksEditor.label": "Blocks Editor",
+  "command.contributeCatalog": "Blocks Editor: Katalógus hozzájárulása a közösséghez…",
+  "config.contributionRepo": "GitHub-tároló (owner/repo), amelyhez a létrehozott katalógusok hozzájárulnak. Módosítsa, hogy egy forkra vagy privát közösségi katalógusra mutasson."
 }

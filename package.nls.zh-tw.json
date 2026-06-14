@@ -27,5 +27,7 @@
   "walkthrough.communityCatalog.description": "探索並下載由社群貢獻的積木目錄。\n\n[開啟社群目錄](command:blocks-editor.catalogRegistry.focus)",
   "walkthrough.contribute.title": "幫助他人學習 — 一起貢獻",
   "walkthrough.contribute.description": "我相信 Arduino 與積木程式設計能真正幫助初學者學習進階概念 — 包括邊緣 AI。但我只是一名獨立開發者，無法為世上每一種硬體裝置與使用情境撰寫積木。\n\n如果你也相信分享知識與幫助他人學習，**請一起貢獻**：提交你的積木目錄、開啟 issue 或送出 pull request。每一份貢獻都讓視覺化程式設計能觸及更多人。\n\n[分享你的積木](https://github.com/linucs/blocks-community-catalog)",
-  "mcp.blocksEditor.label": "Blocks Editor"
+  "mcp.blocksEditor.label": "Blocks Editor",
+  "command.contributeCatalog": "Blocks Editor：向社群貢獻目錄…",
+  "config.contributionRepo": "所建立目錄將貢獻到的 GitHub 儲存庫（owner/repo）。可變更為指向某個 fork 或私有社群目錄。"
 }

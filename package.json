@@ -111,6 +111,11 @@
           "command": "blocks-editor.openInBlocksEditor",
           "when": "resourceExtname == .ino || resourceExtname == .pde || resourceExtname == .cpp || resourceExtname == .py",
           "group": "navigation@10"
+        },
+        {
+          "command": "blocks-editor.contributeCatalog",
+          "when": "resourceExtname =~ /\\.ya?ml$/ && resourcePath =~ /[\\\\/]\\.blocks[\\\\/]/",
+          "group": "navigation@11"
         }
       ],
       "editor/title/context": [
@@ -174,6 +179,11 @@
         "command": "blocks-editor.searchRegistry",
         "title": "%command.searchRegistry%",
         "icon": "$(search)"
+      },
+      {
+        "command": "blocks-editor.contributeCatalog",
+        "title": "%command.contributeCatalog%",
+        "icon": "$(cloud-upload)"
       }
     ],
     "customEditors": [
@@ -222,17 +232,22 @@
           "type": "string",
           "default": "https://raw.githubusercontent.com/linucs/blocks-community-catalog/main/index.json",
           "description": "%config.catalogRegistryUrl%"
+        },
+        "blocks-editor.contributionRepo": {
+          "type": "string",
+          "default": "linucs/blocks-community-catalog",
+          "description": "%config.contributionRepo%"
         }
       }
     }
   },
   "scripts": {
     "vscode:prepublish": "yarn run package",
-    "compile": "yarn run check-editor-ext && yarn run check-types && yarn run lint && node esbuild.js",
+    "compile": "yarn run check-editor-ext && yarn run check-types && yarn run lint && yarn run check-i18n && node esbuild.js",
     "watch": "npm-run-all -p watch:*",
     "watch:esbuild": "node esbuild.js --watch",
     "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
-    "package": "yarn run check-types && yarn run lint && node esbuild.js --production",
+    "package": "yarn run check-types && yarn run lint && yarn run check-i18n && node esbuild.js --production",
     "compile-tests": "tsc -p . --outDir out",
     "watch-tests": "tsc -p . -w --outDir out",
     "pretest": "yarn run compile-tests && yarn run compile && yarn run lint",

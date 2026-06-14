@@ -27,5 +27,7 @@
   "walkthrough.communityCatalog.description": "Objevujte a stahujte katalogy bloků přispěné komunitou.\n\n[Otevřít komunitní katalog](command:blocks-editor.catalogRegistry.focus)",
   "walkthrough.contribute.title": "Pomozte druhým učit se — přispějte",
   "walkthrough.contribute.description": "Věřím, že Arduino a programování pomocí bloků mohou opravdu pomoci začátečníkům naučit se pokročilé koncepty — včetně edge AI. Jsem ale jediný vývojář a nemohu vytvořit bloky pro každé hardwarové zařízení a případ použití.\n\nPokud i vy věříte ve sdílení znalostí a pomoc druhým při učení, **prosím přispějte**: odešlete své katalogy bloků, zakládejte issues nebo posílejte pull requesty. Každý příspěvek zpřístupní vizuální programování více lidem.\n\n[Sdílejte své bloky](https://github.com/linucs/blocks-community-catalog)",
-  "mcp.blocksEditor.label": "Blocks Editor"
+  "mcp.blocksEditor.label": "Blocks Editor",
+  "command.contributeCatalog": "Blocks Editor: Přispět katalogem do komunity…",
+  "config.contributionRepo": "Úložiště GitHub (owner/repo), do kterého se přispívají vytvořené katalogy. Změňte pro odkaz na fork nebo soukromý komunitní katalog."
 }

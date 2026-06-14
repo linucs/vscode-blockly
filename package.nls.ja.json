@@ -27,5 +27,7 @@
   "walkthrough.communityCatalog.description": "コミュニティが提供したブロックカタログを見つけてダウンロードします。\n\n[コミュニティカタログを開く](command:blocks-editor.catalogRegistry.focus)",
   "walkthrough.contribute.title": "学びを広げよう — 貢献する",
   "walkthrough.contribute.description": "私は、Arduino とブロックプログラミングが初心者の高度な概念の学習を本当に助けられると信じています — エッジ AI を含めて。しかし私は個人の開発者であり、存在するすべてのハードウェアデバイスやユースケースのためにブロックを作成することはできません。\n\nあなたも知識の共有と他者の学びを助けることを信じているなら、**ぜひ貢献してください**: ブロックカタログを投稿したり、issue を開いたり、pull request を送ったりしてください。すべての貢献が、視覚的プログラミングをより多くの人に届けます。\n\n[あなたのブロックを共有](https://github.com/linucs/blocks-community-catalog)",
-  "mcp.blocksEditor.label": "Blocks Editor"
+  "mcp.blocksEditor.label": "Blocks Editor",
+  "command.contributeCatalog": "Blocks Editor: コミュニティにカタログを提供…",
+  "config.contributionRepo": "作成したカタログの提供先となる GitHub リポジトリ（owner/repo）。フォークやプライベートなコミュニティカタログを指すように変更できます。"
 }

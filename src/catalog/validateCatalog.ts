@@ -7,13 +7,25 @@ const ajv = new Ajv({ allErrors: true, strict: false });
 addFormats(ajv);
 const validate = ajv.compile(schema);
 
+export interface ValidateOptions {
+    /**
+     * Enforce the WYSIWYG rule that implementation-level `codegen.setup` must not
+     * contain init calls. This is authoring guidance (on by default, used by the
+     * `/validate` author tool). It is intentionally relaxed for community
+     * contribution gates, where the existing corpus legitimately uses impl-level
+     * setup — see contributeCatalog.ts and the community repo's CI validator.
+     */
+    wysiwyg?: boolean;
+}
+
 /**
  * Validate a multi-document block catalog YAML string against the bundled JSON
  * schema and run structural checks (duplicate types, output/precedence
  * consistency, WYSIWYG, placeholder and inputDefaults coverage).
  * Returns a human-readable summary. Host-agnostic.
  */
-export function validateCatalogYaml(input: string): string {
+export function validateCatalogYaml(input: string, opts: ValidateOptions = {}): string {
+    const wysiwyg = opts.wysiwyg ?? true;
     const errors: string[] = [];
     const allTypes = new Set<string>();
     let docCount = 0;
@@ -43,7 +55,7 @@ export function validateCatalogYaml(input: string): string {
         for (const impl of impls) {
             const implCodegen = impl.codegen as Record<string, unknown> | undefined;
             const implSetup = implCodegen?.setup as string[] | undefined;
-            if (implSetup && implSetup.length > 0) {
+            if (wysiwyg && implSetup && implSetup.length > 0) {
                 errors.push(`WYSIWYG violation: implementation-level codegen.setup should not contain init calls (found: ${implSetup.join(', ')}). Provide explicit init blocks instead.`);
             }
 
@@ -133,9 +145,11 @@ function checkPlaceholders(
     if (!codegen) return;
 
     const definedNames = new Set<string>();
+    // Indices can be sparse (e.g. message0 with no args0, then args1/args2 on a
+    // hat block) — scan all of them, don't stop at the first gap.
     for (let i = 0; i < 10; i++) {
         const args = blockly[`args${i}`] as Array<Record<string, unknown>> | undefined;
-        if (!Array.isArray(args)) break;
+        if (!Array.isArray(args)) continue;
         for (const arg of args) {
             if (arg.name) definedNames.add(arg.name as string);
         }
@@ -163,7 +177,7 @@ function checkInputDefaults(
     const inputValueNames = new Set<string>();
     for (let i = 0; i < 10; i++) {
         const args = blockly[`args${i}`] as Array<Record<string, unknown>> | undefined;
-        if (!Array.isArray(args)) break;
+        if (!Array.isArray(args)) continue;
         for (const arg of args) {
             if (arg.type === 'input_value' && arg.name) inputValueNames.add(arg.name as string);
         }

@@ -27,5 +27,7 @@
   "walkthrough.communityCatalog.description": "커뮤니티가 기여한 블록 카탈로그를 발견하고 다운로드하세요.\n\n[커뮤니티 카탈로그 열기](command:blocks-editor.catalogRegistry.focus)",
   "walkthrough.contribute.title": "다른 사람의 학습을 도와주세요 — 기여하기",
   "walkthrough.contribute.description": "저는 Arduino와 블록 프로그래밍이 초보자가 엣지 AI를 포함한 고급 개념을 배우는 데 진정으로 도움이 될 수 있다고 믿습니다. 하지만 저는 1인 개발자이며, 세상의 모든 하드웨어 장치와 사용 사례를 위한 블록을 작성할 수는 없습니다.\n\n지식 공유와 다른 사람의 학습을 돕는 일을 함께 믿으신다면, **기여해 주세요**: 여러분의 블록 카탈로그를 제출하고, 이슈를 열고, 풀 리퀘스트를 보내주세요. 모든 기여가 시각적 프로그래밍을 더 많은 사람에게 접근 가능하게 만듭니다.\n\n[블록 공유하기](https://github.com/linucs/blocks-community-catalog)",
-  "mcp.blocksEditor.label": "Blocks Editor"
+  "mcp.blocksEditor.label": "Blocks Editor",
+  "command.contributeCatalog": "Blocks Editor: 커뮤니티에 카탈로그 기여…",
+  "config.contributionRepo": "작성한 카탈로그가 기여되는 GitHub 저장소(owner/repo)입니다. 포크나 비공개 커뮤니티 카탈로그를 가리키도록 변경하세요."
 }

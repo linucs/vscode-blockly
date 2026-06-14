@@ -27,5 +27,7 @@
   "walkthrough.communityCatalog.description": "发现并下载社区贡献的积木目录。\n\n[打开社区目录](command:blocks-editor.catalogRegistry.focus)",
   "walkthrough.contribute.title": "帮助他人学习 —— 参与贡献",
   "walkthrough.contribute.description": "我相信 Arduino 和积木编程能够真正帮助初学者学习高级概念 —— 包括边缘 AI。但我只是一名独立开发者，无法为世界上每一种硬件设备和使用场景都编写积木。\n\n如果你同样相信分享知识、帮助他人学习的价值，**请参与贡献**：提交你的积木目录、提出 issue 或发送 pull request。每一份贡献都让可视化编程惠及更多人。\n\n[分享你的积木](https://github.com/linucs/blocks-community-catalog)",
-  "mcp.blocksEditor.label": "Blocks Editor"
+  "mcp.blocksEditor.label": "Blocks Editor",
+  "command.contributeCatalog": "Blocks Editor：向社区贡献目录…",
+  "config.contributionRepo": "所创建目录将贡献到的 GitHub 仓库（owner/repo）。可更改为指向某个 fork 或私有社区目录。"
 }

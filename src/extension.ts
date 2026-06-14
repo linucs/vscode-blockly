@@ -4,6 +4,7 @@ import { BlocksEditorProvider } from './BlocksEditorProvider';
 import { CatalogManager } from './catalog/CatalogManager';
 import { CatalogRegistryProvider } from './catalog/CatalogRegistryProvider';
 import { enableClaudeCodeIntegration } from './mcp/enableIntegration';
+import { contributeCatalog } from './contribute/contributeCatalog';
 import { resolveActiveWorkspaceRoot } from './util/workspaceRoot';
 
 export async function activate(context: vscode.ExtensionContext) {
@@ -51,6 +52,10 @@ export async function activate(context: vscode.ExtensionContext) {
         enableClaudeCodeIntegration(context)
     ));
 
+    context.subscriptions.push(vscode.commands.registerCommand('blocks-editor.contributeCatalog', (uri?: vscode.Uri) =>
+        contributeCatalog(uri)
+    ));
+
     const blocksWatcher = vscode.workspace.createFileSystemWatcher('**/.blocks/**/*.{yaml,yml}');
     const onBlocksChange = () => { void catalogManager.reloadCatalogs(); };
     blocksWatcher.onDidCreate(onBlocksChange);
@@ -58,15 +63,48 @@ export async function activate(context: vscode.ExtensionContext) {
     blocksWatcher.onDidDelete(onBlocksChange);
     context.subscriptions.push(blocksWatcher);
 
+    maybeAnnounceVersion(context);
+}
+
+/**
+ * Announce the packaged version once per version by comparing it against the one
+ * stored in globalState: on first install open the Get Started walkthrough, and
+ * after an update surface a "What's New" notification linking to the changelog.
+ */
+function maybeAnnounceVersion(context: vscode.ExtensionContext): void {
     const currentVersion: string = context.extension.packageJSON.version;
     const lastVersion = context.globalState.get<string>('lastVersion');
-    if (lastVersion !== currentVersion) {
-        context.globalState.update('lastVersion', currentVersion);
+    if (lastVersion === currentVersion) {
+        return;
+    }
+    context.globalState.update('lastVersion', currentVersion);
+
+    if (lastVersion === undefined) {
+        // Fresh install → Get Started walkthrough.
         vscode.commands.executeCommand(
             'workbench.action.openWalkthrough',
             'linucs.blocks-editor#blocks-editor.welcome',
             false
         );
+        return;
+    }
+
+    // Update → changelog notification.
+    void showUpdateNotification(context, currentVersion);
+}
+
+async function showUpdateNotification(
+    context: vscode.ExtensionContext,
+    version: string
+): Promise<void> {
+    const whatsNew = vscode.l10n.t("What's New");
+    const choice = await vscode.window.showInformationMessage(
+        vscode.l10n.t('Blocks Editor updated to v{0}', version),
+        whatsNew
+    );
+    if (choice === whatsNew) {
+        const uri = vscode.Uri.joinPath(context.extensionUri, 'CHANGELOG.md');
+        void vscode.commands.executeCommand('markdown.showPreview', uri);
     }
 }
 

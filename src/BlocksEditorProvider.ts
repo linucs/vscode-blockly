@@ -187,6 +187,12 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
                     selectedEnv = e.env;
                     sendCatalog();
                     return;
+                case 'set_generate_mode':
+                    // Persist the global setting; onDidChangeConfiguration echoes set_mode
+                    // back to every open editor, keeping them in sync.
+                    await vscode.workspace.getConfiguration('blocks-editor')
+                        .update('generateOnChange', e.autoGenerate === true, vscode.ConfigurationTarget.Global);
+                    return;
                 case 'change':
                     await writeCompanionWorkspace(companion, e.state);
                     if (typeof e.code === 'string') {
@@ -359,6 +365,32 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
                     #toolbar { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-bottom: 1px solid var(--vscode-editorWidget-border, #454545); position: relative; z-index: 100; }
                     #toolbar .spacer { flex: 1; }
                     #toolbar label { font-size: 12px; opacity: 0.8; }
+                    #docsBtn[aria-disabled="true"] { opacity: 0.4; cursor: default; }
+                    #genSplit { display: inline-flex; align-items: stretch; }
+                    /* Custom toolbar tooltip — native title is unreliable through the toolkit's shadow DOM. */
+                    #tooltip {
+                        position: fixed; z-index: 1000; pointer-events: none;
+                        padding: 3px 8px; font-size: 12px; line-height: 1.4; max-width: 320px;
+                        background: var(--vscode-editorHoverWidget-background, #252526);
+                        color: var(--vscode-editorHoverWidget-foreground, #cccccc);
+                        border: 1px solid var(--vscode-editorHoverWidget-border, #454545);
+                        border-radius: 3px; box-shadow: 0 2px 8px rgba(0,0,0,0.36);
+                        opacity: 0; transition: opacity 0.08s;
+                    }
+                    #tooltip.visible { opacity: 1; }
+                    #genSplit vscode-button#generateBtn::part(control) { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+                    #genSplit vscode-button#genCaret::part(control) { border-top-left-radius: 0; border-bottom-left-radius: 0; min-width: 0; padding-left: 6px; padding-right: 6px; }
+                    #genMenu {
+                        position: absolute; top: 100%; right: 8px; margin-top: 4px; z-index: 200; min-width: 220px;
+                        background: var(--vscode-menu-background, var(--vscode-editorWidget-background, #252526));
+                        color: var(--vscode-menu-foreground, var(--vscode-foreground, #ccc));
+                        border: 1px solid var(--vscode-menu-border, var(--vscode-editorWidget-border, #454545));
+                        border-radius: 4px; padding: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.36);
+                    }
+                    #genMenu[hidden] { display: none; }
+                    .genMenuItem { display: flex; align-items: center; gap: 8px; padding: 6px 8px; font-size: 12px; cursor: pointer; border-radius: 3px; }
+                    .genMenuItem:hover { background: var(--vscode-menu-selectionBackground, rgba(255,255,255,0.08)); color: var(--vscode-menu-selectionForeground, inherit); }
+                    .genMenuItem input { margin: 0; cursor: pointer; }
                     #editorArea { position: relative; flex-grow: 1; width: 100%; }
                     #blocklyDiv { position: absolute; inset: 0; }
                     #emptyState {
@@ -414,9 +446,18 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
                 <div id="toolbar">
                     <label id="envLabel" for="envSelect" style="display:none">${vscode.l10n.t('Environment')}</label>
                     <vscode-dropdown id="envSelect" style="display:none"></vscode-dropdown>
-                    <vscode-button id="docsBtn" appearance="icon" title="${vscode.l10n.t('Documentation')}" style="display:none"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M14.5 1h-11a1.5 1.5 0 0 0-1.5 1.5v11a1.5 1.5 0 0 0 1.5 1.5h11a.5.5 0 0 0 .5-.5V1.5a.5.5 0 0 0-.5-.5zM3.5 2H14v12H3.5a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5zM5 4h7v1H5V4zm0 2h7v1H5V6zm0 2h4v1H5V8z"/></svg></vscode-button>
                     <span class="spacer"></span>
-                    <vscode-button id="generateBtn" disabled>${vscode.l10n.t('Generate Code')}</vscode-button>
+                    <vscode-button id="docsBtn" appearance="icon" aria-disabled="true" aria-label="${vscode.l10n.t('Documentation')}" data-tooltip="${vscode.l10n.t('Documentation')}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"><path d="M8 3.8c-1.4-.9-3.3-1.2-5.3-.9v8.6c2-.3 3.9 0 5.3.9 1.4-.9 3.3-1.2 5.3-.9V2.9c-2-.3-3.9 0-5.3.9z"/><path d="M8 3.8v8.6"/></svg></vscode-button>
+                    <div id="genSplit">
+                        <vscode-button id="generateBtn" appearance="secondary" disabled data-tooltip="${vscode.l10n.t('Generate code now')}">${vscode.l10n.t('Generate Code')}</vscode-button>
+                        <vscode-button id="genCaret" appearance="secondary" aria-haspopup="true" aria-label="${vscode.l10n.t('Generation options')}" data-tooltip="${vscode.l10n.t('Generation options')}"><svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M4 6l4 4 4-4z"/></svg></vscode-button>
+                        <div id="genMenu" role="menu" hidden>
+                            <label class="genMenuItem">
+                                <input type="checkbox" id="autoGenCheck" />
+                                <span>${vscode.l10n.t('Generate automatically on change')}</span>
+                            </label>
+                        </div>
+                    </div>
                 </div>
                 <div id="editorArea">
                     <div id="blocklyDiv"></div>

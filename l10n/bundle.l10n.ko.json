@@ -80,5 +80,12 @@
   "Timed out waiting for the fork to be ready. Please try again.": "포크가 준비될 때까지 기다리는 중 시간이 초과되었습니다. 다시 시도하세요.",
   "Invalid contribution repository \"{0}\". Expected \"owner/repo\".": "잘못된 기여 저장소 \"{0}\"입니다. \"owner/repo\"가 필요합니다.",
   "What's New": "새로운 기능",
-  "Blocks Editor updated to v{0}": "Blocks Editor가 v{0}(으)로 업데이트되었습니다"
+  "Blocks Editor updated to v{0}": "Blocks Editor가 v{0}(으)로 업데이트되었습니다",
+  "Generation options": "생성 옵션",
+  "Generate automatically on change": "변경 시 자동 생성",
+  "No reference documentation for the current blocks": "현재 블록에 대한 참조 문서가 없습니다",
+  "Open reference documentation (1 component)": "참조 문서 열기 (1개 구성 요소)",
+  "Open reference documentation ({0} components)": "참조 문서 열기 ({0}개 구성 요소)",
+  "Generate code now": "지금 코드 생성",
+  "Regenerate code now (auto-generation is on)": "지금 코드 다시 생성 (자동 생성이 켜져 있음)"
 }

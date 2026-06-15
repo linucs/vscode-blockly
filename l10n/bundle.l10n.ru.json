@@ -80,5 +80,12 @@
   "Timed out waiting for the fork to be ready. Please try again.": "Истекло время ожидания готовности форка. Повторите попытку.",
   "Invalid contribution repository \"{0}\". Expected \"owner/repo\".": "Недопустимый репозиторий для вклада «{0}». Ожидалось «owner/repo».",
   "What's New": "Что нового",
-  "Blocks Editor updated to v{0}": "Blocks Editor обновлён до v{0}"
+  "Blocks Editor updated to v{0}": "Blocks Editor обновлён до v{0}",
+  "Generation options": "Параметры генерации",
+  "Generate automatically on change": "Генерировать автоматически при изменении",
+  "No reference documentation for the current blocks": "Нет справочной документации для текущих блоков",
+  "Open reference documentation (1 component)": "Открыть справочную документацию (1 компонент)",
+  "Open reference documentation ({0} components)": "Открыть справочную документацию ({0} компонентов)",
+  "Generate code now": "Сгенерировать код сейчас",
+  "Regenerate code now (auto-generation is on)": "Перегенерировать код сейчас (автогенерация включена)"
 }

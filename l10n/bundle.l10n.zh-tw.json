@@ -80,5 +80,12 @@
   "Timed out waiting for the fork to be ready. Please try again.": "等待 fork 就緒逾時。請重試。",
   "Invalid contribution repository \"{0}\". Expected \"owner/repo\".": "無效的貢獻儲存庫「{0}」。應為「owner/repo」。",
   "What's New": "新增功能",
-  "Blocks Editor updated to v{0}": "Blocks Editor 已更新至 v{0}"
+  "Blocks Editor updated to v{0}": "Blocks Editor 已更新至 v{0}",
+  "Generation options": "產生選項",
+  "Generate automatically on change": "變更時自動產生",
+  "No reference documentation for the current blocks": "目前的積木沒有參考文件",
+  "Open reference documentation (1 component)": "開啟參考文件（1 個元件）",
+  "Open reference documentation ({0} components)": "開啟參考文件（{0} 個元件）",
+  "Generate code now": "立即產生程式碼",
+  "Regenerate code now (auto-generation is on)": "立即重新產生程式碼（自動產生已開啟）"
 }

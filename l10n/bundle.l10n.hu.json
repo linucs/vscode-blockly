@@ -80,5 +80,12 @@
   "Timed out waiting for the fork to be ready. Please try again.": "Időtúllépés a fork elkészültére várva. Kérjük, próbálja újra.",
   "Invalid contribution repository \"{0}\". Expected \"owner/repo\".": "Érvénytelen hozzájárulási tároló: „{0}”. A várt formátum: „owner/repo”.",
   "What's New": "Újdonságok",
-  "Blocks Editor updated to v{0}": "A Blocks Editor frissült a(z) {0} verzióra"
+  "Blocks Editor updated to v{0}": "A Blocks Editor frissült a(z) {0} verzióra",
+  "Generation options": "Generálási beállítások",
+  "Generate automatically on change": "Automatikus generálás módosításkor",
+  "No reference documentation for the current blocks": "Nincs referenciadokumentáció a jelenlegi blokkokhoz",
+  "Open reference documentation (1 component)": "Referenciadokumentáció megnyitása (1 komponens)",
+  "Open reference documentation ({0} components)": "Referenciadokumentáció megnyitása ({0} komponens)",
+  "Generate code now": "Kód generálása most",
+  "Regenerate code now (auto-generation is on)": "Kód újragenerálása most (az automatikus generálás be van kapcsolva)"
 }

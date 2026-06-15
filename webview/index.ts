@@ -162,21 +162,98 @@ document.addEventListener("DOMContentLoaded", () => {
     const emptyHint = emptyState?.querySelector('.hint') as HTMLElement | null;
     const envSelect = document.getElementById('envSelect') as HTMLElement & { value?: string };
     const envLabel = document.getElementById('envLabel');
-    const generateBtn = document.getElementById('generateBtn') as (HTMLElement & { disabled?: boolean }) | null;
+    const generateBtn = document.getElementById('generateBtn') as (HTMLElement & { disabled?: boolean; appearance?: string }) | null;
+    const genCaret = document.getElementById('genCaret');
+    const genMenu = document.getElementById('genMenu') as HTMLElement | null;
+    const autoGenCheck = document.getElementById('autoGenCheck') as HTMLInputElement | null;
     const docsBtn = document.getElementById('docsBtn');
 
-    const updateButtonVisibility = () => {
-        if (!generateBtn) return;
-        if (autoGenerate) {
-            generateBtn.style.display = 'none';
-        } else {
-            generateBtn.style.display = '';
-            generateBtn.disabled = !runtimeReady;
-        }
+    // Reference docs are contextual to the loaded catalog: actionable with a count when
+    // present, dimmed (aria-disabled) with an explanatory tooltip when blocks expose none.
+    // Tooltip text is driven through data-tooltip (see the custom tooltip handler below).
+    const updateDocsButton = () => {
+        if (!docsBtn) return;
+        const n = catalogDocs.length;
+        docsBtn.setAttribute('aria-disabled', n === 0 ? 'true' : 'false');
+        const tip = n === 0
+            ? l10n.t('No reference documentation for the current blocks')
+            : n === 1
+                ? l10n.t('Open reference documentation (1 component)')
+                : l10n.t('Open reference documentation ({0} components)', String(n));
+        docsBtn.setAttribute('aria-label', tip);
+        docsBtn.setAttribute('data-tooltip', tip);
     };
+
+    // Custom tooltip for toolbar controls. Native `title`/SVG <title> are unreliable
+    // through the toolkit's shadow DOM and don't cover the whole control; this single
+    // delegated handler reads `data-tooltip` and works for every toolbar button.
+    // Event retargeting at the shadow boundary means ev.target resolves to the host
+    // <vscode-button>, so closest('[data-tooltip]') finds the attribute regardless.
+    const tooltipEl = document.createElement('div');
+    tooltipEl.id = 'tooltip';
+    tooltipEl.setAttribute('role', 'tooltip');
+    document.body.appendChild(tooltipEl);
+
+    let tooltipTarget: Element | null = null;
+    let tooltipTimer = 0;
+
+    const hideTooltip = () => {
+        if (tooltipTimer) { clearTimeout(tooltipTimer); tooltipTimer = 0; }
+        tooltipEl.classList.remove('visible');
+        tooltipTarget = null;
+    };
+
+    const placeTooltip = (target: Element) => {
+        const text = target.getAttribute('data-tooltip');
+        if (!text) return;
+        tooltipEl.textContent = text;
+        tooltipEl.classList.add('visible');
+        const r = target.getBoundingClientRect();
+        const t = tooltipEl.getBoundingClientRect();
+        let left = r.left + r.width / 2 - t.width / 2;
+        left = Math.max(4, Math.min(left, window.innerWidth - t.width - 4));
+        let top = r.bottom + 4;
+        if (top + t.height > window.innerHeight - 4) top = r.top - t.height - 4;
+        tooltipEl.style.left = `${left}px`;
+        tooltipEl.style.top = `${top}px`;
+    };
+
+    document.addEventListener('mouseover', (ev) => {
+        const target = (ev.target as Element | null)?.closest('[data-tooltip]') ?? null;
+        if (!target || target === tooltipTarget) return;
+        hideTooltip();
+        tooltipTarget = target;
+        tooltipTimer = window.setTimeout(() => {
+            if (tooltipTarget === target) placeTooltip(target);
+        }, 500);
+    });
+    document.addEventListener('mouseout', (ev) => {
+        if (!tooltipTarget) return;
+        // Ignore moves that stay within the same control (child/shadow transitions);
+        // relatedTarget is retargeted to the host at the shadow boundary.
+        const related = ev.relatedTarget as Node | null;
+        if (related && tooltipTarget.contains(related)) return;
+        hideTooltip();
+    });
+    document.addEventListener('mousedown', hideTooltip);
+
+    // The split control is always visible: the body always generates on demand,
+    // the caret menu toggles auto mode. In auto mode the body is de-emphasized.
+    const updateGenControl = () => {
+        if (autoGenCheck) autoGenCheck.checked = autoGenerate;
+        if (!generateBtn) return;
+        generateBtn.disabled = !runtimeReady;
+        generateBtn.appearance = autoGenerate ? 'secondary' : 'primary';
+        generateBtn.setAttribute('data-tooltip', autoGenerate
+            ? l10n.t('Regenerate code now (auto-generation is on)')
+            : l10n.t('Generate code now'));
+    };
+
+    const closeGenMenu = () => { if (genMenu) genMenu.hidden = true; };
 
     const showGenerationFeedback = (ok: boolean, error?: string) => {
         if (!generateBtn) return;
+        // In auto mode generation runs on every change — don't flash success each time.
         if (autoGenerate && ok) return;
 
         const origText = generateBtn.textContent;
@@ -184,13 +261,10 @@ document.addEventListener("DOMContentLoaded", () => {
             generateBtn.textContent = l10n.t('Generated ✓');
         } else {
             generateBtn.textContent = error ? l10n.t('Error: {0}', error) : l10n.t('Generation failed');
-            if (autoGenerate) {
-                generateBtn.style.display = '';
-            }
         }
         setTimeout(() => {
             generateBtn!.textContent = origText;
-            updateButtonVisibility();
+            updateGenControl();
         }, ok ? 1500 : 4000);
     };
 
@@ -200,7 +274,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (emptyHint) emptyHint.textContent = hint;
         emptyState?.classList.add('visible');
         runtimeReady = false;
-        updateButtonVisibility();
+        updateGenControl();
         workspace.updateToolbox({ kind: 'categoryToolbox', contents: [] });
     };
 
@@ -455,7 +529,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 // Supported runtime: show the toolbox and enable generation.
                 emptyState?.classList.remove('visible');
                 runtimeReady = true;
-                updateButtonVisibility();
+                updateGenControl();
 
                 codeFactory.loadCatalogEntries(message.entries ?? [], locale);
 
@@ -473,7 +547,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         })),
                     });
                 }
-                if (docsBtn) docsBtn.style.display = catalogDocs.length > 0 ? '' : 'none';
+                updateDocsButton();
 
                 // Merge catalog categories into language categories that share a
                 // name (e.g. a catalog "Code" folds into the built-in "Code"
@@ -510,7 +584,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             case 'set_mode':
                 autoGenerate = message.autoGenerate !== false;
-                updateButtonVisibility();
+                updateGenControl();
                 break;
             case 'theme_changed':
                 themeAdapter.onThemeChanged();
@@ -586,11 +660,40 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Explicit regeneration via button (always sends code).
-    generateBtn?.addEventListener('click', () => {
+    // Explicit regeneration via the split-button body (always sends code).
+    const generateNow = () => {
         const state = Blockly.serialization.workspaces.save(workspace);
         lastSentState = JSON.stringify(state);
         vscode.postMessage({ type: 'change', state, code: generate() });
+    };
+    generateBtn?.addEventListener('click', generateNow);
+
+    // Caret opens the one-item options menu.
+    genCaret?.addEventListener('click', (ev) => {
+        ev.stopPropagation();
+        if (genMenu) genMenu.hidden = !genMenu.hidden;
+    });
+
+    // Toggling auto mode persists the global setting (host echoes set_mode back).
+    autoGenCheck?.addEventListener('change', () => {
+        const enabled = !!autoGenCheck.checked;
+        autoGenerate = enabled;
+        vscode.postMessage({ type: 'set_generate_mode', autoGenerate: enabled });
+        closeGenMenu();
+        updateGenControl();
+        // Switching back to auto: regenerate now so the file matches current blocks.
+        if (enabled && runtimeReady) generateNow();
+    });
+
+    // Dismiss the menu on outside click or Escape.
+    document.addEventListener('click', (ev) => {
+        if (!genMenu || genMenu.hidden) return;
+        const target = ev.target as Node;
+        if (genMenu.contains(target) || genCaret?.contains(target)) return;
+        closeGenMenu();
+    });
+    document.addEventListener('keydown', (ev) => {
+        if (ev.key === 'Escape') closeGenMenu();
     });
 
     docsBtn?.addEventListener('click', () => {

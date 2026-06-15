@@ -80,5 +80,12 @@
   "Timed out waiting for the fork to be ready. Please try again.": "等待 fork 就绪超时。请重试。",
   "Invalid contribution repository \"{0}\". Expected \"owner/repo\".": "无效的贡献仓库“{0}”。应为“owner/repo”。",
   "What's New": "新增功能",
-  "Blocks Editor updated to v{0}": "Blocks Editor 已更新到 v{0}"
+  "Blocks Editor updated to v{0}": "Blocks Editor 已更新到 v{0}",
+  "Generation options": "生成选项",
+  "Generate automatically on change": "更改时自动生成",
+  "No reference documentation for the current blocks": "当前块没有参考文档",
+  "Open reference documentation (1 component)": "打开参考文档（1 个组件）",
+  "Open reference documentation ({0} components)": "打开参考文档（{0} 个组件）",
+  "Generate code now": "立即生成代码",
+  "Regenerate code now (auto-generation is on)": "立即重新生成代码（自动生成已开启）"
 }

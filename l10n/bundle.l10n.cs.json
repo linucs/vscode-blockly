@@ -80,5 +80,12 @@
   "Timed out waiting for the fork to be ready. Please try again.": "Vypršel časový limit při čekání na připravenost forku. Zkuste to prosím znovu.",
   "Invalid contribution repository \"{0}\". Expected \"owner/repo\".": "Neplatné úložiště pro přispění „{0}“. Očekáváno „owner/repo“.",
   "What's New": "Novinky",
-  "Blocks Editor updated to v{0}": "Blocks Editor byl aktualizován na verzi {0}"
+  "Blocks Editor updated to v{0}": "Blocks Editor byl aktualizován na verzi {0}",
+  "Generation options": "Možnosti generování",
+  "Generate automatically on change": "Generovat automaticky při změně",
+  "No reference documentation for the current blocks": "Pro aktuální bloky není k dispozici žádná referenční dokumentace",
+  "Open reference documentation (1 component)": "Otevřít referenční dokumentaci (1 komponenta)",
+  "Open reference documentation ({0} components)": "Otevřít referenční dokumentaci ({0} komponent)",
+  "Generate code now": "Generovat kód nyní",
+  "Regenerate code now (auto-generation is on)": "Znovu generovat kód nyní (automatické generování je zapnuté)"
 }

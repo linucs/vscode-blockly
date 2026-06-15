@@ -80,5 +80,12 @@
   "Timed out waiting for the fork to be ready. Please try again.": "Przekroczono limit czasu oczekiwania na gotowość forka. Spróbuj ponownie.",
   "Invalid contribution repository \"{0}\". Expected \"owner/repo\".": "Nieprawidłowe repozytorium wkładu „{0}”. Oczekiwano „owner/repo”.",
   "What's New": "Co nowego",
-  "Blocks Editor updated to v{0}": "Blocks Editor zaktualizowano do wersji {0}"
+  "Blocks Editor updated to v{0}": "Blocks Editor zaktualizowano do wersji {0}",
+  "Generation options": "Opcje generowania",
+  "Generate automatically on change": "Generuj automatycznie przy zmianie",
+  "No reference documentation for the current blocks": "Brak dokumentacji referencyjnej dla bieżących bloków",
+  "Open reference documentation (1 component)": "Otwórz dokumentację referencyjną (1 komponent)",
+  "Open reference documentation ({0} components)": "Otwórz dokumentację referencyjną ({0} komponentów)",
+  "Generate code now": "Generuj kod teraz",
+  "Regenerate code now (auto-generation is on)": "Wygeneruj kod ponownie teraz (automatyczne generowanie jest włączone)"
 }

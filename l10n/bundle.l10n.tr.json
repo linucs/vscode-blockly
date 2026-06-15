@@ -80,5 +80,12 @@
   "Timed out waiting for the fork to be ready. Please try again.": "Fork'un hazır olması beklenirken zaman aşımına uğradı. Lütfen tekrar deneyin.",
   "Invalid contribution repository \"{0}\". Expected \"owner/repo\".": "Geçersiz katkı deposu \"{0}\". \"owner/repo\" bekleniyordu.",
   "What's New": "Yenilikler",
-  "Blocks Editor updated to v{0}": "Blocks Editor v{0} sürümüne güncellendi"
+  "Blocks Editor updated to v{0}": "Blocks Editor v{0} sürümüne güncellendi",
+  "Generation options": "Oluşturma seçenekleri",
+  "Generate automatically on change": "Değişiklikte otomatik oluştur",
+  "No reference documentation for the current blocks": "Geçerli bloklar için başvuru belgesi yok",
+  "Open reference documentation (1 component)": "Başvuru belgelerini aç (1 bileşen)",
+  "Open reference documentation ({0} components)": "Başvuru belgelerini aç ({0} bileşen)",
+  "Generate code now": "Kodu şimdi oluştur",
+  "Regenerate code now (auto-generation is on)": "Kodu şimdi yeniden oluştur (otomatik oluşturma açık)"
 }

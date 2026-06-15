@@ -4,6 +4,12 @@ All notable changes to the "Blocks Editor" extension will be documented in this 
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.3.1] - 2026-06-15
+
+### Fixed
+
+- **Project-local `.blocks/` catalogs in multi-root and nested-project workspaces** — catalogs in a project's `.blocks/` directory are now resolved at the workspace folder root containing the open file, matching `gatherLocalCatalogs()` and the catalog tree's `resolveBlocksDir()`, instead of relative to the project config file's directory. Previously, projects whose `platformio.ini` / `sketch.yaml` / `app.yaml` did not sit at the workspace folder root could fail to load their project-local catalogs.
+
 ## [0.3.0] - 2026-06-15
 
 ### Added

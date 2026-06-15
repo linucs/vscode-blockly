@@ -31,6 +31,21 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
         private readonly catalogManager: CatalogManager
     ) { }
 
+    /**
+     * Resolve the project-local `.blocks/` directory for a file in the project.
+     * Anchored at the workspace folder containing the file (falling back to the
+     * first folder, then the file's own directory) so it matches the other local
+     * catalog mechanisms — `gatherLocalCatalogs()` and the catalog tree's
+     * `resolveBlocksDir()` — rather than the project config file's directory.
+     */
+    private resolveBlocksDir(fileUri: vscode.Uri): string {
+        const folder = vscode.workspace.getWorkspaceFolder(fileUri);
+        const root = folder?.uri.fsPath
+            ?? vscode.workspace.workspaceFolders?.[0]?.uri.fsPath
+            ?? path.dirname(fileUri.fsPath);
+        return path.join(root, '.blocks');
+    }
+
     public async resolveCustomTextEditor(
         document: vscode.TextDocument,
         webviewPanel: vscode.WebviewPanel,
@@ -91,7 +106,7 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
         const reloadProject = async () => {
             project = await loadProjectConfig(sourceUri.fsPath);
             if (project) {
-                const projectBlocksDir = path.join(path.dirname(project.configPath), '.blocks');
+                const projectBlocksDir = this.resolveBlocksDir(sourceUri);
                 await this.catalogManager.syncRemoteCatalogs(projectBlocksDir);
                 projectLocalEntries = await this.catalogManager.loadEntriesFrom(projectBlocksDir);
             } else {
@@ -102,7 +117,7 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
 
         const changeCatalogSubscription = this.catalogManager.onDidChangeCatalogs(async () => {
             if (project) {
-                const projectBlocksDir = path.join(path.dirname(project.configPath), '.blocks');
+                const projectBlocksDir = this.resolveBlocksDir(sourceUri);
                 projectLocalEntries = await this.catalogManager.loadEntriesFrom(projectBlocksDir);
             }
             sendCatalog();
@@ -110,7 +125,7 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
 
         const remoteRefreshSubscription = this.catalogManager.onDidRequestRemoteRefresh(async () => {
             if (project) {
-                const projectBlocksDir = path.join(path.dirname(project.configPath), '.blocks');
+                const projectBlocksDir = this.resolveBlocksDir(sourceUri);
                 await this.catalogManager.syncRemoteCatalogs(projectBlocksDir, true);
                 projectLocalEntries = await this.catalogManager.loadEntriesFrom(projectBlocksDir);
                 sendCatalog();
@@ -288,7 +303,7 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
         if (!project || !activeEnv || !activeEnv.framework) return;
 
         const runtime = composeRuntime(activeEnv.framework, language);
-        const projectBlocksDir = path.join(path.dirname(project.configPath), '.blocks');
+        const projectBlocksDir = this.resolveBlocksDir(vscode.Uri.file(project.configPath));
         const localEntries = await this.catalogManager.loadEntriesFrom(projectBlocksDir);
         const allEntries = [...this.catalogManager.getEntries(), ...localEntries];
         const reqs = collectRequirements(allEntries, collectUsedBlockTypes(state), runtime);

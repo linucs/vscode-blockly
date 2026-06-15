@@ -122,8 +122,8 @@ export class CatalogManager {
     /**
      * Load and validate catalog entries from a directory without mutating the
      * global entry list.  Used by the editor provider to pick up project-local
-     * `.blocks/` catalogs that live next to the project config file rather than
-     * at the workspace root.
+     * `.blocks/` catalogs that live at the workspace folder root (resolved by
+     * BlocksEditorProvider.resolveBlocksDir).
      */
     public async loadEntriesFrom(dirPath: string): Promise<CatalogEntry[]> {
         const entries: CatalogEntry[] = [];

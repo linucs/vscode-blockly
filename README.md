@@ -14,6 +14,7 @@ No syntax to memorize. No semicolons to forget. You snap blocks together, and Bl
 - 👀 **See it work instantly** — every time you change a block, the program updates live.
 - 🔌 **Knows your board** — it reads your project and shows only the blocks that make sense for the hardware you're using.
 - 📦 **Installs libraries for you** — use a block that needs an extra library? It gets added to your project automatically. You don't have to hunt for it.
+- 📖 **One click to the docs** — a button in the toolbar opens the reference documentation for the parts you're actually using.
 - 💾 **Saves your work automatically** — nothing to remember, nothing to lose.
 
 ## Getting started
@@ -25,7 +26,12 @@ Blocks Editor sits on top of one of two free tools that actually build and uploa
 - **[PlatformIO](https://platformio.org/install/ide?install=vscode)** — a popular extension for VS Code. (Easiest if you're already in VS Code.)
 - **[Arduino CLI](https://arduino.github.io/arduino-cli/)** — or the Arduino IDE 2.x, which uses it under the hood. Pair it with the sister extension **[Arduino CLI IDE](https://marketplace.visualstudio.com/items?itemName=linucs.vscode-arduino-cli-ide)** to get Compile and Upload buttons right inside VS Code.
 
-You also need a **project folder** that tells the tools which board you have. If you're using PlatformIO or the Arduino IDE, creating a new project sets this up for you automatically.
+You also need a **project folder** that tells the tools which board you have. The editor recognizes three kinds of project, by the config file in the folder:
+
+- **PlatformIO** (`platformio.ini`) or **Arduino CLI / Arduino IDE** (`sketch.yaml`) — your blocks generate **C++** (`.cpp` / `.ino`).
+- **Arduino App Lab** (`app.yaml`) — a Python-based app (`python/main.py`); here your blocks generate **Python** instead.
+
+If you're using PlatformIO, the Arduino IDE, or App Lab, creating a new project sets this up for you automatically.
 
 > **Don't have a project yet?** In VS Code, install PlatformIO, click the 🐜 ant icon in the sidebar → **New Project**, pick your board, and you're ready.
 
@@ -33,12 +39,19 @@ You also need a **project folder** that tells the tools which board you have. If
 
 1. Install this extension (plus PlatformIO or the Arduino CLI).
 2. Open your project folder in VS Code.
-3. In the file explorer, **right-click** your main source file (it ends in `.cpp` or `.ino`).
-4. Choose **"Open With…"** → **"Blocks Editor"**.
+3. In the file explorer, **right-click** your main source file (it ends in `.cpp`, `.ino`, or `.py`).
+4. Choose **"Open in Blocks Editor"**. (The classic **"Open With…"** → **"Blocks Editor"** route still works too.)
 5. Drag blocks from the menu on the left and click them together to build your program.
 6. Build and upload to your board the way you normally would — the code is already written for you.
 
 That's it. The code file updates itself every time you move a block.
+
+### The toolbar
+
+Along the top of the editor you'll find:
+
+- **Generate code** — a split button that writes the code on demand, with a **"Generate automatically on change"** toggle so you can choose live updates or manual ones (the same as the `blocks-editor.generateOnChange` setting).
+- **Open reference documentation** — opens the docs for the components used by the blocks currently on the canvas.
 
 ## Frequently asked questions
 
@@ -67,7 +80,7 @@ Most blocks run over and over (that's the `loop`). For things that should happen
 ## What's included
 
 - **Arduino building blocks** — Digital pins, Analog pins, Serial monitor, SPI, I2C (Wire), Math, Text, Time, Interrupts, and more.
-- **Classic blocks** — Logic (if/else), Loops, Math, Text, Variables, Lists, and Functions — always available.
+- **Classic blocks** — Logic (if/else and switch/case), Loops, Math, Text, Variables, Lists, and Functions — always available.
 - **Handy extras** — a search box to find blocks fast, an optional minimap for big programs, and customizable category colors.
 
 ## Settings
@@ -76,20 +89,21 @@ You can leave everything at its defaults. If you want to tweak things, open VS C
 
 | Setting | Default | What it does |
 |---------|---------|--------------|
-| `blocks-editor.generateOnChange` | `true` | Update the code automatically as you build. Turn off if you'd rather press a **Generate C++** button yourself. |
+| `blocks-editor.generateOnChange` | `true` | Update the code automatically as you build. Turn off if you'd rather press the **Generate code** button yourself. (Also toggleable from the editor toolbar.) |
 | `blocks-editor.showMinimap` | `false` | Show a small overview map of your blocks in the corner — handy for large programs. |
 | `blocks-editor.catalogPaths` | `[]` | Add extra blocks from a folder or a web link (see below). |
 
 ## Requirements
 
 - **VS Code 1.120 or newer**
-- One supported toolchain:
-  - **PlatformIO** — a `platformio.ini` with at least one `[env:...]` that sets a `board` and `framework = arduino`.
-  - **Arduino CLI** — a `sketch.yaml` with at least one profile defining an FQBN-based board.
+- One supported project type:
+  - **PlatformIO** — a `platformio.ini` with at least one `[env:...]` that sets a `board` and `framework = arduino`. → generates C++.
+  - **Arduino CLI** — a `sketch.yaml` with at least one profile defining an FQBN-based board. → generates C++.
+  - **Arduino App Lab** — an `app.yaml` app (with `python/main.py` and a `sketch/sketch.yaml` for the board). → generates Python.
 
 ## Good to know
 
-- Right now Blocks Editor supports the **Arduino** framework with C++. Other frameworks (ESP-IDF, STM32Cube, …) aren't supported yet.
+- Right now Blocks Editor supports the **Arduino** framework with **C++** (PlatformIO / Arduino CLI) and **Python** (Arduino App Lab). Other frameworks (ESP-IDF, STM32Cube, …) aren't supported yet.
 - The PlatformIO project reader doesn't yet understand advanced `platformio.ini` features (`extends`, `${...}` variables, file includes).
 - Don't hand-edit the generated source file — your block layout is the real source, and edits to the code will be overwritten.
 
@@ -178,53 +192,57 @@ Run the command **"Blocks Editor: Refresh Remote Catalogs"** to re-download remo
 
 ### Block Author assistant
 
-Don't want to write YAML by hand? The extension includes an AI assistant that can research a hardware library and generate a complete block catalog for you.
+Don't want to write YAML by hand? Let an AI assistant research a hardware library and generate a complete, validated block catalog for you. The extension ships a **block-author** skill that works with both **GitHub Copilot** and **Claude Code** — one command sets up both.
 
-#### With GitHub Copilot
+#### Set it up
 
-Open the **Chat** panel in VS Code (sidebar or `Ctrl+Shift+I` / `Cmd+Shift+I`), then type:
+Run this once per project from the Command Palette:
 
-```
-@blocks create blocks for the BME280 sensor
-```
+**"Blocks Editor: Set Up AI Assistants (Copilot & Claude Code)"**
 
-The `@blocks` assistant will:
-1. **Research** the library — fetch the real header files and documentation, check the PlatformIO and Arduino registries.
-2. **Design** the blocks — propose a plan showing which blocks to create, which methods to expose, and which boards are supported.
-3. **Generate** the YAML — write a validated catalog file and save it to your project.
+It writes three things into your workspace:
 
-You can also run each step separately with slash commands:
+- **`.mcp.json`** — registers this extension's MCP server so [Claude Code](https://claude.ai/code) can reach the catalog tools. In a Claude Code session, run `/mcp` and approve the **`blocks-editor`** server.
+- **`.claude/skills/block-author/`** — the block-author skill (Claude Code discovers it automatically).
+- **`.github/instructions/block-author.instructions.md`** — the same skill, in the form GitHub Copilot reads, so Copilot follows the identical workflow.
 
-| Command | What it does |
-|---------|-------------|
-| `@blocks /research BME280` | Fetch and analyze the library's API |
-| `@blocks /design` | Design the blocks based on the research |
-| `@blocks /generate` | Generate and validate the YAML catalog |
-| `@blocks /validate` | Validate an existing catalog against the schema |
+> Re-run the command after upgrading the extension to refresh the server path and skill files.
 
-The assistant will ask if you want Italian translations added to the block labels and tooltips.
+#### Use it
 
-#### With Claude Code
-
-If you use [Claude Code](https://claude.ai/code), run this command once in your project:
-
-**"Blocks Editor: Enable Claude Code integration"** (from the Command Palette)
-
-This sets up an MCP server and installs the **block-author** skill. In any Claude Code session for the project, Claude will automatically use the skill when you ask things like:
+In either assistant, just ask in plain language:
 
 ```
 create blocks for the Adafruit NeoPixel library
 ```
 
-The skill has the same workflow (research → design → generate) and the same tools as the Copilot assistant.
+The assistant follows the same workflow in both hosts:
+
+1. **Research** the library — fetch the real header files and documentation, check the PlatformIO and Arduino registries.
+2. **Design** the blocks — propose a plan showing which blocks to create, which methods to expose, and which boards are supported.
+3. **Generate** the YAML — write a validated catalog file and save it under your project's `.blocks/` folder.
+
+### 🌟 Share your blocks with the community
+
+**Authored some blocks? Please contribute them back.** Every catalog you share means another sensor, board, or library that the next person can just drag in — no YAML required. Community catalogs are what make visual programming reach more hardware and more people, so this is the single most valuable thing you can do for the project.
+
+It takes one step — no git, no manual fork:
+
+1. Right-click your catalog file under `.blocks/` (or run **"Blocks Editor: Contribute Catalog to Community…"** from the Command Palette).
+2. The extension **validates it locally**, then asks how you'd like to submit:
+   - **Open a Pull Request** — uses your GitHub account and forks the community repo automatically.
+   - **Submit via Issue** — opens a pre-filled form in your browser; no fork or git needed.
+3. That's it — your catalog is on its way to the [community catalog](https://github.com/linucs/blocks-community-catalog).
+
+By default, submissions go to the official [`linucs/blocks-community-catalog`](https://github.com/linucs/blocks-community-catalog) repo. Point them somewhere else (a fork or a private team repo) with the `blocks-editor.contributionRepo` setting (`owner/repo`).
 
 ## Version Control
 
-Commit both the `.blk` files and the generated `.cpp` files. The `.blk` is the authoritative source; the `.cpp` lets collaborators (and CI) compile without the extension installed. Add the `.blocks/` folder (remote-catalog cache) to `.gitignore`.
+Commit both the `.blk` files and the generated source files (`.cpp` / `.ino` / `.py`). The `.blk` is the authoritative source; the generated code lets collaborators (and CI) compile without the extension installed. Add the `.blocks/` folder (remote-catalog cache) to `.gitignore`.
 
 ## Community
 
-Questions, ideas, or just want to show what you built? Join the [GitHub Discussions](https://github.com/linucs/vscode-blockly/discussions).
+Questions, ideas, or just want to show what you built? Join the [GitHub Discussions](https://github.com/linucs/vscode-blockly/discussions). And if you've authored blocks, [contribute your catalog](#-share-your-blocks-with-the-community) so others can use them too.
 
 ## Contributing
 

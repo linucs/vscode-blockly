@@ -4,6 +4,27 @@ All notable changes to the "Blocks Editor" extension will be documented in this 
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.3.0] - 2026-06-15
+
+### Added
+
+- **Python code generation (Arduino App Lab)** — a new `arduino:python` runtime sits alongside `arduino:cpp`. Projects with an `app.yaml` (Arduino App Lab apps, built around `python/main.py`) now open in the Blocks Editor and generate **Python** instead of C++. App Lab is detected as a third project backend next to PlatformIO and Arduino CLI, with dependencies routed to the right place: pip packages → `python/requirements.txt`, bricks → `app.yaml`, Arduino libraries → `sketch/sketch.yaml` (all add-only).
+- **Contribute Catalog** — a new **"Blocks Editor: Contribute Catalog to Community…"** command (also on the right-click menu for `.blocks/*.yaml` files) validates a locally authored catalog and submits it to the community repo, either by opening a **pull request** (native GitHub auth, automatic fork — no git needed) or a **pre-filled issue** in the browser. The destination repo is configurable via `blocks-editor.contributionRepo`.
+- **"Open in Blocks Editor" command** — opening a source file no longer requires the "Open With…" submenu. A dedicated command appears directly on the Explorer and editor-title context menus for `.ino`, `.pde`, `.cpp`, and `.py` files.
+- **In-editor generation controls** — a **Generate code** split button in the toolbar generates on demand and carries a **"Generate automatically on change"** toggle, surfacing the `blocks-editor.generateOnChange` setting right where you work.
+- **switch/case block** — a new Logic block for multi-way branching, with C++ and Python generators.
+
+### Changed
+
+- **AI assistant setup unified** — the GitHub Copilot `@blocks` chat participant and its `/research`, `/design`, `/generate`, `/validate` slash commands have been removed in favor of a single **block-author skill** shared by both hosts. The renamed **"Blocks Editor: Set Up AI Assistants (Copilot & Claude Code)"** command writes `.mcp.json` (Claude Code MCP server), installs the skill under `.claude/skills/block-author/`, and generates `.github/instructions/block-author.instructions.md` so Copilot follows the same workflow. Re-run it after upgrading to refresh the server path and skill files.
+- **Generation and project-packaging refactor** — the code-generation engine was restructured around a runtime registry (`<framework>:<language>`) so C++ and Python share the same pipeline, plus internal project-packaging cleanups.
+- The custom editor's display name is now **"Blocks Editor (Visual Programming)"**.
+- The README has been refreshed to cover Python/App Lab projects, the new toolbar, the AI-assistant setup, and contributing catalogs back to the community.
+
+### Fixed
+
+- Disabled workspace auto-focus in the webview, which was causing the context menu to misbehave.
+
 ## [0.2.1] - 2026-06-08
 
 ### Changed
@@ -81,6 +102,9 @@ First public preview.
 - **Workspace conveniences** — optional minimap, toolbox search, and customizable category colors.
 - **Block Author chat participant** (`@blocks`) — assists in creating new block catalogs for hardware libraries.
 
+[0.3.0]: https://github.com/linucs/vscode-blockly/releases/tag/v0.3.0
+[0.2.1]: https://github.com/linucs/vscode-blockly/releases/tag/v0.2.1
+[0.2.0]: https://github.com/linucs/vscode-blockly/releases/tag/v0.2.0
 [0.1.2]: https://github.com/linucs/vscode-blockly/releases/tag/v0.1.2
 [0.1.1]: https://github.com/linucs/vscode-blockly/releases/tag/v0.1.1
 [0.1.0]: https://github.com/linucs/vscode-blockly/releases/tag/v0.1.0

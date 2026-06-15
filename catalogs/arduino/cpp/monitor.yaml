@@ -1,0 +1,84 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
+id: arduino_monitor_cpp
+author: Lino Moretto
+version: 0.0.1
+category: Control
+description:
+  en: "Print values to the App Lab Monitor via the Router Bridge."
+  it: "Stampa valori sul Monitor di App Lab tramite il Router Bridge."
+  zh-cn: "通过 Router Bridge 将值打印到 App Lab Monitor。"
+  zh-tw: "透過 Router Bridge 將值列印到 App Lab Monitor。"
+  fr: "Affiche des valeurs dans le Monitor d'App Lab via le Router Bridge."
+  de: "Gibt Werte über die Router Bridge im App-Lab-Monitor aus."
+  es: "Imprime valores en el Monitor de App Lab a través del Router Bridge."
+  ja: "Router Bridge を介して App Lab Monitor に値を出力します。"
+  ko: "Router Bridge를 통해 App Lab Monitor에 값을 출력합니다."
+  ru: "Выводит значения в Monitor App Lab через Router Bridge."
+  pt-br: "Imprime valores no Monitor do App Lab através do Router Bridge."
+  tr: "Router Bridge aracılığıyla App Lab Monitor'e değerleri yazdırır."
+  pl: "Wypisuje wartości do Monitora App Lab przez Router Bridge."
+  cs: "Vypisuje hodnoty do Monitoru App Lab přes Router Bridge."
+  hu: "Értékeket ír ki az App Lab Monitorra a Router Bridge-en keresztül."
+docs:
+  api: "https://docs.arduino.cc/software/app-lab/bridge/bridge-api/"
+implementations:
+  - runtime: arduino:cpp
+    targets:
+      - arduino:zephyr:unoq
+      - arduino:zephyr:ventunoq
+    dependencies:
+      - type: library
+        name: Arduino_RouterBridge
+        minVersion: "0.4.2"
+    codegen:
+      imports:
+        - "#include <Arduino_RouterBridge.h>"
+    blocks:
+      - blockly:
+          type: cpp_print
+          message0:
+            en: "print %1 to Monitor"
+            it: "stampa %1 sul Monitor"
+            zh-cn: "打印 %1 到 Monitor"
+            zh-tw: "列印 %1 到 Monitor"
+            fr: "afficher %1 dans le Monitor"
+            de: "gib %1 im Monitor aus"
+            es: "imprimir %1 en el Monitor"
+            ja: "%1 を Monitor に出力"
+            ko: "%1 을(를) Monitor에 출력"
+            ru: "вывести %1 в Monitor"
+            pt-br: "imprimir %1 no Monitor"
+            tr: "%1 değerini Monitor'e yazdır"
+            pl: "wypisz %1 do Monitora"
+            cs: "vypiš %1 do Monitoru"
+            hu: "%1 kiírása a Monitorra"
+          args0:
+            - type: input_value
+              name: VALUE
+          previousStatement: null
+          nextStatement: null
+          inputsInline: true
+          tooltip:
+            en: "Print a value to the serial monitor via the Arduino Router Bridge."
+            it: "Stampa un valore sul monitor seriale tramite l'Arduino Router Bridge."
+            zh-cn: "通过 Arduino Router Bridge 将值打印到串行监视器。"
+            zh-tw: "透過 Arduino Router Bridge 將值列印到序列監視器。"
+            fr: "Affiche une valeur sur le moniteur série via l'Arduino Router Bridge."
+            de: "Gibt einen Wert über die Arduino Router Bridge im seriellen Monitor aus."
+            es: "Imprime un valor en el monitor serie a través del Arduino Router Bridge."
+            ja: "Arduino Router Bridge を介してシリアルモニタに値を出力します。"
+            ko: "Arduino Router Bridge를 통해 시리얼 모니터에 값을 출력합니다."
+            ru: "Выводит значение в монитор порта через Arduino Router Bridge."
+            pt-br: "Imprime um valor no monitor serial através do Arduino Router Bridge."
+            tr: "Arduino Router Bridge aracılığıyla seri monitöre bir değer yazdırır."
+            pl: "Wypisuje wartość do monitora szeregowego przez Arduino Router Bridge."
+            cs: "Vypíše hodnotu do sériového monitoru přes Arduino Router Bridge."
+            hu: "Kiír egy értéket a soros monitorra az Arduino Router Bridge-en keresztül."
+          helpUrl: "https://docs.arduino.cc/software/app-lab/bridge/bridge-api/"
+        codegen:
+          setup:
+            - "Monitor.begin();"
+          body:
+            - "Monitor.println({{VALUE}});"
+          inputDefaults:
+            VALUE: '""'

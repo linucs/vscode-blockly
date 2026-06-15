@@ -97,7 +97,7 @@ class ArduinoPythonGenerator extends PythonGenerator {
     // as a fallback when the setting is on, and never annotate expression blocks
     // or empty emitters. Statement chaining is replicated from the parent.
     override scrub_(block: Blockly.Block, code: string, thisOnly?: boolean): string {
-        const prefix = blockCommentPrefix(block, code, this, '# ');
+        const prefix = blockCommentPrefix(block, code, this as unknown as Blockly.CodeGenerator, '# ');
         const nextBlock = block.nextConnection ? block.nextConnection.targetBlock() : null;
         const nextCode = thisOnly ? '' : (this.blockToCode(nextBlock) as string);
         return prefix + code + nextCode;
@@ -107,11 +107,11 @@ class ArduinoPythonGenerator extends PythonGenerator {
 export function createArduinoPythonGenerator(): RuntimeGenerator {
     const g = new ArduinoPythonGenerator();
     g.addReservedWords(pythonLanguageProfile.reservedWords.join(','));
-    pythonLanguageProfile.registerLanguageBlocks(g, { paramVarIds: new Set() });
+    pythonLanguageProfile.registerLanguageBlocks(g as unknown as Blockly.CodeGenerator, { paramVarIds: new Set() });
 
     return {
         runtime: ARDUINO_PYTHON_RUNTIME,
-        generator: g,
+        generator: g as unknown as Blockly.CodeGenerator,
         language: pythonLanguageProfile,
         firstPartyGenerators: FIRST_PARTY_GENERATORS,
         generate: (workspace: Blockly.Workspace) => g.workspaceToCode(workspace),

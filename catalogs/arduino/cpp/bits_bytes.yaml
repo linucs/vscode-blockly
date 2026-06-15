@@ -1,10 +1,27 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
 id: arduino_bits_bytes
+author: Lino Moretto
+version: 0.0.1
 category: "Math::Bits and Bytes"
+description:
+  en: "Read, set, and extract individual bits and bytes of values."
+  it: "Legge, imposta ed estrae singoli bit e byte dei valori."
+  zh-cn: "读取、设置和提取值的单个位和字节。"
+  zh-tw: "讀取、設定和提取值的個別位元和位元組。"
+  fr: "Lit, définit et extrait des bits et octets individuels des valeurs."
+  de: "Liest, setzt und extrahiert einzelne Bits und Bytes von Werten."
+  es: "Lee, establece y extrae bits y bytes individuales de valores."
+  ja: "値の個々のビットとバイトを読み取り、設定、抽出します。"
+  ko: "값의 개별 비트와 바이트를 읽고, 설정하고, 추출합니다."
+  ru: "Читает, устанавливает и извлекает отдельные биты и байты значений."
+  pt-br: "Lê, define e extrai bits e bytes individuais de valores."
+  tr: "Değerlerin tek tek bit ve byte'larını okur, ayarlar ve çıkarır."
+  pl: "Odczytuje, ustawia i wyodrębnia pojedyncze bity i bajty wartości."
+  cs: "Čte, nastavuje a extrahuje jednotlivé bity a bajty hodnot."
+  hu: "Értékek egyes bitjeit és bájtjait olvassa, állítja és nyeri ki."
 implementations:
   - runtime: "arduino:cpp"
     blocks:
-      # --- bit(n) ---
       - blockly:
           type: cpp_bit
           message0:
@@ -53,7 +70,6 @@ implementations:
           inputDefaults:
             N: "0"
 
-      # --- bitRead(x, n) ---
       - blockly:
           type: cpp_bit_read
           message0:
@@ -104,7 +120,6 @@ implementations:
             X: "0"
             N: "0"
 
-      # --- bitSet / bitClear (consolidated, dropdown) ---
       - blockly:
           type: cpp_bit_set_clear
           message0:
@@ -159,7 +174,6 @@ implementations:
           inputDefaults:
             N: "0"
 
-      # --- bitWrite(x, n, b) ---
       - blockly:
           type: cpp_bit_write
           message0:
@@ -212,7 +226,6 @@ implementations:
             N: "0"
             B: "1"
 
-      # --- highByte / lowByte (consolidated, dropdown) ---
       - blockly:
           type: cpp_byte_of
           message0:

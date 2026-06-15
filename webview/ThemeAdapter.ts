@@ -217,6 +217,8 @@ export class ThemeAdapter {
         const { blockStyles, categoryStyles } = buildStyles();
 
         const vscodeTheme = Blockly.Theme.defineTheme('vscodeTheme', {
+            // `name` is redundant with the first arg but required by the ITheme type.
+            name: 'vscodeTheme',
             base: Blockly.Themes.Classic,
             blockStyles,
             categoryStyles,

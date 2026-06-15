@@ -1,0 +1,89 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
+id: arduino_onboard_led_py
+author: Lino Moretto
+version: 0.0.1
+category: Control
+description:
+  en: "Python block to set the CPU-side onboard RGB LED."
+  it: "Blocco Python per impostare il LED RGB integrato lato CPU."
+  zh-cn: "用于设置 CPU 端板载 RGB LED 的 Python 块。"
+  zh-tw: "用於設定 CPU 端板載 RGB LED 的 Python 積木。"
+  fr: "Bloc Python pour régler la LED RGB intégrée côté CPU."
+  de: "Python-Block zum Setzen der CPU-seitigen RGB-LED."
+  es: "Bloque Python para configurar el LED RGB integrado del lado de la CPU."
+  ja: "CPU 側のオンボード RGB LED を設定する Python ブロック。"
+  ko: "CPU 측 온보드 RGB LED를 설정하는 Python 블록."
+  ru: "Блок Python для управления встроенным RGB-светодиодом на стороне CPU."
+  pt-br: "Bloco Python para definir o LED RGB integrado do lado da CPU."
+  tr: "CPU tarafındaki yerleşik RGB LED'i ayarlayan Python bloğu."
+  pl: "Blok Python do ustawiania wbudowanej diody RGB po stronie CPU."
+  cs: "Blok Python pro nastavení vestavěné RGB LED na straně CPU."
+  hu: "Python blokk a CPU oldali beépített RGB LED beállításához."
+implementations:
+  - runtime: arduino:python
+    targets:
+      - arduino:zephyr:unoq
+      - arduino:zephyr:ventunoq
+    blocks:
+      - blockly:
+          type: python_led
+          message0:
+            en: "set LED %1  R %2  G %3  B %4"
+            it: "imposta LED %1  R %2  G %3  B %4"
+            zh-cn: "设置 LED %1  R %2  G %3  B %4"
+            zh-tw: "設定 LED %1  R %2  G %3  B %4"
+            fr: "régler LED %1  R %2  G %3  B %4"
+            de: "setze LED %1  R %2  G %3  B %4"
+            es: "establecer LED %1  R %2  G %3  B %4"
+            ja: "LED %1 を設定  R %2  G %3  B %4"
+            ko: "LED %1 설정  R %2  G %3  B %4"
+            ru: "установить LED %1  R %2  G %3  B %4"
+            pt-br: "definir LED %1  R %2  G %3  B %4"
+            tr: "LED %1 ayarla  R %2  G %3  B %4"
+            pl: "ustaw LED %1  R %2  G %3  B %4"
+            cs: "nastav LED %1  R %2  G %3  B %4"
+            hu: "LED %1 beállítása  R %2  G %3  B %4"
+          args0:
+            - type: field_dropdown
+              name: LED
+              options:
+                - ["1", "1"]
+                - ["2", "2"]
+            - type: field_dropdown
+              name: R
+              options:
+                - ["ON", "True"]
+                - ["OFF", "False"]
+            - type: field_dropdown
+              name: G
+              options:
+                - ["ON", "True"]
+                - ["OFF", "False"]
+            - type: field_dropdown
+              name: B
+              options:
+                - ["ON", "True"]
+                - ["OFF", "False"]
+          previousStatement: null
+          nextStatement: null
+          tooltip:
+            en: "Set the R / G / B channels of a CPU-side onboard RGB LED (1 or 2)."
+            it: "Imposta i canali R / G / B di un LED RGB integrato lato CPU (1 o 2)."
+            zh-cn: "设置 CPU 端板载 RGB LED（1 或 2）的 R / G / B 通道。"
+            zh-tw: "設定 CPU 端板載 RGB LED（1 或 2）的 R / G / B 通道。"
+            fr: "Règle les canaux R / G / B d'une LED RGB intégrée côté CPU (1 ou 2)."
+            de: "Setzt die R / G / B-Kanäle einer CPU-seitigen integrierten RGB-LED (1 oder 2)."
+            es: "Establece los canales R / G / B de un LED RGB integrado del lado de la CPU (1 o 2)."
+            ja: "CPU 側のオンボード RGB LED（1 または 2）の R / G / B チャンネルを設定します。"
+            ko: "CPU 측 온보드 RGB LED(1 또는 2)의 R / G / B 채널을 설정합니다."
+            ru: "Устанавливает каналы R / G / B встроенного RGB-светодиода на стороне CPU (1 или 2)."
+            pt-br: "Define os canais R / G / B de um LED RGB integrado do lado da CPU (1 ou 2)."
+            tr: "CPU tarafındaki yerleşik RGB LED'in (1 veya 2) R / G / B kanallarını ayarlar."
+            pl: "Ustawia kanały R / G / B wbudowanej diody RGB po stronie CPU (1 lub 2)."
+            cs: "Nastaví kanály R / G / B vestavěné RGB LED na straně CPU (1 nebo 2)."
+            hu: "Beállítja a CPU oldali beépített RGB LED (1 vagy 2) R / G / B csatornáit."
+        codegen:
+          imports:
+            - "from arduino.app_utils import Leds"
+          body:
+            - "Leds.set_led{{LED}}_color({{R}}, {{G}}, {{B}})"

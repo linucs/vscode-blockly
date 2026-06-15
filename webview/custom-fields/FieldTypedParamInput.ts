@@ -4,7 +4,7 @@ type Preset = [string, string];
 
 const SEP = '|';
 
-export class FieldTypedParamInput extends Blockly.Field<string> {
+export class FieldTypedParamInput extends Blockly.Field<string | undefined> {
     override SERIALIZABLE = true;
     override EDITABLE = true;
 
@@ -14,7 +14,7 @@ export class FieldTypedParamInput extends Blockly.Field<string> {
     constructor(
         presets: Preset[],
         initial?: string,
-        validator?: Blockly.FieldValidator<string>,
+        validator?: Blockly.FieldValidator<string | undefined>,
     ) {
         super(initial ?? '', validator);
         this.presets_ = presets;

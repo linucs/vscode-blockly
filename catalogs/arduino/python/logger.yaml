@@ -1,0 +1,118 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
+id: arduino_logger_py
+author: Lino Moretto
+version: 0.0.1
+category: Control::Logging
+description:
+  en: "Python blocks for logging messages via the Logger."
+  it: "Blocchi Python per registrare messaggi tramite il Logger."
+  zh-cn: "通过 Logger 记录消息的 Python 块。"
+  zh-tw: "透過 Logger 記錄訊息的 Python 積木。"
+  fr: "Blocs Python pour journaliser des messages via le Logger."
+  de: "Python-Blöcke zum Protokollieren von Nachrichten über den Logger."
+  es: "Bloques Python para registrar mensajes mediante el Logger."
+  ja: "Logger でメッセージを記録する Python ブロック。"
+  ko: "Logger를 통해 메시지를 기록하는 Python 블록."
+  ru: "Блоки Python для записи сообщений через Logger."
+  pt-br: "Blocos Python para registrar mensagens via Logger."
+  tr: "Logger ile mesaj kaydetmek için Python blokları."
+  pl: "Bloki Python do rejestrowania komunikatów przez Logger."
+  cs: "Bloky Python pro záznam zpráv pomocí Logger."
+  hu: "Python blokkok üzenetek naplózásához a Logger segítségével."
+docs:
+  api: "https://docs.arduino.cc/software/app-lab/bridge/bridge-api/"
+implementations:
+  - runtime: arduino:python
+    targets:
+      - arduino:zephyr:unoq
+      - arduino:zephyr:ventunoq
+    blocks:
+      - blockly:
+          type: python_logger_create
+          message0:
+            en: "Logger %1 named %2"
+            it: "Logger %1 chiamato %2"
+            zh-cn: "Logger %1 命名为 %2"
+            zh-tw: "Logger %1 命名為 %2"
+            fr: "Logger %1 nommé %2"
+            de: "Logger %1 mit Namen %2"
+            es: "Logger %1 llamado %2"
+            ja: "Logger %1 名前 %2"
+            ko: "Logger %1 이름 %2"
+            ru: "Logger %1 с именем %2"
+            pt-br: "Logger %1 chamado %2"
+            tr: "Logger %1 adı %2"
+            pl: "Logger %1 o nazwie %2"
+            cs: "Logger %1 s názvem %2"
+            hu: "Logger %1 neve %2"
+          args0:
+            - type: field_input
+              name: VAR_NAME
+              text: logger
+            - type: field_input
+              name: LABEL
+              text: app
+          previousStatement: null
+          nextStatement: null
+          tooltip:
+            en: "Create a Logger instance. Place near the top of the workspace."
+            it: "Crea un'istanza Logger. Posizionala vicino alla cima dello spazio di lavoro."
+            zh-cn: "创建一个 Logger 实例。放在工作区顶部附近。"
+            zh-tw: "建立一個 Logger 實例。放在工作區頂部附近。"
+            fr: "Crée une instance Logger. Placez-la près du haut de l'espace de travail."
+            de: "Erstellt eine Logger-Instanz. Platziere sie nahe dem oberen Rand des Arbeitsbereichs."
+            es: "Crea una instancia Logger. Colócala cerca de la parte superior del área de trabajo."
+            ja: "Logger インスタンスを作成します。ワークスペースの上部付近に配置してください。"
+            ko: "Logger 인스턴스를 생성합니다. 작업 공간 상단 근처에 배치하세요."
+            ru: "Создаёт экземпляр Logger. Разместите его ближе к началу рабочей области."
+            pt-br: "Cria uma instância Logger. Coloque-a perto do topo da área de trabalho."
+            tr: "Bir Logger örneği oluşturur. Çalışma alanının üst kısmına yakın yerleştirin."
+            pl: "Tworzy instancję Logger. Umieść ją blisko góry obszaru roboczego."
+            cs: "Vytvoří instanci Logger. Umístěte ji blízko horní části pracovní plochy."
+            hu: "Létrehoz egy Logger példányt. Helyezd a munkaterület tetejéhez közel."
+          helpUrl: "https://docs.arduino.cc/software/app-lab/bridge/bridge-api/"
+        codegen:
+          imports:
+            - "from arduino.app_utils import Logger"
+          declarations:
+            - "{{VAR_NAME}} = Logger('{{LABEL}}')"
+
+      - blockly:
+          type: python_logger_log
+          message0: "%1 . %2 %3"
+          args0:
+            - type: input_value
+              name: LOGGER
+            - type: field_dropdown
+              name: LEVEL
+              options:
+                - ["info", "info"]
+                - ["debug", "debug"]
+                - ["warning", "warning"]
+            - type: input_value
+              name: MESSAGE
+          previousStatement: null
+          nextStatement: null
+          inputsInline: true
+          tooltip:
+            en: "Log a message at the given level."
+            it: "Registra un messaggio al livello indicato."
+            zh-cn: "以指定级别记录一条消息。"
+            zh-tw: "以指定等級記錄一則訊息。"
+            fr: "Enregistre un message au niveau indiqué."
+            de: "Protokolliert eine Nachricht auf der angegebenen Stufe."
+            es: "Registra un mensaje en el nivel indicado."
+            ja: "指定したレベルでメッセージを記録します。"
+            ko: "지정된 레벨로 메시지를 기록합니다."
+            ru: "Записывает сообщение на указанном уровне."
+            pt-br: "Registra uma mensagem no nível indicado."
+            tr: "Belirtilen seviyede bir mesaj kaydeder."
+            pl: "Rejestruje komunikat na podanym poziomie."
+            cs: "Zaznamená zprávu na zadané úrovni."
+            hu: "Naplóz egy üzenetet a megadott szinten."
+        codegen:
+          body:
+            - "{{LOGGER}}.{{LEVEL}}({{MESSAGE}})"
+          inputDefaults:
+            LOGGER: logger
+            MESSAGE: '""'

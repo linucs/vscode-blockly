@@ -1,9 +1,27 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
 id: arduino_code_setup
-docs:
-  reference: "https://docs.arduino.cc/language-reference/"
+author: Lino Moretto
+version: 0.0.1
 category: Control
 colour: "#78909C"
+description:
+  en: "Container whose blocks run once at startup, inside setup()."
+  it: "Contenitore i cui blocchi vengono eseguiti una volta all'avvio, in setup()."
+  zh-cn: "其内部积木在启动时执行一次的容器，位于 setup() 中。"
+  zh-tw: "其內部積木在啟動時執行一次的容器，位於 setup() 中。"
+  fr: "Conteneur dont les blocs s'exécutent une fois au démarrage, dans setup()."
+  de: "Container, dessen Blöcke beim Start einmal in setup() ausgeführt werden."
+  es: "Contenedor cuyos bloques se ejecutan una vez al inicio, en setup()."
+  ja: "内部のブロックが起動時に setup() で一度だけ実行されるコンテナ。"
+  ko: "내부 블록이 시작 시 setup()에서 한 번 실행되는 컨테이너."
+  ru: "Контейнер, блоки которого выполняются один раз при запуске, в setup()."
+  pt-br: "Contêiner cujos blocos são executados uma vez na inicialização, em setup()."
+  tr: "Blokları başlangıçta setup() içinde bir kez çalışan kapsayıcı."
+  pl: "Kontener, którego bloki wykonują się raz przy starcie, w setup()."
+  cs: "Kontejner, jehož bloky se spustí jednou při startu, v setup()."
+  hu: "Tároló, amelynek blokkjai egyszer futnak le indításkor, a setup()-ban."
+docs:
+  reference: "https://docs.arduino.cc/language-reference/"
 implementations:
   - runtime: arduino:cpp
     blocks:
@@ -48,7 +66,25 @@ implementations:
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
 id: arduino_constants
+author: Lino Moretto
+version: 0.0.1
 category: Control
+description:
+  en: "Arduino named constants: HIGH/LOW, pin modes, and LED_BUILTIN."
+  it: "Costanti Arduino: HIGH/LOW, modalità pin e LED_BUILTIN."
+  zh-cn: "Arduino 命名常量：HIGH/LOW、引脚模式和 LED_BUILTIN。"
+  zh-tw: "Arduino 命名常數：HIGH/LOW、腳位模式和 LED_BUILTIN。"
+  fr: "Constantes Arduino nommées : HIGH/LOW, modes de broche et LED_BUILTIN."
+  de: "Benannte Arduino-Konstanten: HIGH/LOW, Pin-Modi und LED_BUILTIN."
+  es: "Constantes Arduino con nombre: HIGH/LOW, modos de pin y LED_BUILTIN."
+  ja: "Arduino の名前付き定数：HIGH/LOW、ピンモード、LED_BUILTIN。"
+  ko: "Arduino 명명 상수: HIGH/LOW, 핀 모드 및 LED_BUILTIN."
+  ru: "Именованные константы Arduino: HIGH/LOW, режимы пинов и LED_BUILTIN."
+  pt-br: "Constantes nomeadas do Arduino: HIGH/LOW, modos de pino e LED_BUILTIN."
+  tr: "Arduino adlandırılmış sabitleri: HIGH/LOW, pin modları ve LED_BUILTIN."
+  pl: "Nazwane stałe Arduino: HIGH/LOW, tryby pinów i LED_BUILTIN."
+  cs: "Pojmenované konstanty Arduina: HIGH/LOW, režimy pinů a LED_BUILTIN."
+  hu: "Arduino elnevezett konstansok: HIGH/LOW, pin módok és LED_BUILTIN."
 implementations:
   - runtime: arduino:cpp
     blocks:
@@ -105,7 +141,25 @@ implementations:
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
 id: arduino_builtin_led
+author: Lino Moretto
+version: 0.0.1
 category: Control
+description:
+  en: "Turn the board's single built-in LED on or off."
+  it: "Accendi o spegni l'unico LED integrato della scheda."
+  zh-cn: "打开或关闭开发板唯一的板载 LED。"
+  zh-tw: "開啟或關閉開發板唯一的板載 LED。"
+  fr: "Allume ou éteint l'unique LED intégrée de la carte."
+  de: "Schaltet die einzelne eingebaute LED der Platine ein oder aus."
+  es: "Enciende o apaga el único LED integrado de la placa."
+  ja: "ボードの唯一の内蔵 LED をオン/オフします。"
+  ko: "보드의 단일 내장 LED를 켜거나 끕니다."
+  ru: "Включает или выключает единственный встроенный LED платы."
+  pt-br: "Liga ou desliga o único LED integrado da placa."
+  tr: "Kartın tek dahili LED'ini açar veya kapatır."
+  pl: "Włącza lub wyłącza jedyną wbudowaną diodę LED płytki."
+  cs: "Zapne nebo vypne jedinou vestavěnou LED desky."
+  hu: "Be- vagy kikapcsolja a kártya egyetlen beépített LED-jét."
 implementations:
   - runtime: arduino:cpp
     blocks:

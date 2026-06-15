@@ -1,0 +1,221 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
+id: arduino_bridge_cpp
+author: Lino Moretto
+version: 0.0.1
+category: Control::Bridge
+description:
+  en: "C++ side of the MCU-to-SBC Bridge: notify, provide, and call services."
+  it: "Lato C++ del Bridge MCU-SBC: notifica, fornisci e chiama servizi."
+  zh-cn: "MCU 到 SBC Bridge 的 C++ 端：通知、提供和调用服务。"
+  zh-tw: "MCU 到 SBC Bridge 的 C++ 端：通知、提供和呼叫服務。"
+  fr: "Côté C++ du Bridge MCU-SBC : notifier, fournir et appeler des services."
+  de: "C++-Seite der MCU-zu-SBC-Bridge: benachrichtigen, bereitstellen und Dienste aufrufen."
+  es: "Lado C++ del Bridge MCU-SBC: notificar, proveer y llamar servicios."
+  ja: "MCU から SBC への Bridge の C++ 側：通知、提供、サービス呼び出し。"
+  ko: "MCU-SBC Bridge의 C++ 측: 알림, 제공 및 서비스 호출."
+  ru: "C++ сторона моста MCU-SBC: уведомление, предоставление и вызов служб."
+  pt-br: "Lado C++ do Bridge MCU-SBC: notificar, fornecer e chamar serviços."
+  tr: "MCU-SBC Bridge'in C++ tarafı: bildir, sağla ve servisleri çağır."
+  pl: "Strona C++ mostu MCU-SBC: powiadamiaj, udostępniaj i wywołuj usługi."
+  cs: "C++ strana mostu MCU-SBC: oznámit, poskytnout a volat služby."
+  hu: "Az MCU-SBC Bridge C++ oldala: értesítés, szolgáltatás biztosítása és hívása."
+docs:
+  library: "https://docs.arduino.cc/libraries/bridge/"
+  api: "https://docs.arduino.cc/software/app-lab/bridge/bridge-api/"
+implementations:
+  - runtime: arduino:cpp
+    targets:
+      - arduino:zephyr:unoq
+      - arduino:zephyr:ventunoq
+    dependencies:
+      - type: library
+        name: Arduino_RouterBridge
+        minVersion: "0.4.2"
+    codegen:
+      imports:
+        - "#include <Arduino_RouterBridge.h>"
+    blocks:
+      - blockly:
+          type: cpp_bridge_notify
+          message0:
+            en: "notify %1 of %2 through bridge"
+            it: "notifica %1 di %2 tramite bridge"
+            zh-cn: "通过 bridge 通知 %1 %2"
+            zh-tw: "透過 bridge 通知 %1 %2"
+            fr: "notifier %1 de %2 via le bridge"
+            de: "benachrichtige %1 über %2 via Bridge"
+            es: "notificar %1 de %2 a través del bridge"
+            ja: "bridge 経由で %1 に %2 を通知"
+            ko: "bridge를 통해 %1 에게 %2 알림"
+            ru: "уведомить %1 о %2 через bridge"
+            pt-br: "notificar %1 de %2 pelo bridge"
+            tr: "bridge üzerinden %1 öğesine %2 bildir"
+            pl: "powiadom %1 o %2 przez bridge"
+            cs: "oznámit %1 o %2 přes bridge"
+            hu: "%1 értesítése %2 -ről a bridge-en keresztül"
+          args0:
+            - type: field_input
+              name: NAME
+              text: eventName
+            - type: input_value
+              name: ARGS
+          previousStatement: null
+          nextStatement: null
+          inputsInline: true
+          tooltip:
+            en: "Send a notification event to the SBC side via the Bridge."
+            it: "Invia un evento di notifica al lato SBC tramite il Bridge."
+            zh-cn: "通过 Bridge 向 SBC 端发送通知事件。"
+            zh-tw: "透過 Bridge 向 SBC 端傳送通知事件。"
+            fr: "Envoie un événement de notification au côté SBC via le Bridge."
+            de: "Sendet ein Benachrichtigungsereignis über die Bridge an die SBC-Seite."
+            es: "Envía un evento de notificación al lado SBC a través del Bridge."
+            ja: "Bridge を介して SBC 側に通知イベントを送信します。"
+            ko: "Bridge를 통해 SBC 측에 알림 이벤트를 보냅니다."
+            ru: "Отправляет уведомление на сторону SBC через Bridge."
+            pt-br: "Envia um evento de notificação para o lado SBC através do Bridge."
+            tr: "Bridge aracılığıyla SBC tarafına bir bildirim olayı gönderir."
+            pl: "Wysyła zdarzenie powiadomienia do strony SBC przez Bridge."
+            cs: "Odešle oznamovací událost na stranu SBC přes Bridge."
+            hu: "Értesítési eseményt küld az SBC oldalnak a Bridge-en keresztül."
+          helpUrl: "https://docs.arduino.cc/software/app-lab/bridge/bridge-api/"
+        codegen:
+          setup:
+            - "Bridge.begin();"
+          body:
+            - 'Bridge.notify("{{NAME}}", {{ARGS}});'
+          inputDefaults:
+            ARGS: nullptr
+
+      - blockly:
+          type: cpp_bridge_provide
+          message0:
+            en: "listen to bridge for %1 data %2"
+            it: "ascolta dal bridge %1 con dati %2"
+            zh-cn: "监听 bridge 的 %1 数据 %2"
+            zh-tw: "監聽 bridge 的 %1 資料 %2"
+            fr: "écouter le bridge pour %1 données %2"
+            de: "höre auf Bridge für %1 Daten %2"
+            es: "escuchar el bridge para %1 datos %2"
+            ja: "bridge で %1 を待ち受け データ %2"
+            ko: "bridge에서 %1 수신 데이터 %2"
+            ru: "слушать bridge для %1 данные %2"
+            pt-br: "ouvir o bridge por %1 dados %2"
+            tr: "bridge'i %1 için dinle veri %2"
+            pl: "nasłuchuj bridge dla %1 dane %2"
+            cs: "naslouchej bridge pro %1 data %2"
+            hu: "figyeld a bridge-et %1 -re adat %2"
+          args0:
+            - type: field_input
+              name: NAME
+              text: serviceName
+            - type: field_typed_param_input
+              name: PARAM
+              text: args
+              defaultType: String
+              options:
+                - ["String", "String"]
+                - ["int", "int"]
+                - ["float", "float"]
+                - ["double", "double"]
+                - ["bool", "bool"]
+                - ["bytes", "std::vector<uint8_t>"]
+          message1:
+            en: "do %1"
+            it: "fai %1"
+            zh-cn: "执行 %1"
+            zh-tw: "執行 %1"
+            fr: "faire %1"
+            de: "tue %1"
+            es: "hacer %1"
+            ja: "実行 %1"
+            ko: "실행 %1"
+            ru: "выполнить %1"
+            pt-br: "fazer %1"
+            tr: "yap %1"
+            pl: "wykonaj %1"
+            cs: "proveď %1"
+            hu: "csináld %1"
+          args1:
+            - type: input_statement
+              name: BODY
+          nextStatement: null
+          extensions:
+            - hat_event_style
+          tooltip:
+            en: "Register a handler for a Bridge service call from the SBC side."
+            it: "Registra un gestore per una chiamata di servizio Bridge dal lato SBC."
+            zh-cn: "为来自 SBC 端的 Bridge 服务调用注册一个处理程序。"
+            zh-tw: "為來自 SBC 端的 Bridge 服務呼叫註冊一個處理常式。"
+            fr: "Enregistre un gestionnaire pour un appel de service Bridge du côté SBC."
+            de: "Registriert einen Handler für einen Bridge-Serviceaufruf von der SBC-Seite."
+            es: "Registra un manejador para una llamada de servicio Bridge desde el lado SBC."
+            ja: "SBC 側からの Bridge サービス呼び出しのハンドラーを登録します。"
+            ko: "SBC 측의 Bridge 서비스 호출에 대한 핸들러를 등록합니다."
+            ru: "Регистрирует обработчик вызова службы Bridge со стороны SBC."
+            pt-br: "Registra um manipulador para uma chamada de serviço Bridge do lado SBC."
+            tr: "SBC tarafından gelen bir Bridge servis çağrısı için bir işleyici kaydeder."
+            pl: "Rejestruje procedurę obsługi wywołania usługi Bridge od strony SBC."
+            cs: "Zaregistruje obslužnou rutinu pro volání služby Bridge ze strany SBC."
+            hu: "Kezelőt regisztrál egy SBC oldali Bridge szolgáltatáshíváshoz."
+          helpUrl: "https://docs.arduino.cc/software/app-lab/bridge/bridge-api/"
+        codegen:
+          declarations:
+            - "void _bridgeHandler_{{NAME}}({{PARAM.type}} {{PARAM.name}}) {\n{{BODY}}\n}"
+          setup:
+            - "Bridge.begin();"
+            - 'Bridge.provide("{{NAME}}", _bridgeHandler_{{NAME}});'
+
+      - blockly:
+          type: cpp_bridge_call
+          message0:
+            en: "call %1 through bridge with data %2 - results into %3"
+            it: "chiama %1 tramite bridge con dati %2 - risultati in %3"
+            zh-cn: "通过 bridge 调用 %1 数据 %2 - 结果存入 %3"
+            zh-tw: "透過 bridge 呼叫 %1 資料 %2 - 結果存入 %3"
+            fr: "appeler %1 via le bridge avec données %2 - résultats dans %3"
+            de: "rufe %1 via Bridge auf mit Daten %2 - Ergebnisse in %3"
+            es: "llamar a %1 a través del bridge con datos %2 - resultados en %3"
+            ja: "bridge 経由で %1 を呼び出し データ %2 - 結果を %3 へ"
+            ko: "bridge를 통해 %1 호출 데이터 %2 - 결과를 %3 에"
+            ru: "вызвать %1 через bridge с данными %2 - результат в %3"
+            pt-br: "chamar %1 pelo bridge com dados %2 - resultados em %3"
+            tr: "bridge üzerinden %1 öğesini çağır veri %2 - sonuçlar %3 içine"
+            pl: "wywołaj %1 przez bridge z danymi %2 - wyniki do %3"
+            cs: "zavolej %1 přes bridge s daty %2 - výsledky do %3"
+            hu: "%1 hívása a bridge-en keresztül %2 adattal - eredmény ide: %3"
+          args0:
+            - type: field_input
+              name: NAME
+              text: serviceName
+            - type: input_value
+              name: ARGS
+            - type: input_value
+              name: OUT_VAR
+          previousStatement: null
+          nextStatement: null
+          inputsInline: true
+          tooltip:
+            en: "Call a Bridge service on the SBC and capture the result into a typed variable."
+            it: "Chiama un servizio Bridge sull'SBC e cattura il risultato in una variabile tipizzata."
+            zh-cn: "调用 SBC 上的 Bridge 服务并将结果捕获到一个类型化变量中。"
+            zh-tw: "呼叫 SBC 上的 Bridge 服務並將結果擷取到一個型別化變數中。"
+            fr: "Appelle un service Bridge sur le SBC et capture le résultat dans une variable typée."
+            de: "Ruft einen Bridge-Service auf dem SBC auf und erfasst das Ergebnis in einer typisierten Variablen."
+            es: "Llama a un servicio Bridge en el SBC y captura el resultado en una variable tipada."
+            ja: "SBC 上の Bridge サービスを呼び出し、結果を型付き変数に取り込みます。"
+            ko: "SBC의 Bridge 서비스를 호출하고 결과를 타입 변수에 저장합니다."
+            ru: "Вызывает службу Bridge на SBC и сохраняет результат в типизированную переменную."
+            pt-br: "Chama um serviço Bridge no SBC e captura o resultado em uma variável tipada."
+            tr: "SBC üzerindeki bir Bridge servisini çağırır ve sonucu türlü bir değişkene yakalar."
+            pl: "Wywołuje usługę Bridge na SBC i przechwytuje wynik do zmiennej typowanej."
+            cs: "Zavolá službu Bridge na SBC a zachytí výsledek do typované proměnné."
+            hu: "Meghív egy Bridge szolgáltatást az SBC-n és az eredményt egy típusos változóba menti."
+          helpUrl: "https://docs.arduino.cc/software/app-lab/bridge/bridge-api/"
+        codegen:
+          setup:
+            - "Bridge.begin();"
+          body:
+            - 'Bridge.call("{{NAME}}", {{ARGS}}).result({{OUT_VAR}});'
+          inputDefaults:
+            ARGS: nullptr

@@ -1,0 +1,96 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
+id: arduino_onboard_led
+author: Lino Moretto
+version: 0.0.1
+category: Control
+description:
+  en: "Control the MCU-side onboard RGB LED (active-LOW)."
+  it: "Controlla il LED RGB integrato lato MCU (attivo-basso)."
+  zh-cn: "控制 MCU 端板载 RGB LED（低电平有效）。"
+  zh-tw: "控制 MCU 端板載 RGB LED（低電位有效）。"
+  fr: "Contrôle la LED RGB intégrée côté MCU (actif-bas)."
+  de: "Steuert die MCU-seitige integrierte RGB-LED (Active-Low)."
+  es: "Controla el LED RGB integrado del lado del MCU (activo-bajo)."
+  ja: "MCU 側のオンボード RGB LED を制御します（アクティブLOW）。"
+  ko: "MCU 측 온보드 RGB LED를 제어합니다(액티브 로우)."
+  ru: "Управляет встроенным RGB-светодиодом на стороне MCU (активный низкий)."
+  pt-br: "Controla o LED RGB integrado do lado do MCU (ativo-baixo)."
+  tr: "MCU tarafındaki yerleşik RGB LED'i denetler (aktif-düşük)."
+  pl: "Steruje wbudowaną diodą RGB po stronie MCU (aktywny stanem niskim)."
+  cs: "Ovládá vestavěnou RGB LED na straně MCU (aktivní v nule)."
+  hu: "Vezérli az MCU oldali beépített RGB LED-et (aktív-alacsony)."
+implementations:
+  - runtime: arduino:cpp
+    targets:
+      - arduino:zephyr:unoq
+      - arduino:zephyr:ventunoq
+    blocks:
+      - blockly:
+          type: cpp_led
+          message0:
+            en: "set LED %1  R %2  G %3  B %4"
+            it: "imposta LED %1  R %2  G %3  B %4"
+            zh-cn: "设置 LED %1  R %2  G %3  B %4"
+            zh-tw: "設定 LED %1  R %2  G %3  B %4"
+            fr: "régler LED %1  R %2  G %3  B %4"
+            de: "setze LED %1  R %2  G %3  B %4"
+            es: "establecer LED %1  R %2  G %3  B %4"
+            ja: "LED %1 を設定  R %2  G %3  B %4"
+            ko: "LED %1 설정  R %2  G %3  B %4"
+            ru: "установить LED %1  R %2  G %3  B %4"
+            pt-br: "definir LED %1  R %2  G %3  B %4"
+            tr: "LED %1 ayarla  R %2  G %3  B %4"
+            pl: "ustaw LED %1  R %2  G %3  B %4"
+            cs: "nastav LED %1  R %2  G %3  B %4"
+            hu: "LED %1 beállítása  R %2  G %3  B %4"
+          args0:
+            - type: field_dropdown
+              name: LED
+              options:
+                - ["3", "3"]
+                - ["4", "4"]
+            - type: field_dropdown
+              name: R
+              options:
+                - ["ON", "LOW"]
+                - ["OFF", "HIGH"]
+            - type: field_dropdown
+              name: G
+              options:
+                - ["ON", "LOW"]
+                - ["OFF", "HIGH"]
+            - type: field_dropdown
+              name: B
+              options:
+                - ["ON", "LOW"]
+                - ["OFF", "HIGH"]
+          previousStatement: null
+          nextStatement: null
+          tooltip:
+            en: "Set the R / G / B channels of an MCU-side onboard RGB LED (3 or 4). Active-LOW: ON drives the pin low."
+            it: "Imposta i canali R / G / B di un LED RGB integrato lato MCU (3 o 4). Attivo-basso: ON porta il pin a livello basso."
+            zh-cn: "设置 MCU 端板载 RGB LED（3 或 4）的 R / G / B 通道。低电平有效：ON 将引脚拉低。"
+            zh-tw: "設定 MCU 端板載 RGB LED（3 或 4）的 R / G / B 通道。低電位有效：ON 將腳位拉低。"
+            fr: "Règle les canaux R / G / B d'une LED RGB intégrée côté MCU (3 ou 4). Actif-bas : ON met la broche au niveau bas."
+            de: "Setzt die R / G / B-Kanäle einer MCU-seitigen integrierten RGB-LED (3 oder 4). Active-Low: ON zieht den Pin auf Low."
+            es: "Establece los canales R / G / B de un LED RGB integrado del lado del MCU (3 o 4). Activo-bajo: ON pone el pin en bajo."
+            ja: "MCU 側のオンボード RGB LED（3 または 4）の R / G / B チャンネルを設定します。アクティブLOW：ON でピンを LOW にします。"
+            ko: "MCU 측 온보드 RGB LED(3 또는 4)의 R / G / B 채널을 설정합니다. 액티브 로우: ON은 핀을 LOW로 구동합니다."
+            ru: "Устанавливает каналы R / G / B встроенного RGB-светодиода на стороне MCU (3 или 4). Активный низкий: ON переводит пин в низкий уровень."
+            pt-br: "Define os canais R / G / B de um LED RGB integrado do lado do MCU (3 ou 4). Ativo-baixo: ON coloca o pino em nível baixo."
+            tr: "MCU tarafındaki yerleşik RGB LED'in (3 veya 4) R / G / B kanallarını ayarlar. Aktif-düşük: ON pini düşük seviyeye çeker."
+            pl: "Ustawia kanały R / G / B wbudowanej diody RGB po stronie MCU (3 lub 4). Aktywny stanem niskim: ON ustawia pin w stan niski."
+            cs: "Nastaví kanály R / G / B vestavěné RGB LED na straně MCU (3 nebo 4). Aktivní v nule: ON přepne pin do nízké úrovně."
+            hu: "Beállítja az MCU oldali beépített RGB LED (3 vagy 4) R / G / B csatornáit. Aktív-alacsony: ON alacsony szintre húzza a lábat."
+        codegen:
+          setup:
+            - "pinMode(LED{{LED}}_R, OUTPUT);"
+            - "pinMode(LED{{LED}}_G, OUTPUT);"
+            - "pinMode(LED{{LED}}_B, OUTPUT);"
+            - "digitalWrite(LED{{LED}}_R, HIGH);"
+            - "digitalWrite(LED{{LED}}_G, HIGH);"
+            - "digitalWrite(LED{{LED}}_B, HIGH);"
+          body:
+            - "digitalWrite(LED{{LED}}_R, {{R}});"
+            - "digitalWrite(LED{{LED}}_G, {{G}});"
+            - "digitalWrite(LED{{LED}}_B, {{B}});"

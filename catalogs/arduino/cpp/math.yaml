@@ -1,10 +1,27 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
 id: arduino_math
+author: Lino Moretto
+version: 0.0.1
 category: "Math::Arduino"
+description:
+  en: "Arduino math helpers: min, max, constrain, and map."
+  it: "Funzioni matematiche Arduino: min, max, constrain e map."
+  zh-cn: "Arduino 数学辅助函数：min、max、constrain 和 map。"
+  zh-tw: "Arduino 數學輔助函式：min、max、constrain 和 map。"
+  fr: "Fonctions mathématiques Arduino : min, max, constrain et map."
+  de: "Arduino-Mathehilfen: min, max, constrain und map."
+  es: "Funciones matemáticas de Arduino: min, max, constrain y map."
+  ja: "Arduino 数学ヘルパー: min、max、constrain、map。"
+  ko: "Arduino 수학 도우미: min, max, constrain, map."
+  ru: "Математические функции Arduino: min, max, constrain и map."
+  pt-br: "Funções matemáticas do Arduino: min, max, constrain e map."
+  tr: "Arduino matematik yardımcıları: min, max, constrain ve map."
+  pl: "Pomocniki matematyczne Arduino: min, max, constrain i map."
+  cs: "Matematické pomocníky Arduino: min, max, constrain a map."
+  hu: "Arduino matematikai segédfüggvények: min, max, constrain és map."
 implementations:
   - runtime: "arduino:cpp"
     blocks:
-      # --- min / max (consolidated, dropdown) ---
       - blockly:
           type: cpp_math_minmax
           message0:
@@ -62,7 +79,6 @@ implementations:
             A: "0"
             B: "0"
 
-      # --- constrain ---
       - blockly:
           type: cpp_constrain
           message0:
@@ -119,7 +135,6 @@ implementations:
             LOW: "0"
             HIGH: "255"
 
-      # --- map ---
       - blockly:
           type: cpp_map
           message0:

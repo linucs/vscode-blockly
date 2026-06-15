@@ -16,7 +16,7 @@ export function resolveTemplate(
           return varId ? generator.getVariableName(varId) : '';
       }
       if (sub && 'getParamType' in field && 'getParamName' in field) {
-        const typed = field as { getParamType(): string; getParamName(): string; getVarId(): string | null };
+        const typed = field as unknown as { getParamType(): string; getParamName(): string; getVarId(): string | null };
         if (sub === 'type') return typed.getParamType();
         if (sub === 'name') {
           const varId = typed.getVarId();
@@ -138,7 +138,7 @@ function resolveTemplateWithDefaults(
           return varId ? generator.getVariableName(varId) : '';
       }
       if (sub && 'getParamType' in field && 'getParamName' in field) {
-        const typed = field as { getParamType(): string; getParamName(): string; getVarId(): string | null };
+        const typed = field as unknown as { getParamType(): string; getParamName(): string; getVarId(): string | null };
         if (sub === 'type') return typed.getParamType();
         if (sub === 'name') {
           const varId = typed.getVarId();

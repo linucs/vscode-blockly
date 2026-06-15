@@ -1,0 +1,202 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
+id: arduino_bridge_py
+author: Lino Moretto
+version: 0.0.1
+category: Control::Bridge
+description:
+  en: "Python blocks for MCU-SBC Bridge messaging."
+  it: "Blocchi Python per la messaggistica Bridge MCU-SBC."
+  zh-cn: "用于 MCU-SBC Bridge 消息传递的 Python 块。"
+  zh-tw: "用於 MCU-SBC Bridge 訊息傳遞的 Python 積木。"
+  fr: "Blocs Python pour la messagerie Bridge MCU-SBC."
+  de: "Python-Blöcke für MCU-SBC-Bridge-Nachrichten."
+  es: "Bloques Python para mensajería Bridge MCU-SBC."
+  ja: "MCU-SBC Bridge メッセージング用の Python ブロック。"
+  ko: "MCU-SBC Bridge 메시징용 Python 블록."
+  ru: "Блоки Python для обмена сообщениями Bridge MCU-SBC."
+  pt-br: "Blocos Python para mensagens Bridge MCU-SBC."
+  tr: "MCU-SBC Bridge mesajlaşması için Python blokları."
+  pl: "Bloki Python do komunikacji Bridge MCU-SBC."
+  cs: "Bloky Python pro zasílání zpráv Bridge MCU-SBC."
+  hu: "Python blokkok az MCU-SBC Bridge üzenetküldéshez."
+docs:
+  library: "https://docs.arduino.cc/libraries/bridge/"
+  api: "https://docs.arduino.cc/software/app-lab/bridge/bridge-api/"
+implementations:
+  - runtime: arduino:python
+    targets:
+      - arduino:zephyr:unoq
+      - arduino:zephyr:ventunoq
+    codegen:
+      imports:
+        - "from arduino.app_utils import Bridge"
+    blocks:
+      - blockly:
+          type: python_bridge_notify
+          message0:
+            en: "notify %1 of %2 through bridge"
+            it: "notifica %1 di %2 tramite bridge"
+            zh-cn: "通过 bridge 通知 %1 %2"
+            zh-tw: "透過 bridge 通知 %1 %2"
+            fr: "notifier %1 de %2 via le bridge"
+            de: "benachrichtige %1 über %2 via Bridge"
+            es: "notificar %1 de %2 a través del bridge"
+            ja: "bridge 経由で %1 に %2 を通知"
+            ko: "bridge를 통해 %1 에게 %2 알림"
+            ru: "уведомить %1 о %2 через bridge"
+            pt-br: "notificar %1 de %2 pelo bridge"
+            tr: "bridge üzerinden %1 öğesine %2 bildir"
+            pl: "powiadom %1 o %2 przez bridge"
+            cs: "oznámit %1 o %2 přes bridge"
+            hu: "%1 értesítése %2 -ről a bridge-en keresztül"
+          args0:
+            - type: field_input
+              name: NAME
+              text: eventName
+            - type: input_value
+              name: ARGS
+          previousStatement: null
+          nextStatement: null
+          inputsInline: true
+          tooltip:
+            en: "Send a notification event to the MCU side via the Bridge."
+            it: "Invia un evento di notifica al lato MCU tramite il Bridge."
+            zh-cn: "通过 Bridge 向 MCU 端发送通知事件。"
+            zh-tw: "透過 Bridge 向 MCU 端傳送通知事件。"
+            fr: "Envoie un événement de notification au côté MCU via le Bridge."
+            de: "Sendet ein Benachrichtigungsereignis über die Bridge an die MCU-Seite."
+            es: "Envía un evento de notificación al lado MCU a través del Bridge."
+            ja: "Bridge を介して MCU 側に通知イベントを送信します。"
+            ko: "Bridge를 통해 MCU 측에 알림 이벤트를 보냅니다."
+            ru: "Отправляет уведомление на сторону MCU через Bridge."
+            pt-br: "Envia um evento de notificação para o lado MCU através do Bridge."
+            tr: "Bridge aracılığıyla MCU tarafına bir bildirim olayı gönderir."
+            pl: "Wysyła zdarzenie powiadomienia do strony MCU przez Bridge."
+            cs: "Odešle oznamovací událost na stranu MCU přes Bridge."
+            hu: "Értesítési eseményt küld az MCU oldalnak a Bridge-en keresztül."
+          helpUrl: "https://docs.arduino.cc/software/app-lab/bridge/bridge-api/"
+        codegen:
+          body:
+            - 'Bridge.notify("{{NAME}}", {{ARGS}})'
+          inputDefaults:
+            ARGS: None
+
+      - blockly:
+          type: python_bridge_provide
+          message0:
+            en: "listen to bridge for %1 data %2"
+            it: "ascolta dal bridge %1 con dati %2"
+            zh-cn: "监听 bridge 的 %1 数据 %2"
+            zh-tw: "監聽 bridge 的 %1 資料 %2"
+            fr: "écouter le bridge pour %1 données %2"
+            de: "höre auf Bridge für %1 Daten %2"
+            es: "escuchar el bridge para %1 datos %2"
+            ja: "bridge で %1 を待ち受け データ %2"
+            ko: "bridge에서 %1 수신 데이터 %2"
+            ru: "слушать bridge для %1 данные %2"
+            pt-br: "ouvir o bridge por %1 dados %2"
+            tr: "bridge'i %1 için dinle veri %2"
+            pl: "nasłuchuj bridge dla %1 dane %2"
+            cs: "naslouchej bridge pro %1 data %2"
+            hu: "figyeld a bridge-et %1 -re adat %2"
+          args0:
+            - type: field_input
+              name: NAME
+              text: serviceName
+            - type: field_param_input
+              name: PARAM_NAME
+              text: args
+          message1:
+            en: "do %1"
+            it: "fai %1"
+            zh-cn: "执行 %1"
+            zh-tw: "執行 %1"
+            fr: "faire %1"
+            de: "tue %1"
+            es: "hacer %1"
+            ja: "実行 %1"
+            ko: "실행 %1"
+            ru: "выполнить %1"
+            pt-br: "fazer %1"
+            tr: "yap %1"
+            pl: "wykonaj %1"
+            cs: "proveď %1"
+            hu: "csináld %1"
+          args1:
+            - type: input_statement
+              name: BODY
+          nextStatement: null
+          extensions:
+            - hat_event_style
+          tooltip:
+            en: "Register a handler for a Bridge service call from the MCU side."
+            it: "Registra un gestore per una chiamata di servizio Bridge dal lato MCU."
+            zh-cn: "为来自 MCU 端的 Bridge 服务调用注册一个处理程序。"
+            zh-tw: "為來自 MCU 端的 Bridge 服務呼叫註冊一個處理常式。"
+            fr: "Enregistre un gestionnaire pour un appel de service Bridge du côté MCU."
+            de: "Registriert einen Handler für einen Bridge-Serviceaufruf von der MCU-Seite."
+            es: "Registra un manejador para una llamada de servicio Bridge desde el lado MCU."
+            ja: "MCU 側からの Bridge サービス呼び出しのハンドラーを登録します。"
+            ko: "MCU 측의 Bridge 서비스 호출에 대한 핸들러를 등록합니다."
+            ru: "Регистрирует обработчик вызова службы Bridge со стороны MCU."
+            pt-br: "Registra um manipulador para uma chamada de serviço Bridge do lado MCU."
+            tr: "MCU tarafından gelen bir Bridge servis çağrısı için bir işleyici kaydeder."
+            pl: "Rejestruje procedurę obsługi wywołania usługi Bridge od strony MCU."
+            cs: "Zaregistruje obslužnou rutinu pro volání služby Bridge ze strany MCU."
+            hu: "Kezelőt regisztrál egy MCU oldali Bridge szolgáltatáshíváshoz."
+          helpUrl: "https://docs.arduino.cc/software/app-lab/bridge/bridge-api/"
+        codegen:
+          declarations:
+            - "def _bridge_handler_{{NAME}}({{PARAM_NAME}}):\n{{BODY}}"
+          setup:
+            - 'Bridge.provide("{{NAME}}", _bridge_handler_{{NAME}})'
+
+      - blockly:
+          type: python_bridge_call
+          message0:
+            en: "call %1 through bridge with data %2"
+            it: "chiama %1 tramite bridge con dati %2"
+            zh-cn: "通过 bridge 调用 %1 数据 %2"
+            zh-tw: "透過 bridge 呼叫 %1 資料 %2"
+            fr: "appeler %1 via le bridge avec données %2"
+            de: "rufe %1 via Bridge auf mit Daten %2"
+            es: "llamar a %1 a través del bridge con datos %2"
+            ja: "bridge 経由で %1 を呼び出し データ %2"
+            ko: "bridge를 통해 %1 호출 데이터 %2"
+            ru: "вызвать %1 через bridge с данными %2"
+            pt-br: "chamar %1 pelo bridge com dados %2"
+            tr: "bridge üzerinden %1 öğesini çağır veri %2"
+            pl: "wywołaj %1 przez bridge z danymi %2"
+            cs: "zavolej %1 přes bridge s daty %2"
+            hu: "%1 hívása a bridge-en keresztül %2 adattal"
+          args0:
+            - type: field_input
+              name: NAME
+              text: serviceName
+            - type: input_value
+              name: ARGS
+          output: null
+          inputsInline: true
+          tooltip:
+            en: "Call a Bridge service on the MCU and return the result."
+            it: "Chiama un servizio Bridge sull'MCU e restituisce il risultato."
+            zh-cn: "调用 MCU 上的 Bridge 服务并返回结果。"
+            zh-tw: "呼叫 MCU 上的 Bridge 服務並回傳結果。"
+            fr: "Appelle un service Bridge sur le MCU et renvoie le résultat."
+            de: "Ruft einen Bridge-Service auf dem MCU auf und gibt das Ergebnis zurück."
+            es: "Llama a un servicio Bridge en el MCU y devuelve el resultado."
+            ja: "MCU 上の Bridge サービスを呼び出し、結果を返します。"
+            ko: "MCU의 Bridge 서비스를 호출하고 결과를 반환합니다."
+            ru: "Вызывает службу Bridge на MCU и возвращает результат."
+            pt-br: "Chama um serviço Bridge no MCU e retorna o resultado."
+            tr: "MCU üzerindeki bir Bridge servisini çağırır ve sonucu döndürür."
+            pl: "Wywołuje usługę Bridge na MCU i zwraca wynik."
+            cs: "Zavolá službu Bridge na MCU a vrátí výsledek."
+            hu: "Meghív egy Bridge szolgáltatást az MCU-n és visszaadja az eredményt."
+          helpUrl: "https://docs.arduino.cc/software/app-lab/bridge/bridge-api/"
+        codegen:
+          body:
+            - 'Bridge.call("{{NAME}}", {{ARGS}})'
+          precedence: ATOMIC
+          inputDefaults:
+            ARGS: None

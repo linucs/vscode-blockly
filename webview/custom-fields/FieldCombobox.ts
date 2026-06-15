@@ -2,7 +2,7 @@ import * as Blockly from 'blockly';
 
 type Preset = [string, string];
 
-export class FieldCombobox extends Blockly.Field<string> {
+export class FieldCombobox extends Blockly.Field<string | undefined> {
     override SERIALIZABLE = true;
     override EDITABLE = true;
 
@@ -11,7 +11,7 @@ export class FieldCombobox extends Blockly.Field<string> {
     constructor(
         presets: Preset[],
         value?: string,
-        validator?: Blockly.FieldValidator<string>,
+        validator?: Blockly.FieldValidator<string | undefined>,
     ) {
         super(value ?? presets[0]?.[1] ?? '', validator);
         this.presets_ = presets;

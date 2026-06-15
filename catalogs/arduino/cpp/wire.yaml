@@ -1,6 +1,24 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
 id: arduino_wire
+author: Lino Moretto
+version: 0.0.1
 category: "Communication::I2C"
+description:
+  en: "Blocks for I2C bus communication using the Wire library."
+  it: "Blocchi per la comunicazione sul bus I2C con la libreria Wire."
+  zh-cn: "使用 Wire 库进行 I2C 总线通信的块。"
+  zh-tw: "使用 Wire 函式庫進行 I2C 匯流排通訊的積木。"
+  fr: "Blocs pour la communication sur le bus I2C avec la bibliothèque Wire."
+  de: "Blöcke für die I2C-Bus-Kommunikation mit der Wire-Bibliothek."
+  es: "Bloques para la comunicación por bus I2C con la biblioteca Wire."
+  ja: "Wire ライブラリを使った I2C バス通信用のブロック。"
+  ko: "Wire 라이브러리를 사용한 I2C 버스 통신용 블록."
+  ru: "Блоки для связи по шине I2C с использованием библиотеки Wire."
+  pt-br: "Blocos para comunicação por barramento I2C com a biblioteca Wire."
+  tr: "Wire kütüphanesiyle I2C veri yolu iletişimi için bloklar."
+  pl: "Bloki do komunikacji magistralą I2C z biblioteką Wire."
+  cs: "Bloky pro komunikaci po sběrnici I2C pomocí knihovny Wire."
+  hu: "Blokkok az I2C buszos kommunikációhoz a Wire könyvtárral."
 docs:
   library: "https://docs.arduino.cc/language-reference/en/functions/communication/wire/"
 implementations:
@@ -9,7 +27,6 @@ implementations:
       imports:
         - "#include <Wire.h>"
     blocks:
-      # --- Wire.begin([address]) (place in a setup block) ---
       - blockly:
           type: cpp_wire_begin
           message0:
@@ -57,7 +74,6 @@ implementations:
           inputDefaults:
             ADDRESS: ""
 
-      # --- Wire.end ---
       - blockly:
           type: cpp_wire_end
           message0:
@@ -100,7 +116,6 @@ implementations:
           body:
             - "Wire.end();"
 
-      # --- Wire.beginTransmission(address) ---
       - blockly:
           type: cpp_wire_begin_transmission
           message0:
@@ -149,7 +164,6 @@ implementations:
           inputDefaults:
             ADDRESS: "8"
 
-      # --- Wire.endTransmission ---
       - blockly:
           type: cpp_wire_end_transmission
           message0:
@@ -192,7 +206,6 @@ implementations:
             - "Wire.endTransmission()"
           precedence: ATOMIC
 
-      # --- Wire.write(data) ---
       - blockly:
           type: cpp_wire_write
           message0:
@@ -241,7 +254,6 @@ implementations:
           inputDefaults:
             DATA: "0"
 
-      # --- Wire.read ---
       - blockly:
           type: cpp_wire_read
           message0:
@@ -284,7 +296,6 @@ implementations:
             - "Wire.read()"
           precedence: ATOMIC
 
-      # --- Wire.available ---
       - blockly:
           type: cpp_wire_available
           message0:
@@ -327,7 +338,6 @@ implementations:
             - "Wire.available()"
           precedence: ATOMIC
 
-      # --- Wire.requestFrom(address, count) ---
       - blockly:
           type: cpp_wire_request_from
           message0:
@@ -380,7 +390,6 @@ implementations:
             ADDRESS: "8"
             COUNT: "1"
 
-      # --- Wire.setClock(hz) (place in a setup block) ---
       - blockly:
           type: cpp_wire_set_clock
           message0:
@@ -429,7 +438,6 @@ implementations:
           body:
             - "Wire.setClock({{HZ}});"
 
-      # --- Wire.onReceive / onRequest (consolidated, dropdown) ---
       - blockly:
           type: cpp_wire_on_event
           message0:
@@ -481,7 +489,6 @@ implementations:
           body:
             - "Wire.{{FUNC}}({{HANDLER}});"
 
-      # --- Wire.setWireTimeout(timeout, reset) ---
       - blockly:
           type: cpp_wire_set_timeout
           message0:
@@ -535,7 +542,6 @@ implementations:
           inputDefaults:
             TIMEOUT: "25000"
 
-      # --- Wire.clearWireTimeoutFlag ---
       - blockly:
           type: cpp_wire_clear_timeout_flag
           message0:
@@ -578,7 +584,6 @@ implementations:
           body:
             - "Wire.clearWireTimeoutFlag();"
 
-      # --- Wire.getWireTimeoutFlag ---
       - blockly:
           type: cpp_wire_get_timeout_flag
           message0:

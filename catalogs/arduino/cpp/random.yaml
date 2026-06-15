@@ -1,10 +1,27 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
 id: arduino_math_random
+author: Lino Moretto
+version: 0.0.1
 category: "Math::Random"
+description:
+  en: "Generate pseudo-random numbers and seed the generator."
+  it: "Genera numeri pseudo-casuali e inizializza il generatore."
+  zh-cn: "生成伪随机数并初始化生成器。"
+  zh-tw: "產生偽隨機數並初始化生成器。"
+  fr: "Génère des nombres pseudo-aléatoires et initialise le générateur."
+  de: "Erzeugt Pseudozufallszahlen und initialisiert den Generator."
+  es: "Genera números pseudoaleatorios e inicializa el generador."
+  ja: "擬似乱数を生成し、ジェネレータを初期化します。"
+  ko: "의사 난수를 생성하고 생성기를 초기화합니다."
+  ru: "Генерирует псевдослучайные числа и инициализирует генератор."
+  pt-br: "Gera números pseudoaleatórios e inicializa o gerador."
+  tr: "Sahte rastgele sayılar üretir ve üreteci başlatır."
+  pl: "Generuje liczby pseudolosowe i inicjalizuje generator."
+  cs: "Generuje pseudonáhodná čísla a inicializuje generátor."
+  hu: "Pszeudovéletlen számokat generál és inicializálja a generátort."
 implementations:
   - runtime: "arduino:cpp"
     blocks:
-      # --- random(min, max) ---
       - blockly:
           type: cpp_random
           message0:
@@ -57,7 +74,6 @@ implementations:
             MIN: "0"
             MAX: "100"
 
-      # --- randomSeed (place in a setup block) ---
       - blockly:
           type: cpp_random_seed
           message0:

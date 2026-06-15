@@ -1,13 +1,30 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
 id: arduino_serial
+author: Lino Moretto
+version: 0.0.1
 category: "Communication::Serial"
 colour: "#5C6BC0"
+description:
+  en: "Blocks to send and receive data over the Arduino Serial port."
+  it: "Blocchi per inviare e ricevere dati tramite la porta seriale di Arduino."
+  zh-cn: "通过 Arduino 串口发送和接收数据的块。"
+  zh-tw: "透過 Arduino 序列埠傳送和接收資料的積木。"
+  fr: "Blocs pour envoyer et recevoir des données via le port série Arduino."
+  de: "Blöcke zum Senden und Empfangen von Daten über die Arduino-Schnittstelle."
+  es: "Bloques para enviar y recibir datos por el puerto serie de Arduino."
+  ja: "Arduino のシリアルポートでデータを送受信するブロック。"
+  ko: "Arduino 시리얼 포트로 데이터를 송수신하는 블록."
+  ru: "Блоки для отправки и приёма данных через последовательный порт Arduino."
+  pt-br: "Blocos para enviar e receber dados pela porta serial do Arduino."
+  tr: "Arduino seri portu üzerinden veri gönderip alan bloklar."
+  pl: "Bloki do wysyłania i odbierania danych przez port szeregowy Arduino."
+  cs: "Bloky pro odesílání a příjem dat přes sériový port Arduino."
+  hu: "Blokkok adatok küldésére és fogadására az Arduino soros portján."
 docs:
   library: "https://docs.arduino.cc/language-reference/en/functions/communication/serial/"
 implementations:
   - runtime: "arduino:cpp"
     blocks:
-      # --- Serial.begin (place in a setup block) ---
       - blockly:
           type: cpp_serial_begin
           message0:
@@ -58,7 +75,6 @@ implementations:
           body:
             - "Serial.begin({{BAUD}});"
 
-      # --- Serial.print / println (consolidated, dropdown) ---
       - blockly:
           type: cpp_serial_print
           message0:
@@ -111,7 +127,6 @@ implementations:
           inputDefaults:
             VALUE: '""'
 
-      # --- Serial.write ---
       - blockly:
           type: cpp_serial_write
           message0:
@@ -160,7 +175,6 @@ implementations:
           inputDefaults:
             VALUE: "0"
 
-      # --- Serial.available ---
       - blockly:
           type: cpp_serial_available
           message0:
@@ -203,7 +217,6 @@ implementations:
             - "Serial.available()"
           precedence: ATOMIC
 
-      # --- Serial.read ---
       - blockly:
           type: cpp_serial_read
           message0:
@@ -246,7 +259,6 @@ implementations:
             - "Serial.read()"
           precedence: ATOMIC
 
-      # --- Serial.peek ---
       - blockly:
           type: cpp_serial_peek
           message0:
@@ -289,7 +301,6 @@ implementations:
             - "Serial.peek()"
           precedence: ATOMIC
 
-      # --- Serial.availableForWrite ---
       - blockly:
           type: cpp_serial_available_for_write
           message0:
@@ -332,7 +343,6 @@ implementations:
             - "Serial.availableForWrite()"
           precedence: ATOMIC
 
-      # --- Serial.readString ---
       - blockly:
           type: cpp_serial_read_string
           message0:
@@ -375,7 +385,6 @@ implementations:
             - "Serial.readString()"
           precedence: ATOMIC
 
-      # --- Serial.readStringUntil ---
       - blockly:
           type: cpp_serial_read_string_until
           message0:
@@ -423,7 +432,6 @@ implementations:
           inputDefaults:
             TERMINATOR: "'\\n'"
 
-      # --- Serial.parseInt / parseFloat (consolidated, dropdown) ---
       - blockly:
           type: cpp_serial_parse
           message0:
@@ -471,7 +479,6 @@ implementations:
             - "Serial.{{FUNC}}()"
           precedence: ATOMIC
 
-      # --- Serial.find ---
       - blockly:
           type: cpp_serial_find
           message0:
@@ -519,7 +526,6 @@ implementations:
           inputDefaults:
             TARGET: '""'
 
-      # --- Serial.findUntil ---
       - blockly:
           type: cpp_serial_find_until
           message0:
@@ -570,7 +576,6 @@ implementations:
             TARGET: '""'
             TERMINAL: '""'
 
-      # --- Serial.setTimeout (place in a setup block) ---
       - blockly:
           type: cpp_serial_set_timeout
           message0:
@@ -619,7 +624,6 @@ implementations:
           inputDefaults:
             MS: "1000"
 
-      # --- Serial.getTimeout ---
       - blockly:
           type: cpp_serial_get_timeout
           message0:
@@ -662,7 +666,6 @@ implementations:
             - "Serial.getTimeout()"
           precedence: ATOMIC
 
-      # --- Serial.flush ---
       - blockly:
           type: cpp_serial_flush
           message0:
@@ -705,7 +708,6 @@ implementations:
           body:
             - "Serial.flush();"
 
-      # --- Serial.end ---
       - blockly:
           type: cpp_serial_end
           message0:

@@ -1,6 +1,24 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
 id: arduino_spi
+author: Lino Moretto
+version: 0.0.1
 category: "Communication::SPI"
+description:
+  en: "Blocks for SPI bus communication with peripheral devices."
+  it: "Blocchi per la comunicazione sul bus SPI con dispositivi periferici."
+  zh-cn: "用于与外设进行 SPI 总线通信的块。"
+  zh-tw: "用於與外設進行 SPI 匯流排通訊的積木。"
+  fr: "Blocs pour la communication sur le bus SPI avec des périphériques."
+  de: "Blöcke für die SPI-Bus-Kommunikation mit Peripheriegeräten."
+  es: "Bloques para la comunicación por bus SPI con dispositivos periféricos."
+  ja: "周辺機器との SPI バス通信用のブロック。"
+  ko: "주변 장치와 SPI 버스 통신을 위한 블록."
+  ru: "Блоки для связи по шине SPI с периферийными устройствами."
+  pt-br: "Blocos para comunicação por barramento SPI com dispositivos periféricos."
+  tr: "Çevre birimleriyle SPI veri yolu iletişimi için bloklar."
+  pl: "Bloki do komunikacji magistralą SPI z urządzeniami peryferyjnymi."
+  cs: "Bloky pro komunikaci po sběrnici SPI s periferními zařízeními."
+  hu: "Blokkok az SPI buszos kommunikációhoz periféria eszközökkel."
 docs:
   library: "https://docs.arduino.cc/language-reference/en/functions/communication/SPI/"
 implementations:
@@ -9,7 +27,6 @@ implementations:
       imports:
         - "#include <SPI.h>"
     blocks:
-      # --- SPISettings(clock, bitOrder, dataMode) ---
       - blockly:
           type: cpp_spi_settings
           message0:
@@ -69,7 +86,6 @@ implementations:
           inputDefaults:
             CLOCK: "4000000"
 
-      # --- SPI.begin (place in a setup block) ---
       - blockly:
           type: cpp_spi_begin
           message0:
@@ -112,7 +128,6 @@ implementations:
           body:
             - "SPI.begin();"
 
-      # --- SPI.end ---
       - blockly:
           type: cpp_spi_end
           message0:
@@ -155,7 +170,6 @@ implementations:
           body:
             - "SPI.end();"
 
-      # --- SPI.beginTransaction(settings) ---
       - blockly:
           type: cpp_spi_begin_transaction
           message0:
@@ -203,7 +217,6 @@ implementations:
           inputDefaults:
             SETTINGS: "SPISettings(4000000, MSBFIRST, SPI_MODE0)"
 
-      # --- SPI.endTransaction ---
       - blockly:
           type: cpp_spi_end_transaction
           message0:
@@ -246,7 +259,6 @@ implementations:
           body:
             - "SPI.endTransaction();"
 
-      # --- SPI.transfer / transfer16 (consolidated, dropdown) ---
       - blockly:
           type: cpp_spi_transfer
           message0:
@@ -299,7 +311,6 @@ implementations:
           inputDefaults:
             VALUE: "0"
 
-      # --- SPI.usingInterrupt(n) ---
       - blockly:
           type: cpp_spi_using_interrupt
           message0:
@@ -348,7 +359,6 @@ implementations:
           inputDefaults:
             N: "0"
 
-      # --- SPI.setBitOrder (legacy) ---
       - blockly:
           type: cpp_spi_set_bit_order
           message0:
@@ -396,7 +406,6 @@ implementations:
           body:
             - "SPI.setBitOrder({{ORDER}});"
 
-      # --- SPI.setClockDivider (legacy) ---
       - blockly:
           type: cpp_spi_set_clock_divider
           message0:
@@ -449,7 +458,6 @@ implementations:
           body:
             - "SPI.setClockDivider({{DIVIDER}});"
 
-      # --- SPI.setDataMode (legacy) ---
       - blockly:
           type: cpp_spi_set_data_mode
           message0:

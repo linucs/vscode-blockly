@@ -45,7 +45,7 @@ const BLOCKLY_LOCALES: Record<string, typeof En> = {
     fr: Fr, de: De, es: Es, ja: Ja, ko: Ko, ru: Ru,
     'pt-br': PtBr, tr: Tr, pl: Pl, cs: Cs, hu: Hu,
 };
-Blockly.setLocale(BLOCKLY_LOCALES[locale] ?? En);
+Blockly.setLocale((BLOCKLY_LOCALES[locale] ?? En) as unknown as { [key: string]: string });
 
 // Register VSCode UI Toolkit components
 provideVSCodeDesignSystem().register(vsCodeButton(), vsCodeDropdown(), vsCodeOption());

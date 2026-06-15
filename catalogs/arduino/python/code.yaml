@@ -1,13 +1,24 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
-# The Python "Code" family (runtime arduino:python), named & categorized identically
-# to the C++ side (all under Code, matching core.yaml where code_setup lives in Code):
-#   code_statement / code_expression — raw code leaves
-#   code_includes / code_declaration / code_setup — section containers that route
-#     their nested blocks to the import / module-level / pre-loop zones via the
-#     first-party section routers (webview/codegen/targets/shared/sectionRouters.ts).
-# Colours come from ThemeAdapter (the Code category default) — no hex here.
 id: builtin_code_python
+author: Lino Moretto
+version: 0.0.1
 category: Code
+description:
+  en: "Raw Python code blocks and section containers."
+  it: "Blocchi di codice Python grezzo e contenitori di sezione."
+  zh-cn: "原始 Python 代码块和节容器。"
+  zh-tw: "原始 Python 程式碼積木與區段容器。"
+  fr: "Blocs de code Python brut et conteneurs de section."
+  de: "Rohe Python-Codeblöcke und Abschnittscontainer."
+  es: "Bloques de código Python sin procesar y contenedores de sección."
+  ja: "生の Python コードブロックとセクションコンテナ。"
+  ko: "원시 Python 코드 블록 및 섹션 컨테이너."
+  ru: "Блоки необработанного кода Python и контейнеры секций."
+  pt-br: "Blocos de código Python bruto e contêineres de seção."
+  tr: "Ham Python kod blokları ve bölüm kapsayıcıları."
+  pl: "Bloki surowego kodu Python i kontenery sekcji."
+  cs: "Bloky surového kódu Python a kontejnery sekcí."
+  hu: "Nyers Python kódblokkok és szakaszkonténerek."
 implementations:
   - runtime: arduino:python
     blocks:
@@ -20,7 +31,22 @@ implementations:
               text: ""
           previousStatement: null
           nextStatement: null
-          tooltip: "Insert raw Python statement(s) verbatim. Place inside a section container to target the import / module / setup zone."
+          tooltip:
+            en: "Insert raw Python statement(s) verbatim. Place inside a section container to target the import / module / setup zone."
+            it: "Inserisce istruzioni Python grezze testualmente. Posizionalo in un contenitore di sezione per la zona import / modulo / setup."
+            zh-cn: "逐字插入原始 Python 语句。放入节容器中以定位导入 / 模块 / setup 区域。"
+            zh-tw: "逐字插入原始 Python 陳述式。放入區段容器中以定位匯入 / 模組 / setup 區域。"
+            fr: "Insère des instructions Python brutes telles quelles. Placez-le dans un conteneur de section pour cibler la zone import / module / setup."
+            de: "Fügt rohe Python-Anweisungen wörtlich ein. In einen Abschnittscontainer setzen, um die Import- / Modul- / Setup-Zone anzusteuern."
+            es: "Inserta sentencias Python sin procesar literalmente. Colócalo en un contenedor de sección para la zona import / módulo / setup."
+            ja: "生の Python 文をそのまま挿入します。import / モジュール / setup ゾーンを対象にするにはセクションコンテナ内に配置します。"
+            ko: "원시 Python 문을 그대로 삽입합니다. import / 모듈 / setup 영역을 대상으로 하려면 섹션 컨테이너 안에 배치하세요."
+            ru: "Вставляет необработанные операторы Python дословно. Поместите в контейнер секции для зоны import / модуля / setup."
+            pt-br: "Insere instruções Python brutas literalmente. Coloque em um contêiner de seção para a zona import / módulo / setup."
+            tr: "Ham Python ifadelerini olduğu gibi ekler. import / modül / setup bölgesini hedeflemek için bir bölüm kapsayıcısına yerleştirin."
+            pl: "Wstawia surowe instrukcje Python dosłownie. Umieść w kontenerze sekcji, aby trafić do strefy import / moduł / setup."
+            cs: "Vloží surové příkazy Python doslovně. Umístěte do kontejneru sekce pro zónu import / modul / setup."
+            hu: "Nyers Python utasításokat szó szerint illeszt be. Helyezd szakaszkonténerbe az import / modul / setup zóna eléréséhez."
         codegen:
           body:
             - "{{CODE}}"
@@ -33,7 +59,22 @@ implementations:
               name: CODE
               text: expression
           output: null
-          tooltip: "Raw Python expression inserted as-is as a value."
+          tooltip:
+            en: "Raw Python expression inserted as-is as a value."
+            it: "Espressione Python grezza inserita così com'è come valore."
+            zh-cn: "作为值原样插入的原始 Python 表达式。"
+            zh-tw: "作為值原樣插入的原始 Python 運算式。"
+            fr: "Expression Python brute insérée telle quelle comme valeur."
+            de: "Rohe Python-Ausdruck, der unverändert als Wert eingefügt wird."
+            es: "Expresión Python sin procesar insertada tal cual como valor."
+            ja: "値としてそのまま挿入される生の Python 式。"
+            ko: "값으로 그대로 삽입되는 원시 Python 표현식."
+            ru: "Необработанное выражение Python, вставляемое как значение."
+            pt-br: "Expressão Python bruta inserida como está como valor."
+            tr: "Değer olarak olduğu gibi eklenen ham Python ifadesi."
+            pl: "Surowe wyrażenie Python wstawione bez zmian jako wartość."
+            cs: "Surový výraz Python vložený tak, jak je, jako hodnota."
+            hu: "Nyers Python kifejezés, értékként változatlanul beillesztve."
         codegen:
           body:
             - "{{CODE}}"
@@ -41,27 +82,117 @@ implementations:
 
       - blockly:
           type: code_includes
-          message0: "includes %1"
+          message0:
+            en: "includes %1"
+            it: "import %1"
+            zh-cn: "导入 %1"
+            zh-tw: "匯入 %1"
+            fr: "imports %1"
+            de: "Importe %1"
+            es: "importaciones %1"
+            ja: "インポート %1"
+            ko: "임포트 %1"
+            ru: "импорты %1"
+            pt-br: "importações %1"
+            tr: "içe aktarmalar %1"
+            pl: "importy %1"
+            cs: "importy %1"
+            hu: "importok %1"
           args0:
             - type: input_statement
               name: MEMBERS
-          tooltip: "Python: blocks inside go to the import zone at the top of the file. Put 'import ...' / 'from ... import ...' lines here using a custom code block."
+          tooltip:
+            en: "Python: blocks inside go to the import zone at the top of the file. Put 'import ...' / 'from ... import ...' lines here using a custom code block."
+            it: "Python: i blocchi all'interno vanno nella zona import in cima al file. Metti qui le righe 'import ...' / 'from ... import ...' con un blocco di codice personalizzato."
+            zh-cn: "Python：内部的块会进入文件顶部的导入区域。用自定义代码块在此放置 'import ...' / 'from ... import ...' 行。"
+            zh-tw: "Python：內部的積木會進入檔案頂部的匯入區域。用自訂程式碼積木在此放置 'import ...' / 'from ... import ...' 行。"
+            fr: "Python : les blocs à l'intérieur vont dans la zone d'import en haut du fichier. Placez ici les lignes 'import ...' / 'from ... import ...' avec un bloc de code personnalisé."
+            de: "Python: Innere Blöcke gehen in die Import-Zone oben in der Datei. Platziere hier 'import ...' / 'from ... import ...'-Zeilen mit einem benutzerdefinierten Codeblock."
+            es: "Python: los bloques internos van a la zona de importación en la parte superior del archivo. Coloca aquí las líneas 'import ...' / 'from ... import ...' con un bloque de código personalizado."
+            ja: "Python: 内部のブロックはファイル先頭のインポートゾーンに入ります。カスタムコードブロックで 'import ...' / 'from ... import ...' 行をここに置きます。"
+            ko: "Python: 내부 블록은 파일 상단의 import 영역으로 들어갑니다. 사용자 정의 코드 블록으로 'import ...' / 'from ... import ...' 줄을 여기에 두세요."
+            ru: "Python: внутренние блоки попадают в зону импорта в начале файла. Размещайте здесь строки 'import ...' / 'from ... import ...' через пользовательский блок кода."
+            pt-br: "Python: os blocos internos vão para a zona de importação no topo do arquivo. Coloque aqui as linhas 'import ...' / 'from ... import ...' com um bloco de código personalizado."
+            tr: "Python: içerideki bloklar dosyanın üstündeki içe aktarma bölgesine gider. 'import ...' / 'from ... import ...' satırlarını buraya özel bir kod bloğuyla koyun."
+            pl: "Python: bloki w środku trafiają do strefy importu na początku pliku. Umieść tutaj wiersze 'import ...' / 'from ... import ...' za pomocą niestandardowego bloku kodu."
+            cs: "Python: bloky uvnitř jdou do zóny importů na začátku souboru. Umístěte sem řádky 'import ...' / 'from ... import ...' pomocí vlastního bloku kódu."
+            hu: "Python: a belül lévő blokkok a fájl tetején lévő import zónába kerülnek. Tedd ide az 'import ...' / 'from ... import ...' sorokat egyéni kódblokkal."
         generator: code_includes
 
       - blockly:
           type: code_declaration
-          message0: "globals %1"
+          message0:
+            en: "globals %1"
+            it: "globali %1"
+            zh-cn: "全局变量 %1"
+            zh-tw: "全域變數 %1"
+            fr: "globales %1"
+            de: "Globale %1"
+            es: "globales %1"
+            ja: "グローバル %1"
+            ko: "전역 %1"
+            ru: "глобальные %1"
+            pt-br: "globais %1"
+            tr: "küreseller %1"
+            pl: "globalne %1"
+            cs: "globální %1"
+            hu: "globálisok %1"
           args0:
             - type: input_statement
               name: MEMBERS
-          tooltip: "Python: blocks inside go to module level, after the imports (e.g. global constants or helper definitions)."
+          tooltip:
+            en: "Python: blocks inside go to module level, after the imports (e.g. global constants or helper definitions)."
+            it: "Python: i blocchi all'interno vanno a livello di modulo, dopo gli import (es. costanti globali o definizioni di supporto)."
+            zh-cn: "Python：内部的块会进入模块级别，位于导入之后（例如全局常量或辅助定义）。"
+            zh-tw: "Python：內部的積木會進入模組層級，位於匯入之後（例如全域常數或輔助定義）。"
+            fr: "Python : les blocs à l'intérieur vont au niveau du module, après les imports (par ex. constantes globales ou définitions auxiliaires)."
+            de: "Python: Innere Blöcke gehen auf Modulebene, nach den Imports (z. B. globale Konstanten oder Hilfsdefinitionen)."
+            es: "Python: los bloques internos van a nivel de módulo, después de las importaciones (p. ej. constantes globales o definiciones auxiliares)."
+            ja: "Python: 内部のブロックはモジュールレベル、インポートの後（例: グローバル定数やヘルパー定義）に入ります。"
+            ko: "Python: 내부 블록은 import 다음의 모듈 수준으로 들어갑니다(예: 전역 상수 또는 헬퍼 정의)."
+            ru: "Python: внутренние блоки попадают на уровень модуля, после импортов (например, глобальные константы или вспомогательные определения)."
+            pt-br: "Python: os blocos internos vão para o nível do módulo, após as importações (por exemplo, constantes globais ou definições auxiliares)."
+            tr: "Python: içerideki bloklar içe aktarmalardan sonra modül düzeyine gider (örn. küresel sabitler veya yardımcı tanımlar)."
+            pl: "Python: bloki w środku trafiają na poziom modułu, po importach (np. globalne stałe lub definicje pomocnicze)."
+            cs: "Python: bloky uvnitř jdou na úroveň modulu, za importy (např. globální konstanty nebo pomocné definice)."
+            hu: "Python: a belül lévő blokkok modulszintre kerülnek, az importok után (pl. globális konstansok vagy segédfüggvény-definíciók)."
         generator: code_declaration
 
       - blockly:
           type: code_setup
-          message0: "setup %1"
+          message0:
+            en: "setup %1"
+            it: "setup %1"
+            zh-cn: "setup %1"
+            zh-tw: "setup %1"
+            fr: "setup %1"
+            de: "Setup %1"
+            es: "setup %1"
+            ja: "setup %1"
+            ko: "setup %1"
+            ru: "настройка %1"
+            pt-br: "setup %1"
+            tr: "kurulum %1"
+            pl: "setup %1"
+            cs: "nastavení %1"
+            hu: "beállítás %1"
           args0:
             - type: input_statement
               name: MEMBERS
-          tooltip: "Python: blocks inside run once at startup, before def loop() — the parallel of C++ setup(). Use for one-time initialization."
+          tooltip:
+            en: "Python: blocks inside run once at startup, before def loop() — the parallel of C++ setup(). Use for one-time initialization."
+            it: "Python: i blocchi all'interno vengono eseguiti una volta all'avvio, prima di def loop() — il parallelo di setup() in C++. Usalo per l'inizializzazione una tantum."
+            zh-cn: "Python：内部的块在启动时运行一次，位于 def loop() 之前——相当于 C++ 的 setup()。用于一次性初始化。"
+            zh-tw: "Python：內部的積木在啟動時執行一次，位於 def loop() 之前——相當於 C++ 的 setup()。用於一次性初始化。"
+            fr: "Python : les blocs à l'intérieur s'exécutent une fois au démarrage, avant def loop() — l'équivalent de setup() en C++. À utiliser pour l'initialisation unique."
+            de: "Python: Innere Blöcke laufen einmal beim Start, vor def loop() — das Pendant zu C++ setup(). Für einmalige Initialisierung verwenden."
+            es: "Python: los bloques internos se ejecutan una vez al inicio, antes de def loop() — el paralelo de setup() en C++. Úsalo para inicialización única."
+            ja: "Python: 内部のブロックは起動時に一度、def loop() の前に実行されます — C++ の setup() に相当します。一度きりの初期化に使います。"
+            ko: "Python: 내부 블록은 시작 시 def loop() 전에 한 번 실행됩니다 — C++ setup()의 대응입니다. 일회성 초기화에 사용하세요."
+            ru: "Python: внутренние блоки выполняются один раз при запуске, до def loop() — аналог setup() в C++. Используйте для однократной инициализации."
+            pt-br: "Python: os blocos internos são executados uma vez na inicialização, antes de def loop() — o paralelo de setup() em C++. Use para inicialização única."
+            tr: "Python: içerideki bloklar başlangıçta bir kez, def loop() öncesinde çalışır — C++ setup() karşılığı. Bir kerelik başlatma için kullanın."
+            pl: "Python: bloki w środku uruchamiają się raz przy starcie, przed def loop() — odpowiednik setup() w C++. Użyj do jednorazowej inicjalizacji."
+            cs: "Python: bloky uvnitř se spustí jednou při startu, před def loop() — obdoba setup() v C++. Použijte pro jednorázovou inicializaci."
+            hu: "Python: a belül lévő blokkok egyszer futnak indításkor, a def loop() előtt — a C++ setup() párja. Egyszeri inicializáláshoz használd."
         generator: code_setup

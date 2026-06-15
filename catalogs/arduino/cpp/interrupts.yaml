@@ -1,10 +1,27 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
 id: arduino_interrupts
+author: Lino Moretto
+version: 0.0.1
 category: "Control::Interrupts"
+description:
+  en: "Blocks for handling external pin interrupts on the Arduino."
+  it: "Blocchi per gestire gli interrupt esterni dei pin su Arduino."
+  zh-cn: "用于处理 Arduino 外部引脚中断的块。"
+  zh-tw: "用於處理 Arduino 外部腳位中斷的積木。"
+  fr: "Blocs pour gérer les interruptions externes des broches sur Arduino."
+  de: "Blöcke zur Behandlung externer Pin-Interrupts am Arduino."
+  es: "Bloques para gestionar interrupciones externas de pines en Arduino."
+  ja: "Arduino の外部ピン割り込みを扱うためのブロック。"
+  ko: "Arduino의 외부 핀 인터럽트를 처리하는 블록."
+  ru: "Блоки для обработки внешних прерываний пинов на Arduino."
+  pt-br: "Blocos para tratar interrupções externas de pinos no Arduino."
+  tr: "Arduino'da harici pin kesmelerini işlemek için bloklar."
+  pl: "Bloki do obsługi zewnętrznych przerwań pinów na Arduino."
+  cs: "Bloky pro zpracování externích přerušení pinů na Arduinu."
+  hu: "Blokkok az Arduino külső láb-megszakításainak kezeléséhez."
 implementations:
   - runtime: "arduino:cpp"
     blocks:
-      # --- when pin <n> <mode> / do … (hat-style attachInterrupt, poll-flag pattern) ---
       - blockly:
           type: cpp_attach_interrupt
           message0:
@@ -90,7 +107,6 @@ implementations:
             - "{{BODY}}"
             - "}"
 
-      # --- detachInterrupt(digitalPinToInterrupt(pin)) ---
       - blockly:
           type: cpp_detach_interrupt
           message0:
@@ -139,7 +155,6 @@ implementations:
           inputDefaults:
             PIN: "2"
 
-      # --- digitalPinToInterrupt(pin) ---
       - blockly:
           type: cpp_digital_pin_to_interrupt
           message0:
@@ -188,7 +203,6 @@ implementations:
           inputDefaults:
             PIN: "2"
 
-      # --- interrupts / noInterrupts (consolidated, dropdown) ---
       - blockly:
           type: cpp_interrupts
           message0:

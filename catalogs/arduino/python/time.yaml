@@ -1,0 +1,75 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
+id: python_time
+author: Lino Moretto
+version: 0.0.1
+category: "Control::Time"
+description:
+  en: "Python block to pause execution for milliseconds."
+  it: "Blocco Python per mettere in pausa l'esecuzione per millisecondi."
+  zh-cn: "用于暂停执行指定毫秒数的 Python 块。"
+  zh-tw: "用於暫停執行指定毫秒數的 Python 積木。"
+  fr: "Bloc Python pour mettre en pause l'exécution pendant des millisecondes."
+  de: "Python-Block zum Pausieren der Ausführung für Millisekunden."
+  es: "Bloque Python para pausar la ejecución durante milisegundos."
+  ja: "実行をミリ秒単位で一時停止する Python ブロック。"
+  ko: "실행을 밀리초 동안 일시 중지하는 Python 블록."
+  ru: "Блок Python для приостановки выполнения на миллисекунды."
+  pt-br: "Bloco Python para pausar a execução por milissegundos."
+  tr: "Yürütmeyi milisaniye kadar duraklatan Python bloğu."
+  pl: "Blok Python do wstrzymywania wykonania na milisekundy."
+  cs: "Blok Python pro pozastavení provádění na milisekundy."
+  hu: "Python blokk a végrehajtás milliszekundumokra szüneteltetéséhez."
+implementations:
+  - runtime: arduino:python
+    targets:
+      - arduino:zephyr:unoq
+      - arduino:zephyr:ventunoq
+    blocks:
+      - blockly:
+          type: python_wait
+          message0:
+            en: "wait %1 ms"
+            it: "attendi %1 ms"
+            zh-cn: "等待 %1 毫秒"
+            zh-tw: "等待 %1 毫秒"
+            fr: "attendre %1 ms"
+            de: "warte %1 ms"
+            es: "esperar %1 ms"
+            ja: "%1 ミリ秒待つ"
+            ko: "%1 밀리초 대기"
+            ru: "ждать %1 мс"
+            pt-br: "aguardar %1 ms"
+            tr: "%1 ms bekle"
+            pl: "czekaj %1 ms"
+            cs: "čekej %1 ms"
+            hu: "várj %1 ms"
+          args0:
+            - type: input_value
+              name: DURATION
+              check: Number
+          previousStatement: null
+          nextStatement: null
+          inputsInline: true
+          tooltip:
+            en: "Pause execution for the given number of milliseconds."
+            it: "Metti in pausa l'esecuzione per il numero di millisecondi indicato."
+            zh-cn: "暂停执行指定的毫秒数。"
+            zh-tw: "暫停執行指定的毫秒數。"
+            fr: "Met en pause l'exécution pendant le nombre de millisecondes indiqué."
+            de: "Pausiert die Ausführung für die angegebene Anzahl von Millisekunden."
+            es: "Pausa la ejecución durante el número de milisegundos indicado."
+            ja: "指定されたミリ秒数だけ実行を一時停止します。"
+            ko: "지정된 밀리초 동안 실행을 일시 중지합니다."
+            ru: "Приостанавливает выполнение на указанное количество миллисекунд."
+            pt-br: "Pausa a execução pelo número de milissegundos indicado."
+            tr: "Belirtilen milisaniye sayısı kadar yürütmeyi duraklatır."
+            pl: "Wstrzymuje wykonanie na podaną liczbę milisekund."
+            cs: "Pozastaví provádění na zadaný počet milisekund."
+            hu: "Szünetelteti a végrehajtást a megadott számú milliszekundumra."
+        codegen:
+          imports:
+            - "import time"
+          body:
+            - "time.sleep(({{DURATION}}) / 1000)"
+          inputDefaults:
+            DURATION: "1000"

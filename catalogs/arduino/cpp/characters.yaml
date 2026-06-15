@@ -1,6 +1,24 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
 id: arduino_characters
+author: Lino Moretto
+version: 0.0.1
 category: "Text::Characters"
+description:
+  en: "Blocks to test character classes with Arduino is*() functions."
+  it: "Blocchi per verificare le classi di carattere con le funzioni Arduino is*()."
+  zh-cn: "使用 Arduino is*() 函数测试字符类别的块。"
+  zh-tw: "使用 Arduino is*() 函式測試字元類別的積木。"
+  fr: "Blocs pour tester les classes de caractères avec les fonctions Arduino is*()."
+  de: "Blöcke zum Testen von Zeichenklassen mit Arduino is*()-Funktionen."
+  es: "Bloques para comprobar clases de caracteres con funciones Arduino is*()."
+  ja: "Arduino is*() 関数で文字クラスをテストするブロック。"
+  ko: "Arduino is*() 함수로 문자 클래스를 테스트하는 블록."
+  ru: "Блоки для проверки классов символов функциями Arduino is*()."
+  pt-br: "Blocos para testar classes de caracteres com funções Arduino is*()."
+  tr: "Arduino is*() fonksiyonlarıyla karakter sınıflarını test eden bloklar."
+  pl: "Bloki do sprawdzania klas znaków funkcjami Arduino is*()."
+  cs: "Bloky pro testování tříd znaků funkcemi Arduino is*()."
+  hu: "Blokkok karakterosztályok tesztelésére Arduino is*() függvényekkel."
 implementations:
   - runtime: "arduino:cpp"
     blocks:

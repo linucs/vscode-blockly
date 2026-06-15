@@ -1,11 +1,28 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
 id: arduino_digital_io
+author: Lino Moretto
+version: 0.0.1
 category: "Input / Output::Digital"
 colour: "#FFB300"
+description:
+  en: "Configure, read, and write digital pins."
+  it: "Configura, legge e scrive i pin digitali."
+  zh-cn: "配置、读取和写入数字引脚。"
+  zh-tw: "設定、讀取和寫入數位腳位。"
+  fr: "Configure, lit et écrit les broches numériques."
+  de: "Konfiguriert, liest und schreibt digitale Pins."
+  es: "Configura, lee y escribe pines digitales."
+  ja: "デジタルピンを設定、読み取り、書き込みします。"
+  ko: "디지털 핀을 설정, 읽기, 쓰기합니다."
+  ru: "Настраивает, читает и записывает цифровые пины."
+  pt-br: "Configura, lê e escreve pinos digitais."
+  tr: "Dijital pinleri yapılandırır, okur ve yazar."
+  pl: "Konfiguruje, odczytuje i zapisuje piny cyfrowe."
+  cs: "Konfiguruje, čte a zapisuje digitální piny."
+  hu: "Digitális lábakat konfigurál, olvas és ír."
 implementations:
   - runtime: "arduino:cpp"
     blocks:
-      # --- pinMode (setup-only) ---
       - blockly:
           type: cpp_pin_mode
           message0:
@@ -60,7 +77,6 @@ implementations:
           inputDefaults:
             PIN: "13"
 
-      # --- digitalWrite ---
       - blockly:
           type: cpp_digital_write
           message0:
@@ -114,7 +130,6 @@ implementations:
           inputDefaults:
             PIN: "13"
 
-      # --- digitalRead ---
       - blockly:
           type: cpp_digital_read
           message0:

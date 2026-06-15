@@ -1,11 +1,28 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
 id: arduino_analog_io
+author: Lino Moretto
+version: 0.0.1
 category: "Input / Output::Analog"
 colour: "#FFB300"
+description:
+  en: "Read and write analog values and configure ADC and PWM."
+  it: "Legge e scrive valori analogici e configura ADC e PWM."
+  zh-cn: "读取和写入模拟值并配置 ADC 和 PWM。"
+  zh-tw: "讀取和寫入類比值並設定 ADC 和 PWM。"
+  fr: "Lit et écrit des valeurs analogiques et configure l'ADC et la PWM."
+  de: "Liest und schreibt Analogwerte und konfiguriert ADC und PWM."
+  es: "Lee y escribe valores analógicos y configura ADC y PWM."
+  ja: "アナログ値を読み書きし、ADC と PWM を設定します。"
+  ko: "아날로그 값을 읽고 쓰며 ADC와 PWM을 설정합니다."
+  ru: "Читает и записывает аналоговые значения, настраивает АЦП и ШИМ."
+  pt-br: "Lê e escreve valores analógicos e configura ADC e PWM."
+  tr: "Analog değerleri okur ve yazar, ADC ve PWM'yi yapılandırır."
+  pl: "Odczytuje i zapisuje wartości analogowe oraz konfiguruje ADC i PWM."
+  cs: "Čte a zapisuje analogové hodnoty a konfiguruje ADC a PWM."
+  hu: "Analóg értékeket olvas és ír, valamint ADC-t és PWM-et állít be."
 implementations:
   - runtime: "arduino:cpp"
     blocks:
-      # --- analogRead ---
       - blockly:
           type: cpp_analog_read
           message0:
@@ -54,7 +71,6 @@ implementations:
           inputDefaults:
             PIN: "A0"
 
-      # --- analogWrite (PWM) ---
       - blockly:
           type: cpp_analog_write
           message0:
@@ -107,7 +123,6 @@ implementations:
             PIN: "3"
             VALUE: "128"
 
-      # --- analogReference (setup-only) ---
       - blockly:
           type: cpp_analog_reference
           message0:
@@ -158,9 +173,6 @@ implementations:
           body:
             - "analogReference({{TYPE}});"
 
-      # --- analog resolution: read (ADC) / write (PWM) (consolidated) ---
-      # Bits is a union (8/10/12/14); the valid range depends on the chosen
-      # function and the board. ADC (read): 10/12/14; PWM (write): 8/10/12.
       - blockly:
           type: cpp_analog_resolution
           message0:

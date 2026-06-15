@@ -1,10 +1,27 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
 id: arduino_time
+author: Lino Moretto
+version: 0.0.1
 category: "Control::Time"
+description:
+  en: "Timing blocks: delay, delayMicroseconds, and time since start."
+  it: "Blocchi temporali: delay, delayMicroseconds e tempo dall'avvio."
+  zh-cn: "时间积木：delay、delayMicroseconds 和启动以来的时间。"
+  zh-tw: "時間積木：delay、delayMicroseconds 和啟動以來的時間。"
+  fr: "Blocs de temps : delay, delayMicroseconds et temps depuis le démarrage."
+  de: "Zeitblöcke: delay, delayMicroseconds und Zeit seit dem Start."
+  es: "Bloques de tiempo: delay, delayMicroseconds y tiempo desde el inicio."
+  ja: "時間ブロック：delay、delayMicroseconds、起動からの経過時間。"
+  ko: "시간 블록: delay, delayMicroseconds, 시작 이후 경과 시간."
+  ru: "Блоки времени: delay, delayMicroseconds и время с момента запуска."
+  pt-br: "Blocos de tempo: delay, delayMicroseconds e tempo desde o início."
+  tr: "Zaman blokları: delay, delayMicroseconds ve başlangıçtan bu yana geçen süre."
+  pl: "Bloki czasu: delay, delayMicroseconds i czas od uruchomienia."
+  cs: "Časové bloky: delay, delayMicroseconds a čas od spuštění."
+  hu: "Időblokkok: delay, delayMicroseconds és indítás óta eltelt idő."
 implementations:
   - runtime: "arduino:cpp"
     blocks:
-      # --- delay ---
       - blockly:
           type: cpp_delay
           message0:
@@ -53,7 +70,6 @@ implementations:
           inputDefaults:
             DURATION: "1000"
 
-      # --- delayMicroseconds ---
       - blockly:
           type: cpp_delay_microseconds
           message0:
@@ -102,7 +118,6 @@ implementations:
           inputDefaults:
             US: "100"
 
-      # --- time since start: millis / micros (consolidated, dropdown) ---
       - blockly:
           type: cpp_time_since_start
           message0:

@@ -1,0 +1,341 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
+id: builtin_led_matrix
+author: Lino Moretto
+version: 0.0.1
+category: "Displays"
+description:
+  en: "Uno R4 12×8 LED matrix display blocks."
+  it: "Blocchi per il display a matrice LED 12×8 di Uno R4."
+  zh-cn: "Uno R4 12×8 LED 点阵显示块。"
+  zh-tw: "Uno R4 12×8 LED 點陣顯示積木。"
+  fr: "Blocs d'affichage pour la matrice LED 12×8 de l'Uno R4."
+  de: "Anzeigeblöcke für die 12×8-LED-Matrix des Uno R4."
+  es: "Bloques de visualización para la matriz LED 12×8 del Uno R4."
+  ja: "Uno R4 の 12×8 LED マトリクス表示ブロック。"
+  ko: "Uno R4 12×8 LED 매트릭스 디스플레이 블록."
+  ru: "Блоки управления светодиодной матрицей 12×8 дисплея Uno R4."
+  pt-br: "Blocos de exibição para a matriz de LED 12×8 do Uno R4."
+  tr: "Uno R4 12×8 LED matris ekran blokları."
+  pl: "Bloki wyświetlania dla matrycy LED 12×8 Uno R4."
+  cs: "Bloky zobrazení pro LED matici 12×8 Uno R4."
+  hu: "Megjelenítő blokkok az Uno R4 12×8-as LED-mátrixához."
+docs:
+  tutorial: https://docs.arduino.cc/tutorials/uno-r4-wifi/led-matrix/
+implementations:
+  - runtime: "arduino:cpp"
+    targets:
+      - arduino:renesas_uno:unor4wifi
+    dependencies:
+      - type: library
+        name: ArduinoGraphics
+        minVersion: "1.0.0"
+      - type: library
+        name: Arduino_LED_Matrix
+        minVersion: "1.0.0"
+    codegen:
+      imports:
+        - '#include "ArduinoGraphics.h"'
+        - '#include "Arduino_LED_Matrix.h"'
+      declarations:
+        - "ArduinoLEDMatrix matrix;"
+      setup:
+        - "matrix.begin();"
+    blocks:
+      - blockly:
+          type: led_matrix_clear
+          message0:
+            en: "LED Matrix: clear"
+            it: "Matrice LED: cancella"
+            zh-cn: "LED 点阵：清除"
+            zh-tw: "LED 點陣：清除"
+            fr: "Matrice LED : effacer"
+            de: "LED-Matrix: löschen"
+            es: "Matriz LED: borrar"
+            ja: "LED マトリクス：クリア"
+            ko: "LED 매트릭스: 지우기"
+            ru: "Светодиодная матрица: очистить"
+            pt-br: "Matriz LED: limpar"
+            tr: "LED Matris: temizle"
+            pl: "Matryca LED: wyczyść"
+            cs: "LED matice: vymazat"
+            hu: "LED mátrix: törlés"
+          args0: []
+          previousStatement: null
+          nextStatement: null
+          tooltip:
+            en: "Turn off all LEDs on the 8×13 matrix."
+            it: "Spegni tutti i LED sulla matrice 8×13."
+            zh-cn: "关闭 8×13 点阵上的所有 LED。"
+            zh-tw: "關閉 8×13 點陣上的所有 LED。"
+            fr: "Éteint toutes les LED de la matrice 8×13."
+            de: "Schaltet alle LEDs der 8×13-Matrix aus."
+            es: "Apaga todos los LED de la matriz 8×13."
+            ja: "8×13 マトリクスのすべての LED を消灯します。"
+            ko: "8×13 매트릭스의 모든 LED를 끕니다."
+            ru: "Выключает все светодиоды матрицы 8×13."
+            pt-br: "Apaga todos os LEDs da matriz 8×13."
+            tr: "8×13 matristeki tüm LED'leri kapatır."
+            pl: "Wyłącza wszystkie diody LED na matrycy 8×13."
+            cs: "Vypne všechny LED na matici 8×13."
+            hu: "Kikapcsolja a 8×13-as mátrix összes LED-jét."
+        codegen:
+          body:
+            - "matrix.clear();"
+        tags:
+          - display
+          - actuator
+          - beginner
+
+      - blockly:
+          type: led_matrix_scroll_text
+          message0:
+            en: "LED Matrix: scroll %1 speed %2 ms"
+            it: "Matrice LED: scorri %1 velocità %2 ms"
+            zh-cn: "LED 点阵：滚动 %1 速度 %2 毫秒"
+            zh-tw: "LED 點陣：捲動 %1 速度 %2 毫秒"
+            fr: "Matrice LED : défiler %1 vitesse %2 ms"
+            de: "LED-Matrix: scrolle %1 Geschwindigkeit %2 ms"
+            es: "Matriz LED: desplazar %1 velocidad %2 ms"
+            ja: "LED マトリクス：%1 をスクロール 速度 %2 ms"
+            ko: "LED 매트릭스: %1 스크롤 속도 %2 ms"
+            ru: "Светодиодная матрица: прокрутка %1 скорость %2 мс"
+            pt-br: "Matriz LED: rolar %1 velocidade %2 ms"
+            tr: "LED Matris: %1 kaydır hız %2 ms"
+            pl: "Matryca LED: przewiń %1 prędkość %2 ms"
+            cs: "LED matice: posouvej %1 rychlost %2 ms"
+            hu: "LED mátrix: görgesd %1 sebesség %2 ms"
+          args0:
+            - type: input_value
+              name: TEXT
+              check: String
+            - type: field_number
+              name: SPEED
+              value: 100
+              min: 10
+              max: 2000
+          message1:
+            en: "font %1  direction %2 %3"
+            it: "font %1  direzione %2 %3"
+            zh-cn: "字体 %1  方向 %2 %3"
+            zh-tw: "字型 %1  方向 %2 %3"
+            fr: "police %1  direction %2 %3"
+            de: "Schriftart %1  Richtung %2 %3"
+            es: "fuente %1  dirección %2 %3"
+            ja: "フォント %1  方向 %2 %3"
+            ko: "글꼴 %1  방향 %2 %3"
+            ru: "шрифт %1  направление %2 %3"
+            pt-br: "fonte %1  direção %2 %3"
+            tr: "yazı tipi %1  yön %2 %3"
+            pl: "czcionka %1  kierunek %2 %3"
+            cs: "písmo %1  směr %2 %3"
+            hu: "betűtípus %1  irány %2 %3"
+          args1:
+            - type: field_dropdown
+              name: FONT
+              options:
+                - ["5×7", "Font_5x7"]
+                - ["4×6", "Font_4x6"]
+            - type: field_dropdown
+              name: DIRECTION
+              options:
+                - ["← scroll left", "SCROLL_LEFT"]
+                - ["scroll right →", "SCROLL_RIGHT"]
+                - ["static", "NO_SCROLL"]
+            - type: input_dummy
+          previousStatement: null
+          nextStatement: null
+          tooltip:
+            en: "Scroll (or display) text on the LED matrix. Blocking — the next block runs only after the full animation finishes."
+            it: "Scorri (o visualizza) testo sulla matrice LED. Bloccante — il blocco successivo viene eseguito solo al termine dell'animazione."
+            zh-cn: "在 LED 点阵上滚动（或显示）文本。阻塞式——只有在整个动画完成后才会运行下一个块。"
+            zh-tw: "在 LED 點陣上捲動（或顯示）文字。阻塞式——只有在整個動畫完成後才會執行下一個積木。"
+            fr: "Fait défiler (ou affiche) du texte sur la matrice LED. Bloquant — le bloc suivant ne s'exécute qu'une fois l'animation terminée."
+            de: "Scrollt (oder zeigt) Text auf der LED-Matrix. Blockierend — der nächste Block läuft erst, wenn die Animation vollständig abgeschlossen ist."
+            es: "Desplaza (o muestra) texto en la matriz LED. Bloqueante — el siguiente bloque se ejecuta solo cuando termina toda la animación."
+            ja: "LED マトリクスにテキストをスクロール（または表示）します。ブロッキング——アニメーションが完全に終了してから次のブロックが実行されます。"
+            ko: "LED 매트릭스에 텍스트를 스크롤(또는 표시)합니다. 블로킹——전체 애니메이션이 끝난 후에만 다음 블록이 실행됩니다."
+            ru: "Прокручивает (или отображает) текст на светодиодной матрице. Блокирующий — следующий блок выполняется только после завершения всей анимации."
+            pt-br: "Rola (ou exibe) texto na matriz LED. Bloqueante — o próximo bloco é executado somente após o término de toda a animação."
+            tr: "LED matris üzerinde metni kaydırır (veya görüntüler). Engelleyici — sonraki blok yalnızca animasyon tamamen bittikten sonra çalışır."
+            pl: "Przewija (lub wyświetla) tekst na matrycy LED. Blokujący — następny blok uruchamia się dopiero po zakończeniu całej animacji."
+            cs: "Posouvá (nebo zobrazuje) text na LED matici. Blokující — další blok se spustí až po dokončení celé animace."
+            hu: "Görgeti (vagy megjeleníti) a szöveget a LED-mátrixon. Blokkoló — a következő blokk csak a teljes animáció befejezése után fut."
+        codegen:
+          body:
+            - "matrix.beginDraw();"
+            - "matrix.stroke(0xFFFFFFFF);"
+            - "matrix.textFont({{FONT}});"
+            - "matrix.textScrollSpeed({{SPEED}});"
+            - "matrix.beginText(0, 1, 0xFFFFFF);"
+            - "matrix.println({{TEXT}});"
+            - "matrix.endText({{DIRECTION}});"
+            - "matrix.endDraw();"
+          inputDefaults:
+            TEXT: '"Hello"'
+        tags:
+          - display
+          - actuator
+          - text
+          - beginner
+
+      - blockly:
+          type: led_matrix_draw
+          message0:
+            en: "LED Matrix: draw %1"
+            it: "Matrice LED: disegna %1"
+            zh-cn: "LED 点阵：绘制 %1"
+            zh-tw: "LED 點陣：繪製 %1"
+            fr: "Matrice LED : dessiner %1"
+            de: "LED-Matrix: zeichne %1"
+            es: "Matriz LED: dibujar %1"
+            ja: "LED マトリクス：描画 %1"
+            ko: "LED 매트릭스: 그리기 %1"
+            ru: "Светодиодная матрица: рисовать %1"
+            pt-br: "Matriz LED: desenhar %1"
+            tr: "LED Matris: çiz %1"
+            pl: "Matryca LED: rysuj %1"
+            cs: "LED matice: kresli %1"
+            hu: "LED mátrix: rajzolj %1"
+          args0:
+            - type: input_statement
+              name: COMMANDS
+          previousStatement: null
+          nextStatement: null
+          tooltip:
+            en: "Open a drawing session on the LED matrix. Place 'set pixel' and 'fill' blocks inside. The display updates when the block ends."
+            it: "Apri una sessione di disegno sulla matrice LED. Inserisci i blocchi 'pixel' e 'riempi' all'interno. Il display si aggiorna al termine del blocco."
+            zh-cn: "在 LED 点阵上打开一个绘图会话。将“设置像素”和“填充”块放在其中。块结束时显示更新。"
+            zh-tw: "在 LED 點陣上開啟一個繪圖工作階段。將“設定像素”和“填滿”積木放在其中。積木結束時顯示更新。"
+            fr: "Ouvre une session de dessin sur la matrice LED. Placez les blocs « pixel » et « remplir » à l'intérieur. L'affichage se met à jour à la fin du bloc."
+            de: "Öffnet eine Zeichensitzung auf der LED-Matrix. Platziere die Blöcke „Pixel setzen“ und „Füllen“ darin. Die Anzeige wird aktualisiert, wenn der Block endet."
+            es: "Abre una sesión de dibujo en la matriz LED. Coloca los bloques 'pixel' y 'rellenar' dentro. La pantalla se actualiza cuando termina el bloque."
+            ja: "LED マトリクスで描画セッションを開きます。中に「ピクセル設定」と「塗りつぶし」ブロックを配置します。ブロックが終了すると表示が更新されます。"
+            ko: "LED 매트릭스에서 그리기 세션을 엽니다. 안에 '픽셀 설정'과 '채우기' 블록을 배치하세요. 블록이 끝나면 디스플레이가 업데이트됩니다."
+            ru: "Открывает сеанс рисования на светодиодной матрице. Поместите внутрь блоки «пиксель» и «заливка». Дисплей обновляется по завершении блока."
+            pt-br: "Abre uma sessão de desenho na matriz LED. Coloque os blocos 'pixel' e 'preencher' dentro. O display é atualizado quando o bloco termina."
+            tr: "LED matris üzerinde bir çizim oturumu açar. İçine 'piksel' ve 'doldur' bloklarını yerleştirin. Blok bittiğinde ekran güncellenir."
+            pl: "Otwiera sesję rysowania na matrycy LED. Umieść wewnątrz bloki 'piksel' i 'wypełnij'. Wyświetlacz aktualizuje się po zakończeniu bloku."
+            cs: "Otevře kreslicí relaci na LED matici. Dovnitř umístěte bloky 'pixel' a 'vyplnit'. Displej se aktualizuje po skončení bloku."
+            hu: "Megnyit egy rajzolási munkamenetet a LED-mátrixon. Helyezz bele 'pixel' és 'kitöltés' blokkokat. A kijelző a blokk végén frissül."
+        codegen:
+          body:
+            - "matrix.beginDraw();"
+            - "{{COMMANDS}}"
+            - "matrix.endDraw();"
+        tags:
+          - display
+          - actuator
+
+      - blockly:
+          type: led_matrix_set_pixel
+          message0:
+            en: "pixel  col %1  row %2  %3"
+            it: "pixel  col %1  riga %2  %3"
+            zh-cn: "像素  列 %1  行 %2  %3"
+            zh-tw: "像素  欄 %1  列 %2  %3"
+            fr: "pixel  col %1  ligne %2  %3"
+            de: "Pixel  Spalte %1  Zeile %2  %3"
+            es: "píxel  col %1  fila %2  %3"
+            ja: "ピクセル  列 %1  行 %2  %3"
+            ko: "픽셀  열 %1  행 %2  %3"
+            ru: "пиксель  столбец %1  строка %2  %3"
+            pt-br: "pixel  col %1  linha %2  %3"
+            tr: "piksel  sütun %1  satır %2  %3"
+            pl: "piksel  kol %1  wiersz %2  %3"
+            cs: "pixel  sl %1  řádek %2  %3"
+            hu: "pixel  oszlop %1  sor %2  %3"
+          args0:
+            - type: input_value
+              name: COL
+              check: ["Number", "int", "unsigned int", "long", "unsigned long",
+                      "byte", "word", "uint8_t", "uint16_t", "uint32_t",
+                      "int8_t", "int16_t", "int32_t"]
+            - type: input_value
+              name: ROW
+              check: ["Number", "int", "unsigned int", "long", "unsigned long",
+                      "byte", "word", "uint8_t", "uint16_t", "uint32_t",
+                      "int8_t", "int16_t", "int32_t"]
+            - type: field_dropdown
+              name: STATE
+              options:
+                - ["on", "1"]
+                - ["off", "0"]
+          previousStatement: null
+          nextStatement: null
+          inputsInline: true
+          tooltip:
+            en: "Turn one LED on or off. Place inside 'LED Matrix: draw'. Col: 0–12 (left→right), Row: 0–7 (top→bottom)."
+            it: "Accendi o spegni un singolo LED. Da inserire dentro 'Matrice LED: disegna'. Col: 0–12 (sinistra→destra), Riga: 0–7 (alto→basso)."
+            zh-cn: "打开或关闭单个 LED。放在“LED 点阵：绘制”内。列：0–12（左→右），行：0–7（上→下）。"
+            zh-tw: "開啟或關閉單個 LED。放在“LED 點陣：繪製”內。欄：0–12（左→右），列：0–7（上→下）。"
+            fr: "Allume ou éteint une LED. À placer dans « Matrice LED : dessiner ». Col : 0–12 (gauche→droite), Ligne : 0–7 (haut→bas)."
+            de: "Schaltet eine LED ein oder aus. In „LED-Matrix: zeichne“ platzieren. Spalte: 0–12 (links→rechts), Zeile: 0–7 (oben→unten)."
+            es: "Enciende o apaga un LED. Colócalo dentro de 'Matriz LED: dibujar'. Col: 0–12 (izquierda→derecha), Fila: 0–7 (arriba→abajo)."
+            ja: "1 つの LED をオン/オフします。「LED マトリクス：描画」の中に配置します。列：0–12（左→右）、行：0–7（上→下）。"
+            ko: "LED 하나를 켜거나 끕니다. 'LED 매트릭스: 그리기' 안에 배치하세요. 열: 0–12(왼쪽→오른쪽), 행: 0–7(위→아래)."
+            ru: "Включает или выключает один светодиод. Поместите внутрь «Светодиодная матрица: рисовать». Столбец: 0–12 (слева→направо), строка: 0–7 (сверху→вниз)."
+            pt-br: "Liga ou desliga um LED. Coloque dentro de 'Matriz LED: desenhar'. Col: 0–12 (esquerda→direita), Linha: 0–7 (cima→baixo)."
+            tr: "Bir LED'i açar veya kapatır. 'LED Matris: çiz' içine yerleştirin. Sütun: 0–12 (sol→sağ), Satır: 0–7 (yukarı→aşağı)."
+            pl: "Włącza lub wyłącza jedną diodę LED. Umieść wewnątrz 'Matryca LED: rysuj'. Kol: 0–12 (lewo→prawo), Wiersz: 0–7 (góra→dół)."
+            cs: "Zapne nebo vypne jednu LED. Umístěte dovnitř 'LED matice: kresli'. Sloupec: 0–12 (vlevo→vpravo), řádek: 0–7 (nahoře→dole)."
+            hu: "Be- vagy kikapcsol egy LED-et. Helyezd a 'LED mátrix: rajzolj' blokkba. Oszlop: 0–12 (balra→jobbra), sor: 0–7 (fent→lent)."
+        codegen:
+          body:
+            - "matrix.set({{COL}}, {{ROW}}, {{STATE}}, {{STATE}}, {{STATE}});"
+          inputDefaults:
+            COL: "0"
+            ROW: "0"
+        tags:
+          - display
+          - actuator
+          - beginner
+
+      - blockly:
+          type: led_matrix_fill
+          message0:
+            en: "fill all LEDs %1"
+            it: "riempi tutti i LED %1"
+            zh-cn: "填充所有 LED %1"
+            zh-tw: "填滿所有 LED %1"
+            fr: "remplir toutes les LED %1"
+            de: "alle LEDs füllen %1"
+            es: "rellenar todos los LED %1"
+            ja: "すべての LED を塗りつぶす %1"
+            ko: "모든 LED 채우기 %1"
+            ru: "залить все светодиоды %1"
+            pt-br: "preencher todos os LEDs %1"
+            tr: "tüm LED'leri doldur %1"
+            pl: "wypełnij wszystkie diody LED %1"
+            cs: "vyplnit všechny LED %1"
+            hu: "összes LED kitöltése %1"
+          args0:
+            - type: field_dropdown
+              name: STATE
+              options:
+                - ["on", "255"]
+                - ["off", "0"]
+          previousStatement: null
+          nextStatement: null
+          tooltip:
+            en: "Turn all LEDs on or off at once. Place inside 'LED Matrix: draw'."
+            it: "Accendi o spegni tutti i LED contemporaneamente. Da inserire dentro 'Matrice LED: disegna'."
+            zh-cn: "一次性打开或关闭所有 LED。放在“LED 点阵：绘制”内。"
+            zh-tw: "一次開啟或關閉所有 LED。放在“LED 點陣：繪製”內。"
+            fr: "Allume ou éteint toutes les LED en une fois. À placer dans « Matrice LED : dessiner »."
+            de: "Schaltet alle LEDs auf einmal ein oder aus. In „LED-Matrix: zeichne“ platzieren."
+            es: "Enciende o apaga todos los LED a la vez. Colócalo dentro de 'Matriz LED: dibujar'."
+            ja: "すべての LED を一度にオン/オフします。「LED マトリクス：描画」の中に配置します。"
+            ko: "모든 LED를 한 번에 켜거나 끕니다. 'LED 매트릭스: 그리기' 안에 배치하세요."
+            ru: "Включает или выключает все светодиоды сразу. Поместите внутрь «Светодиодная матрица: рисовать»."
+            pt-br: "Liga ou desliga todos os LEDs de uma vez. Coloque dentro de 'Matriz LED: desenhar'."
+            tr: "Tüm LED'leri aynı anda açar veya kapatır. 'LED Matris: çiz' içine yerleştirin."
+            pl: "Włącza lub wyłącza wszystkie diody LED naraz. Umieść wewnątrz 'Matryca LED: rysuj'."
+            cs: "Zapne nebo vypne všechny LED najednou. Umístěte dovnitř 'LED matice: kresli'."
+            hu: "Egyszerre be- vagy kikapcsolja az összes LED-et. Helyezd a 'LED mátrix: rajzolj' blokkba."
+        codegen:
+          body:
+            - "matrix.background({{STATE}}, {{STATE}}, {{STATE}});"
+        tags:
+          - display
+          - actuator
+          - beginner

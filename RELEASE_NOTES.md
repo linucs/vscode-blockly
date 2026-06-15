@@ -1,10 +1,27 @@
 # Blocks Editor — Release Notes
 
-Build programs for Arduino by **dragging colorful blocks** — like Scratch, but it writes real C++ for you. The blocks are the source of truth; the generated `.cpp`/`.ino` stays in sync automatically.
+Build programs for Arduino by **dragging colorful blocks** — like Scratch, but it writes real C++ (or Python, for Arduino App Lab apps) for you. The blocks are the source of truth; the generated `.cpp`/`.ino`/`.py` stays in sync automatically.
 
 > **Works on top of your existing toolchain** — you need **one** of [PlatformIO](https://platformio.org/install/ide?install=vscode) or the [Arduino CLI](https://arduino.github.io/arduino-cli/). Blocks Editor reads your project to know which board you're targeting; it never builds or flashes on its own. To compile and upload from inside VS Code, install the sister extension [**Arduino CLI IDE**](https://marketplace.visualstudio.com/items?itemName=linucs.vscode-arduino-cli-ide).
 
 ---
+
+## v0.3.2 — 2026-06-15
+
+- **See which block wrote which line** — generated code now carries a short comment above each statement, naming the block that produced it (from the block's tooltip), so the source reads like a guided tour of your blocks. Any comment you write on a block yourself always shows up too. On by default; turn the tooltip comments off with the new **"Annotate generated code"** setting (your own comments stay either way).
+
+## v0.3.1 — 2026-06-15
+
+- **Project catalogs found in more layouts** — blocks in a project's `.blocks/` folder now load reliably in multi-root and nested-project workspaces, even when your `platformio.ini` / `sketch.yaml` / `app.yaml` doesn't sit at the workspace root.
+
+## v0.3.0 — 2026-06-15
+
+- **Now writes Python, too (Arduino App Lab)** — open an Arduino App Lab app (`app.yaml`, built around `python/main.py`) and the same blocks generate **Python** instead of C++. App Lab joins PlatformIO and the Arduino CLI as a recognized project type, with dependencies routed to the right place automatically: pip packages, bricks, and Arduino libraries each land where they belong.
+- **Contribute your catalog to the community** — a new **"Contribute Catalog to Community…"** command validates a catalog you've authored and submits it as a pull request (with native GitHub sign-in and automatic fork — no git required) or a pre-filled issue in your browser.
+- **"Open in Blocks Editor" right where you need it** — a dedicated command now appears on the Explorer and editor-title menus for `.ino`, `.pde`, `.cpp`, and `.py` files, so you no longer have to hunt through "Open With…".
+- **Generate controls in the toolbar** — a **Generate code** split button generates on demand and carries a **"Generate automatically on change"** toggle, right where you work.
+- **switch/case block** — a new Logic block for multi-way branching, with both C++ and Python generators.
+- **One AI assistant setup for Copilot and Claude Code** — the old `@blocks` chat participant is replaced by a single shared **block-author skill**; the renamed **"Set Up AI Assistants (Copilot & Claude Code)"** command wires up both hosts. Re-run it after upgrading.
 
 ## v0.2.1 — 2026-06-08
 

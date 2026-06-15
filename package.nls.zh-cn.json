@@ -4,6 +4,7 @@
   "config.title": "Blocks Editor",
   "config.generateOnChange": "在积木发生变化时自动生成代码。禁用后，仅在按下“生成代码”按钮时才生成代码。",
   "config.showMinimap": "在右下角显示积木工作区的小地图概览。",
+  "config.annotateGeneratedCode": "在每条生成的语句上方添加注释，使用积木的工具提示标识生成该语句的积木。你自己为积木添加的注释始终包含在内，与此设置无关。",
   "config.catalogPaths": "积木目录 YAML 文件的本地目录或远程 URL。本地路径（相对于工作区根目录或绝对路径）会被递归扫描。URL（http/https）会在首次加载时下载到项目的 .blocks/ 文件夹；使用“刷新远程目录”命令可强制重新下载。",
   "command.openInBlocksEditor": "在块编辑器中打开",
   "command.refreshCatalogs": "Blocks Editor: 刷新远程目录",

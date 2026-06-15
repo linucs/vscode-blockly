@@ -152,6 +152,9 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
         const getShowMinimap = () =>
             vscode.workspace.getConfiguration('blocks-editor').get<boolean>('showMinimap', false);
 
+        const getAnnotate = () =>
+            vscode.workspace.getConfiguration('blocks-editor').get<boolean>('annotateGeneratedCode', true);
+
         const sendMode = () => {
             webviewPanel.webview.postMessage({ type: 'set_mode', autoGenerate: getAutoGenerate() });
         };
@@ -160,9 +163,14 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
             webviewPanel.webview.postMessage({ type: 'set_minimap', show: getShowMinimap() });
         };
 
+        const sendAnnotate = () => {
+            webviewPanel.webview.postMessage({ type: 'set_annotate', annotate: getAnnotate() });
+        };
+
         const configSubscription = vscode.workspace.onDidChangeConfiguration(e => {
             if (e.affectsConfiguration('blocks-editor.generateOnChange')) sendMode();
             if (e.affectsConfiguration('blocks-editor.showMinimap')) sendMinimap();
+            if (e.affectsConfiguration('blocks-editor.annotateGeneratedCode')) sendAnnotate();
         });
 
         const themeSubscription = vscode.window.onDidChangeActiveColorTheme(() => {
@@ -197,6 +205,7 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
                     await updateWebview();
                     sendMode();
                     sendMinimap();
+                    sendAnnotate();
                     return;
                 case 'select_env':
                     selectedEnv = e.env;

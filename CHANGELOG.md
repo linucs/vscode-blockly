@@ -4,6 +4,12 @@ All notable changes to the "Blocks Editor" extension will be documented in this 
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.3.2] - 2026-06-15
+
+### Added
+
+- **Annotate generated code with block comments** — generated source now carries a comment above each statement identifying the block that produced it, taken from the block's tooltip. Controlled by the new `blocks-editor.annotateGeneratedCode` setting (on by default). Comments you write on blocks yourself are always emitted, regardless of the setting, for both the C++ and Python runtimes. Toggling the setting re-generates the open file when auto-generation is on.
+
 ## [0.3.1] - 2026-06-15
 
 ### Fixed

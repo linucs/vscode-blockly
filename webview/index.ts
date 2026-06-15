@@ -19,6 +19,7 @@ import { provideVSCodeDesignSystem, vsCodeButton, vsCodeDropdown, vsCodeOption }
 import { ThemeAdapter, categoryStyleFor } from './ThemeAdapter';
 import { CodeFactory } from './codegen/core/CodeFactory';
 import { isRuntimeSupported } from './codegen/core/generatorRegistry';
+import { setCommentAnnotation } from './codegen/core/commentAnnotation';
 import { initTypedVariableModal, initWorkspacePlugins, pluginInjectOptions, CPP_VARIABLE_TYPES, ThemedMinimap } from './plugins';
 import { initCppProcedureFlyout } from './custom-blocks/cppProcedureBlocks';
 // Registers the `hat_event_style` block extension as a side effect, so catalog
@@ -590,6 +591,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 themeAdapter.onThemeChanged();
                 if (minimap) minimap.applyDarkTheme(workspace);
                 break;
+            case 'set_annotate': {
+                const changed = setCommentAnnotation(message.annotate !== false);
+                // Re-emit so the source reflects the new setting, but only when the
+                // value actually changed (not on the initial push at open) and only
+                // when auto-generation is on, mirroring the change listener.
+                if (changed && autoGenerate && runtimeReady) generateNow();
+                break;
+            }
             case 'set_minimap':
                 if (message.show && !minimap) {
                     minimap = new ThemedMinimap(workspace);

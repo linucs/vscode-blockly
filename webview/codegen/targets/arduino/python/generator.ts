@@ -9,6 +9,7 @@ import { FieldParamInput } from '../../../../custom-fields/FieldParamInput';
 import { assembleScript } from '../../../../../src/codegen/targets/arduino/python/assemble';
 import { formatGeneratedAt } from '../../../../../src/codegen/generatedAt';
 import { RuntimeGenerator } from '../../../core/runtimeGenerator';
+import { blockCommentPrefix } from '../../../core/commentAnnotation';
 import { FIRST_PARTY_GENERATORS } from './firstParty';
 
 export const ARDUINO_PYTHON_RUNTIME = 'arduino:python';
@@ -88,6 +89,18 @@ class ArduinoPythonGenerator extends PythonGenerator {
         this.nameDB_?.reset();
 
         return result;
+    }
+
+    // Stock PythonGenerator.scrub_ already emits a block's own comment (and the
+    // comments of its value inputs). Override it to share the exact same policy
+    // as the cpp generator: always emit the user's own comment, add the tooltip
+    // as a fallback when the setting is on, and never annotate expression blocks
+    // or empty emitters. Statement chaining is replicated from the parent.
+    override scrub_(block: Blockly.Block, code: string, thisOnly?: boolean): string {
+        const prefix = blockCommentPrefix(block, code, this, '# ');
+        const nextBlock = block.nextConnection ? block.nextConnection.targetBlock() : null;
+        const nextCode = thisOnly ? '' : (this.blockToCode(nextBlock) as string);
+        return prefix + code + nextCode;
     }
 }
 

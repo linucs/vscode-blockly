@@ -2,7 +2,7 @@
   "name": "blocks-editor",
   "displayName": "%displayName%",
   "description": "%description%",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "license": "MIT",
   "publisher": "linucs",
   "icon": "images/icon.png",
@@ -239,6 +239,11 @@
           "type": "boolean",
           "default": false,
           "description": "%config.showMinimap%"
+        },
+        "blocks-editor.annotateGeneratedCode": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.annotateGeneratedCode%"
         },
         "blocks-editor.catalogPaths": {
           "type": "array",

@@ -4,6 +4,7 @@
   "config.title": "Blocks Editor",
   "config.generateOnChange": "Gera o código automaticamente sempre que os blocos mudam. Quando desativado, o código é gerado apenas ao pressionar o botão Gerar código.",
   "config.showMinimap": "Mostra um minimapa do workspace de blocos no canto inferior direito.",
+  "config.annotateGeneratedCode": "Adiciona um comentário acima de cada instrução gerada identificando o bloco que a produziu, usando a dica de ferramenta do bloco. Os comentários que você mesmo adiciona aos blocos são sempre incluídos, independentemente desta configuração.",
   "config.catalogPaths": "Diretórios locais ou URLs remotas para os arquivos YAML dos catálogos de blocos. Os caminhos locais (relativos à raiz do workspace ou absolutos) são verificados recursivamente. As URLs (http/https) são baixadas para a pasta .blocks/ do projeto no primeiro carregamento; use o comando \"Atualizar catálogos remotos\" para forçar um novo download.",
   "command.openInBlocksEditor": "Abrir no editor de blocos",
   "command.refreshCatalogs": "Blocks Editor: Atualizar catálogos remotos",

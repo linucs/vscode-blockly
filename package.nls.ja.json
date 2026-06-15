@@ -4,6 +4,7 @@
   "config.title": "Blocks Editor",
   "config.generateOnChange": "ブロックが変更されるたびにコードを自動生成します。無効にすると、コードは「コードを生成」ボタンを押したときにのみ生成されます。",
   "config.showMinimap": "ブロックワークスペースの全体を示すミニマップを右下隅に表示します。",
+  "config.annotateGeneratedCode": "生成された各ステートメントの上に、それを生成したブロックを示すコメントをブロックのツールチップから追加します。自分でブロックに追加したコメントは、この設定に関係なく常に含まれます。",
   "config.catalogPaths": "ブロックカタログ YAML ファイルのローカルディレクトリまたはリモート URL。ローカルパス（ワークスペースルートからの相対パス、または絶対パス）は再帰的にスキャンされます。URL（http/https）は初回読み込み時にプロジェクトの .blocks/ フォルダーにダウンロードされます。再ダウンロードを強制するには「Refresh Remote Catalogs」コマンドを使用してください。",
   "command.openInBlocksEditor": "ブロックエディターで開く",
   "command.refreshCatalogs": "Blocks Editor: リモートカタログを更新",

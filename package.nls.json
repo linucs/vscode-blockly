@@ -4,6 +4,7 @@
   "config.title": "Blocks Editor",
   "config.generateOnChange": "Generate code automatically whenever blocks change. When disabled, code is generated only when the Generate Code button is pressed.",
   "config.showMinimap": "Show a minimap overview of the block workspace in the bottom-right corner.",
+  "config.annotateGeneratedCode": "Add a comment above each generated statement, identifying the block that produced it, using the block's tooltip. Comments you add to blocks yourself are always included, regardless of this setting.",
   "config.catalogPaths": "Local directories or remote URLs for block catalog YAML files. Local paths (relative to the workspace root, or absolute) are scanned recursively. URLs (http/https) are downloaded to the project .blocks/ folder on first load; use the \"Refresh Remote Catalogs\" command to force re-download.",
   "command.openInBlocksEditor": "Open in Blocks Editor",
   "command.refreshCatalogs": "Blocks Editor: Refresh Remote Catalogs",

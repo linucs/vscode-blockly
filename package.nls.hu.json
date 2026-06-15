@@ -4,6 +4,7 @@
   "config.title": "Blokkszerkesztő",
   "config.generateOnChange": "Kód automatikus generálása minden alkalommal, amikor a blokkok megváltoznak. Ha le van tiltva, a kód csak a Kód generálása gomb megnyomásakor generálódik.",
   "config.showMinimap": "A blokk-munkaterület minitérkép-áttekintésének megjelenítése a jobb alsó sarokban.",
+  "config.annotateGeneratedCode": "Minden generált utasítás fölé megjegyzést tesz, amely a blokk buboréksúgója alapján azonosítja az azt létrehozó blokkot. A blokkokhoz általad hozzáadott megjegyzések ettől a beállítástól függetlenül mindig megjelennek.",
   "config.catalogPaths": "Helyi könyvtárak vagy távoli URL-ek a blokk-katalógus YAML-fájljaihoz. A helyi útvonalakat (a munkaterület gyökeréhez viszonyítva vagy abszolút módon) rekurzívan vizsgálja át. Az URL-eket (http/https) az első betöltéskor letölti a projekt .blocks/ mappájába; használd a \"Refresh Remote Catalogs\" parancsot az újraletöltés kikényszerítéséhez.",
   "command.openInBlocksEditor": "Megnyitás a blokkszerkesztőben",
   "command.refreshCatalogs": "Blokkszerkesztő: Távoli katalógusok frissítése",

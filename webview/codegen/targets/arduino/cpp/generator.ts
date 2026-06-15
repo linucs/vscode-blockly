@@ -4,6 +4,7 @@ import { FieldTypedParamInput } from '../../../../custom-fields/FieldTypedParamI
 import { categorizeDefinitions, assembleSketch } from '../../../../../src/codegen/targets/arduino/cpp/assemble';
 import { formatGeneratedAt } from '../../../../../src/codegen/generatedAt';
 import { RuntimeGenerator } from '../../../core/runtimeGenerator';
+import { blockCommentPrefix } from '../../../core/commentAnnotation';
 import { FIRST_PARTY_GENERATORS } from './firstParty';
 
 export const ARDUINO_CPP_RUNTIME = 'arduino:cpp';
@@ -61,11 +62,10 @@ export function createArduinoCppGenerator(): RuntimeGenerator {
     };
 
     (g as any).scrub_ = function (block: Blockly.Block, code: string, thisOnly?: boolean) {
+        const prefix = blockCommentPrefix(block, code, this as Blockly.CodeGenerator, '// ');
         const nextBlock = block.nextConnection && block.nextConnection.targetBlock();
-        if (nextBlock && !thisOnly) {
-            return code + this.blockToCode(nextBlock);
-        }
-        return code;
+        const nextCode = nextBlock && !thisOnly ? this.blockToCode(nextBlock) : '';
+        return prefix + code + nextCode;
     };
 
     // Preserve the existing wiring exactly: registration captures the current

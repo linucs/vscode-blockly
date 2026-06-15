@@ -4,6 +4,7 @@
   "config.title": "Blocks Editor",
   "config.generateOnChange": "블록이 변경될 때마다 코드를 자동으로 생성합니다. 비활성화하면 코드 생성 버튼을 누를 때만 코드가 생성됩니다.",
   "config.showMinimap": "블록 작업 영역의 미니맵 개요를 오른쪽 아래 모서리에 표시합니다.",
+  "config.annotateGeneratedCode": "생성된 각 문 위에 해당 문을 만든 블록을 블록의 툴팁으로 식별하는 주석을 추가합니다. 직접 블록에 추가한 주석은 이 설정과 관계없이 항상 포함됩니다.",
   "config.catalogPaths": "블록 카탈로그 YAML 파일을 위한 로컬 디렉터리 또는 원격 URL입니다. 로컬 경로(워크스페이스 루트 기준 상대 경로 또는 절대 경로)는 재귀적으로 검색됩니다. URL(http/https)은 처음 로드할 때 프로젝트 .blocks/ 폴더로 다운로드됩니다. 다시 다운로드를 강제하려면 \"Refresh Remote Catalogs\" 명령을 사용하세요.",
   "command.openInBlocksEditor": "블록 편집기에서 열기",
   "command.refreshCatalogs": "Blocks Editor: 원격 카탈로그 새로 고침",

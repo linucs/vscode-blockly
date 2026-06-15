@@ -7,7 +7,7 @@ suite('sourceLanguage', () => {
     test('maps C++ family extensions to cpp', () => {
         assert.strictEqual(languageForFile('main.cpp'), 'cpp');
         assert.strictEqual(languageForFile('sketch.ino'), 'cpp');
-        assert.strictEqual(languageForFile('foo.cc'), 'cpp');
+        assert.strictEqual(languageForFile('foo.pde'), 'cpp');
     });
 
     test('maps .py to python', () => {

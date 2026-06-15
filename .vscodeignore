@@ -4,6 +4,7 @@ out/**
 node_modules/**
 src/**
 .gitignore
+.nvmrc
 .yarnrc
 esbuild.js
 vsc-extension-quickstart.md

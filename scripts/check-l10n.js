@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
- * check-i18n.js — systematic translation completeness & formal-correctness check.
+ * check-l10n.js — systematic translation completeness & formal-correctness check.
  *
- * Verifies every i18n domain that has machine-checkable key sets:
+ * Verifies every l10n domain that has machine-checkable key sets:
  *   1. Manifest        — package.nls.json            + package.nls.<locale>.json   ({n} placeholders)
  *   2. Custom blocks   — l10n/blocks.en.json         + l10n/blocks.<locale>.json   (%n placeholders)
  *   3. Extension host  — l10n/bundle.l10n.<locale>.json   (no English base; English IS the l10n.t() literal in src/)
@@ -19,7 +19,7 @@
  *
  * Exit code: 0 if everything passes, 1 if any ERROR is found. WARNINGs do not fail.
  *
- * Usage: node scripts/check-i18n.js   (or: yarn check-i18n)
+ * Usage: node scripts/check-l10n.js   (or: yarn check-l10n)
  */
 'use strict';
 

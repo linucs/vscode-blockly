@@ -6,6 +6,12 @@ Build programs for Arduino by **dragging colorful blocks** — like Scratch, but
 
 ---
 
+## v0.3.3 — 2026-06-16
+
+- **Blocks for the Arduino UNO Q** — new built-in catalogs for the dual-brain board, on both sides of the bridge. On the **MCU (C++)** side: light up the onboard **RGB LED**, print to the App Lab **Monitor**, and use the **MCU→SBC Bridge** to notify, provide, and call services. On the **CPU (Python)** side: the onboard **RGB LED**, the **Logger**, `sleep`, and the Python half of the **Bridge** messaging.
+- **Uno R4 LED matrix** — a new **Displays** category with blocks for the Uno R4's built-in **12×8 LED matrix**, plus character helpers.
+- **Drop in raw Python** — the Python blocks now include raw-statement and raw-expression blocks and **import / globals / setup** section containers, so you can place code in exactly the right zone — just like the C++ side.
+
 ## v0.3.2 — 2026-06-15
 
 - **See which block wrote which line** — generated code now carries a short comment above each statement, naming the block that produced it (from the block's tooltip), so the source reads like a guided tour of your blocks. Any comment you write on a block yourself always shows up too. On by default; turn the tooltip comments off with the new **"Annotate generated code"** setting (your own comments stay either way).

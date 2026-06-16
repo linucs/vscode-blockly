@@ -4,6 +4,20 @@ All notable changes to the "Blocks Editor" extension will be documented in this 
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.3.3] - 2026-06-16
+
+### Added
+
+- **Arduino UNO Q / App Lab block catalogs** — a set of new built-in catalogs for the dual-brain UNO Q workflow, on both sides of the bridge:
+  - **C++ (MCU side):** onboard RGB LED control (`Control`), printing to the App Lab **Monitor** via the Router Bridge (`Control`), and the **MCU→SBC Bridge** — notify, provide, and call services (`Control::Bridge`).
+  - **Python (CPU/SBC side):** onboard RGB LED, **Logger** messages (`Control::Logging`), `sleep`/time, and the Python side of the **MCU-SBC Bridge** messaging (`Control::Bridge`).
+- **Uno R4 12×8 LED matrix** — a new `Displays` catalog with blocks for the Uno R4's built-in 12×8 LED matrix, plus character helper blocks.
+- **Raw Python code & section containers** — the Python `code` catalog gains raw-statement and raw-expression blocks plus **import**, **globals (module)**, and **setup** section containers, so Python projects can target the import / module / setup zones the same way C++ already could.
+
+### Changed
+
+- The webview bundle is now type-checked in CI: `check-types:webview` (strict `tsc` over `webview/`) was added to the `compile` and `package` scripts, and the webview sources were tightened to pass it (custom-field generics, generator casts, theme definition, Blockly plugin type shims).
+
 ## [0.3.2] - 2026-06-15
 
 ### Added
@@ -114,6 +128,9 @@ First public preview.
 - **Workspace conveniences** — optional minimap, toolbox search, and customizable category colors.
 - **Block Author chat participant** (`@blocks`) — assists in creating new block catalogs for hardware libraries.
 
+[0.3.3]: https://github.com/linucs/vscode-blockly/releases/tag/v0.3.3
+[0.3.2]: https://github.com/linucs/vscode-blockly/releases/tag/v0.3.2
+[0.3.1]: https://github.com/linucs/vscode-blockly/releases/tag/v0.3.1
 [0.3.0]: https://github.com/linucs/vscode-blockly/releases/tag/v0.3.0
 [0.2.1]: https://github.com/linucs/vscode-blockly/releases/tag/v0.2.1
 [0.2.0]: https://github.com/linucs/vscode-blockly/releases/tag/v0.2.0

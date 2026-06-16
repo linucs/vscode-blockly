@@ -26,7 +26,7 @@ Before research, ask the user:
 2. **Who is the target audience?** — beginners (fewer blocks, generous defaults) or advanced users (granular access to every parameter)?
 3. **Where is the reference documentation?** — docs/API/tutorial/example URLs.
 4. **Are there example sketches** that represent the expected outcome?
-5. **What development environment are we targeting?** - we might be creating blocks for the Arduino CLI/IDE, PlatformIO (PIO). Each has its own library registry, and registries do not fully overlap.
+5. **What development environment are we targeting?** - we might be creating C++ blocks for the Arduino CLI/IDE sketches, PlatformIO (PIO) programs, or a mix of Python/C++ blocks for whats'called an "Arduino App" - specifically targeting the dual-brain Arduino Uno Q / Ventuno Q boards and developed with the Arduino App CLI. Each has its own library registry, and registries do not fully overlap.
 
 ### Phase 1: Research the target (do NOT design from memory)
 
@@ -93,8 +93,9 @@ Design principles:
   `.begin()` from implementation-level `codegen.setup`. Pick one approach.
 - Tag blocks with init/begin functions that require parameters with a `setup` tag and put the code in the block-lebel `codegen.body` section — the user will specify the parameters and place them in setup containers.
 - For use-case blocks, leverage `codegen.helpers` (utility functions, callback functions) so `body` stays readable.
-- **Runtime is always `arduino:cpp`.** The extension generates C++ only. Never offer Python; never
-  ask which runtime — always set `runtime: "arduino:cpp"`.
+- **Default to `runtime: "arduino:cpp"`.** It is the right runtime for board/component/sensor
+  libraries — the common case for this skill — so don't ask which runtime, just use it. The extension
+  *also* supports `runtime: "arduino:python"` (for blocks to be developed on the Uno Q / Ventuno Q SBC); only use that when the user is explicitly authoring Ardino App Lab or Arduino App CLI Python blocks.
 - **`targets` is mandatory for board-specific libraries.** If a library is not universal, the
   implementation MUST include a `targets` array of board identifiers. Omitting it makes the blocks
   appear for ALL boards.
@@ -115,7 +116,8 @@ file (subcategories, counts, names); chosen category colour (with rationale); ke
 
 #### Phase 3.3: Generate and validate
 
-1. Generate the YAML (with the schema front matter).
+1. Generate the YAML — schema front matter, then `id` / `author` / `version` / `description`
+   (see "Catalog metadata"), then `category` / `implementations`.
 2. **Validate** it (schema + structural checks below). Fix issues and re-validate.
 3. Output: **save** the file(s) if a filesystem/tool is available; otherwise present as fenced
    code blocks with suggested filenames. Save into the project `.blocks/` directory only — the
@@ -315,8 +317,10 @@ tooltip:
 - **Dropdown labels** in `args` `options` are NOT translatable in the YAML — they are typically
   code identifiers (HIGH/LOW, MSBFIRST, SPI_MODE0) or API names that should stay in English.
 - When **generating a new catalog**, always include `en` strings. If the user requests translations,
-  add them as additional keys. Offer to translate if the user hasn't asked — the extension supports
-  Italian (`it`) as the first non-English locale.
+  add them as additional keys. Offer to translate if the user hasn't asked. The extension ships 15
+  locales — `en, it, zh-cn, zh-tw, fr, de, es, ja, ko, ru, pt-br, tr, pl, cs, hu` (`it` is the primary
+  non-English locale) — but a community catalog may include any subset; only `en` is required. The
+  same applies to the `description` field.
 
 ### Multi-message blocks
 
@@ -395,47 +399,29 @@ When the code generator serialises nested blocks into text, it needs to know whe
 Every call to the code generator takes an argument — the minimum precedence the caller can tolerate from the inner block.
 The generator compares that value against the precedence the inner block declares for its own output. If the inner block's precedence is weaker than what the outer block needs, the code is automatically wrapped in parentheses.
 
-We use `codegen.precedence` from following operator precedence table:
+`codegen.precedence` accepts ONE of exactly these **9 values** — the schema (and
+`validate-catalog`) rejects anything else. The vocabulary is intentionally **coarse**: each
+value is a bucket, not a 1:1 C++ operator. The "Level" column (C++ numeric level) is shown only
+to explain relative strength.
 
-| Precedence | Value | Operator |
+| `precedence` | Level | Bucket — the value block's *outermost* operator is… |
 |---|---|---|
-| `ATOMIC` | 0 | literals, identifiers |
-| `NEW` | 1.1 | `new` |
-| `MEMBER` | 1.2 | `.` `[]` |
-| `FUNCTION_CALL` | 2 | `()` |
-| `INCREMENT` | 3 | `++` |
-| `DECREMENT` | 3 | `--` |
-| `BITWISE_NOT` | 4.1 | `~` |
-| `UNARY_PLUS` | 4.2 | `+` (unary) |
-| `UNARY_NEGATION` | 4.3 | `-` (unary) |
-| `LOGICAL_NOT` | 4.4 | `!` |
-| `TYPEOF` | 4.5 | `typeof` |
-| `VOID` | 4.6 | `void` |
-| `DELETE` | 4.7 | `delete` |
-| `AWAIT` | 4.8 | `await` |
-| `EXPONENTIATION` | 5.0 | `**` |
-| `MULTIPLICATION` | 5.1 | `*` |
-| `DIVISION` | 5.2 | `/` |
-| `MODULUS` | 5.3 | `%` |
-| `SUBTRACTION` | 6.1 | `-` |
-| `ADDITION` | 6.2 | `+` |
-| `BITWISE_SHIFT` | 7 | `<<` `>>` `>>>` |
-| `RELATIONAL` | 8 | `<` `<=` `>` `>=` |
-| `IN` | 8 | `in` |
-| `INSTANCEOF` | 8 | `instanceof` |
-| `EQUALITY` | 9 | `==` `!=` `===` `!==` |
-| `BITWISE_AND` | 10 | `&` |
-| `BITWISE_XOR` | 11 | `^` |
-| `BITWISE_OR` | 12 | `\|` |
-| `LOGICAL_AND` | 13 | `&&` |
-| `LOGICAL_OR` | 14 | `\|\|` |
-| `CONDITIONAL` | 15 | `?:` |
-| `ASSIGNMENT` | 16 | `=` `+=` `-=` `**=` etc. |
-| `YIELD` | 17 | `yield` |
-| `COMMA` | 18 | `,` |
-| `NONE` | 99 | always parenthesise |
+| `ATOMIC` | 0 | a literal, identifier, function call `f(...)`, or member access `a.b` / `a[i]` — never needs parentheses |
+| `UNARY_PREFIX` | 3 | a prefix unary operator: `!x`, `~x`, `-x`, `*p`, `&x` |
+| `MULTIPLICATION` | 5 | `*`, `/`, `%` |
+| `ADDITION` | 6 | binary `+`, `-` |
+| `RELATIONAL` | 9 | `<`, `<=`, `>`, `>=` (also bit-shifts — pick the nearest bucket) |
+| `EQUALITY` | 10 | `==`, `!=` |
+| `LOGICAL_AND` | 14 | `&&` |
+| `LOGICAL_OR` | 15 | `\|\|` |
+| `NONE` | 99 | anything not in the list (bitwise `& ^ \|`, ternary `?:`, assignment, comma) — always parenthesised |
 
-**When in doubt, use `ATOMIC`.**
+There is **no** separate bucket for bitwise / ternary / assignment / comma: if your expression's
+top-level operator isn't listed above, use `NONE` (it forces parentheses, which is always safe).
+
+**Defaults:** use `ATOMIC` when the body is a single literal, identifier, or call — the common case
+for hardware blocks (`analogRead({{PIN}})`, `sensor.read()`). For any composite expression you're
+unsure about, use `NONE`.
 
 ---
 
@@ -451,6 +437,25 @@ Every generated file MUST start with the schema reference for linter validation:
 
 For multi-document files, add the schema reference before the FIRST document only.
 
+### Catalog metadata (author, version, description)
+
+Right after `id`, every catalog document should declare these three fields (the schema *requires*
+only `id`, `category`, `implementations`, but author/version/description are the project standard and
+power the community-catalog browser). In multi-document files, each document gets its own set.
+
+```yaml
+id: bme280-thermo
+author: Jane Doe
+version: "1.0.0"            # your catalog's semantic version
+category: "BME280::Thermo"
+description:                # follows the same i18n rules as message/tooltip: `en` required, others optional
+  en: "Temperature and humidity blocks for the BME280 sensor."
+  it: "Blocchi di temperatura e umidità per il sensore BME280."
+```
+
+Key order: `id` → `author` → `version` → `category` → `colour` (if any) → `description` → `docs`
+(if any) → `implementations`.
+
 ### Multi-document layout
 
 Use `---` to separate subcategories. Each document is an independent catalog entry.
@@ -460,8 +465,12 @@ Use `---` to separate subcategories. Each document is an independent catalog ent
 
 # === Section A ===
 id: myboard-section-a
+author: Jane Doe
+version: "1.0.0"
 category: "My Board::Section A"
 colour: "#00979D"
+description:
+  en: "Section A blocks for My Board."
 implementations:
   - runtime: "arduino:cpp"
     dependencies:
@@ -478,8 +487,12 @@ implementations:
 ---
 # === Section B ===
 id: myboard-section-b
+author: Jane Doe
+version: "1.0.0"
 category: "My Board::Section B"
 # colour inherited from the first document (same top-level category "My Board")
+description:
+  en: "Section B blocks for My Board."
 # ...
 ```
 
@@ -528,8 +541,13 @@ board-specific file. When several libraries are mentioned together, classify eac
 ```yaml
 # yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json
 id: arduino_math_random
+author: Lino Moretto
+version: "0.0.1"
 category: "Math::Random"
-colour: "#B5CEA8"
+# (no `colour`: Math is a built-in toolbox category coloured by the theme palette)
+description:
+  en: "Generate pseudo-random numbers and seed the generator."
+  it: "Genera numeri pseudo-casuali e inizializza il generatore."
 implementations:
   - runtime: "arduino:cpp"
     blocks:

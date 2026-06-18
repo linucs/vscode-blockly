@@ -13,7 +13,7 @@ export interface ProjectEnv {
 }
 
 /** Which toolchain/backend a project uses (selects the packaging strategy). */
-export type ProjectConfigType = 'platformio' | 'arduino' | 'app-lab';
+export type ProjectConfigType = 'platformio' | 'arduino' | 'app-lab' | 'manual';
 
 /** Parsed project configuration from either platformio.ini or sketch.yaml. */
 export interface ProjectConfig {
@@ -48,6 +48,24 @@ export function resolveActiveEnv(project: ProjectConfig, requested?: string): Pr
         if (found) return found;
     }
     return project.envs[0];
+}
+
+/**
+ * Last-resort fallback project: synthesized only when the detection chain finds
+ * no real config (`loadProjectConfig` → undefined) and the user has manually
+ * picked a framework (persisted in `blocks-editor.fallbackFramework`). The
+ * `'manual'` configType has no registered backend, so `syncProjectConfig`
+ * no-ops — nothing is written to disk. The runtime is composed downstream from
+ * this framework plus the file's language; board is left undefined (universal
+ * blocks only).
+ */
+export function synthesizeManualProject(configPath: string, framework: string): ProjectConfig {
+    return {
+        configPath,
+        configType: 'manual',
+        envs: [{ name: DEFAULT_ENV_NAME, framework }],
+        defaultEnvs: [DEFAULT_ENV_NAME],
+    };
 }
 
 export function toBoardContext(env: ProjectEnv): BoardContext {

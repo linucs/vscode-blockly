@@ -16,7 +16,6 @@
   "Catalog path not found or not a directory: {0}": "A katalógus elérési útja nem található, vagy nem könyvtár: {0}",
   "Failed to download catalog from {0}: {1}": "A katalógus letöltése sikertelen innen: {0}: {1}",
   "No board detected": "Nem észlelhető panel",
-  "Open this file inside a project containing a platformio.ini, sketch.yaml, or app.yaml to load the blocks compatible with your board.": "Nyisd meg ezt a fájlt egy olyan projektben, amely tartalmaz egy platformio.ini vagy sketch.yaml, app.yaml fájlt, hogy betöltsd a panelodhoz kompatibilis blokkokat.",
   "No framework declared": "Nincs framework megadva",
   "This profile's FQBN does not specify a recognized framework. Ensure the fqbn field is set correctly in sketch.yaml.": "Ennek a profilnak az FQBN-je nem ad meg felismert frameworköt. Győződj meg róla, hogy az fqbn mező helyesen van beállítva a sketch.yaml fájlban.",
   "This environment does not set \"framework\" in platformio.ini, so no code can be generated. Add a framework (e.g. framework = arduino).": "Ez a környezet nem állítja be a \"framework\" értékét a platformio.ini fájlban, ezért nem lehet kódot generálni. Adj hozzá egy frameworköt (pl. framework = arduino).",
@@ -87,5 +86,8 @@
   "Open reference documentation (1 component)": "Referenciadokumentáció megnyitása (1 komponens)",
   "Open reference documentation ({0} components)": "Referenciadokumentáció megnyitása ({0} komponens)",
   "Generate code now": "Kód generálása most",
-  "Regenerate code now (auto-generation is on)": "Kód újragenerálása most (az automatikus generálás be van kapcsolva)"
+  "Regenerate code now (auto-generation is on)": "Kód újragenerálása most (az automatikus generálás be van kapcsolva)",
+  "Open this file inside a project containing a platformio.ini, sketch.yaml, or app.yaml to load the blocks compatible with your board — or select a framework manually below.": "Nyisd meg ezt a fájlt egy olyan projektben, amely tartalmaz egy platformio.ini vagy sketch.yaml, app.yaml fájlt, hogy betöltsd a panelodhoz kompatibilis blokkokat — vagy válassz manuálisan egy keretrendszert alább.",
+  "Select framework…": "Keretrendszer kiválasztása…",
+  "Select the framework for this project": "Válaszd ki a projekt keretrendszerét"
 }

@@ -262,6 +262,11 @@
           "type": "string",
           "default": "linucs/blocks-community-catalog",
           "description": "%config.contributionRepo%"
+        },
+        "blocks-editor.fallbackFramework": {
+          "type": "string",
+          "scope": "resource",
+          "description": "%config.fallbackFramework%"
         }
       }
     }

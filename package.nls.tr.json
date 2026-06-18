@@ -30,5 +30,6 @@
   "walkthrough.contribute.description": "Arduino ve blok programlamanın, edge AI dahil ileri düzey kavramları öğrenmede yeni başlayanlara gerçekten yardımcı olabileceğine inanıyorum. Ancak tek başına çalışan bir geliştiriciyim ve oradaki her donanım cihazı ile kullanım senaryosu için blok oluşturamam.\n\nSiz de bilgi paylaşmaya ve başkalarının öğrenmesine yardım etmeye inanıyorsanız, **lütfen katkıda bulunun**: blok kataloglarınızı gönderin, sorunlar açın veya pull request gönderin. Her katkı, görsel programlamayı daha fazla insan için erişilebilir kılar.\n\n[Bloklarınızı Paylaşın](https://github.com/linucs/blocks-community-catalog)",
   "mcp.blocksEditor.label": "Blocks Editor",
   "command.contributeCatalog": "Blocks Editor: Topluluğa katalog katkıda bulun…",
-  "config.contributionRepo": "Oluşturulan katalogların katkıda bulunulduğu GitHub deposu (owner/repo). Bir fork'a veya özel bir topluluk kataloğuna işaret etmesi için değiştirin."
+  "config.contributionRepo": "Oluşturulan katalogların katkıda bulunulduğu GitHub deposu (owner/repo). Bir fork'a veya özel bir topluluk kataloğuna işaret etmesi için değiştirin.",
+  "config.fallbackFramework": "Açık dosya için herhangi bir proje dosyası (platformio.ini, sketch.yaml veya app.yaml) algılanmadığında varsayılacak framework. Yalnızca son çare olarak kullanılır — algılanan bir proje her zaman önceliklidir. Düzenleyicinin \"Framework seç\" eylemiyle bir framework seçtiğinizde otomatik olarak ayarlanır."
 }

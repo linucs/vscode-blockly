@@ -18,6 +18,7 @@
   "command.contributeCatalog": "Editor a Blocchi: Contribuisci un catalogo alla community…",
   "config.catalogRegistryUrl": "URL dell'indice del catalogo blocchi community (index.json). Modificalo per usare un registro privato o self-hosted.",
   "config.contributionRepo": "Repository GitHub (owner/repo) a cui vengono contribuiti i cataloghi creati. Modificalo per puntare a un fork o a un catalogo community privato.",
+  "config.fallbackFramework": "Framework da assumere quando per il file aperto non viene rilevato alcun file di progetto (platformio.ini, sketch.yaml o app.yaml). Usato solo come ultima risorsa — un progetto rilevato ha sempre la precedenza. Viene impostato automaticamente quando scegli un framework dall'azione \"Seleziona framework\" dell'editor.",
   "walkthrough.title": "Inizia con l'Editor a Blocchi",
   "walkthrough.description": "Impara a costruire programmi Arduino visualmente con blocchi drag-and-drop.",
   "walkthrough.openWithBlocks.title": "Apri un file con l'Editor a Blocchi",

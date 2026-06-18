@@ -30,5 +30,6 @@
   "walkthrough.contribute.description": "Věřím, že Arduino a programování pomocí bloků mohou opravdu pomoci začátečníkům naučit se pokročilé koncepty — včetně edge AI. Jsem ale jediný vývojář a nemohu vytvořit bloky pro každé hardwarové zařízení a případ použití.\n\nPokud i vy věříte ve sdílení znalostí a pomoc druhým při učení, **prosím přispějte**: odešlete své katalogy bloků, zakládejte issues nebo posílejte pull requesty. Každý příspěvek zpřístupní vizuální programování více lidem.\n\n[Sdílejte své bloky](https://github.com/linucs/blocks-community-catalog)",
   "mcp.blocksEditor.label": "Blocks Editor",
   "command.contributeCatalog": "Blocks Editor: Přispět katalogem do komunity…",
-  "config.contributionRepo": "Úložiště GitHub (owner/repo), do kterého se přispívají vytvořené katalogy. Změňte pro odkaz na fork nebo soukromý komunitní katalog."
+  "config.contributionRepo": "Úložiště GitHub (owner/repo), do kterého se přispívají vytvořené katalogy. Změňte pro odkaz na fork nebo soukromý komunitní katalog.",
+  "config.fallbackFramework": "Framework, který se použije, když pro otevřený soubor není nalezen žádný soubor projektu (platformio.ini, sketch.yaml nebo app.yaml). Použije se pouze jako poslední možnost — nalezený projekt má vždy přednost. Nastaví se automaticky, když vyberete framework pomocí akce „Vybrat framework“ v editoru."
 }

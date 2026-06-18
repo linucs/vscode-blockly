@@ -30,5 +30,6 @@
   "walkthrough.contribute.description": "我相信 Arduino 與積木程式設計能真正幫助初學者學習進階概念 — 包括邊緣 AI。但我只是一名獨立開發者，無法為世上每一種硬體裝置與使用情境撰寫積木。\n\n如果你也相信分享知識與幫助他人學習，**請一起貢獻**：提交你的積木目錄、開啟 issue 或送出 pull request。每一份貢獻都讓視覺化程式設計能觸及更多人。\n\n[分享你的積木](https://github.com/linucs/blocks-community-catalog)",
   "mcp.blocksEditor.label": "Blocks Editor",
   "command.contributeCatalog": "Blocks Editor：向社群貢獻目錄…",
-  "config.contributionRepo": "所建立目錄將貢獻到的 GitHub 儲存庫（owner/repo）。可變更為指向某個 fork 或私有社群目錄。"
+  "config.contributionRepo": "所建立目錄將貢獻到的 GitHub 儲存庫（owner/repo）。可變更為指向某個 fork 或私有社群目錄。",
+  "config.fallbackFramework": "當未針對開啟的檔案偵測到專案檔（platformio.ini、sketch.yaml 或 app.yaml）時所採用的框架。僅作為最後手段使用 — 已偵測到的專案一律優先。當你透過編輯器的「選擇框架」動作選擇框架時會自動設定。"
 }

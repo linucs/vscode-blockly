@@ -16,7 +16,6 @@
   "Catalog path not found or not a directory: {0}": "Путь каталога не найден или не является папкой: {0}",
   "Failed to download catalog from {0}: {1}": "Не удалось скачать каталог из {0}: {1}",
   "No board detected": "Плата не обнаружена",
-  "Open this file inside a project containing a platformio.ini, sketch.yaml, or app.yaml to load the blocks compatible with your board.": "Откройте этот файл в проекте, содержащем platformio.ini или sketch.yaml, app.yaml, чтобы загрузить блоки, совместимые с вашей платой.",
   "No framework declared": "Framework не объявлен",
   "This profile's FQBN does not specify a recognized framework. Ensure the fqbn field is set correctly in sketch.yaml.": "FQBN этого профиля не указывает распознаваемый framework. Убедитесь, что поле fqbn правильно задано в sketch.yaml.",
   "This environment does not set \"framework\" in platformio.ini, so no code can be generated. Add a framework (e.g. framework = arduino).": "В этом окружении не задан \"framework\" в platformio.ini, поэтому код сгенерировать нельзя. Добавьте framework (например, framework = arduino).",
@@ -87,5 +86,8 @@
   "Open reference documentation (1 component)": "Открыть справочную документацию (1 компонент)",
   "Open reference documentation ({0} components)": "Открыть справочную документацию ({0} компонентов)",
   "Generate code now": "Сгенерировать код сейчас",
-  "Regenerate code now (auto-generation is on)": "Перегенерировать код сейчас (автогенерация включена)"
+  "Regenerate code now (auto-generation is on)": "Перегенерировать код сейчас (автогенерация включена)",
+  "Open this file inside a project containing a platformio.ini, sketch.yaml, or app.yaml to load the blocks compatible with your board — or select a framework manually below.": "Откройте этот файл в проекте, содержащем platformio.ini или sketch.yaml, app.yaml, чтобы загрузить блоки, совместимые с вашей платой — или выберите фреймворк вручную ниже.",
+  "Select framework…": "Выбрать фреймворк…",
+  "Select the framework for this project": "Выберите фреймворк для этого проекта"
 }

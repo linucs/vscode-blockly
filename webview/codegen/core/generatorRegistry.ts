@@ -17,6 +17,11 @@ export function isRuntimeSupported(runtime: string): boolean {
     return runtime in builders;
 }
 
+/** The runtime keys (`<framework>:<language>`) with a registered generator. */
+export function listSupportedRuntimes(): string[] {
+    return Object.keys(builders);
+}
+
 /** Build (once, then cache) the generator for a runtime, or undefined if unsupported. */
 export function getRuntimeGenerator(runtime: string): RuntimeGenerator | undefined {
     const build = builders[runtime];

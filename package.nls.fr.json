@@ -30,5 +30,6 @@
   "walkthrough.contribute.description": "Je crois qu'Arduino et la programmation par blocs peuvent vraiment aider les débutants à apprendre des concepts avancés — y compris l'IA embarquée (edge AI). Mais je suis un développeur seul, et je ne peux pas créer des blocs pour chaque appareil matériel et chaque cas d'usage.\n\nSi vous aussi croyez au partage des connaissances et à l'entraide pour apprendre, **contribuez** : proposez vos catalogues de blocs, ouvrez des issues ou envoyez des pull requests. Chaque contribution rend la programmation visuelle accessible à un plus grand nombre.\n\n[Partagez vos blocs](https://github.com/linucs/blocks-community-catalog)",
   "mcp.blocksEditor.label": "Blocks Editor",
   "command.contributeCatalog": "Blocks Editor : Contribuer un catalogue à la communauté…",
-  "config.contributionRepo": "Dépôt GitHub (owner/repo) auquel les catalogues créés sont contribués. Modifiez-le pour pointer vers un fork ou un catalogue communautaire privé."
+  "config.contributionRepo": "Dépôt GitHub (owner/repo) auquel les catalogues créés sont contribués. Modifiez-le pour pointer vers un fork ou un catalogue communautaire privé.",
+  "config.fallbackFramework": "Framework à utiliser lorsqu'aucun fichier de projet (platformio.ini, sketch.yaml ou app.yaml) n'est détecté pour le fichier ouvert. Utilisé uniquement en dernier recours — un projet détecté est toujours prioritaire. Défini automatiquement lorsque vous choisissez un framework via l'action « Sélectionner un framework » de l'éditeur."
 }

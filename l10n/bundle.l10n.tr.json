@@ -16,7 +16,6 @@
   "Catalog path not found or not a directory: {0}": "Katalog yolu bulunamadı veya bir dizin değil: {0}",
   "Failed to download catalog from {0}: {1}": "Katalog {0} adresinden indirilemedi: {1}",
   "No board detected": "Kart algılanmadı",
-  "Open this file inside a project containing a platformio.ini, sketch.yaml, or app.yaml to load the blocks compatible with your board.": "Kartınızla uyumlu blokları yüklemek için bu dosyayı platformio.ini veya sketch.yaml, app.yaml içeren bir projede açın.",
   "No framework declared": "Framework belirtilmedi",
   "This profile's FQBN does not specify a recognized framework. Ensure the fqbn field is set correctly in sketch.yaml.": "Bu profilin FQBN'i tanınan bir framework belirtmiyor. sketch.yaml içindeki fqbn alanının doğru ayarlandığından emin olun.",
   "This environment does not set \"framework\" in platformio.ini, so no code can be generated. Add a framework (e.g. framework = arduino).": "Bu environment, platformio.ini içinde \"framework\" ayarlamadığı için kod oluşturulamaz. Bir framework ekleyin (ör. framework = arduino).",
@@ -87,5 +86,8 @@
   "Open reference documentation (1 component)": "Başvuru belgelerini aç (1 bileşen)",
   "Open reference documentation ({0} components)": "Başvuru belgelerini aç ({0} bileşen)",
   "Generate code now": "Kodu şimdi oluştur",
-  "Regenerate code now (auto-generation is on)": "Kodu şimdi yeniden oluştur (otomatik oluşturma açık)"
+  "Regenerate code now (auto-generation is on)": "Kodu şimdi yeniden oluştur (otomatik oluşturma açık)",
+  "Open this file inside a project containing a platformio.ini, sketch.yaml, or app.yaml to load the blocks compatible with your board — or select a framework manually below.": "Kartınızla uyumlu blokları yüklemek için bu dosyayı platformio.ini veya sketch.yaml, app.yaml içeren bir projede açın — veya aşağıdan elle bir framework seçin.",
+  "Select framework…": "Framework seç…",
+  "Select the framework for this project": "Bu proje için framework seçin"
 }

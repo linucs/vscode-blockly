@@ -30,5 +30,6 @@
   "walkthrough.contribute.description": "私は、Arduino とブロックプログラミングが初心者の高度な概念の学習を本当に助けられると信じています — エッジ AI を含めて。しかし私は個人の開発者であり、存在するすべてのハードウェアデバイスやユースケースのためにブロックを作成することはできません。\n\nあなたも知識の共有と他者の学びを助けることを信じているなら、**ぜひ貢献してください**: ブロックカタログを投稿したり、issue を開いたり、pull request を送ったりしてください。すべての貢献が、視覚的プログラミングをより多くの人に届けます。\n\n[あなたのブロックを共有](https://github.com/linucs/blocks-community-catalog)",
   "mcp.blocksEditor.label": "Blocks Editor",
   "command.contributeCatalog": "Blocks Editor: コミュニティにカタログを提供…",
-  "config.contributionRepo": "作成したカタログの提供先となる GitHub リポジトリ（owner/repo）。フォークやプライベートなコミュニティカタログを指すように変更できます。"
+  "config.contributionRepo": "作成したカタログの提供先となる GitHub リポジトリ（owner/repo）。フォークやプライベートなコミュニティカタログを指すように変更できます。",
+  "config.fallbackFramework": "開いているファイルに対してプロジェクトファイル（platformio.ini、sketch.yaml、app.yaml）が検出されない場合に想定するフレームワーク。最終手段としてのみ使用されます — 検出されたプロジェクトが常に優先されます。エディターの「フレームワークを選択」操作でフレームワークを選ぶと自動的に設定されます。"
 }

@@ -18,6 +18,7 @@
   "command.contributeCatalog": "Blocks Editor: Contribute Catalog to Community…",
   "config.catalogRegistryUrl": "URL of the community block catalog index (index.json). Change to use a private or self-hosted registry.",
   "config.contributionRepo": "GitHub repository (owner/repo) that authored catalogs are contributed to. Change to point at a fork or private community catalog.",
+  "config.fallbackFramework": "Framework to assume when no project file (platformio.ini, sketch.yaml, or app.yaml) is detected for the open file. Used only as a last resort — a detected project always takes precedence. Set automatically when you pick a framework from the editor's \"Select framework\" action.",
   "walkthrough.title": "Get Started with Blocks Editor",
   "walkthrough.description": "Learn how to build Arduino programs visually with drag-and-drop blocks.",
   "walkthrough.openWithBlocks.title": "Open a file with Blocks Editor",

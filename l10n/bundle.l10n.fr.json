@@ -16,7 +16,6 @@
   "Catalog path not found or not a directory: {0}": "Chemin de catalogue introuvable ou n'est pas un dossier : {0}",
   "Failed to download catalog from {0}: {1}": "Échec du téléchargement du catalogue depuis {0} : {1}",
   "No board detected": "Aucune carte détectée",
-  "Open this file inside a project containing a platformio.ini, sketch.yaml, or app.yaml to load the blocks compatible with your board.": "Ouvrez ce fichier dans un projet contenant un platformio.ini ou un sketch.yaml, app.yaml pour charger les blocs compatibles avec votre carte.",
   "No framework declared": "Aucun framework déclaré",
   "This profile's FQBN does not specify a recognized framework. Ensure the fqbn field is set correctly in sketch.yaml.": "Le FQBN de ce profil ne spécifie pas de framework reconnu. Assurez-vous que le champ fqbn est correctement défini dans sketch.yaml.",
   "This environment does not set \"framework\" in platformio.ini, so no code can be generated. Add a framework (e.g. framework = arduino).": "Cet environnement ne définit pas \"framework\" dans platformio.ini, aucun code ne peut donc être généré. Ajoutez un framework (par ex. framework = arduino).",
@@ -87,5 +86,8 @@
   "Open reference documentation (1 component)": "Ouvrir la documentation de référence (1 composant)",
   "Open reference documentation ({0} components)": "Ouvrir la documentation de référence ({0} composants)",
   "Generate code now": "Générer le code maintenant",
-  "Regenerate code now (auto-generation is on)": "Régénérer le code maintenant (la génération automatique est activée)"
+  "Regenerate code now (auto-generation is on)": "Régénérer le code maintenant (la génération automatique est activée)",
+  "Open this file inside a project containing a platformio.ini, sketch.yaml, or app.yaml to load the blocks compatible with your board — or select a framework manually below.": "Ouvrez ce fichier dans un projet contenant un platformio.ini ou un sketch.yaml, app.yaml pour charger les blocs compatibles avec votre carte — ou sélectionnez un framework manuellement ci-dessous.",
+  "Select framework…": "Sélectionner un framework…",
+  "Select the framework for this project": "Sélectionnez le framework pour ce projet"
 }

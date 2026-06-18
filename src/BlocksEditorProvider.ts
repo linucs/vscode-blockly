@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import { CatalogManager } from './catalog/CatalogManager';
 import { filterEntriesForRuntime, composeRuntime } from './catalog/boardFilter';
-import { ProjectConfig, resolveActiveEnv, toBoardContext } from './project/projectConfig';
+import { ProjectConfig, resolveActiveEnv, toBoardContext, synthesizeManualProject } from './project/projectConfig';
 import { loadProjectConfig } from './project/projectLoader';
 import { companionUriFor, readCompanionWorkspace, writeCompanionWorkspace, companionExists } from './sidecar/companion';
 import { languageForFile } from './codegen/sourceLanguage';
@@ -105,6 +105,15 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
 
         const reloadProject = async () => {
             project = await loadProjectConfig(sourceUri.fsPath);
+            // Last-resort fallback: only when the detection chain finds nothing.
+            // A real project (even one missing a framework) always wins, so the
+            // fallback self-heals once a genuine config appears.
+            if (!project) {
+                const fb = vscode.workspace
+                    .getConfiguration('blocks-editor', sourceUri)
+                    .get<string>('fallbackFramework');
+                if (fb) project = synthesizeManualProject(sourceUri.fsPath, fb);
+            }
             if (project) {
                 const projectBlocksDir = this.resolveBlocksDir(sourceUri);
                 await this.catalogManager.syncRemoteCatalogs(projectBlocksDir);
@@ -171,6 +180,9 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
             if (e.affectsConfiguration('blocks-editor.generateOnChange')) sendMode();
             if (e.affectsConfiguration('blocks-editor.showMinimap')) sendMinimap();
             if (e.affectsConfiguration('blocks-editor.annotateGeneratedCode')) sendAnnotate();
+            // Keep every editor on the same folder in sync when the manual
+            // framework fallback changes (same echo pattern as the settings above).
+            if (e.affectsConfiguration('blocks-editor.fallbackFramework')) void reloadProject();
         });
 
         const themeSubscription = vscode.window.onDidChangeActiveColorTheme(() => {
@@ -211,6 +223,21 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
                     selectedEnv = e.env;
                     sendCatalog();
                     return;
+                case 'pick_fallback_framework': {
+                    // Last-resort: no project was detected. Let the user pick a
+                    // framework (the candidate list is derived webview-side from
+                    // the supported runtimes) and persist it for this folder.
+                    const frameworks: string[] = e.frameworks ?? [];
+                    if (!frameworks.length) return;
+                    const picked = await vscode.window.showQuickPick(frameworks, {
+                        placeHolder: vscode.l10n.t('Select the framework for this project'),
+                    });
+                    if (!picked) return;
+                    await vscode.workspace.getConfiguration('blocks-editor', sourceUri)
+                        .update('fallbackFramework', picked, vscode.ConfigurationTarget.WorkspaceFolder);
+                    await reloadProject();
+                    return;
+                }
                 case 'set_generate_mode':
                     // Persist the global setting; onDidChangeConfiguration echoes set_mode
                     // back to every open editor, keeping them in sync.
@@ -428,6 +455,14 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
                     #emptyState.visible { display: flex; }
                     #emptyState .title { font-size: 14px; font-weight: 600; }
                     #emptyState .hint { font-size: 12px; opacity: 0.75; max-width: 420px; }
+                    #emptyAction {
+                        display: none; margin-top: 8px; padding: 4px 14px; cursor: pointer;
+                        font-family: inherit; font-size: 12px; border: none; border-radius: 2px;
+                        color: var(--vscode-button-foreground, #fff);
+                        background: var(--vscode-button-background, #0e639c);
+                    }
+                    #emptyAction:hover { background: var(--vscode-button-hoverBackground, #1177bb); }
+                    #emptyAction.visible { display: inline-block; }
 
                     .blocklyToolboxCategory[id="toolbox-search-input"] .blocklyTreeRowContentContainer {
                         pointer-events: auto !important;
@@ -488,6 +523,7 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
                     <div id="emptyState">
                         <div class="title">No board detected</div>
                         <div class="hint">Open this file inside a project containing a <code>platformio.ini</code>, <code>sketch.yaml</code>, or <code>app.yaml</code> to load the blocks compatible with your board.</div>
+                        <button id="emptyAction" type="button">Select framework…</button>
                     </div>
                 </div>
                 <script id="l10n-data" type="application/json">${l10nBundle}</script>

@@ -16,7 +16,6 @@
   "Catalog path not found or not a directory: {0}": "Cesta ke katalogu nenalezena nebo není adresářem: {0}",
   "Failed to download catalog from {0}: {1}": "Nepodařilo se stáhnout katalog z {0}: {1}",
   "No board detected": "Nebyla zjištěna žádná deska",
-  "Open this file inside a project containing a platformio.ini, sketch.yaml, or app.yaml to load the blocks compatible with your board.": "Otevřete tento soubor v projektu obsahujícím platformio.ini nebo sketch.yaml, app.yaml, aby se načetly bloky kompatibilní s vaší deskou.",
   "No framework declared": "Není deklarován žádný framework",
   "This profile's FQBN does not specify a recognized framework. Ensure the fqbn field is set correctly in sketch.yaml.": "FQBN tohoto profilu neuvádí rozpoznaný framework. Ujistěte se, že je pole fqbn v sketch.yaml správně nastaveno.",
   "This environment does not set \"framework\" in platformio.ini, so no code can be generated. Add a framework (e.g. framework = arduino).": "Toto prostředí nenastavuje \"framework\" v platformio.ini, takže nelze generovat kód. Přidejte framework (např. framework = arduino).",
@@ -87,5 +86,8 @@
   "Open reference documentation (1 component)": "Otevřít referenční dokumentaci (1 komponenta)",
   "Open reference documentation ({0} components)": "Otevřít referenční dokumentaci ({0} komponent)",
   "Generate code now": "Generovat kód nyní",
-  "Regenerate code now (auto-generation is on)": "Znovu generovat kód nyní (automatické generování je zapnuté)"
+  "Regenerate code now (auto-generation is on)": "Znovu generovat kód nyní (automatické generování je zapnuté)",
+  "Open this file inside a project containing a platformio.ini, sketch.yaml, or app.yaml to load the blocks compatible with your board — or select a framework manually below.": "Otevřete tento soubor v projektu obsahujícím platformio.ini nebo sketch.yaml, app.yaml, aby se načetly bloky kompatibilní s vaší deskou — nebo níže ručně vyberte framework.",
+  "Select framework…": "Vybrat framework…",
+  "Select the framework for this project": "Vyberte framework pro tento projekt"
 }

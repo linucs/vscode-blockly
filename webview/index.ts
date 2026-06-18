@@ -18,7 +18,7 @@ import * as l10n from '@vscode/l10n';
 import { provideVSCodeDesignSystem, vsCodeButton, vsCodeDropdown, vsCodeOption } from "@vscode/webview-ui-toolkit";
 import { ThemeAdapter, categoryStyleFor } from './ThemeAdapter';
 import { CodeFactory } from './codegen/core/CodeFactory';
-import { isRuntimeSupported } from './codegen/core/generatorRegistry';
+import { isRuntimeSupported, listSupportedRuntimes } from './codegen/core/generatorRegistry';
 import { setCommentAnnotation } from './codegen/core/commentAnnotation';
 import { initTypedVariableModal, initWorkspacePlugins, pluginInjectOptions, CPP_VARIABLE_TYPES, ThemedMinimap } from './plugins';
 import { initCppProcedureFlyout } from './custom-blocks/cppProcedureBlocks';
@@ -161,6 +161,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const emptyState = document.getElementById('emptyState');
     const emptyTitle = emptyState?.querySelector('.title') as HTMLElement | null;
     const emptyHint = emptyState?.querySelector('.hint') as HTMLElement | null;
+    const emptyAction = document.getElementById('emptyAction');
+    if (emptyAction) emptyAction.textContent = l10n.t('Select framework…');
+
+    // Frameworks offerable as a manual fallback, derived from the supported
+    // runtimes (single source of truth) — no separate list to maintain.
+    const fallbackFrameworks = () =>
+        [...new Set(listSupportedRuntimes().map(r => r.split(':')[0]))];
     const envSelect = document.getElementById('envSelect') as HTMLElement & { value?: string };
     const envLabel = document.getElementById('envLabel');
     const generateBtn = document.getElementById('generateBtn') as (HTMLElement & { disabled?: boolean; appearance?: string }) | null;
@@ -270,9 +277,11 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     // Show a full-area notice instead of the toolbox (no board / no framework / unsupported runtime).
-    const showBlocked = (title: string, hint: string) => {
+    // The "pick framework" action is offered only when a manual fallback can resolve the state.
+    const showBlocked = (title: string, hint: string, canPickFramework = false) => {
         if (emptyTitle) emptyTitle.textContent = title;
         if (emptyHint) emptyHint.textContent = hint;
+        emptyAction?.classList.toggle('visible', canPickFramework);
         emptyState?.classList.add('visible');
         runtimeReady = false;
         updateGenControl();
@@ -498,7 +507,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (!hasBoard) {
                     showBlocked(
                         l10n.t('No board detected'),
-                        l10n.t('Open this file inside a project containing a platformio.ini, sketch.yaml, or app.yaml to load the blocks compatible with your board.')
+                        l10n.t('Open this file inside a project containing a platformio.ini, sketch.yaml, or app.yaml to load the blocks compatible with your board — or select a framework manually below.'),
+                        true
                     );
                     break;
                 }
@@ -709,5 +719,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (catalogDocs.length > 0) {
             vscode.postMessage({ type: 'show_docs', docs: catalogDocs });
         }
+    });
+
+    emptyAction?.addEventListener('click', () => {
+        vscode.postMessage({ type: 'pick_fallback_framework', frameworks: fallbackFrameworks() });
     });
 });

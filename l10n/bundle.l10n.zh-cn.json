@@ -16,7 +16,6 @@
   "Catalog path not found or not a directory: {0}": "未找到目录路径或它不是一个文件夹：{0}",
   "Failed to download catalog from {0}: {1}": "从 {0} 下载目录失败：{1}",
   "No board detected": "未检测到开发板",
-  "Open this file inside a project containing a platformio.ini, sketch.yaml, or app.yaml to load the blocks compatible with your board.": "请在包含 platformio.ini 或 sketch.yaml, app.yaml 的项目中打开此文件，以加载与你的开发板兼容的积木。",
   "No framework declared": "未声明框架",
   "This profile's FQBN does not specify a recognized framework. Ensure the fqbn field is set correctly in sketch.yaml.": "此 profile 的 FQBN 未指定可识别的框架。请确保 sketch.yaml 中的 fqbn 字段设置正确。",
   "This environment does not set \"framework\" in platformio.ini, so no code can be generated. Add a framework (e.g. framework = arduino).": "此 environment 未在 platformio.ini 中设置 \"framework\"，因此无法生成代码。请添加一个框架（例如 framework = arduino）。",
@@ -87,5 +86,8 @@
   "Open reference documentation (1 component)": "打开参考文档（1 个组件）",
   "Open reference documentation ({0} components)": "打开参考文档（{0} 个组件）",
   "Generate code now": "立即生成代码",
-  "Regenerate code now (auto-generation is on)": "立即重新生成代码（自动生成已开启）"
+  "Regenerate code now (auto-generation is on)": "立即重新生成代码（自动生成已开启）",
+  "Open this file inside a project containing a platformio.ini, sketch.yaml, or app.yaml to load the blocks compatible with your board — or select a framework manually below.": "请在包含 platformio.ini 或 sketch.yaml, app.yaml 的项目中打开此文件，以加载与你的开发板兼容的积木 — 或在下方手动选择框架。",
+  "Select framework…": "选择框架…",
+  "Select the framework for this project": "为此项目选择框架"
 }

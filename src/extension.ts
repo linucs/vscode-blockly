@@ -29,7 +29,7 @@ export async function activate(context: vscode.ExtensionContext) {
         vscode.commands.registerCommand('blocks-editor.downloadCatalog', (item) => registryProvider.download(item)),
     );
 
-    const localCatalogsProvider = new LocalCatalogsProvider();
+    const localCatalogsProvider = new LocalCatalogsProvider(context.extensionUri);
     context.subscriptions.push(
         vscode.window.createTreeView('blocks-editor.localCatalogs', {
             treeDataProvider: localCatalogsProvider,

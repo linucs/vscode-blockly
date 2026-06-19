@@ -2,6 +2,8 @@ import * as vscode from 'vscode';
 import * as fs from 'fs/promises';
 import { gatherInstalledCatalogs, LocalCatalog } from '../contribute/localCatalogs';
 import { titleCase } from '../util/strings';
+import { canEditInGuidedUi } from './canEditInGuidedUi';
+import { CatalogEditorPanel } from './CatalogEditorPanel';
 
 type LocalCatalogItem = VendorGroup | CatalogFileItem;
 
@@ -25,6 +27,8 @@ interface CatalogFileItem {
 export class LocalCatalogsProvider implements vscode.TreeDataProvider<LocalCatalogItem> {
     private readonly _onDidChangeTreeData = new vscode.EventEmitter<LocalCatalogItem | undefined | void>();
     readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
+
+    constructor(private readonly extensionUri: vscode.Uri) { }
 
     refresh(): void {
         this._onDidChangeTreeData.fire();
@@ -74,12 +78,28 @@ export class LocalCatalogsProvider implements vscode.TreeDataProvider<LocalCatal
     }
 
     /**
-     * Edit a catalog file. The dedicated editing UI is built separately; until
-     * then this opens the YAML in a text editor so the action is functional.
+     * Edit a catalog file. Opens the guided editor unless the YAML uses
+     * constructs the guided surface can't represent (multi-document, a
+     * `generator:` block, a mutator, or a parse/schema error) — those fall back
+     * to the raw-text editor via {@link canEditInGuidedUi}.
      */
     async edit(item: LocalCatalogItem): Promise<void> {
         if (item?.kind !== 'file') return;
-        const doc = await vscode.workspace.openTextDocument(vscode.Uri.file(item.catalog.fsPath));
+        const fsPath = item.catalog.fsPath;
+
+        let text: string;
+        try {
+            text = await fs.readFile(fsPath, 'utf-8');
+        } catch {
+            text = '';
+        }
+
+        if (canEditInGuidedUi(text).ok) {
+            CatalogEditorPanel.createOrShow(this.extensionUri, fsPath);
+            return;
+        }
+
+        const doc = await vscode.workspace.openTextDocument(vscode.Uri.file(fsPath));
         await vscode.window.showTextDocument(doc);
     }
 

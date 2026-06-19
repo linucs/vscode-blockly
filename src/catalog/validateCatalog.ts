@@ -2,6 +2,9 @@ import * as yaml from 'js-yaml';
 import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
 import schema from './block-catalog_v1.schema.json';
+import type { CatalogIssue } from './catalogIssue';
+
+export type { CatalogIssue } from './catalogIssue';
 
 const ajv = new Ajv({ allErrors: true, strict: false });
 addFormats(ajv);
@@ -16,19 +19,6 @@ export interface ValidateOptions {
      * setup — see contributeCatalog.ts and the community repo's CI validator.
      */
     wysiwyg?: boolean;
-}
-
-/** A single structured validation finding. Host-agnostic. */
-export interface CatalogIssue {
-    severity: 'error' | 'warning';
-    /**
-     * Scope prefix for the finding, e.g. `Doc 1` or `Block "cpp_pin_mode"`, or
-     * the empty string when the finding is not scoped to a doc/block. Kept
-     * separate from `message` so consumers can group, while the string formatter
-     * reconstructs the original flat rendering as `path: message`.
-     */
-    path: string;
-    message: string;
 }
 
 /** Structured result of validating a catalog YAML string. */
@@ -61,7 +51,8 @@ export function validateCatalogResult(input: string, opts: ValidateOptions = {})
         return { issues: [], docCount: 0, blockCount: 0, parseError: err instanceof Error ? err.message : String(err) };
     }
 
-    const error = (path: string, message: string) => issues.push({ severity: 'error', path, message });
+    const error = (path: string, message: string, kind: 'schema' | 'structural' = 'structural') =>
+        issues.push({ severity: 'error', kind, path, message });
 
     for (const doc of docs) {
         if (doc === null || doc === undefined) continue;
@@ -69,7 +60,7 @@ export function validateCatalogResult(input: string, opts: ValidateOptions = {})
 
         if (!validate(doc)) {
             for (const e of validate.errors ?? []) {
-                error(`Doc ${docCount}`, `${e.instancePath} ${e.message}`);
+                error(`Doc ${docCount}`, `${e.instancePath} ${e.message}`, 'schema');
             }
         }
 
@@ -123,7 +114,7 @@ export function validateCatalogResult(input: string, opts: ValidateOptions = {})
 export function validateCatalogIssues(input: string, opts: ValidateOptions = {}): CatalogIssue[] {
     const result = validateCatalogResult(input, opts);
     if (result.parseError !== undefined) {
-        return [{ severity: 'error', path: '', message: `YAML parse error: ${result.parseError}` }];
+        return [{ severity: 'error', kind: 'schema', path: '', message: `YAML parse error: ${result.parseError}` }];
     }
     return result.issues;
 }

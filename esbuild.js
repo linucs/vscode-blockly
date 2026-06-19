@@ -60,6 +60,25 @@ async function main() {
 		],
 	});
 
+	// Guided Catalog Editor webview (browser, ESM). Separate Blockly meta-block
+	// surface from the main editor; shares ThemeAdapter/validation via imports.
+	const catalogEditorCtx = await esbuild.context({
+		entryPoints: [
+			'webview/catalog-editor/index.ts'
+		],
+		bundle: true,
+		format: 'esm',
+		minify: production,
+		sourcemap: !production,
+		sourcesContent: false,
+		platform: 'browser',
+		outfile: 'dist/catalog-editor.js',
+		logLevel: 'silent',
+		plugins: [
+			esbuildProblemMatcherPlugin,
+		],
+	});
+
 	// Standalone MCP server bundle. Spawned by Claude Code as a separate Node
 	// process (stdio transport). The MCP SDK (ESM) and zod are bundled in.
 	const mcpServerCtx = await esbuild.context({
@@ -81,10 +100,10 @@ async function main() {
 	});
 
 	if (watch) {
-		await Promise.all([extensionCtx.watch(), webviewCtx.watch(), mcpServerCtx.watch()]);
+		await Promise.all([extensionCtx.watch(), webviewCtx.watch(), catalogEditorCtx.watch(), mcpServerCtx.watch()]);
 	} else {
-		await Promise.all([extensionCtx.rebuild(), webviewCtx.rebuild(), mcpServerCtx.rebuild()]);
-		await Promise.all([extensionCtx.dispose(), webviewCtx.dispose(), mcpServerCtx.dispose()]);
+		await Promise.all([extensionCtx.rebuild(), webviewCtx.rebuild(), catalogEditorCtx.rebuild(), mcpServerCtx.rebuild()]);
+		await Promise.all([extensionCtx.dispose(), webviewCtx.dispose(), catalogEditorCtx.dispose(), mcpServerCtx.dispose()]);
 	}
 }
 

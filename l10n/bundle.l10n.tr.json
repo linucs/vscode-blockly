@@ -89,5 +89,9 @@
   "Regenerate code now (auto-generation is on)": "Kodu şimdi yeniden oluştur (otomatik oluşturma açık)",
   "Open this file inside a project containing a platformio.ini, sketch.yaml, or app.yaml to load the blocks compatible with your board — or select a framework manually below.": "Kartınızla uyumlu blokları yüklemek için bu dosyayı platformio.ini veya sketch.yaml, app.yaml içeren bir projede açın — veya aşağıdan elle bir framework seçin.",
   "Select framework…": "Framework seç…",
-  "Select the framework for this project": "Bu proje için framework seçin"
+  "Select the framework for this project": "Bu proje için framework seçin",
+  "Delete": "Sil",
+  "Delete catalog \"{0}\"? This permanently removes the file {1}.": "\"{0}\" kataloğu silinsin mi? Bu, {1} dosyasını kalıcı olarak kaldırır.",
+  "Catalog \"{0}\" deleted.": "\"{0}\" kataloğu silindi.",
+  "Failed to delete catalog \"{0}\": {1}": "\"{0}\" kataloğu silinemedi: {1}"
 }

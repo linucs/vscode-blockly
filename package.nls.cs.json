@@ -10,7 +10,7 @@
   "command.refreshCatalogs": "Blocks Editor: Obnovit vzdálené katalogy",
   "command.enableClaudeCode": "Blocks Editor: Nastavit AI asistenty (Copilot a Claude Code)",
   "editor.displayName": "Blocks Editor (Vizuální programování)",
-  "viewContainer.catalogBrowser.title": "Katalogy bloků",
+  "viewContainer.catalogBrowser.title": "Komunitní katalog",
   "view.catalogRegistry.name": "Komunitní katalog",
   "command.refreshRegistry": "Blocks Editor: Obnovit komunitní katalog",
   "command.downloadCatalog": "Stáhnout katalog",
@@ -31,5 +31,10 @@
   "mcp.blocksEditor.label": "Blocks Editor",
   "command.contributeCatalog": "Blocks Editor: Přispět katalogem do komunity…",
   "config.contributionRepo": "Úložiště GitHub (owner/repo), do kterého se přispívají vytvořené katalogy. Změňte pro odkaz na fork nebo soukromý komunitní katalog.",
-  "config.fallbackFramework": "Framework, který se použije, když pro otevřený soubor není nalezen žádný soubor projektu (platformio.ini, sketch.yaml nebo app.yaml). Použije se pouze jako poslední možnost — nalezený projekt má vždy přednost. Nastaví se automaticky, když vyberete framework pomocí akce „Vybrat framework“ v editoru."
+  "config.fallbackFramework": "Framework, který se použije, když pro otevřený soubor není nalezen žádný soubor projektu (platformio.ini, sketch.yaml nebo app.yaml). Použije se pouze jako poslední možnost — nalezený projekt má vždy přednost. Nastaví se automaticky, když vyberete framework pomocí akce „Vybrat framework“ v editoru.",
+  "view.localCatalogs.name": "Nainstalované bloky",
+  "command.refreshLocalCatalogs": "Editor bloků: Obnovit nainstalované bloky",
+  "command.editLocalCatalog": "Upravit katalog",
+  "command.deleteLocalCatalog": "Odstranit katalog",
+  "command.contributeLocalCatalog": "Přispět komunitě"
 }

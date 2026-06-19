@@ -89,5 +89,9 @@
   "Timed out waiting for the fork to be ready. Please try again.": "Tempo scaduto in attesa che il fork fosse pronto. Riprova.",
   "Invalid contribution repository \"{0}\". Expected \"owner/repo\".": "Repository di contribuzione non valido \"{0}\". Atteso \"owner/repo\".",
   "What's New": "Novità",
-  "Blocks Editor updated to v{0}": "Blocks Editor aggiornato alla v{0}"
+  "Blocks Editor updated to v{0}": "Blocks Editor aggiornato alla v{0}",
+  "Delete": "Elimina",
+  "Delete catalog \"{0}\"? This permanently removes the file {1}.": "Eliminare il catalogo \"{0}\"? Questo rimuove definitivamente il file {1}.",
+  "Catalog \"{0}\" deleted.": "Catalogo \"{0}\" eliminato.",
+  "Failed to delete catalog \"{0}\": {1}": "Eliminazione del catalogo \"{0}\" non riuscita: {1}"
 }

@@ -10,7 +10,7 @@
   "command.refreshCatalogs": "Blocks Editor: 刷新远程目录",
   "command.enableClaudeCode": "Blocks Editor: 设置 AI 助手（Copilot 和 Claude Code）",
   "editor.displayName": "Blocks Editor (可视化编程)",
-  "viewContainer.catalogBrowser.title": "积木目录",
+  "viewContainer.catalogBrowser.title": "社区目录",
   "view.catalogRegistry.name": "社区目录",
   "command.refreshRegistry": "Blocks Editor: 刷新社区目录",
   "command.downloadCatalog": "下载目录",
@@ -31,5 +31,10 @@
   "mcp.blocksEditor.label": "Blocks Editor",
   "command.contributeCatalog": "Blocks Editor：向社区贡献目录…",
   "config.contributionRepo": "所创建目录将贡献到的 GitHub 仓库（owner/repo）。可更改为指向某个 fork 或私有社区目录。",
-  "config.fallbackFramework": "当未为打开的文件检测到项目文件（platformio.ini、sketch.yaml 或 app.yaml）时所采用的框架。仅作为最后手段使用 — 已检测到的项目始终优先。当你通过编辑器的“选择框架”操作选择框架时会自动设置。"
+  "config.fallbackFramework": "当未为打开的文件检测到项目文件（platformio.ini、sketch.yaml 或 app.yaml）时所采用的框架。仅作为最后手段使用 — 已检测到的项目始终优先。当你通过编辑器的“选择框架”操作选择框架时会自动设置。",
+  "view.localCatalogs.name": "已安装的积木",
+  "command.refreshLocalCatalogs": "积木编辑器：刷新已安装的积木",
+  "command.editLocalCatalog": "编辑目录",
+  "command.deleteLocalCatalog": "删除目录",
+  "command.contributeLocalCatalog": "贡献给社区"
 }

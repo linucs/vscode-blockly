@@ -10,7 +10,7 @@
   "command.refreshCatalogs": "Blok Editörü: Uzak Katalogları Yenile",
   "command.enableClaudeCode": "Blok Editörü: Yapay zekâ asistanlarını ayarla (Copilot ve Claude Code)",
   "editor.displayName": "Blok Editörü (Görsel Programlama)",
-  "viewContainer.catalogBrowser.title": "Blok Katalogları",
+  "viewContainer.catalogBrowser.title": "Topluluk Kataloğu",
   "view.catalogRegistry.name": "Topluluk Kataloğu",
   "command.refreshRegistry": "Blok Editörü: Topluluk Kataloğunu Yenile",
   "command.downloadCatalog": "Kataloğu İndir",
@@ -31,5 +31,10 @@
   "mcp.blocksEditor.label": "Blocks Editor",
   "command.contributeCatalog": "Blocks Editor: Topluluğa katalog katkıda bulun…",
   "config.contributionRepo": "Oluşturulan katalogların katkıda bulunulduğu GitHub deposu (owner/repo). Bir fork'a veya özel bir topluluk kataloğuna işaret etmesi için değiştirin.",
-  "config.fallbackFramework": "Açık dosya için herhangi bir proje dosyası (platformio.ini, sketch.yaml veya app.yaml) algılanmadığında varsayılacak framework. Yalnızca son çare olarak kullanılır — algılanan bir proje her zaman önceliklidir. Düzenleyicinin \"Framework seç\" eylemiyle bir framework seçtiğinizde otomatik olarak ayarlanır."
+  "config.fallbackFramework": "Açık dosya için herhangi bir proje dosyası (platformio.ini, sketch.yaml veya app.yaml) algılanmadığında varsayılacak framework. Yalnızca son çare olarak kullanılır — algılanan bir proje her zaman önceliklidir. Düzenleyicinin \"Framework seç\" eylemiyle bir framework seçtiğinizde otomatik olarak ayarlanır.",
+  "view.localCatalogs.name": "Yüklü Bloklar",
+  "command.refreshLocalCatalogs": "Blok Düzenleyici: Yüklü blokları yenile",
+  "command.editLocalCatalog": "Kataloğu düzenle",
+  "command.deleteLocalCatalog": "Kataloğu sil",
+  "command.contributeLocalCatalog": "Topluluğa katkıda bulun"
 }

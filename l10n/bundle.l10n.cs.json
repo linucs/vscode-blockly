@@ -89,5 +89,9 @@
   "Regenerate code now (auto-generation is on)": "Znovu generovat kód nyní (automatické generování je zapnuté)",
   "Open this file inside a project containing a platformio.ini, sketch.yaml, or app.yaml to load the blocks compatible with your board — or select a framework manually below.": "Otevřete tento soubor v projektu obsahujícím platformio.ini nebo sketch.yaml, app.yaml, aby se načetly bloky kompatibilní s vaší deskou — nebo níže ručně vyberte framework.",
   "Select framework…": "Vybrat framework…",
-  "Select the framework for this project": "Vyberte framework pro tento projekt"
+  "Select the framework for this project": "Vyberte framework pro tento projekt",
+  "Delete": "Odstranit",
+  "Delete catalog \"{0}\"? This permanently removes the file {1}.": "Odstranit katalog \"{0}\"? Tím se trvale odstraní soubor {1}.",
+  "Catalog \"{0}\" deleted.": "Katalog \"{0}\" odstraněn.",
+  "Failed to delete catalog \"{0}\": {1}": "Nepodařilo se odstranit katalog \"{0}\": {1}"
 }

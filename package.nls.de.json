@@ -10,7 +10,7 @@
   "command.refreshCatalogs": "Blockeditor: Remote-Kataloge aktualisieren",
   "command.enableClaudeCode": "Blockeditor: KI-Assistenten einrichten (Copilot & Claude Code)",
   "editor.displayName": "Blockeditor (Visuelle Programmierung)",
-  "viewContainer.catalogBrowser.title": "Blockkataloge",
+  "viewContainer.catalogBrowser.title": "Community-Katalog",
   "view.catalogRegistry.name": "Community-Katalog",
   "command.refreshRegistry": "Blockeditor: Community-Katalog aktualisieren",
   "command.downloadCatalog": "Katalog herunterladen",
@@ -31,5 +31,10 @@
   "mcp.blocksEditor.label": "Blocks Editor",
   "command.contributeCatalog": "Blocks Editor: Katalog zur Community beitragen…",
   "config.contributionRepo": "GitHub-Repository (owner/repo), zu dem erstellte Kataloge beigetragen werden. Ändern, um auf einen Fork oder einen privaten Community-Katalog zu verweisen.",
-  "config.fallbackFramework": "Framework, das angenommen wird, wenn für die geöffnete Datei keine Projektdatei (platformio.ini, sketch.yaml oder app.yaml) erkannt wird. Wird nur als letzter Ausweg verwendet — ein erkanntes Projekt hat immer Vorrang. Wird automatisch gesetzt, wenn du über die Aktion „Framework auswählen“ des Editors ein Framework auswählst."
+  "config.fallbackFramework": "Framework, das angenommen wird, wenn für die geöffnete Datei keine Projektdatei (platformio.ini, sketch.yaml oder app.yaml) erkannt wird. Wird nur als letzter Ausweg verwendet — ein erkanntes Projekt hat immer Vorrang. Wird automatisch gesetzt, wenn du über die Aktion „Framework auswählen“ des Editors ein Framework auswählst.",
+  "view.localCatalogs.name": "Installierte Blöcke",
+  "command.refreshLocalCatalogs": "Blockeditor: Installierte Blöcke aktualisieren",
+  "command.editLocalCatalog": "Katalog bearbeiten",
+  "command.deleteLocalCatalog": "Katalog löschen",
+  "command.contributeLocalCatalog": "Zur Community beitragen"
 }

@@ -28,21 +28,41 @@ export interface LocalCatalog {
  * extension are deliberately excluded — you contribute your own authored blocks.
  */
 export async function gatherLocalCatalogs(): Promise<LocalCatalog[]> {
-    const roots: string[] = [];
+    return scanRoots([...blocksRoots(), ...catalogPathRoots()]);
+}
 
-    for (const folder of vscode.workspace.workspaceFolders ?? []) {
-        roots.push(path.join(folder.uri.fsPath, '.blocks'));
-    }
+/**
+ * Gather catalogs installed in the project's `.blocks/` folders only, excluding
+ * the user-configured `catalogPaths`. Powers the Installed Blocks tree view,
+ * where each entry is a file the user can delete in place — shared `catalogPaths`
+ * corpora must not be offered for deletion.
+ */
+export async function gatherInstalledCatalogs(): Promise<LocalCatalog[]> {
+    return scanRoots(blocksRoots());
+}
 
+/** Each workspace folder's `.blocks/` directory. */
+function blocksRoots(): string[] {
+    return (vscode.workspace.workspaceFolders ?? [])
+        .map(folder => path.join(folder.uri.fsPath, '.blocks'));
+}
+
+/** Extra catalog directories from the `blocks-editor.catalogPaths` setting. */
+function catalogPathRoots(): string[] {
     const config = vscode.workspace.getConfiguration('blocks-editor');
     const customPaths: string[] = config.get('catalogPaths') || [];
     const firstFolder = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
+    const roots: string[] = [];
     for (const raw of customPaths) {
         const p = raw.trim();
         if (!p || /^https?:\/\//i.test(p)) continue;
         roots.push(path.isAbsolute(p) || !firstFolder ? p : path.join(firstFolder, p));
     }
+    return roots;
+}
 
+/** Recursively collect every YAML catalog under the given roots, de-duplicated. */
+async function scanRoots(roots: string[]): Promise<LocalCatalog[]> {
     const seen = new Set<string>();
     const results: LocalCatalog[] = [];
     for (const root of roots) {

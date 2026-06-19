@@ -4,6 +4,7 @@ import * as fs from 'fs/promises';
 import { RegistryIndex, RegistryEntry } from './CatalogRegistryTypes';
 import { httpGet } from './remoteCatalog';
 import { activeDocumentUri, resolveActiveWorkspaceRoot } from '../util/workspaceRoot';
+import { titleCase } from '../util/strings';
 
 const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
 
@@ -26,10 +27,6 @@ function resolveLocaleString(value: string | Record<string, string> | undefined)
     if (typeof value === 'string') return value;
     const lang = vscode.env.language.split('-')[0];
     return value[lang] ?? value['en'] ?? Object.values(value)[0] ?? '';
-}
-
-function titleCase(s: string): string {
-    return s.replace(/(^|[-_ ])(\w)/g, (_, sep, c) => (sep === '-' || sep === '_' ? ' ' : sep) + c.toUpperCase());
 }
 
 export class CatalogRegistryProvider implements vscode.TreeDataProvider<CatalogRegistryItem> {

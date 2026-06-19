@@ -89,5 +89,9 @@
   "Regenerate code now (auto-generation is on)": "Перегенерировать код сейчас (автогенерация включена)",
   "Open this file inside a project containing a platformio.ini, sketch.yaml, or app.yaml to load the blocks compatible with your board — or select a framework manually below.": "Откройте этот файл в проекте, содержащем platformio.ini или sketch.yaml, app.yaml, чтобы загрузить блоки, совместимые с вашей платой — или выберите фреймворк вручную ниже.",
   "Select framework…": "Выбрать фреймворк…",
-  "Select the framework for this project": "Выберите фреймворк для этого проекта"
+  "Select the framework for this project": "Выберите фреймворк для этого проекта",
+  "Delete": "Удалить",
+  "Delete catalog \"{0}\"? This permanently removes the file {1}.": "Удалить каталог \"{0}\"? Это безвозвратно удалит файл {1}.",
+  "Catalog \"{0}\" deleted.": "Каталог \"{0}\" удалён.",
+  "Failed to delete catalog \"{0}\": {1}": "Не удалось удалить каталог \"{0}\": {1}"
 }

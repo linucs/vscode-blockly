@@ -10,7 +10,7 @@
   "command.refreshCatalogs": "Blocks Editor: Обновить удалённые каталоги",
   "command.enableClaudeCode": "Blocks Editor: Настроить ИИ-ассистентов (Copilot и Claude Code)",
   "editor.displayName": "Blocks Editor (Визуальное программирование)",
-  "viewContainer.catalogBrowser.title": "Каталоги блоков",
+  "viewContainer.catalogBrowser.title": "Каталог сообщества",
   "view.catalogRegistry.name": "Каталог сообщества",
   "command.refreshRegistry": "Blocks Editor: Обновить каталог сообщества",
   "command.downloadCatalog": "Скачать каталог",
@@ -31,5 +31,10 @@
   "mcp.blocksEditor.label": "Blocks Editor",
   "command.contributeCatalog": "Blocks Editor: Внести каталог в сообщество…",
   "config.contributionRepo": "Репозиторий GitHub (owner/repo), в который вносятся созданные каталоги. Измените, чтобы указать на форк или приватный каталог сообщества.",
-  "config.fallbackFramework": "Фреймворк, используемый, когда для открытого файла не обнаружен файл проекта (platformio.ini, sketch.yaml или app.yaml). Используется только как крайняя мера — обнаруженный проект всегда имеет приоритет. Устанавливается автоматически при выборе фреймворка через действие редактора «Выбрать фреймворк»."
+  "config.fallbackFramework": "Фреймворк, используемый, когда для открытого файла не обнаружен файл проекта (platformio.ini, sketch.yaml или app.yaml). Используется только как крайняя мера — обнаруженный проект всегда имеет приоритет. Устанавливается автоматически при выборе фреймворка через действие редактора «Выбрать фреймворк».",
+  "view.localCatalogs.name": "Установленные блоки",
+  "command.refreshLocalCatalogs": "Редактор блоков: Обновить установленные блоки",
+  "command.editLocalCatalog": "Изменить каталог",
+  "command.deleteLocalCatalog": "Удалить каталог",
+  "command.contributeLocalCatalog": "Поделиться с сообществом"
 }

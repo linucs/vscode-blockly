@@ -10,7 +10,7 @@
   "command.refreshCatalogs": "Blokkszerkesztő: Távoli katalógusok frissítése",
   "command.enableClaudeCode": "Blokkszerkesztő: AI-asszisztensek beállítása (Copilot és Claude Code)",
   "editor.displayName": "Blokkszerkesztő (Vizuális programozás)",
-  "viewContainer.catalogBrowser.title": "Blokk-katalógusok",
+  "viewContainer.catalogBrowser.title": "Közösségi katalógus",
   "view.catalogRegistry.name": "Közösségi katalógus",
   "command.refreshRegistry": "Blokkszerkesztő: Közösségi katalógus frissítése",
   "command.downloadCatalog": "Katalógus letöltése",
@@ -31,5 +31,10 @@
   "mcp.blocksEditor.label": "Blocks Editor",
   "command.contributeCatalog": "Blocks Editor: Katalógus hozzájárulása a közösséghez…",
   "config.contributionRepo": "GitHub-tároló (owner/repo), amelyhez a létrehozott katalógusok hozzájárulnak. Módosítsa, hogy egy forkra vagy privát közösségi katalógusra mutasson.",
-  "config.fallbackFramework": "A megnyitott fájlhoz feltételezett keretrendszer, ha nem található projektfájl (platformio.ini, sketch.yaml vagy app.yaml). Csak végső esetben használatos — egy észlelt projekt mindig elsőbbséget élvez. Automatikusan beállításra kerül, amikor a szerkesztő „Keretrendszer kiválasztása” műveletével választasz keretrendszert."
+  "config.fallbackFramework": "A megnyitott fájlhoz feltételezett keretrendszer, ha nem található projektfájl (platformio.ini, sketch.yaml vagy app.yaml). Csak végső esetben használatos — egy észlelt projekt mindig elsőbbséget élvez. Automatikusan beállításra kerül, amikor a szerkesztő „Keretrendszer kiválasztása” műveletével választasz keretrendszert.",
+  "view.localCatalogs.name": "Telepített blokkok",
+  "command.refreshLocalCatalogs": "Blokkszerkesztő: Telepített blokkok frissítése",
+  "command.editLocalCatalog": "Katalógus szerkesztése",
+  "command.deleteLocalCatalog": "Katalógus törlése",
+  "command.contributeLocalCatalog": "Hozzájárulás a közösséghez"
 }

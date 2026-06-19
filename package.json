@@ -122,6 +122,10 @@
         {
           "id": "blocks-editor.catalogRegistry",
           "name": "%view.catalogRegistry.name%"
+        },
+        {
+          "id": "blocks-editor.localCatalogs",
+          "name": "%view.localCatalogs.name%"
         }
       ]
     },
@@ -155,6 +159,11 @@
           "command": "blocks-editor.refreshRegistry",
           "when": "view == blocks-editor.catalogRegistry",
           "group": "navigation@2"
+        },
+        {
+          "command": "blocks-editor.refreshLocalCatalogs",
+          "when": "view == blocks-editor.localCatalogs",
+          "group": "navigation@1"
         }
       ],
       "view/item/context": [
@@ -162,6 +171,21 @@
           "command": "blocks-editor.downloadCatalog",
           "when": "view == blocks-editor.catalogRegistry && viewItem == catalogEntry",
           "group": "inline"
+        },
+        {
+          "command": "blocks-editor.editLocalCatalog",
+          "when": "view == blocks-editor.localCatalogs && viewItem == localCatalog",
+          "group": "inline@1"
+        },
+        {
+          "command": "blocks-editor.contributeLocalCatalog",
+          "when": "view == blocks-editor.localCatalogs && viewItem == localCatalog",
+          "group": "inline@2"
+        },
+        {
+          "command": "blocks-editor.deleteLocalCatalog",
+          "when": "view == blocks-editor.localCatalogs && viewItem == localCatalog",
+          "group": "inline@3"
         }
       ]
     },
@@ -204,6 +228,26 @@
         "command": "blocks-editor.contributeCatalog",
         "title": "%command.contributeCatalog%",
         "icon": "$(cloud-upload)"
+      },
+      {
+        "command": "blocks-editor.refreshLocalCatalogs",
+        "title": "%command.refreshLocalCatalogs%",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "blocks-editor.editLocalCatalog",
+        "title": "%command.editLocalCatalog%",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "blocks-editor.contributeLocalCatalog",
+        "title": "%command.contributeLocalCatalog%",
+        "icon": "$(cloud-upload)"
+      },
+      {
+        "command": "blocks-editor.deleteLocalCatalog",
+        "title": "%command.deleteLocalCatalog%",
+        "icon": "$(trash)"
       }
     ],
     "customEditors": [

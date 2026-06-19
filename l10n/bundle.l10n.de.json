@@ -89,5 +89,9 @@
   "Regenerate code now (auto-generation is on)": "Code jetzt neu generieren (automatische Generierung ist aktiv)",
   "Open this file inside a project containing a platformio.ini, sketch.yaml, or app.yaml to load the blocks compatible with your board — or select a framework manually below.": "Öffne diese Datei in einem Projekt mit einer platformio.ini oder sketch.yaml, app.yaml, um die mit deinem Board kompatiblen Blöcke zu laden — oder wähle unten manuell ein Framework.",
   "Select framework…": "Framework auswählen…",
-  "Select the framework for this project": "Framework für dieses Projekt auswählen"
+  "Select the framework for this project": "Framework für dieses Projekt auswählen",
+  "Delete": "Löschen",
+  "Delete catalog \"{0}\"? This permanently removes the file {1}.": "Katalog \"{0}\" löschen? Dadurch wird die Datei {1} endgültig entfernt.",
+  "Catalog \"{0}\" deleted.": "Katalog \"{0}\" gelöscht.",
+  "Failed to delete catalog \"{0}\": {1}": "Katalog \"{0}\" konnte nicht gelöscht werden: {1}"
 }

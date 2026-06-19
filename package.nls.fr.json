@@ -10,7 +10,7 @@
   "command.refreshCatalogs": "Éditeur de Blocs : Actualiser les catalogues distants",
   "command.enableClaudeCode": "Éditeur de Blocs : Configurer les assistants IA (Copilot et Claude Code)",
   "editor.displayName": "Éditeur de Blocs (Programmation Visuelle)",
-  "viewContainer.catalogBrowser.title": "Catalogues de Blocs",
+  "viewContainer.catalogBrowser.title": "Catalogue communautaire",
   "view.catalogRegistry.name": "Catalogue communautaire",
   "command.refreshRegistry": "Éditeur de Blocs : Actualiser le catalogue communautaire",
   "command.downloadCatalog": "Télécharger le catalogue",
@@ -31,5 +31,10 @@
   "mcp.blocksEditor.label": "Blocks Editor",
   "command.contributeCatalog": "Blocks Editor : Contribuer un catalogue à la communauté…",
   "config.contributionRepo": "Dépôt GitHub (owner/repo) auquel les catalogues créés sont contribués. Modifiez-le pour pointer vers un fork ou un catalogue communautaire privé.",
-  "config.fallbackFramework": "Framework à utiliser lorsqu'aucun fichier de projet (platformio.ini, sketch.yaml ou app.yaml) n'est détecté pour le fichier ouvert. Utilisé uniquement en dernier recours — un projet détecté est toujours prioritaire. Défini automatiquement lorsque vous choisissez un framework via l'action « Sélectionner un framework » de l'éditeur."
+  "config.fallbackFramework": "Framework à utiliser lorsqu'aucun fichier de projet (platformio.ini, sketch.yaml ou app.yaml) n'est détecté pour le fichier ouvert. Utilisé uniquement en dernier recours — un projet détecté est toujours prioritaire. Défini automatiquement lorsque vous choisissez un framework via l'action « Sélectionner un framework » de l'éditeur.",
+  "view.localCatalogs.name": "Blocs Installés",
+  "command.refreshLocalCatalogs": "Éditeur de Blocs : Actualiser les blocs installés",
+  "command.editLocalCatalog": "Modifier le catalogue",
+  "command.deleteLocalCatalog": "Supprimer le catalogue",
+  "command.contributeLocalCatalog": "Contribuer à la communauté"
 }

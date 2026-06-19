@@ -89,5 +89,9 @@
   "Regenerate code now (auto-generation is on)": "Kód újragenerálása most (az automatikus generálás be van kapcsolva)",
   "Open this file inside a project containing a platformio.ini, sketch.yaml, or app.yaml to load the blocks compatible with your board — or select a framework manually below.": "Nyisd meg ezt a fájlt egy olyan projektben, amely tartalmaz egy platformio.ini vagy sketch.yaml, app.yaml fájlt, hogy betöltsd a panelodhoz kompatibilis blokkokat — vagy válassz manuálisan egy keretrendszert alább.",
   "Select framework…": "Keretrendszer kiválasztása…",
-  "Select the framework for this project": "Válaszd ki a projekt keretrendszerét"
+  "Select the framework for this project": "Válaszd ki a projekt keretrendszerét",
+  "Delete": "Törlés",
+  "Delete catalog \"{0}\"? This permanently removes the file {1}.": "Törli a(z) \"{0}\" katalógust? Ez véglegesen eltávolítja a(z) {1} fájlt.",
+  "Catalog \"{0}\" deleted.": "A(z) \"{0}\" katalógus törölve.",
+  "Failed to delete catalog \"{0}\": {1}": "A(z) \"{0}\" katalógus törlése sikertelen: {1}"
 }

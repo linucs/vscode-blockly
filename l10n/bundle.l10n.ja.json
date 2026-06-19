@@ -89,5 +89,9 @@
   "Regenerate code now (auto-generation is on)": "今すぐコードを再生成（自動生成は有効です）",
   "Open this file inside a project containing a platformio.ini, sketch.yaml, or app.yaml to load the blocks compatible with your board — or select a framework manually below.": "ボードに対応したブロックを読み込むには、platformio.ini または sketch.yaml, app.yaml を含むプロジェクト内でこのファイルを開いてください — または下から手動でフレームワークを選択してください。",
   "Select framework…": "フレームワークを選択…",
-  "Select the framework for this project": "このプロジェクトのフレームワークを選択"
+  "Select the framework for this project": "このプロジェクトのフレームワークを選択",
+  "Delete": "削除",
+  "Delete catalog \"{0}\"? This permanently removes the file {1}.": "カタログ \"{0}\" を削除しますか？ファイル {1} を完全に削除します。",
+  "Catalog \"{0}\" deleted.": "カタログ \"{0}\" を削除しました。",
+  "Failed to delete catalog \"{0}\": {1}": "カタログ \"{0}\" の削除に失敗しました: {1}"
 }

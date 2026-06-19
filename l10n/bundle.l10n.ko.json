@@ -89,5 +89,9 @@
   "Regenerate code now (auto-generation is on)": "지금 코드 다시 생성 (자동 생성이 켜져 있음)",
   "Open this file inside a project containing a platformio.ini, sketch.yaml, or app.yaml to load the blocks compatible with your board — or select a framework manually below.": "보드와 호환되는 블록을 로드하려면 platformio.ini 또는 sketch.yaml, app.yaml이 포함된 프로젝트 안에서 이 파일을 여세요 — 또는 아래에서 프레임워크를 직접 선택하세요.",
   "Select framework…": "프레임워크 선택…",
-  "Select the framework for this project": "이 프로젝트의 프레임워크 선택"
+  "Select the framework for this project": "이 프로젝트의 프레임워크 선택",
+  "Delete": "삭제",
+  "Delete catalog \"{0}\"? This permanently removes the file {1}.": "카탈로그 \"{0}\"을(를) 삭제하시겠습니까? 파일 {1}이(가) 영구적으로 제거됩니다.",
+  "Catalog \"{0}\" deleted.": "카탈로그 \"{0}\"이(가) 삭제되었습니다.",
+  "Failed to delete catalog \"{0}\": {1}": "카탈로그 \"{0}\" 삭제에 실패했습니다: {1}"
 }

@@ -10,7 +10,7 @@
   "command.refreshCatalogs": "Blocks Editor: Atualizar catálogos remotos",
   "command.enableClaudeCode": "Blocks Editor: Configurar assistentes de IA (Copilot e Claude Code)",
   "editor.displayName": "Blocks Editor (Programação Visual)",
-  "viewContainer.catalogBrowser.title": "Catálogos de Blocos",
+  "viewContainer.catalogBrowser.title": "Catálogo da Comunidade",
   "view.catalogRegistry.name": "Catálogo da Comunidade",
   "command.refreshRegistry": "Blocks Editor: Atualizar catálogo da comunidade",
   "command.downloadCatalog": "Baixar catálogo",
@@ -31,5 +31,10 @@
   "mcp.blocksEditor.label": "Blocks Editor",
   "command.contributeCatalog": "Blocks Editor: Contribuir catálogo para a comunidade…",
   "config.contributionRepo": "Repositório do GitHub (owner/repo) para o qual os catálogos criados são contribuídos. Altere para apontar para um fork ou catálogo de comunidade privado.",
-  "config.fallbackFramework": "Framework a ser assumido quando nenhum arquivo de projeto (platformio.ini, sketch.yaml ou app.yaml) é detectado para o arquivo aberto. Usado apenas como último recurso — um projeto detectado sempre tem precedência. Definido automaticamente quando você escolhe um framework pela ação \"Selecionar framework\" do editor."
+  "config.fallbackFramework": "Framework a ser assumido quando nenhum arquivo de projeto (platformio.ini, sketch.yaml ou app.yaml) é detectado para o arquivo aberto. Usado apenas como último recurso — um projeto detectado sempre tem precedência. Definido automaticamente quando você escolhe um framework pela ação \"Selecionar framework\" do editor.",
+  "view.localCatalogs.name": "Blocos Instalados",
+  "command.refreshLocalCatalogs": "Editor de Blocos: Atualizar blocos instalados",
+  "command.editLocalCatalog": "Editar catálogo",
+  "command.deleteLocalCatalog": "Excluir catálogo",
+  "command.contributeLocalCatalog": "Contribuir para a comunidade"
 }

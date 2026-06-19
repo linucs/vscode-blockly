@@ -10,7 +10,7 @@
   "command.refreshCatalogs": "Edytor Bloków: Odśwież zdalne katalogi",
   "command.enableClaudeCode": "Edytor Bloków: Skonfiguruj asystentów AI (Copilot i Claude Code)",
   "editor.displayName": "Edytor Bloków (Programowanie wizualne)",
-  "viewContainer.catalogBrowser.title": "Katalogi Bloków",
+  "viewContainer.catalogBrowser.title": "Katalog Społeczności",
   "view.catalogRegistry.name": "Katalog Społeczności",
   "command.refreshRegistry": "Edytor Bloków: Odśwież katalog społeczności",
   "command.downloadCatalog": "Pobierz katalog",
@@ -31,5 +31,10 @@
   "mcp.blocksEditor.label": "Blocks Editor",
   "command.contributeCatalog": "Blocks Editor: Wnieś katalog do społeczności…",
   "config.contributionRepo": "Repozytorium GitHub (owner/repo), do którego wnoszone są utworzone katalogi. Zmień, aby wskazać fork lub prywatny katalog społeczności.",
-  "config.fallbackFramework": "Framework przyjmowany, gdy dla otwartego pliku nie wykryto żadnego pliku projektu (platformio.ini, sketch.yaml lub app.yaml). Używany tylko w ostateczności — wykryty projekt zawsze ma pierwszeństwo. Ustawiany automatycznie, gdy wybierzesz framework za pomocą akcji „Wybierz framework” w edytorze."
+  "config.fallbackFramework": "Framework przyjmowany, gdy dla otwartego pliku nie wykryto żadnego pliku projektu (platformio.ini, sketch.yaml lub app.yaml). Używany tylko w ostateczności — wykryty projekt zawsze ma pierwszeństwo. Ustawiany automatycznie, gdy wybierzesz framework za pomocą akcji „Wybierz framework” w edytorze.",
+  "view.localCatalogs.name": "Zainstalowane Bloki",
+  "command.refreshLocalCatalogs": "Edytor Bloków: Odśwież zainstalowane bloki",
+  "command.editLocalCatalog": "Edytuj katalog",
+  "command.deleteLocalCatalog": "Usuń katalog",
+  "command.contributeLocalCatalog": "Udostępnij społeczności"
 }

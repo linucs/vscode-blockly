@@ -3,6 +3,7 @@ import * as vscode from 'vscode';
 import { BlocksEditorProvider } from './BlocksEditorProvider';
 import { CatalogManager } from './catalog/CatalogManager';
 import { CatalogRegistryProvider } from './catalog/CatalogRegistryProvider';
+import { LocalCatalogsProvider } from './catalog/LocalCatalogsProvider';
 import { enableClaudeCodeIntegration } from './mcp/enableIntegration';
 import { contributeCatalog } from './contribute/contributeCatalog';
 import { resolveActiveWorkspaceRoot } from './util/workspaceRoot';
@@ -26,6 +27,17 @@ export async function activate(context: vscode.ExtensionContext) {
         vscode.commands.registerCommand('blocks-editor.refreshRegistry', () => registryProvider.refresh()),
         vscode.commands.registerCommand('blocks-editor.searchRegistry', () => registryProvider.search()),
         vscode.commands.registerCommand('blocks-editor.downloadCatalog', (item) => registryProvider.download(item)),
+    );
+
+    const localCatalogsProvider = new LocalCatalogsProvider();
+    context.subscriptions.push(
+        vscode.window.createTreeView('blocks-editor.localCatalogs', {
+            treeDataProvider: localCatalogsProvider,
+        }),
+        vscode.commands.registerCommand('blocks-editor.refreshLocalCatalogs', () => localCatalogsProvider.refresh()),
+        vscode.commands.registerCommand('blocks-editor.editLocalCatalog', (item) => localCatalogsProvider.edit(item)),
+        vscode.commands.registerCommand('blocks-editor.contributeLocalCatalog', (item) => localCatalogsProvider.contribute(item)),
+        vscode.commands.registerCommand('blocks-editor.deleteLocalCatalog', (item) => localCatalogsProvider.delete(item)),
     );
 
     context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(async e => {
@@ -57,7 +69,10 @@ export async function activate(context: vscode.ExtensionContext) {
     ));
 
     const blocksWatcher = vscode.workspace.createFileSystemWatcher('**/.blocks/**/*.{yaml,yml}');
-    const onBlocksChange = () => { void catalogManager.reloadCatalogs(); };
+    const onBlocksChange = () => {
+        void catalogManager.reloadCatalogs();
+        localCatalogsProvider.refresh();
+    };
     blocksWatcher.onDidCreate(onBlocksChange);
     blocksWatcher.onDidChange(onBlocksChange);
     blocksWatcher.onDidDelete(onBlocksChange);

@@ -89,5 +89,9 @@
   "Regenerate code now (auto-generation is on)": "立即重新產生程式碼（自動產生已開啟）",
   "Open this file inside a project containing a platformio.ini, sketch.yaml, or app.yaml to load the blocks compatible with your board — or select a framework manually below.": "在包含 platformio.ini 或 sketch.yaml, app.yaml 的專案內開啟此檔案，以載入與你的開發板相容的積木 — 或在下方手動選擇框架。",
   "Select framework…": "選擇框架…",
-  "Select the framework for this project": "為此專案選擇框架"
+  "Select the framework for this project": "為此專案選擇框架",
+  "Delete": "刪除",
+  "Delete catalog \"{0}\"? This permanently removes the file {1}.": "刪除目錄 \"{0}\"？這將永久刪除檔案 {1}。",
+  "Catalog \"{0}\" deleted.": "已刪除目錄 \"{0}\"。",
+  "Failed to delete catalog \"{0}\": {1}": "刪除目錄 \"{0}\" 失敗：{1}"
 }

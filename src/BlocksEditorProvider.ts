@@ -9,7 +9,7 @@ import { languageForFile } from './codegen/sourceLanguage';
 import { collectUsedBlockTypes } from './project/blockUsage';
 import { collectRequirements } from './catalog/requirements';
 import { getBackend } from './project/backendRegistry';
-import * as fs from 'fs/promises';
+import { loadL10nBundle, loadBlockMessages, webviewDataScripts, BlockMessages } from './webviewHtml';
 
 /**
  * Custom editor that opens directly on a source file (main.cpp, sketch.ino, …)
@@ -56,8 +56,8 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
             localResourceRoots: [vscode.Uri.joinPath(this.context.extensionUri, 'dist')],
         };
         const locale = vscode.env.language || 'en';
-        const l10nBundle = await this.getL10nBundle();
-        const blockMessages = await this.getBlockMessages();
+        const l10nBundle = await loadL10nBundle(this.context.extensionUri);
+        const blockMessages = await loadBlockMessages(this.context.extensionUri);
         webviewPanel.webview.html = this.getHtmlForWebview(webviewPanel.webview, locale, l10nBundle, blockMessages);
 
         const sourceUri = document.uri;
@@ -375,33 +375,7 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
         return vscode.workspace.applyEdit(edit);
     }
 
-    private async readJsonBundle(relativePath: string): Promise<string> {
-        const filePath = vscode.Uri.joinPath(this.context.extensionUri, ...relativePath.split('/'));
-        try {
-            const raw = await fs.readFile(filePath.fsPath, 'utf-8');
-            JSON.parse(raw);
-            return raw;
-        } catch {
-            return '{}';
-        }
-    }
-
-    private async getL10nBundle(): Promise<string> {
-        const locale = vscode.env.language;
-        if (!locale || locale === 'en') return '{}';
-        return this.readJsonBundle(`l10n/bundle.l10n.${locale}.json`);
-    }
-
-    private async getBlockMessages(): Promise<{ en: string; locale: string }> {
-        const locale = vscode.env.language || 'en';
-        const en = await this.readJsonBundle('l10n/blocks.en.json');
-        const localeBundle = locale !== 'en'
-            ? await this.readJsonBundle(`l10n/blocks.${locale}.json`)
-            : '{}';
-        return { en, locale: localeBundle };
-    }
-
-    private getHtmlForWebview(webview: vscode.Webview, locale: string, l10nBundle: string, blockMessages: { en: string; locale: string }): string {
+    private getHtmlForWebview(webview: vscode.Webview, locale: string, l10nBundle: string, blockMessages: BlockMessages): string {
         const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, 'dist', 'webview.js'));
 
         return /* html */`
@@ -526,11 +500,7 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
                         <button id="emptyAction" type="button">Select framework…</button>
                     </div>
                 </div>
-                <script id="l10n-data" type="application/json">${l10nBundle}</script>
-                <script id="l10n-locale" type="application/json">"${locale || 'en'}"</script>
-                <script id="block-messages-en" type="application/json">${blockMessages.en}</script>
-                <script id="block-messages-locale" type="application/json">${blockMessages.locale}</script>
-                <script type="module" src="${scriptUri}"></script>
+                ${webviewDataScripts({ locale, l10nBundle, blockMessages, scriptUri })}
             </body>
             </html>`;
     }

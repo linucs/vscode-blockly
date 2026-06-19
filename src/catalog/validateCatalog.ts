@@ -18,15 +18,38 @@ export interface ValidateOptions {
     wysiwyg?: boolean;
 }
 
+/** A single structured validation finding. Host-agnostic. */
+export interface CatalogIssue {
+    severity: 'error' | 'warning';
+    /**
+     * Scope prefix for the finding, e.g. `Doc 1` or `Block "cpp_pin_mode"`, or
+     * the empty string when the finding is not scoped to a doc/block. Kept
+     * separate from `message` so consumers can group, while the string formatter
+     * reconstructs the original flat rendering as `path: message`.
+     */
+    path: string;
+    message: string;
+}
+
+/** Structured result of validating a catalog YAML string. */
+export interface CatalogValidationResult {
+    issues: CatalogIssue[];
+    docCount: number;
+    blockCount: number;
+    /** Set when the YAML itself failed to parse; in that case `issues` is empty. */
+    parseError?: string;
+}
+
 /**
- * Validate a multi-document block catalog YAML string against the bundled JSON
- * schema and run structural checks (duplicate types, output/precedence
- * consistency, WYSIWYG, placeholder and inputDefaults coverage).
- * Returns a human-readable summary. Host-agnostic.
+ * Structured validation core: validates a multi-document block catalog YAML
+ * string against the bundled JSON schema and runs structural checks (duplicate
+ * types, output/precedence consistency, WYSIWYG, placeholder and inputDefaults
+ * coverage). Returns structured issues; the string API (`validateCatalogYaml`)
+ * is a formatter over this. Host-agnostic.
  */
-export function validateCatalogYaml(input: string, opts: ValidateOptions = {}): string {
+export function validateCatalogResult(input: string, opts: ValidateOptions = {}): CatalogValidationResult {
     const wysiwyg = opts.wysiwyg ?? true;
-    const errors: string[] = [];
+    const issues: CatalogIssue[] = [];
     const allTypes = new Set<string>();
     let docCount = 0;
     let blockCount = 0;
@@ -35,8 +58,10 @@ export function validateCatalogYaml(input: string, opts: ValidateOptions = {}): 
     try {
         docs = yaml.loadAll(input) as unknown[];
     } catch (err) {
-        return `YAML parse error: ${err instanceof Error ? err.message : String(err)}`;
+        return { issues: [], docCount: 0, blockCount: 0, parseError: err instanceof Error ? err.message : String(err) };
     }
+
+    const error = (path: string, message: string) => issues.push({ severity: 'error', path, message });
 
     for (const doc of docs) {
         if (doc === null || doc === undefined) continue;
@@ -44,7 +69,7 @@ export function validateCatalogYaml(input: string, opts: ValidateOptions = {}): 
 
         if (!validate(doc)) {
             for (const e of validate.errors ?? []) {
-                errors.push(`Doc ${docCount}: ${e.instancePath} ${e.message}`);
+                error(`Doc ${docCount}`, `${e.instancePath} ${e.message}`);
             }
         }
 
@@ -56,7 +81,7 @@ export function validateCatalogYaml(input: string, opts: ValidateOptions = {}): 
             const implCodegen = impl.codegen as Record<string, unknown> | undefined;
             const implSetup = implCodegen?.setup as string[] | undefined;
             if (wysiwyg && implSetup && implSetup.length > 0) {
-                errors.push(`WYSIWYG violation: implementation-level codegen.setup should not contain init calls (found: ${implSetup.join(', ')}). Provide explicit init blocks instead.`);
+                error('', `WYSIWYG violation: implementation-level codegen.setup should not contain init calls (found: ${implSetup.join(', ')}). Provide explicit init blocks instead.`);
             }
 
             const blocks = impl.blocks as Array<Record<string, unknown>> | undefined;
@@ -69,7 +94,7 @@ export function validateCatalogYaml(input: string, opts: ValidateOptions = {}): 
 
                 const type = blockly.type as string | undefined;
                 if (type) {
-                    if (allTypes.has(type)) errors.push(`Duplicate block type: "${type}"`);
+                    if (allTypes.has(type)) error('', `Duplicate block type: "${type}"`);
                     allTypes.add(type);
                 }
 
@@ -78,49 +103,71 @@ export function validateCatalogYaml(input: string, opts: ValidateOptions = {}): 
                 const hasPrecedence = codegen?.precedence !== undefined;
 
                 if (hasOutput && !hasPrecedence) {
-                    errors.push(`Block "${type}": has output but missing codegen.precedence`);
+                    error(`Block "${type}"`, 'has output but missing codegen.precedence');
                 }
                 if (!hasOutput && hasPrecedence) {
-                    errors.push(`Block "${type}": has precedence but no output`);
+                    error(`Block "${type}"`, 'has precedence but no output');
                 }
 
-                checkI18nFields(blockly, type, errors);
-                checkPlaceholders(blockly, codegen, type, errors);
-                checkInputDefaults(blockly, codegen, type, errors);
+                checkI18nFields(blockly, type, error);
+                checkPlaceholders(blockly, codegen, type, error);
+                checkInputDefaults(blockly, codegen, type, error);
             }
         }
     }
 
-    if (errors.length === 0) {
-        return `Valid. ${docCount} document(s), ${blockCount} block(s).`;
-    }
-    return `Validation found ${errors.length} issue(s):\n\n${errors.map(e => `- ${e}`).join('\n')}`;
+    return { issues, docCount, blockCount };
 }
+
+/** Convenience accessor returning only the issues (parse error becomes one issue). */
+export function validateCatalogIssues(input: string, opts: ValidateOptions = {}): CatalogIssue[] {
+    const result = validateCatalogResult(input, opts);
+    if (result.parseError !== undefined) {
+        return [{ severity: 'error', path: '', message: `YAML parse error: ${result.parseError}` }];
+    }
+    return result.issues;
+}
+
+/** Render an issue back to the original flat form used by the string summary. */
+function flattenIssue(issue: CatalogIssue): string {
+    return issue.path ? `${issue.path}: ${issue.message}` : issue.message;
+}
+
+/**
+ * Validate a catalog YAML string and return a human-readable summary. Thin
+ * formatter over {@link validateCatalogResult}; the `Valid.` prefix and issue
+ * wording are a stable contract relied on by the MCP tool and the contribution
+ * gate (see contributeCatalog.ts). Host-agnostic.
+ */
+export function validateCatalogYaml(input: string, opts: ValidateOptions = {}): string {
+    const result = validateCatalogResult(input, opts);
+    if (result.parseError !== undefined) {
+        return `YAML parse error: ${result.parseError}`;
+    }
+    if (result.issues.length === 0) {
+        return `Valid. ${result.docCount} document(s), ${result.blockCount} block(s).`;
+    }
+    return `Validation found ${result.issues.length} issue(s):\n\n${result.issues.map(e => `- ${flattenIssue(e)}`).join('\n')}`;
+}
+
+type ReportFn = (path: string, message: string) => void;
 
 const MSG_FIELD_RE = /^message\d+$/;
 const I18N_FIELDS = new Set(['tooltip']);
 
-function resolveI18nString(value: unknown): string | undefined {
-    if (typeof value === 'string') return value;
-    if (value && typeof value === 'object' && !Array.isArray(value)) {
-        const obj = value as Record<string, unknown>;
-        if (typeof obj['en'] === 'string') return obj['en'] as string;
-    }
-    return undefined;
-}
-
 function checkI18nFields(
     blockly: Record<string, unknown>,
     type: string | undefined,
-    errors: string[]
+    error: ReportFn
 ) {
+    const scope = `Block "${type}"`;
     for (const key of Object.keys(blockly)) {
         if (!MSG_FIELD_RE.test(key) && !I18N_FIELDS.has(key)) continue;
         const val = blockly[key];
         if (val && typeof val === 'object' && !Array.isArray(val)) {
             const obj = val as Record<string, unknown>;
             if (!('en' in obj)) {
-                errors.push(`Block "${type}": i18n field "${key}" is an object but missing required "en" key`);
+                error(scope, `i18n field "${key}" is an object but missing required "en" key`);
                 continue;
             }
             const enMsg = typeof obj['en'] === 'string' ? obj['en'] : '';
@@ -129,7 +176,7 @@ function checkI18nFields(
                 if (lang === 'en' || typeof text !== 'string') continue;
                 const langPlaceholders = (text.match(/%\d+/g) ?? []).sort();
                 if (JSON.stringify(enPlaceholders) !== JSON.stringify(langPlaceholders)) {
-                    errors.push(`Block "${type}": i18n "${key}" locale "${lang}" has different placeholders than "en" (en: ${enPlaceholders.join(',')} vs ${lang}: ${langPlaceholders.join(',')})`);
+                    error(scope, `i18n "${key}" locale "${lang}" has different placeholders than "en" (en: ${enPlaceholders.join(',')} vs ${lang}: ${langPlaceholders.join(',')})`);
                 }
             }
         }
@@ -140,7 +187,7 @@ function checkPlaceholders(
     blockly: Record<string, unknown>,
     codegen: Record<string, unknown> | undefined,
     type: string | undefined,
-    errors: string[]
+    error: ReportFn
 ) {
     if (!codegen) return;
 
@@ -160,7 +207,7 @@ function checkPlaceholders(
     for (const ph of placeholders) {
         const name = ph.replace(/\{\{(\w+)(?:\.\w+)?\}\}/, '$1');
         if (!definedNames.has(name)) {
-            errors.push(`Block "${type}": placeholder {{${name}}} not defined in args`);
+            error(`Block "${type}"`, `placeholder {{${name}}} not defined in args`);
         }
     }
 }
@@ -169,7 +216,7 @@ function checkInputDefaults(
     blockly: Record<string, unknown>,
     codegen: Record<string, unknown> | undefined,
     type: string | undefined,
-    errors: string[]
+    error: ReportFn
 ) {
     const defaults = codegen?.inputDefaults as Record<string, unknown> | undefined;
     if (!defaults) return;
@@ -185,7 +232,7 @@ function checkInputDefaults(
 
     for (const key of Object.keys(defaults)) {
         if (!inputValueNames.has(key)) {
-            errors.push(`Block "${type}": inputDefault "${key}" does not correspond to an input_value`);
+            error(`Block "${type}"`, `inputDefault "${key}" does not correspond to an input_value`);
         }
     }
 }

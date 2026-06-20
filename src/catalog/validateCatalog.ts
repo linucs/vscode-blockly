@@ -53,6 +53,8 @@ export function validateCatalogResult(input: string, opts: ValidateOptions = {})
 
     const error = (path: string, message: string, kind: 'schema' | 'structural' = 'structural') =>
         issues.push({ severity: 'error', kind, path, message });
+    const warn = (path: string, message: string) =>
+        issues.push({ severity: 'warning', kind: 'structural', path, message });
 
     for (const doc of docs) {
         if (doc === null || doc === undefined) continue;
@@ -73,6 +75,21 @@ export function validateCatalogResult(input: string, opts: ValidateOptions = {})
             const implSetup = implCodegen?.setup as string[] | undefined;
             if (wysiwyg && implSetup && implSetup.length > 0) {
                 error('', `WYSIWYG violation: implementation-level codegen.setup should not contain init calls (found: ${implSetup.join(', ')}). Provide explicit init blocks instead.`);
+            }
+
+            const deps = impl.dependencies as Array<Record<string, unknown>> | undefined;
+            if (Array.isArray(deps)) {
+                const seenDeps = new Set<string>();
+                for (const dep of deps) {
+                    if (typeof dep.name !== 'string' || !dep.name) {
+                        continue;
+                    }
+                    const key = `${dep.type as string}:${dep.name}`;
+                    if (seenDeps.has(key)) {
+                        warn('', `Duplicate dependency: ${dep.type as string} "${dep.name}" is listed more than once in runtime "${impl.runtime as string}".`);
+                    }
+                    seenDeps.add(key);
+                }
             }
 
             const blocks = impl.blocks as Array<Record<string, unknown>> | undefined;

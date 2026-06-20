@@ -1,26 +1,12 @@
 import * as Blockly from 'blockly';
-import * as En from 'blockly/msg/en';
-import * as It from 'blockly/msg/it';
-import * as ZhHans from 'blockly/msg/zh-hans';
-import * as ZhHant from 'blockly/msg/zh-hant';
-import * as Fr from 'blockly/msg/fr';
-import * as De from 'blockly/msg/de';
-import * as Es from 'blockly/msg/es';
-import * as Ja from 'blockly/msg/ja';
-import * as Ko from 'blockly/msg/ko';
-import * as Ru from 'blockly/msg/ru';
-import * as PtBr from 'blockly/msg/pt-br';
-import * as Tr from 'blockly/msg/tr';
-import * as Pl from 'blockly/msg/pl';
-import * as Cs from 'blockly/msg/cs';
-import * as Hu from 'blockly/msg/hu';
 import * as l10n from '@vscode/l10n';
 import { provideVSCodeDesignSystem, vsCodeButton, vsCodeDropdown, vsCodeOption } from "@vscode/webview-ui-toolkit";
-import { ThemeAdapter, categoryStyleFor } from './ThemeAdapter';
+import { categoryStyleFor } from './ThemeAdapter';
+import { configureBlocklyLocale, installDialogBridge, injectThemedWorkspace } from './blocklyBootstrap';
 import { CodeFactory } from './codegen/core/CodeFactory';
 import { isRuntimeSupported, listSupportedRuntimes } from './codegen/core/generatorRegistry';
 import { setCommentAnnotation } from './codegen/core/commentAnnotation';
-import { initTypedVariableModal, initWorkspacePlugins, pluginInjectOptions, CPP_VARIABLE_TYPES, ThemedMinimap } from './plugins';
+import { initTypedVariableModal, initWorkspacePlugins, CPP_VARIABLE_TYPES, ThemedMinimap } from './plugins';
 import { initCppProcedureFlyout } from './custom-blocks/cppProcedureBlocks';
 // Registers the `hat_event_style` block extension as a side effect, so catalog
 // blocks referencing it (e.g. hat-style attachInterrupt) define without throwing.
@@ -30,22 +16,7 @@ import './custom-blocks/hatEventStyle';
 import './custom-fields/FieldParamInput';
 
 // ── i18n bootstrap (must happen before any Blockly block defs or UI) ───────
-const l10nDataEl = document.getElementById('l10n-data');
-const l10nLocaleEl = document.getElementById('l10n-locale');
-const l10nContents: Record<string, string> = l10nDataEl ? JSON.parse(l10nDataEl.textContent || '{}') : {};
-const locale: string = l10nLocaleEl ? JSON.parse(l10nLocaleEl.textContent || '"en"') : 'en';
-
-l10n.config({ contents: l10nContents });
-
-// Keys are VS Code locale identifiers (vscode.env.language); Chinese maps to
-// Blockly's script-based codes (zh-cn → zh-hans, zh-tw → zh-hant).
-const BLOCKLY_LOCALES: Record<string, typeof En> = {
-    en: En, it: It,
-    'zh-cn': ZhHans, 'zh-tw': ZhHant,
-    fr: Fr, de: De, es: Es, ja: Ja, ko: Ko, ru: Ru,
-    'pt-br': PtBr, tr: Tr, pl: Pl, cs: Cs, hu: Hu,
-};
-Blockly.setLocale((BLOCKLY_LOCALES[locale] ?? En) as unknown as { [key: string]: string });
+const locale = configureBlocklyLocale();
 
 // Register VSCode UI Toolkit components
 provideVSCodeDesignSystem().register(vsCodeButton(), vsCodeDropdown(), vsCodeOption());
@@ -64,42 +35,8 @@ function titleCase(s: string): string {
 // Acquire VSCode API for messaging
 const vscode = acquireVsCodeApi();
 
-// ── Sandbox workaround: redirect window.open to extension host ─────────────
-// VS Code webviews block window.open (no allow-popups). Blockly's showHelp()
-// calls window.open(helpUrl), so we intercept and route via postMessage.
-const _origWindowOpen = window.open;
-window.open = function (url?: string | URL, ...rest: any[]) {
-    if (url) {
-        vscode.postMessage({ type: 'open_url', url: String(url) });
-        return null;
-    }
-    return _origWindowOpen.call(window, url, ...rest);
-} as typeof window.open;
-
-// ── Blockly dialog overrides ────────────────────────────────────────────────
-// VS Code webviews do not support window.prompt / window.confirm / window.alert.
-// Override Blockly's dialog functions to round-trip through postMessage so the
-// extension host can show native VS Code UI (InputBox, QuickPick, etc.).
-const pendingDialogs = new Map<number, (result: any) => void>();
-let dialogIdCounter = 0;
-
-Blockly.dialog.setPrompt((message, defaultValue, callback) => {
-    const id = dialogIdCounter++;
-    pendingDialogs.set(id, callback);
-    vscode.postMessage({ type: 'dialog_prompt', id, message, defaultValue });
-});
-
-Blockly.dialog.setConfirm((message, callback) => {
-    const id = dialogIdCounter++;
-    pendingDialogs.set(id, callback);
-    vscode.postMessage({ type: 'dialog_confirm', id, message });
-});
-
-Blockly.dialog.setAlert((message, callback) => {
-    const id = dialogIdCounter++;
-    if (callback) pendingDialogs.set(id, callback);
-    vscode.postMessage({ type: 'dialog_alert', id, message });
-});
+// Route Blockly's window.open / dialogs through the host (webviews block both).
+const dialogBridge = installDialogBridge(vscode);
 
 document.addEventListener("DOMContentLoaded", () => {
     const blocklyDiv = document.getElementById('blocklyDiv');
@@ -108,20 +45,10 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    const workspace = Blockly.inject(blocklyDiv, {
-        // Start with an empty category toolbox; it's populated dynamically once
-        // the board context arrives. (Injecting without one would make later
-        // updateToolbox() calls fail.)
-        renderer: 'thrasos',
-        toolbox: { kind: 'categoryToolbox', contents: [] },
-        trashcan: true,
-        move: { scrollbars: true, drag: true, wheel: true },
-        zoom: { controls: true, wheel: true, startScale: 1.0 },
-        ...pluginInjectOptions,
-    });
-
-    const themeAdapter = new ThemeAdapter();
-    themeAdapter.init(workspace);
+    // Start with an empty category toolbox; it's populated dynamically once the
+    // board context arrives. (Injecting without one would make later
+    // updateToolbox() calls fail.)
+    const { workspace, themeAdapter } = injectThemedWorkspace(blocklyDiv);
 
     // Load block message dictionaries from JSON (injected by the host).
     // Must happen BEFORE plugin init: typed-variable-modal pre-renders its
@@ -623,11 +550,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 showGenerationFeedback(message.ok, message.error);
                 break;
             case 'dialog_result': {
-                const cb = pendingDialogs.get(message.id);
-                if (cb) {
-                    pendingDialogs.delete(message.id);
-                    cb(message.value);
-                }
+                dialogBridge.handleDialogResult(message.id, message.value);
                 break;
             }
             case 'update':

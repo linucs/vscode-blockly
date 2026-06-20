@@ -10,21 +10,26 @@
     "id": {
       "type": "string",
       "pattern": "^[a-z0-9]+([_-][a-z0-9]+)*$",
+      "maxLength": 64,
       "description": "Unique component identifier. Use kebab-case for external catalog entries (e.g. modulino-thermo). Built-in entries use snake_case (e.g. builtin_serial, cpp_math)."
     },
     "category": {
       "type": "string",
-      "description": "Toolbox category for this entry's blocks. Use '::' to create subcategories (e.g. 'I/O::Digital', 'Communication::Serial'). Single-level values (e.g. 'Modulino', 'Detection') produce flat categories."
+      "pattern": "^[^\\s:](?:[^:]*[^\\s:])?(?:::[^\\s:](?:[^:]*[^\\s:])?)*$",
+      "maxLength": 80,
+      "description": "Toolbox category for this entry's blocks. Use '::' to create subcategories (e.g. 'I/O::Digital', 'Communication::Serial'). Single-level values (e.g. 'Modulino', 'Detection') produce flat categories. Each '::'-separated segment must be non-empty and free of leading/trailing whitespace."
     },
     "description": {
       "oneOf": [
-        { "type": "string" },
+        { "type": "string", "minLength": 1, "maxLength": 280 },
         {
           "type": "object",
-          "additionalProperties": { "type": "string" }
+          "minProperties": 1,
+          "propertyNames": { "pattern": "^[a-z]{2}(-[a-z]{2,4})?$" },
+          "additionalProperties": { "type": "string", "minLength": 1, "maxLength": 280 }
         }
       ],
-      "description": "Human-readable description of this catalog entry. Used in the community catalog browser. Accepts a plain string or a locale map {en: '...', it: '...'}."
+      "description": "Human-readable description of this catalog entry. Used in the community catalog browser. Accepts a plain string or a locale map {en: '...', it: '...'}. Keep it short (≤280 chars)."
     },
     "colour": {
       "type": "string",
@@ -33,6 +38,7 @@
     },
     "author": {
       "type": "string",
+      "minLength": 1,
       "maxLength": 50,
       "description": "Name or handle of the catalog author (e.g. 'Arduino', 'Jane Doe'). Shown in the community catalog browser."
     },
@@ -43,8 +49,10 @@
     },
     "docs": {
       "type": "object",
-      "description": "External documentation links.",
-      "additionalProperties": { "type": "string", "format": "uri" }
+      "description": "External documentation links. Keys are short lowercase labels (e.g. 'api', 'datasheet'); values are URLs.",
+      "minProperties": 1,
+      "propertyNames": { "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$" },
+      "additionalProperties": { "type": "string", "format": "uri", "maxLength": 2048 }
     },
     "implementations": {
       "type": "array",
@@ -70,8 +78,13 @@
         },
         "targets": {
           "type": "array",
-          "items": { "type": "string" },
-          "description": "Optional list of supported targets or platforms (e.g. ['espressif32', 'ststm32']). If absent, the block is considered universal."
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+([_:][a-z0-9]+)*$"
+          },
+          "description": "Optional list of supported targets or platforms. Accepts PlatformIO-style ids (e.g. 'espressif32', 'atmelavr', 'uno') and Arduino-style FQBN prefixes (e.g. 'arduino:avr', 'arduino:renesas_uno:unor4wifi'). If absent, the block is considered universal."
         },
         "codegen": {
           "$ref": "#/definitions/CodegenSections",
@@ -91,10 +104,10 @@
         {
           "properties": {
             "type": { "const": "library" },
-            "name": { "type": "string" },
-            "minVersion": { "type": "string" },
-            "url": { "type": "string", "description": "Git/VCS URL for libraries not in the PlatformIO registry. Emitted as PlatformIO's 'name=url' form; minVersion is ignored (pin via 'ref')." },
-            "ref": { "type": "string", "description": "Optional git tag/branch/commit to pin the VCS dependency (e.g. 'v1.0.0')." }
+            "name": { "type": "string", "minLength": 1 },
+            "minVersion": { "type": "string", "minLength": 1 },
+            "url": { "type": "string", "minLength": 1, "description": "Git/VCS URL for libraries not in the PlatformIO registry. Emitted as PlatformIO's 'name=url' form; minVersion is ignored (pin via 'ref')." },
+            "ref": { "type": "string", "minLength": 1, "description": "Optional git tag/branch/commit to pin the VCS dependency (e.g. 'v1.0.0')." }
           },
           "required": ["type", "name"],
           "additionalProperties": false
@@ -102,8 +115,8 @@
         {
           "properties": {
             "type": { "const": "pip" },
-            "name": { "type": "string" },
-            "minVersion": { "type": "string" }
+            "name": { "type": "string", "minLength": 1 },
+            "minVersion": { "type": "string", "minLength": 1 }
           },
           "required": ["type", "name"],
           "additionalProperties": false
@@ -111,9 +124,11 @@
         {
           "properties": {
             "type": { "const": "brick" },
-            "name": { "type": "string" },
+            "name": { "type": "string", "minLength": 1 },
             "variables": {
               "type": "object",
+              "minProperties": 1,
+              "propertyNames": { "pattern": "^[A-Za-z_][A-Za-z0-9_]*$" },
               "additionalProperties": { "type": "string" }
             }
           },

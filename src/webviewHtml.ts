@@ -57,8 +57,8 @@ export interface WebviewDataScriptsOptions {
 
 /**
  * Build the JSON data `<script>` tags plus the module script tag injected at the
- * end of a webview `<body>`. Lines are indented to 16 spaces to match the
- * surrounding template literals byte-for-byte.
+ * end of a webview `<body>`. Whitespace between tags is irrelevant to the
+ * rendered page, so lines are simply newline-joined.
  */
 export function webviewDataScripts(opts: WebviewDataScriptsOptions): string {
     const lines = [
@@ -70,5 +70,5 @@ export function webviewDataScripts(opts: WebviewDataScriptsOptions): string {
         lines.push(`<script id="block-messages-locale" type="application/json">${opts.blockMessages.locale}</script>`);
     }
     lines.push(`<script type="module" src="${opts.scriptUri}"></script>`);
-    return lines.join('\n                ');
+    return lines.join('\n');
 }

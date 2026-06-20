@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import { loadL10nBundle, webviewDataScripts } from '../webviewHtml';
-import { validateCatalogResult } from './validateCatalog';
+import { validateCatalogIssues } from './validateCatalog';
 import { markSelfWrite, consumeSelfWrite } from './selfWriteRegistry';
 import type { HostToWebviewMessage, WebviewToHostMessage } from './catalogEditorProtocol';
 
@@ -87,7 +87,7 @@ export class CatalogEditorPanel {
                 this.setDirty(msg.value);
                 return;
             case 'requestValidation':
-                this.post({ type: 'validation', issues: validateCatalogResult(msg.yamlText).issues });
+                this.post({ type: 'validation', issues: validateCatalogIssues(msg.yamlText) });
                 return;
             case 'save':
                 await this.save(msg.yamlText);
@@ -115,10 +115,7 @@ export class CatalogEditorPanel {
     }
 
     private async save(yamlText: string): Promise<void> {
-        const result = validateCatalogResult(yamlText);
-        const issues = result.parseError !== undefined
-            ? [{ severity: 'error' as const, kind: 'schema' as const, path: '', message: `YAML parse error: ${result.parseError}` }]
-            : result.issues;
+        const issues = validateCatalogIssues(yamlText);
         this.post({ type: 'validation', issues });
 
         const blocking = issues.filter(i => i.severity === 'error');
@@ -188,12 +185,7 @@ export class CatalogEditorPanel {
                         font-size: 12px; }
                     #banner.visible { display: flex; }
                     #editorArea { flex: 1; display: flex; flex-direction: column; min-height: 0; }
-                    #yaml { flex: 1; resize: none; border: none; outline: none; padding: 10px;
-                        font-family: var(--vscode-editor-font-family, monospace);
-                        font-size: var(--vscode-editor-font-size, 13px);
-                        color: var(--vscode-editor-foreground, #d4d4d4);
-                        background: var(--vscode-editor-background, #1e1e1e);
-                        tab-size: 2; }
+                    #blocklyDiv { flex: 1; min-height: 0; }
                     #validation { max-height: 30%; overflow: auto; border-top: 1px solid var(--vscode-editorWidget-border, #454545); }
                     #validation:empty { display: none; }
                     .issue { padding: 4px 10px; font-size: 12px; display: flex; gap: 6px; }
@@ -215,7 +207,7 @@ export class CatalogEditorPanel {
                     <button id="saveBtn" type="button">Save</button>
                 </div>
                 <div id="editorArea">
-                    <textarea id="yaml" spellcheck="false" wrap="off"></textarea>
+                    <div id="blocklyDiv"></div>
                     <div id="status"></div>
                     <div id="validation"></div>
                 </div>

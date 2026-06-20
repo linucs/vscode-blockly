@@ -80,6 +80,71 @@ suite('validateCatalogResult (structured core)', () => {
     });
 });
 
+/** A schema-valid metadata-only catalog, used as a base for the constraint cases. */
+const META_BASE = `
+id: demo
+category: "I/O::Digital"
+implementations:
+  - runtime: "arduino:cpp"
+    blocks:
+      - blockly:
+          type: demo_noop
+`;
+
+/** Whether the result has a schema error whose message mentions `needle`. */
+function hasSchemaError(yaml: string, needle: string): boolean {
+    return validateCatalogResult(yaml).issues.some(i => i.kind === 'schema' && i.message.includes(needle));
+}
+
+suite('metadata schema constraints', () => {
+    test('rejects a category with a leading/trailing space or empty segment', () => {
+        assert.ok(hasSchemaError(META_BASE.replace('"I/O::Digital"', '" I/O::Digital"'), '/category'));
+        assert.ok(hasSchemaError(META_BASE.replace('"I/O::Digital"', '"I/O::"'), '/category'));
+        assert.ok(hasSchemaError(META_BASE.replace('"I/O::Digital"', '"I/O:Digital"'), '/category'));
+    });
+
+    test('accepts a tidy multi-level and single-level category', () => {
+        assert.ok(!hasSchemaError(META_BASE, '/category'));
+        assert.ok(!hasSchemaError(META_BASE.replace('"I/O::Digital"', 'Displays'), '/category'));
+        assert.ok(!hasSchemaError(META_BASE.replace('"I/O::Digital"', '"Math::Bits and Bytes"'), '/category'));
+    });
+
+    test('rejects an empty author and an over-long description', () => {
+        assert.ok(hasSchemaError(`${META_BASE}\nauthor: ""\n`, '/author'));
+        const long = 'x'.repeat(281);
+        assert.ok(hasSchemaError(`${META_BASE}\ndescription: "${long}"\n`, '/description'));
+    });
+
+    test('rejects an empty docs map and an invalid doc URL', () => {
+        assert.ok(hasSchemaError(`${META_BASE}\ndocs: {}\n`, '/docs'));
+        assert.ok(hasSchemaError(`${META_BASE}\ndocs:\n  api: "not a url"\n`, '/docs/api'));
+    });
+
+    test('accepts a tidy docs map', () => {
+        assert.ok(!hasSchemaError(`${META_BASE}\ndocs:\n  api: "https://example.com/api"\n`, '/docs'));
+    });
+
+    test('rejects malformed, empty, and duplicate targets', () => {
+        const bad = META_BASE.replace('    blocks:', '    targets:\n      - "Arduino:AVR"\n    blocks:');
+        assert.ok(hasSchemaError(bad, '/targets'));
+        const empty = META_BASE.replace('    blocks:', '    targets: []\n    blocks:');
+        assert.ok(hasSchemaError(empty, '/targets'));
+        const dup = META_BASE.replace('    blocks:', '    targets:\n      - uno\n      - uno\n    blocks:');
+        assert.ok(hasSchemaError(dup, '/targets'));
+    });
+
+    test('flags a duplicate dependency as a structural warning (non-blocking)', () => {
+        const yaml = META_BASE.replace(
+            '    blocks:',
+            '    dependencies:\n      - type: library\n        name: Servo\n      - type: library\n        name: Servo\n    blocks:',
+        );
+        const r = validateCatalogResult(yaml);
+        const dupes = r.issues.filter(i => i.severity === 'warning' && /Duplicate dependency/.test(i.message));
+        assert.strictEqual(dupes.length, 1, JSON.stringify(r.issues, null, 2));
+        assert.strictEqual(dupes[0].kind, 'structural');
+    });
+});
+
 suite('validateCatalogYaml (string formatter contract)', () => {
     test('valid catalog keeps the "Valid." prefix contract', () => {
         const s = validateCatalogYaml(VALID);

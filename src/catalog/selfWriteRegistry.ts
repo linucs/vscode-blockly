@@ -17,12 +17,20 @@ export function markSelfWrite(fsPath: string, now: number = Date.now()): void {
 }
 
 /**
- * Whether `fsPath` was written by us within the window. Consumes the marker on a
- * match so a later genuine external edit isn't masked by a stale entry.
+ * Whether `fsPath` was written by us within the window. Does NOT delete the
+ * marker on a match: a single save can surface as several watcher events
+ * (`onDidChange` + `onDidCreate`, or repeated `onDidChange`), and consuming the
+ * marker on the first event would let the others read as genuine external edits.
+ * The marker instead expires by time — the next `markSelfWrite` (our next save)
+ * resets it, and a stale marker older than the window is dropped so a later real
+ * external edit isn't masked.
  */
 export function consumeSelfWrite(fsPath: string, windowMs: number = DEFAULT_WINDOW_MS, now: number = Date.now()): boolean {
     const at = recent.get(fsPath);
     if (at === undefined) return false;
-    recent.delete(fsPath);
-    return now - at <= windowMs;
+    const fresh = now - at <= windowMs;
+    if (!fresh) {
+        recent.delete(fsPath);
+    }
+    return fresh;
 }

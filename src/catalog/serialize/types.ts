@@ -10,6 +10,16 @@ export interface MetaBlock {
     getFieldValue(name: string): string | null;
     getInputTargetBlock(name: string): MetaBlock | null;
     getNextBlock(): MetaBlock | null;
+    /**
+     * Structured (non-string) leaf data a block carries that does not fit a
+     * Blockly field: i18n locale maps (message/tooltip/description text), dropdown
+     * option lists, value-input `check` lists. A {@link BlockSpec} returns its
+     * `extraState`; a live `Blockly.Block` exposes the same via `saveExtraState`.
+     * Read it through {@link extraState}, which bridges both.
+     */
+    getExtraState?(): Record<string, unknown> | null;
+    /** Live Blockly blocks expose structured state here; bridged by {@link extraState}. */
+    saveExtraState?(): Record<string, unknown> | null;
 }
 
 export interface MetaWorkspace {
@@ -31,6 +41,16 @@ export function mapChain<T>(head: MetaBlock | null, fn: (b: MetaBlock) => T | nu
 /** Trimmed field value, or `''` when absent. */
 export function field(block: MetaBlock, name: string): string {
     return (block.getFieldValue(name) ?? '').trim();
+}
+
+/**
+ * Read a block's structured leaf state, bridging the two carriers: a
+ * {@link BlockSpec} (Node tests) exposes `getExtraState`, a live `Blockly.Block`
+ * (webview) exposes `saveExtraState`. Returns `{}` when neither is present.
+ */
+export function extraState(block: MetaBlock): Record<string, unknown> {
+    const state = block.getExtraState?.() ?? block.saveExtraState?.() ?? null;
+    return state ?? {};
 }
 
 /** Parse a `k=v, k=v` text field into a string→string map (empty → `undefined`). */

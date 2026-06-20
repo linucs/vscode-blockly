@@ -45,6 +45,10 @@ export class BlockSpec implements MetaBlock {
     getNextBlock(): MetaBlock | null {
         return this.next;
     }
+
+    getExtraState(): Record<string, unknown> | null {
+        return (this.extraState as Record<string, unknown> | undefined) ?? null;
+    }
 }
 
 /** Link `blocks` into a single statement chain (head → next → …); returns the head. */

@@ -1,6 +1,7 @@
 import type { CatalogEntry } from '../CatalogTypes';
+import { readI18n } from './i18n';
 import { buildImplementation } from './implementation';
-import { field, mapChain, type MetaBlock } from './types';
+import { extraState, field, mapChain, type MetaBlock } from './types';
 
 /**
  * Build a {@link CatalogEntry} from the `catalog` hat block. `id`/`category` are
@@ -19,11 +20,13 @@ export function buildCatalogEntry(block: MetaBlock): CatalogEntry {
     const author = field(block, 'AUTHOR');
     const version = field(block, 'VERSION');
     const colour = field(block, 'COLOUR');
-    const description = field(block, 'DESCRIPTION');
+    // Description is an i18n value: a locale map lives in extraState, a plain
+    // string in the DESCRIPTION field (M2). Prefer the map when present.
+    const description = readI18n(extraState(block).description) ?? (field(block, 'DESCRIPTION') || undefined);
     if (author) { entry.author = author; }
     if (version) { entry.version = version; }
     if (colour) { entry.colour = colour; }
-    if (description) { entry.description = description; }
+    if (description !== undefined) { entry.description = description; }
 
     const docs = buildDocs(block.getInputTargetBlock('DOCS'));
     if (docs) { entry.docs = docs; }

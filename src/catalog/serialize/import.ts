@@ -8,6 +8,7 @@ import type {
     Implementation,
 } from '../CatalogTypes';
 import { BlockSpec, chain } from './blockSpec';
+import { FIELD_DESCRIPTOR_BY_TYPE, scalarToField, type FieldDescriptor } from './fieldDescriptors';
 import { i18nDisplay, isI18nMap } from './i18n';
 import { CODEGEN_SECTION_SLOTS } from './types';
 
@@ -200,43 +201,100 @@ function specFromArg(arg: Record<string, unknown>): BlockSpec {
 
     switch (type) {
         case 'input_value':
-        case 'input_statement': {
-            const spec = new BlockSpec(type, { NAME: name });
-            if (arg.check !== undefined) {
-                spec.extraState = { check: arg.check };
-            }
-            return spec;
-        }
+        case 'input_statement':
         case 'input_dummy':
-            return new BlockSpec('input_dummy', name ? { NAME: name } : {});
-        case 'field_dropdown': {
-            const spec = new BlockSpec('field_dropdown', { NAME: name });
-            spec.extraState = { options: arg.options };
-            return spec;
-        }
-        case 'field_input': {
-            const fields: Record<string, string> = { NAME: name };
-            if (typeof arg.text === 'string') {
-                fields.TEXT = arg.text;
-            }
-            return new BlockSpec('field_input', fields);
-        }
-        case 'field_number': {
-            const fields: Record<string, string> = { NAME: name };
-            for (const key of ['value', 'min', 'max', 'precision'] as const) {
-                if (arg[key] !== undefined) {
-                    fields[key.toUpperCase()] = String(arg[key]);
-                }
-            }
-            return new BlockSpec('field_number', fields);
-        }
+        case 'input_end_row':
+            return specFromInputArg(type, arg, name);
         default: {
+            const desc = FIELD_DESCRIPTOR_BY_TYPE.get(type);
+            if (desc) {
+                return specFromFieldArg(arg, desc);
+            }
             // Catch-all: carry the whole arg entry verbatim.
             const spec = new BlockSpec('field_generic');
             spec.extraState = { entry: arg };
             return spec;
         }
     }
+}
+
+/**
+ * Import an input arg (inverse of {@link ./blockDef.buildInputArg}). `value`/
+ * `statement` keep `name` + `check`; `dummy`/`end-row` keep an optional `name`.
+ * Every other key (notably `align`) is stashed verbatim into `extraState.rest`
+ * so it survives the round-trip even though the descriptor doesn't model it.
+ */
+function specFromInputArg(type: string, arg: Record<string, unknown>, name: string): BlockSpec {
+    const fields: Record<string, string> = {};
+    const claimed = new Set<string>(['type', 'name']);
+    const state: Record<string, unknown> = {};
+    if (type === 'input_value' || type === 'input_statement') {
+        fields.NAME = name;
+        claimed.add('check');
+        if (arg.check !== undefined) {
+            state.check = arg.check;
+        }
+    } else if (name) {
+        fields.NAME = name;
+    }
+    const rest: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(arg)) {
+        if (!claimed.has(key)) {
+            rest[key] = value;
+        }
+    }
+    if (Object.keys(rest).length > 0) {
+        state.rest = rest;
+    }
+    const spec = new BlockSpec(type, fields);
+    if (Object.keys(state).length > 0) {
+        spec.extraState = state;
+    }
+    return spec;
+}
+
+/**
+ * Import a modeled field arg ({@link FieldDescriptor}-driven, inverse of
+ * {@link ./blockDef.buildFieldArg}). Scalars become meta-block fields; structured
+ * keys go to `extraState`; every other key is stashed verbatim into `extraState.rest`
+ * so it survives the round-trip even though the descriptor doesn't model it.
+ */
+function specFromFieldArg(arg: Record<string, unknown>, desc: FieldDescriptor): BlockSpec {
+    const fields: Record<string, string> = {};
+    const claimed = new Set<string>(['type']);
+    if (desc.hasName) {
+        claimed.add('name');
+        if (typeof arg.name === 'string') {
+            fields.NAME = arg.name;
+        }
+    }
+    for (const scalar of desc.scalars) {
+        claimed.add(scalar.json);
+        if (arg[scalar.json] !== undefined) {
+            fields[scalar.field] = scalarToField(arg[scalar.json], scalar.kind);
+        }
+    }
+    const state: Record<string, unknown> = {};
+    for (const key of desc.structured) {
+        claimed.add(key);
+        if (arg[key] !== undefined) {
+            state[key] = arg[key];
+        }
+    }
+    const rest: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(arg)) {
+        if (!claimed.has(key)) {
+            rest[key] = value;
+        }
+    }
+    if (Object.keys(rest).length > 0) {
+        state.rest = rest;
+    }
+    const spec = new BlockSpec(desc.type, fields);
+    if (Object.keys(state).length > 0) {
+        spec.extraState = state;
+    }
+    return spec;
 }
 
 /** Build the shared codegen-section slots (imports/declarations/setup/cleanup/helpers) for a spec. */

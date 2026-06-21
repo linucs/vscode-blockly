@@ -2,6 +2,7 @@ import * as Blockly from 'blockly';
 import { registerFieldMultilineInput } from '@blockly/field-multilineinput';
 import { registerFieldColour } from '@blockly/field-colour';
 import { i18nMerge, type I18nText } from '../../../src/catalog/serialize/i18n';
+import { FIELD_DESCRIPTORS } from '../../../src/catalog/serialize/fieldDescriptors';
 import { catalogBlock } from './catalog';
 import { defineImplementationBlock } from './implementation';
 import { dependencyBlocks } from './dependency';
@@ -111,9 +112,10 @@ export const META_TOOLBOX = {
         { kind: 'block', type: 'input_value' },
         { kind: 'block', type: 'input_statement' },
         { kind: 'block', type: 'input_dummy' },
-        { kind: 'block', type: 'field_dropdown' },
-        { kind: 'block', type: 'field_input' },
-        { kind: 'block', type: 'field_number' },
+        { kind: 'block', type: 'input_end_row' },
+        // Every modeled field type, derived from the shared descriptor table.
+        // (`field_generic` is import-only — it carries unmodeled types verbatim.)
+        ...FIELD_DESCRIPTORS.map(d => ({ kind: 'block', type: d.type })),
         { kind: 'block', type: 'code_line' },
         { kind: 'block', type: 'helper' },
         { kind: 'block', type: 'raw_blockly_prop' },

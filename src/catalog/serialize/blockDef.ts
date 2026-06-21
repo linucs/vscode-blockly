@@ -1,4 +1,5 @@
 import type { BlockCodegen, BlockDefinition, CodegenSections } from '../CatalogTypes';
+import { FIELD_DESCRIPTOR_BY_TYPE, scalarToJson, type FieldDescriptor } from './fieldDescriptors';
 import { readI18n } from './i18n';
 import { CODEGEN_SECTION_SLOTS, extraState, field, mapChain, type MetaBlock } from './types';
 
@@ -88,54 +89,90 @@ export function buildBlockDefinition(block: MetaBlock): BlockDefinition {
     return def;
 }
 
+/** The four Blockly input arg types (sockets, not fields). */
+const INPUT_TYPES = new Set(['input_value', 'input_statement', 'input_dummy', 'input_end_row']);
+
 /** Serialize one arg block to its `args{N}[k]` entry. */
 function buildArg(block: MetaBlock): Record<string, unknown> | null {
     const state = extraState(block);
+    if (INPUT_TYPES.has(block.type)) {
+        return buildInputArg(block, state);
+    }
     switch (block.type) {
-        case 'input_value':
-        case 'input_statement': {
-            const entry: Record<string, unknown> = { type: block.type, name: field(block, 'NAME') };
-            if (state.check !== undefined) {
-                entry.check = state.check;
-            }
-            return entry;
-        }
-        case 'input_dummy': {
-            const entry: Record<string, unknown> = { type: 'input_dummy' };
-            const name = field(block, 'NAME');
-            if (name) {
-                entry.name = name;
-            }
-            return entry;
-        }
-        case 'field_dropdown':
-            return { type: 'field_dropdown', name: field(block, 'NAME'), options: state.options };
-        case 'field_input': {
-            const entry: Record<string, unknown> = { type: 'field_input', name: field(block, 'NAME') };
-            // `text` may be a meaningful empty string, so key on presence (null =
-            // absent) and don't trim — preserve the authored default verbatim.
-            const text = block.getFieldValue('TEXT');
-            if (text !== null) {
-                entry.text = text;
-            }
-            return entry;
-        }
-        case 'field_number': {
-            const entry: Record<string, unknown> = { type: 'field_number', name: field(block, 'NAME') };
-            for (const key of ['value', 'min', 'max', 'precision'] as const) {
-                const raw = block.getFieldValue(key.toUpperCase());
-                if (raw !== null && raw !== '') {
-                    entry[key] = Number(raw);
-                }
-            }
-            return entry;
-        }
         case 'field_generic':
             // Catch-all: the whole arg entry was stored verbatim on import.
             return (state.entry as Record<string, unknown>) ?? null;
-        default:
-            return null;
+        default: {
+            const desc = FIELD_DESCRIPTOR_BY_TYPE.get(block.type);
+            return desc ? buildFieldArg(block, desc, state) : null;
+        }
     }
+}
+
+/**
+ * Serialize an input arg. `value`/`statement` carry a `name` and an optional
+ * `check`; `dummy`/`end-row` carry only an optional `name`. Any other input
+ * attribute (notably `align`) is preserved verbatim via the `rest` bag — the same
+ * fidelity guarantee fields get, so an input round-trips identically even though
+ * the guided UI doesn't model every attribute yet (alignment editing is M5).
+ */
+function buildInputArg(block: MetaBlock, state: Record<string, unknown>): Record<string, unknown> {
+    const entry: Record<string, unknown> = { type: block.type };
+    if (block.type === 'input_value' || block.type === 'input_statement') {
+        entry.name = field(block, 'NAME');
+        if (state.check !== undefined) {
+            entry.check = state.check;
+        }
+    } else {
+        const name = field(block, 'NAME');
+        if (name) {
+            entry.name = name;
+        }
+    }
+    if (state.rest && typeof state.rest === 'object') {
+        Object.assign(entry, state.rest);
+    }
+    return entry;
+}
+
+/**
+ * Serialize a modeled field arg ({@link FieldDescriptor}-driven). Emits, in order,
+ * `type`, optional `name`, each editable scalar, the structured leaf values from
+ * `extraState`, and finally the verbatim `rest` bag of unmodeled attributes — so
+ * the entry round-trips identically however lean the descriptor is. Scalars key on
+ * **presence** (a `BlockSpec` returns `null` for a field never set on import, so an
+ * absent attribute stays absent) and strings are not trimmed (an empty default is
+ * meaningful).
+ */
+function buildFieldArg(
+    block: MetaBlock,
+    desc: FieldDescriptor,
+    state: Record<string, unknown>,
+): Record<string, unknown> {
+    const entry: Record<string, unknown> = { type: block.type };
+    if (desc.hasName) {
+        const name = block.getFieldValue('NAME');
+        if (name !== null) {
+            entry.name = name;
+        }
+    }
+    for (const scalar of desc.scalars) {
+        const raw = block.getFieldValue(scalar.field);
+        // Numbers drop the empty string (absent), matching the M3 `field_number`.
+        if (raw === null || (scalar.kind === 'number' && raw === '')) {
+            continue;
+        }
+        entry[scalar.json] = scalarToJson(raw, scalar.kind);
+    }
+    for (const key of desc.structured) {
+        if (state[key] !== undefined) {
+            entry[key] = state[key];
+        }
+    }
+    if (state.rest && typeof state.rest === 'object') {
+        Object.assign(entry, state.rest);
+    }
+    return entry;
 }
 
 /** Block-level codegen (`body`/`setup`/`imports`/`declarations`/`helpers`/`precedence`/`inputDefaults`). */

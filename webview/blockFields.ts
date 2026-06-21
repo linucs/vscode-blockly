@@ -37,3 +37,11 @@ registerFieldAngle();
 registerFieldColour();
 registerFieldMultilineInput();
 Blockly.fieldRegistry.register('field_colour_hsv_sliders', FieldColourHsvSliders);
+
+/**
+ * The block `extensions` catalog blocks may reference — the single source the
+ * Guided Catalog Editor's `extension` block seeds its combobox from, kept here next
+ * to the imports that actually register them so the two never drift. Custom names
+ * are still accepted (the combobox allows free text).
+ */
+export const CATALOG_EXTENSIONS = ['hat_event_style'] as const;

@@ -33,7 +33,7 @@ export async function gatherLocalCatalogs(): Promise<LocalCatalog[]> {
 
 /**
  * Gather catalogs installed in the project's `.blocks/` folders only, excluding
- * the user-configured `catalogPaths`. Powers the Installed Blocks tree view,
+ * the user-configured `catalogPaths`. Powers the Project Blocks tree view,
  * where each entry is a file the user can delete in place — shared `catalogPaths`
  * corpora must not be offered for deletion.
  */

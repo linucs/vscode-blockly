@@ -11,6 +11,8 @@ import { defineBlockDefBlock } from './blockDef';
 import { defineMessageRowBlock } from './messageRow';
 import { defineArgBlocks } from './args';
 import { defineCodegenBlocks } from './codegen';
+import { defineConnectionCheckBlock } from './connectionCheck';
+import { defineExtensionBlock } from './extension';
 
 /**
  * Registers the catalog-editor meta-blocks (defined in TypeScript, not as YAML
@@ -93,6 +95,8 @@ export function registerMetaBlocks(): void {
     defineMessageRowBlock();
     defineArgBlocks();
     defineCodegenBlocks();
+    defineConnectionCheckBlock();
+    defineExtensionBlock();
     registered = true;
 }
 
@@ -116,6 +120,9 @@ export const META_TOOLBOX = {
         // Every modeled field type, derived from the shared descriptor table.
         // (`field_generic` is import-only — it carries unmodeled types verbatim.)
         ...FIELD_DESCRIPTORS.map(d => ({ kind: 'block', type: d.type })),
+        { kind: 'sep' },
+        { kind: 'block', type: 'connection_check' },
+        { kind: 'block', type: 'extension' },
         { kind: 'block', type: 'code_line' },
         { kind: 'block', type: 'helper' },
         { kind: 'block', type: 'raw_blockly_prop' },

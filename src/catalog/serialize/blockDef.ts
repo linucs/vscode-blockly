@@ -1,4 +1,5 @@
 import type { BlockCodegen, BlockDefinition, CodegenSections } from '../CatalogTypes';
+import { checkChainToValue } from './connectionCheck';
 import { FIELD_DESCRIPTOR_BY_TYPE, scalarToJson, type FieldDescriptor } from './fieldDescriptors';
 import { readI18n } from './i18n';
 import { CODEGEN_SECTION_SLOTS, extraState, field, mapChain, type MetaBlock } from './types';
@@ -12,11 +13,11 @@ import { CODEGEN_SECTION_SLOTS, extraState, field, mapChain, type MetaBlock } fr
  *
  * The meta-block field/extraState contract (shared with `import.ts`):
  * - `block_def`: fields `TYPE`, `INLINE` (`unset`|`true`|`false`), `HELPURL`,
- *   `PRECEDENCE`; extraState `{ output?, previousStatement?, nextStatement?,
- *   tooltip?, colour?, style?, extensions?, tags?, inputDefaults? }` (the
- *   connection shape is preserved verbatim there, not via a field); inputs
- *   `MESSAGES`, `BODY`, `SETUP`, `IMPORTS`, `DECLARATIONS`, `CLEANUP`, `HELPERS`,
- *   `RAW_PROPS`.
+ *   `PRECEDENCE`, `STYLE`, `CONNECTIONS` (`NONE`|`LEFT`|`TOP`|`BOTTOM`|`BOTH` —
+ *   picks which of output/prev/next are present); extraState `{ tooltip?, colour?,
+ *   tags?, inputDefaults? }`; inputs `MESSAGES`, `BODY`, `SETUP`, `IMPORTS`,
+ *   `DECLARATIONS`, `CLEANUP`, `HELPERS`, `EXTENSIONS`, `RAW_PROPS`, and the
+ *   per-shape check slots `OUTPUTCHECK`/`TOPCHECK`/`BOTTOMCHECK` (connection_check chains).
  * - `message_row`: extraState `{ text }` (the verbatim message); input `ARGS`.
  * - arg blocks: see {@link buildArg}.
  */
@@ -37,11 +38,20 @@ export function buildBlockDefinition(block: MetaBlock): BlockDefinition {
         }
     });
 
-    // Connection shape: each of output / previous / next is independently present
-    // and may carry a check value, so preserve them verbatim from extraState.
-    for (const key of ['output', 'previousStatement', 'nextStatement'] as const) {
-        if (key in state) {
-            blockly[key] = state[key];
+    // Connection shape: the CONNECTIONS field picks which of output / previous /
+    // next are present; each present connection's check comes from its
+    // connection_check slot (empty chain → `null` = "any type"). Corpus shape
+    // checks are only scalar/`null`, so the array-vs-scalar surface form isn't
+    // tracked here (unlike input checks, which can be a 1-element array).
+    const conn = field(block, 'CONNECTIONS') || 'BOTH';
+    if (conn === 'LEFT') {
+        blockly.output = checkChainToValue(block.getInputTargetBlock('OUTPUTCHECK'));
+    } else {
+        if (conn === 'TOP' || conn === 'BOTH') {
+            blockly.previousStatement = checkChainToValue(block.getInputTargetBlock('TOPCHECK'));
+        }
+        if (conn === 'BOTTOM' || conn === 'BOTH') {
+            blockly.nextStatement = checkChainToValue(block.getInputTargetBlock('BOTTOMCHECK'));
         }
     }
 
@@ -63,11 +73,16 @@ export function buildBlockDefinition(block: MetaBlock): BlockDefinition {
     if (state.colour !== undefined) {
         blockly.colour = state.colour;
     }
-    if (typeof state.style === 'string' && state.style) {
-        blockly.style = state.style;
+    const style = field(block, 'STYLE');
+    if (style) {
+        blockly.style = style;
     }
-    if (Array.isArray(state.extensions) && state.extensions.length > 0) {
-        blockly.extensions = state.extensions;
+    // extensions: one editable `extension` block per name in the EXTENSIONS slot.
+    const extensions = mapChain(block.getInputTargetBlock('EXTENSIONS'), b =>
+        b.type === 'extension' ? (field(b, 'VALUE') || null) : null,
+    );
+    if (extensions.length > 0) {
+        blockly.extensions = extensions;
     }
     // Catch-all: any unmodeled top-level blockly attribute, carried verbatim.
     for (const rawProp of mapChain(block.getInputTargetBlock('RAW_PROPS'), b => b)) {
@@ -111,23 +126,28 @@ function buildArg(block: MetaBlock): Record<string, unknown> | null {
 
 /**
  * Serialize an input arg. `value`/`statement` carry a `name` and an optional
- * `check`; `dummy`/`end-row` carry only an optional `name`. Any other input
- * attribute (notably `align`) is preserved verbatim via the `rest` bag — the same
- * fidelity guarantee fields get, so an input round-trips identically even though
- * the guided UI doesn't model every attribute yet (alignment editing is M5).
+ * `check` (a connection_check chain; empty → omitted). All four types carry an
+ * editable `align` field (omitted when blank). Any further unmodeled attribute is
+ * preserved verbatim via the `rest` bag — the same fidelity guarantee fields get.
+ * `state.checkArray` keeps a one-element `["String"]` from collapsing to `"String"`.
  */
 function buildInputArg(block: MetaBlock, state: Record<string, unknown>): Record<string, unknown> {
     const entry: Record<string, unknown> = { type: block.type };
     if (block.type === 'input_value' || block.type === 'input_statement') {
         entry.name = field(block, 'NAME');
-        if (state.check !== undefined) {
-            entry.check = state.check;
+        const check = checkChainToValue(block.getInputTargetBlock('CHECK'), state.checkArray === true);
+        if (check !== null) {
+            entry.check = check;
         }
     } else {
         const name = field(block, 'NAME');
         if (name) {
             entry.name = name;
         }
+    }
+    const align = field(block, 'ALIGN');
+    if (align) {
+        entry.align = align;
     }
     if (state.rest && typeof state.rest === 'object') {
         Object.assign(entry, state.rest);

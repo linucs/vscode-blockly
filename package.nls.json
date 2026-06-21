@@ -32,8 +32,8 @@
   "walkthrough.contribute.title": "Help others learn — contribute",
   "walkthrough.contribute.description": "I believe Arduino and block programming can truly help beginners learn advanced concepts — including edge AI. But I'm a solo developer, and I can't author blocks for every hardware device and use case out there.\n\nIf you also believe in sharing knowledge and helping others learn, **please contribute**: submit your block catalogs, open issues, or send pull requests. Every contribution makes visual programming accessible to more people.\n\n[Share your Blocks](https://github.com/linucs/blocks-community-catalog)",
   "mcp.blocksEditor.label": "Blocks Editor",
-  "view.localCatalogs.name": "Installed Blocks",
-  "command.refreshLocalCatalogs": "Blocks Editor: Refresh Installed Blocks",
+  "view.localCatalogs.name": "Project Blocks",
+  "command.refreshLocalCatalogs": "Blocks Editor: Refresh Project Blocks",
   "command.editLocalCatalog": "Edit Catalog",
   "command.deleteLocalCatalog": "Delete Catalog",
   "command.contributeLocalCatalog": "Contribute to Community"

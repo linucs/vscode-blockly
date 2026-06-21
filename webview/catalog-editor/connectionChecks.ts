@@ -26,4 +26,12 @@ export const CHECK = {
     HELPER: 'Helper',
     /** `raw_blockly_prop` blocks; only nest inside `block_def.RAW_PROPS`. */
     RAWPROP: 'RawProp',
+    /**
+     * `connection_check` blocks; nest inside a connection's check slot
+     * (`OUTPUTCHECK`/`TOPCHECK`/`BOTTOMCHECK`) or a value/statement input's `CHECK`
+     * slot. A chain is the AND-list of accepted types.
+     */
+    CONNCHECK: 'ConnCheck',
+    /** `extension` blocks; only nest inside `block_def.EXTENSIONS`. */
+    EXTENSION: 'Extension',
 } as const;

@@ -40,6 +40,17 @@ export const CODEGEN_SECTION_SLOTS = [
     ['cleanup', 'CLEANUP'],
 ] as const;
 
+/**
+ * Input-alignment values the guided editor's ALIGN dropdown represents — the
+ * canonical Blockly set. The formal parser (`Block.jsonInit`) uppercases `align`
+ * and looks it up in `{LEFT, RIGHT, CENTRE, CENTER}` (CENTER aliases CENTRE),
+ * warning "Illegal align value" on anything else. Only these canonical spellings
+ * are claimed into the field; any other parser-accepted value (e.g. `CENTER`)
+ * round-trips verbatim through the `rest` bag instead of being dropped by the
+ * closed set. Single source shared by the importer and the webview meta-block.
+ */
+export const INPUT_ALIGN_VALUES = ['LEFT', 'RIGHT', 'CENTRE'] as const;
+
 /** Walk a statement-input chain (head + `getNextBlock()` links), mapping each. */
 export function mapChain<T>(head: MetaBlock | null, fn: (b: MetaBlock) => T | null): T[] {
     const out: T[] = [];

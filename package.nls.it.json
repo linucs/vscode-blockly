@@ -32,8 +32,8 @@
   "walkthrough.contribute.title": "Aiuta gli altri a imparare — contribuisci",
   "walkthrough.contribute.description": "Credo che Arduino e la programmazione a blocchi possano davvero aiutare i principianti a imparare concetti avanzati — inclusa l'AI on the edge. Ma sono un solo sviluppatore, e non posso creare blocchi per ogni dispositivo hardware e caso d'uso.\n\nSe anche tu credi nella condivisione e nell'aiutare gli altri a imparare, **contribuisci**: invia i tuoi cataloghi di blocchi, apri issue o manda pull request. Ogni contributo rende la programmazione visuale accessibile a più persone.\n\n[Condividi i tuoi blocchi](https://github.com/linucs/blocks-community-catalog)",
   "mcp.blocksEditor.label": "Blocks Editor",
-  "view.localCatalogs.name": "Blocchi Installati",
-  "command.refreshLocalCatalogs": "Editor a Blocchi: Aggiorna blocchi installati",
+  "view.localCatalogs.name": "Blocchi del Progetto",
+  "command.refreshLocalCatalogs": "Editor a Blocchi: Aggiorna blocchi del progetto",
   "command.editLocalCatalog": "Modifica catalogo",
   "command.deleteLocalCatalog": "Elimina catalogo",
   "command.contributeLocalCatalog": "Contribuisci alla community"

@@ -8,9 +8,13 @@ import type {
     Implementation,
 } from '../CatalogTypes';
 import { BlockSpec, chain } from './blockSpec';
+import { valueToCheckChain } from './connectionCheck';
 import { FIELD_DESCRIPTOR_BY_TYPE, scalarToField, type FieldDescriptor } from './fieldDescriptors';
 import { i18nDisplay, isI18nMap } from './i18n';
-import { CODEGEN_SECTION_SLOTS } from './types';
+import { CODEGEN_SECTION_SLOTS, INPUT_ALIGN_VALUES } from './types';
+
+/** Alignment spellings the ALIGN dropdown can hold; others fall through to `rest`. */
+const KNOWN_ALIGN = new Set<string>(INPUT_ALIGN_VALUES);
 
 /**
  * Import (the inverse of {@link ./index.serializeWorkspace}): parse catalog YAML
@@ -115,14 +119,33 @@ function specFromBlockDefinition(def: BlockDefinition): BlockSpec {
 
     const fields: Record<string, string> = { TYPE: String(blockly.type ?? '') };
     const state: Record<string, unknown> = {};
+    const shapeInputs: Record<string, BlockSpec | null> = {};
 
-    // Connection shape: preserve each of output/previous/next independently
-    // (presence + value) verbatim in extraState.
-    for (const key of ['output', 'previousStatement', 'nextStatement'] as const) {
-        if (key in blockly) {
-            state[key] = blockly[key];
-        }
+    // Connection shape → CONNECTIONS field + per-shape connection_check slots.
+    // `output` wins if (invalidly) combined with statement connections, matching
+    // Blockly. Each check value becomes a connection_check chain in its slot.
+    const hasOut = 'output' in blockly;
+    const hasPrev = 'previousStatement' in blockly;
+    const hasNext = 'nextStatement' in blockly;
+    if (hasOut) {
+        fields.CONNECTIONS = 'LEFT';
+        shapeInputs.OUTPUTCHECK = chain(valueToCheckChain(blockly.output));
+    } else if (hasPrev && hasNext) {
+        fields.CONNECTIONS = 'BOTH';
+        shapeInputs.TOPCHECK = chain(valueToCheckChain(blockly.previousStatement));
+        shapeInputs.BOTTOMCHECK = chain(valueToCheckChain(blockly.nextStatement));
+    } else if (hasPrev) {
+        fields.CONNECTIONS = 'TOP';
+        shapeInputs.TOPCHECK = chain(valueToCheckChain(blockly.previousStatement));
+    } else if (hasNext) {
+        fields.CONNECTIONS = 'BOTTOM';
+        shapeInputs.BOTTOMCHECK = chain(valueToCheckChain(blockly.nextStatement));
+    } else {
+        fields.CONNECTIONS = 'NONE';
     }
+    // The renderer rebuilds the dynamic check slots in loadExtraState (before
+    // fields are set), so it needs the chosen shape there, not just in the field.
+    state.connections = fields.CONNECTIONS;
     if (codegen.inputDefaults && Object.keys(codegen.inputDefaults).length > 0) {
         state.inputDefaults = codegen.inputDefaults;
     }
@@ -148,14 +171,15 @@ function specFromBlockDefinition(def: BlockDefinition): BlockSpec {
         state.colour = blockly.colour;
     }
     if (typeof blockly.style === 'string') {
-        state.style = blockly.style;
-    }
-    if (Array.isArray(blockly.extensions)) {
-        state.extensions = blockly.extensions;
+        fields.STYLE = blockly.style;
     }
     if (Array.isArray(def.tags)) {
         state.tags = def.tags;
     }
+    // extensions → one editable `extension` block per name in the EXTENSIONS slot.
+    const extensionSpecs = (Array.isArray(blockly.extensions) ? blockly.extensions : [])
+        .filter((e): e is string => typeof e === 'string')
+        .map(e => new BlockSpec('extension', { VALUE: e }));
 
     // message{N} + args{N} → one message_row per rendered row.
     const rows: BlockSpec[] = [];
@@ -185,7 +209,9 @@ function specFromBlockDefinition(def: BlockDefinition): BlockSpec {
     const inputs: Record<string, BlockSpec | null> = {
         MESSAGES: chain(rows),
         BODY: chain(codeLineSpecs(codegen.body)),
+        EXTENSIONS: chain(extensionSpecs),
         RAW_PROPS: chain(rawProps),
+        ...shapeInputs,
         ...sectionInputs(codegen),
     };
 
@@ -220,22 +246,35 @@ function specFromArg(arg: Record<string, unknown>): BlockSpec {
 
 /**
  * Import an input arg (inverse of {@link ./blockDef.buildInputArg}). `value`/
- * `statement` keep `name` + `check`; `dummy`/`end-row` keep an optional `name`.
- * Every other key (notably `align`) is stashed verbatim into `extraState.rest`
- * so it survives the round-trip even though the descriptor doesn't model it.
+ * `statement` keep `name` + a `check` (modeled as a connection_check chain in the
+ * `CHECK` slot); all four types keep `align` as an editable field. `checkArray`
+ * records whether the source `check` was a one-element array (`["String"]`), so it
+ * doesn't collapse to the scalar `"String"`. Every other key is stashed verbatim
+ * into `extraState.rest` so it survives the round-trip.
  */
 function specFromInputArg(type: string, arg: Record<string, unknown>, name: string): BlockSpec {
     const fields: Record<string, string> = {};
+    const inputs: Record<string, BlockSpec | null> = {};
     const claimed = new Set<string>(['type', 'name']);
     const state: Record<string, unknown> = {};
     if (type === 'input_value' || type === 'input_statement') {
         fields.NAME = name;
         claimed.add('check');
         if (arg.check !== undefined) {
-            state.check = arg.check;
+            inputs.CHECK = chain(valueToCheckChain(arg.check));
+            if (Array.isArray(arg.check)) {
+                state.checkArray = true;
+            }
         }
     } else if (name) {
         fields.NAME = name;
+    }
+    // Only the values the ALIGN dropdown can represent are claimed into the field;
+    // any other parser-accepted spelling (e.g. the alias `CENTER`) round-trips
+    // verbatim through `rest` rather than being silently dropped by the closed set.
+    if (typeof arg.align === 'string' && KNOWN_ALIGN.has(arg.align)) {
+        fields.ALIGN = arg.align;
+        claimed.add('align');
     }
     const rest: Record<string, unknown> = {};
     for (const [key, value] of Object.entries(arg)) {
@@ -246,7 +285,7 @@ function specFromInputArg(type: string, arg: Record<string, unknown>, name: stri
     if (Object.keys(rest).length > 0) {
         state.rest = rest;
     }
-    const spec = new BlockSpec(type, fields);
+    const spec = new BlockSpec(type, fields, inputs);
     if (Object.keys(state).length > 0) {
         spec.extraState = state;
     }

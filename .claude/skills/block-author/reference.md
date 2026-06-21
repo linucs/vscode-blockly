@@ -361,8 +361,10 @@ codegen:
 ### Two levels of codegen
 
 **Implementation-level** (`implementations[].codegen`) — emitted ONCE if any block from this
-implementation is used. Use ONLY for shared `imports` and `declarations`. Do NOT put `.begin()`
-or other init calls here — provide explicit init blocks instead (WYSIWYG principle).
+implementation is used, **verbatim** (no `{{placeholder}}` resolution). Best for shared `imports`
+and `declarations`. Putting `.begin()` or other init calls here is allowed (the validator does not
+restrict impl-level `setup`), but it runs invisibly — prefer explicit init blocks when you want the
+setup to map to a visible block (WYSIWYG principle, advisory).
 
 **Block-level** (`blocks[].codegen`) — emitted per block instance.
 

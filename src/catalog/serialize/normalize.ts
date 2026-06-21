@@ -41,3 +41,53 @@ export function semanticallyEqualYaml(a: string, b: string): boolean {
         return false;
     }
 }
+
+/**
+ * The first differing path between two parsed values, as a short diagnostic
+ * (e.g. `.implementations[0].blocks: missing`). `null` when deep-equal. Used by
+ * the import-time self-check to name *what* didn't round-trip before falling back.
+ */
+export function firstDiff(a: unknown, b: unknown, path = ''): string | null {
+    if (deepEqual(a, b)) {
+        return null;
+    }
+    if (Array.isArray(a) && Array.isArray(b)) {
+        if (a.length !== b.length) {
+            return `${path}: length ${a.length} vs ${b.length}`;
+        }
+        for (let i = 0; i < a.length; i++) {
+            const d = firstDiff(a[i], b[i], `${path}[${i}]`);
+            if (d) {
+                return d;
+            }
+        }
+        return `${path}: arrays differ`;
+    }
+    if (a && b && typeof a === 'object' && typeof b === 'object') {
+        const ao = a as Record<string, unknown>;
+        const bo = b as Record<string, unknown>;
+        for (const key of new Set([...Object.keys(ao), ...Object.keys(bo)])) {
+            if (!(key in ao)) {
+                return `${path}.${key}: only in produced`;
+            }
+            if (!(key in bo)) {
+                return `${path}.${key}: missing in produced`;
+            }
+            const d = firstDiff(ao[key], bo[key], `${path}.${key}`);
+            if (d) {
+                return d;
+            }
+        }
+        return `${path}: objects differ`;
+    }
+    return `${path}: ${JSON.stringify(a)} vs ${JSON.stringify(b)}`;
+}
+
+/** Parse two YAML strings and report the first differing path (`null` if equal). */
+export function firstDiffYaml(a: string, b: string): string | null {
+    try {
+        return firstDiff(yaml.load(a), yaml.load(b));
+    } catch (err) {
+        return `parse error: ${(err as Error).message}`;
+    }
+}

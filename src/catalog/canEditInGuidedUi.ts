@@ -1,18 +1,20 @@
 import * as yaml from 'js-yaml';
-import { validateCatalogResult } from './validateCatalog';
 
 /**
  * Reasons a catalog cannot be opened in the guided editor and must fall back to
- * the raw-text editor. Each maps to a construct the guided surface can't
- * faithfully represent and round-trip (design §5d).
+ * the raw-text editor. Each maps to a construct the guided surface genuinely
+ * *cannot* represent — not merely an invalid value. Schema validity is **not** a
+ * gate: a schema-invalid-but-parseable file opens in blocks and surfaces its
+ * issues as (non-blocking) validation messages, so the user can keep editing
+ * where they left off. Only a construct the editor can't model at all sends the
+ * file to text. The webview's import try/catch is the final net for files that
+ * can't even be parsed into the meta-model.
  */
 export type GuidedEditBlocker =
     | 'parse-error'           // YAML doesn't parse
-    | 'schema-invalid'        // fails the catalog JSON schema
-    | 'multi-document'        // more than one YAML document in the file
+    | 'multi-document'        // more than one YAML document in the file (one catalog block per workspace)
     | 'uses-generator'        // a block uses an imperative `generator:` (first-party TS)
-    | 'uses-mutator'          // a block uses a Blockly `mutator` (not modeled yet)
-    | 'has-block-definitions'; // contains constructs M2's guided surface can't model yet
+    | 'uses-mutator';         // a block uses a Blockly `mutator` (not modeled yet)
 
 export interface GuidedEditCheck {
     ok: boolean;
@@ -26,12 +28,14 @@ export interface GuidedEditCheck {
  * structurally-unrepresentable cases, which route to the existing raw-text
  * `edit()` branch.
  *
- * In M2 the guided surface models all top-level metadata (including the `docs`
- * map), implementations, and dependencies — but not block definitions, impl-level
- * `codegen`, or an i18n-object `description`. Files carrying any of those return
- * `has-block-definitions` and stay on the raw-text editor (no stash, no
- * reformatting of content the editor can't yet emit). M3 lifts this once
- * `factory_base` can faithfully import and emit blocks.
+ * M3 models block definitions (Model A), impl-level `codegen`, and i18n-object
+ * `description`/`message`/`tooltip` — so those are now guided-editable. The
+ * remaining fallbacks are the genuinely un-modelable: an imperative `generator:`
+ * (first-party TS tier), a Blockly `mutator`, multiple YAML documents, and parse
+ * errors. Schema validity is intentionally **not** checked here — over-strict
+ * schema rules must not deny block editing; invalid values surface as validation
+ * messages instead. Files that can't be imported into the meta-model at all fall
+ * back via the webview's import try/catch.
  */
 export function canEditInGuidedUi(yamlText: string): GuidedEditCheck {
     let docs: unknown[];
@@ -47,74 +51,29 @@ export function canEditInGuidedUi(yamlText: string): GuidedEditCheck {
     }
 
     for (const doc of realDocs) {
-        // An i18n-object `description` (the translation subsystem) is not modeled
-        // in M2; a plain-string description is. `docs` IS modeled (doc_link).
-        if (doc.description !== undefined && typeof doc.description === 'object') {
-            return { ok: false, reason: 'has-block-definitions' };
-        }
-
         const impls = doc.implementations as Array<Record<string, unknown>> | undefined;
-        if (!Array.isArray(impls)) continue;
+        if (!Array.isArray(impls)) {
+            continue;
+        }
         for (const impl of impls) {
-            // Impl-level codegen is an M3 construct; route to text until then.
-            if (impl.codegen !== undefined) {
-                return { ok: false, reason: 'has-block-definitions' };
-            }
             const blocks = impl.blocks as Array<Record<string, unknown>> | undefined;
-            if (!Array.isArray(blocks)) continue;
-            // Any block definition means the file needs the M3 block surface.
-            if (blocks.length > 0) {
-                for (const block of blocks) {
-                    if (typeof block.generator === 'string' && block.generator.length > 0) {
-                        return { ok: false, reason: 'uses-generator' };
-                    }
-                    const blockly = block.blockly as Record<string, unknown> | undefined;
-                    if (blockly && blockly.mutator !== undefined) {
-                        return { ok: false, reason: 'uses-mutator' };
-                    }
+            if (!Array.isArray(blocks)) {
+                continue;
+            }
+            for (const block of blocks) {
+                if (typeof block.generator === 'string' && block.generator.length > 0) {
+                    return { ok: false, reason: 'uses-generator' };
                 }
-                return { ok: false, reason: 'has-block-definitions' };
+                const blockly = block.blockly as Record<string, unknown> | undefined;
+                if (blockly && blockly.mutator !== undefined) {
+                    return { ok: false, reason: 'uses-mutator' };
+                }
             }
         }
     }
 
-    // An empty file is a fresh, new catalog: nothing to validate — the guided
-    // editor seeds an empty `catalog` block.
-    if (realDocs.length === 0) {
-        return { ok: true };
-    }
-
-    // Schema validity is checked through the single validation core, but a
-    // metadata-only catalog is *legitimately* blocks-incomplete (authoring a
-    // block is M3) — the schema's `blocks: minItems 1` rule must not bounce it to
-    // text. So validate with a placeholder block injected: only schema errors
-    // unrelated to the missing blocks gate the file to the raw-text editor. The
-    // schema itself is untouched; save-time validation still blocks an
-    // incomplete catalog.
-    const result = validateCatalogResult(yaml.dump(withProbeBlocks(realDocs[0])));
-    if (result.issues.some(i => i.kind === 'schema')) {
-        return { ok: false, reason: 'schema-invalid' };
-    }
-
+    // Everything else — including a schema-invalid or blocks-incomplete catalog —
+    // opens in the guided editor. Invalid values become validation messages; the
+    // webview's import try/catch handles anything that can't be modeled at all.
     return { ok: true };
-}
-
-/** Minimal schema-valid block, injected only to satisfy `blocks: minItems 1`. */
-const PROBE_BLOCK = { blockly: { type: '__guided_probe__' } };
-
-/** Deep-clone `doc`, giving every implementation a placeholder block if it has none. */
-function withProbeBlocks(doc: Record<string, unknown>): Record<string, unknown> {
-    const clone = JSON.parse(JSON.stringify(doc)) as Record<string, unknown>;
-    const impls = clone.implementations;
-    if (Array.isArray(impls)) {
-        for (const impl of impls) {
-            if (impl && typeof impl === 'object') {
-                const i = impl as Record<string, unknown>;
-                if (!Array.isArray(i.blocks) || i.blocks.length === 0) {
-                    i.blocks = [PROBE_BLOCK];
-                }
-            }
-        }
-    }
-    return clone;
 }

@@ -103,7 +103,8 @@ suite('catalog serializer', () => {
                     runtime: 'arduino:cpp',
                     targets: ['uno', 'nano'],
                     dependencies: [{ type: 'library', name: 'Servo', minVersion: '1.2.0' }],
-                    blocks: [],
+                    // `blocks` is omitted for a metadata-only implementation (real
+                    // files omit it; the host validator flags it on save).
                 },
             ],
         });

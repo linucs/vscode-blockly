@@ -2,17 +2,9 @@ import * as Blockly from 'blockly';
 import { TypedVariableModal } from '@blockly/plugin-typed-variable-modal';
 import { PositionedMinimap } from '@blockly/workspace-minimap';
 
-// Official Blockly field plugins.
-// slider, dependent-dropdown, grid-dropdown, bitmap auto-register on import.
-// angle, colour, hsv-sliders, multiline require an explicit registration call.
-import '@blockly/field-slider';            // field_slider
-import { registerFieldAngle } from '@blockly/field-angle';
-import { registerFieldColour } from '@blockly/field-colour';
-import '@blockly/field-dependent-dropdown'; // field_dependent_dropdown
-import '@blockly/field-grid-dropdown';     // field_grid_dropdown
-import './custom-fields/FieldThemedBitmap'; // field_bitmap (themed subclass)
-import { FieldColourHsvSliders } from '@blockly/field-colour-hsv-sliders';
-import { registerFieldMultilineInput } from '@blockly/field-multilineinput';
+// The fields + extensions catalog blocks may reference — the single registry
+// shared with the Guided Catalog Editor (see blockFields.ts).
+import './blockFields';
 import '@blockly/toolbox-search';          // toolbox category kind: "search"
 
 // Workspace plugins
@@ -22,14 +14,6 @@ import { shadowBlockConversionChangeListener } from '@blockly/shadow-block-conve
 import * as BlockDynamicConnection from '@blockly/block-dynamic-connection';
 import { Multiselect } from '@mit-app-inventor/blockly-plugin-workspace-multiselect';
 
-registerFieldAngle();
-registerFieldColour();
-registerFieldMultilineInput();
-Blockly.fieldRegistry.register('field_colour_hsv_sliders', FieldColourHsvSliders);
-
-import './custom-fields/FieldCombobox';
-import './custom-fields/FieldTypedParamInput';
-import './custom-fields/FieldCode';
 import './custom-blocks/cppProcedureBlocks';
 
 export const CPP_VARIABLE_TYPES: [string, string][] = [

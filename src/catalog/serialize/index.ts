@@ -35,7 +35,7 @@ function orderKeys<T extends object>(obj: T, order: string[]): T {
 }
 
 /** Apply canonical key ordering to the entry and every nested impl/dependency. */
-export function orderCatalogForDump(entry: CatalogEntry): CatalogEntry {
+function orderCatalogForDump(entry: CatalogEntry): CatalogEntry {
     const ordered = orderKeys(entry, ENTRY_ORDER);
     ordered.implementations = ordered.implementations.map(impl => {
         const oi = orderKeys(impl, IMPL_ORDER);

@@ -90,7 +90,8 @@ suite('catalog importer', () => {
                         { type: 'pip', name: 'pyserial' },
                         { type: 'brick', name: 'thermo', variables: { pin: 'A0' } },
                     ],
-                    blocks: [],
+                    // `blocks` is omitted: a metadata-only implementation is
+                    // schema-incomplete by design and real files omit it.
                 },
             ],
         };

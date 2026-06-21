@@ -14,4 +14,16 @@ export const CHECK = {
     DEPENDENCY: 'Dependency',
     /** `doc_link` blocks; only nest inside `catalog.DOCS`. */
     DOC: 'Doc',
+    /** `block_def` blocks; only nest inside `implementation.BLOCKS`. */
+    BLOCKDEF: 'BlockDef',
+    /** `message_row` blocks; only nest inside `block_def.MESSAGES`. */
+    MSGROW: 'MessageRow',
+    /** arg blocks (`input_*`/`field_*`); only nest inside `message_row.ARGS`. */
+    ARG: 'Arg',
+    /** `code_line` blocks; only nest inside the codegen array slots. */
+    CODELINE: 'CodeLine',
+    /** `helper` blocks; only nest inside a `HELPERS` slot. */
+    HELPER: 'Helper',
+    /** `raw_blockly_prop` blocks; only nest inside `block_def.RAW_PROPS`. */
+    RAWPROP: 'RawProp',
 } as const;

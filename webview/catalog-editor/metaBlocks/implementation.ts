@@ -56,6 +56,17 @@ export function defineImplementationBlock(): void {
                 .setCheck(CHECK.DEPENDENCY)
                 .appendField('dependencies');
 
+            // Impl-level codegen sections (shared imports/declarations/etc.).
+            this.appendStatementInput('IMPORTS').setCheck(CHECK.CODELINE).appendField('codegen imports');
+            this.appendStatementInput('DECLARATIONS').setCheck(CHECK.CODELINE).appendField('codegen declarations');
+            this.appendStatementInput('SETUP').setCheck(CHECK.CODELINE).appendField('codegen setup');
+            this.appendStatementInput('CLEANUP').setCheck(CHECK.CODELINE).appendField('codegen cleanup');
+            this.appendStatementInput('HELPERS').setCheck(CHECK.HELPER).appendField('codegen helpers');
+
+            this.appendStatementInput('BLOCKS')
+                .setCheck(CHECK.BLOCKDEF)
+                .appendField('blocks');
+
             this.setPreviousStatement(true, CHECK.IMPLEMENTATION);
             this.setNextStatement(true, CHECK.IMPLEMENTATION);
             this.setColour(160);
@@ -78,8 +89,8 @@ export function defineImplementationBlock(): void {
             this.appendDummyInput(`TARGET_ROW_${i}`)
                 .appendField('target')
                 .appendField(new Blockly.FieldTextInput(''), `TARGET${i}`);
-            // Keep the dependencies slot last.
-            this.moveInputBefore('DEPENDENCIES', null);
+            // Keep target rows above the dependencies/codegen/blocks slots.
+            this.moveInputBefore(`TARGET_ROW_${i}`, 'DEPENDENCIES');
             this.updateMinus_();
         },
 

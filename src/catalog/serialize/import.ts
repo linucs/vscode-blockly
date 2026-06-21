@@ -8,7 +8,8 @@ import type {
     Implementation,
 } from '../CatalogTypes';
 import { BlockSpec, chain } from './blockSpec';
-import { isI18nMap } from './i18n';
+import { i18nDisplay, isI18nMap } from './i18n';
+import { CODEGEN_SECTION_SLOTS } from './types';
 
 /**
  * Import (the inverse of {@link ./index.serializeWorkspace}): parse catalog YAML
@@ -28,16 +29,17 @@ export function importCatalog(yamlText: string): BlockSpec | null {
     return specFromEntry(doc as CatalogEntry);
 }
 
-export function specFromEntry(entry: CatalogEntry): BlockSpec {
+function specFromEntry(entry: CatalogEntry): BlockSpec {
     const fields: Record<string, string> = {
         ID: entry.id ?? '',
         CATEGORY: entry.category ?? '',
         VERSION: entry.version ?? '',
         AUTHOR: entry.author ?? '',
         COLOUR: entry.colour ?? '',
-        // A plain-string description goes in the field; an i18n map goes in extraState.
-        DESCRIPTION: typeof entry.description === 'string' ? entry.description : '',
     };
+    // The editor shows/edits the primary locale in the DESCRIPTION field; an i18n
+    // map's other locales are preserved in extraState.
+    fields.DESCRIPTION = i18nDisplay(entry.description);
     const docs = Object.entries(entry.docs ?? {}).map(([name, url]) =>
         new BlockSpec('doc_link', { NAME: name, URL: url }),
     );
@@ -46,8 +48,17 @@ export function specFromEntry(entry: CatalogEntry): BlockSpec {
         DOCS: chain(docs),
         IMPLEMENTATIONS: chain(impls),
     });
+    // Carry the verbatim colour (field_colour canonicalises hex to lowercase, so
+    // the editor preserves the authored case here) and an i18n-map description.
+    const state: Record<string, unknown> = {};
+    if (entry.colour) {
+        state.colour = entry.colour;
+    }
     if (isI18nMap(entry.description)) {
-        spec.extraState = { description: entry.description };
+        state.description = entry.description;
+    }
+    if (Object.keys(state).length > 0) {
+        spec.extraState = state;
     }
     return spec;
 }
@@ -97,7 +108,7 @@ const KNOWN_BLOCKLY_KEYS = new Set([
     'tooltip', 'helpUrl', 'colour', 'style', 'extensions',
 ]);
 
-export function specFromBlockDefinition(def: BlockDefinition): BlockSpec {
+function specFromBlockDefinition(def: BlockDefinition): BlockSpec {
     const blockly = def.blockly as Record<string, unknown>;
     const codegen = (def.codegen ?? {}) as BlockCodegen;
 
@@ -105,14 +116,12 @@ export function specFromBlockDefinition(def: BlockDefinition): BlockSpec {
     const state: Record<string, unknown> = {};
 
     // Connection shape: preserve each of output/previous/next independently
-    // (presence + value), and derive a CONNECTIONS hint for the editor UI.
+    // (presence + value) verbatim in extraState.
     for (const key of ['output', 'previousStatement', 'nextStatement'] as const) {
         if (key in blockly) {
             state[key] = blockly[key];
         }
     }
-    fields.CONNECTIONS = 'output' in blockly ? 'value'
-        : ('previousStatement' in blockly || 'nextStatement' in blockly) ? 'statement' : 'none';
     if (codegen.inputDefaults && Object.keys(codegen.inputDefaults).length > 0) {
         state.inputDefaults = codegen.inputDefaults;
     }
@@ -151,12 +160,13 @@ export function specFromBlockDefinition(def: BlockDefinition): BlockSpec {
     const rows: BlockSpec[] = [];
     for (let n = 0; `message${n}` in blockly; n++) {
         const args = (blockly[`args${n}`] as Array<Record<string, unknown>> | undefined) ?? [];
-        const row = new BlockSpec('message_row', {}, {
+        // The editor edits the primary locale in the TEXT field; extraState keeps
+        // the full i18n value (other locales) and the args-presence flag.
+        const text = blockly[`message${n}`];
+        const row = new BlockSpec('message_row', { TEXT: i18nDisplay(text as never) }, {
             ARGS: chain(args.map(specFromArg)),
         });
-        // Preserve whether `args{n}` was present on disk: some blocks omit it,
-        // others write an explicit empty `args{n}: []`.
-        row.extraState = { text: blockly[`message${n}`], hasArgs: `args${n}` in blockly };
+        row.extraState = { text, hasArgs: `args${n}` in blockly };
         rows.push(row);
     }
 
@@ -235,12 +245,7 @@ function sectionInputs(sections: CodegenSections | undefined): Record<string, Bl
     if (!sections) {
         return out;
     }
-    for (const [key, slot] of [
-        ['imports', 'IMPORTS'],
-        ['declarations', 'DECLARATIONS'],
-        ['setup', 'SETUP'],
-        ['cleanup', 'CLEANUP'],
-    ] as const) {
+    for (const [key, slot] of CODEGEN_SECTION_SLOTS) {
         const lines = sections[key];
         if (Array.isArray(lines) && lines.length > 0) {
             out[slot] = chain(codeLineSpecs(lines));

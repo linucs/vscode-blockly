@@ -32,3 +32,39 @@ export function readI18n(raw: unknown): I18nText | undefined {
     }
     return undefined;
 }
+
+/**
+ * M3 i18n editing: the guided editor edits the **primary locale** (`en`, or the
+ * first key) inline as a normal field while the other translations are preserved
+ * verbatim. {@link i18nDisplay} is the string shown/edited; {@link i18nMerge} folds
+ * an edit back, keeping the other locales and key order.
+ */
+export function i18nDisplay(value: I18nText | undefined): string {
+    if (value === undefined) {
+        return '';
+    }
+    if (typeof value === 'string') {
+        return value;
+    }
+    if ('en' in value) {
+        return value.en;
+    }
+    return Object.values(value)[0] ?? '';
+}
+
+/** The primary locale key of a map (`en` or first); `undefined` for a scalar. */
+function primaryLocale(value: I18nText | undefined): string | undefined {
+    if (value === undefined || typeof value === 'string') {
+        return undefined;
+    }
+    return 'en' in value ? 'en' : Object.keys(value)[0];
+}
+
+/** Fold an edited primary-locale string back into an i18n value, preserving other locales. */
+export function i18nMerge(original: I18nText | undefined, edited: string): I18nText {
+    const key = primaryLocale(original);
+    if (key === undefined) {
+        return edited;
+    }
+    return { ...(original as Record<string, string>), [key]: edited };
+}

@@ -125,7 +125,9 @@ suite('metadata schema constraints', () => {
     });
 
     test('rejects malformed, empty, and duplicate targets', () => {
-        const bad = META_BASE.replace('    blocks:', '    targets:\n      - "Arduino:AVR"\n    blocks:');
+        // Uppercase / hyphens / dots are valid (real FQBN board ids); whitespace
+        // and stray punctuation are not.
+        const bad = META_BASE.replace('    blocks:', '    targets:\n      - "mkr zero"\n    blocks:');
         assert.ok(hasSchemaError(bad, '/targets'));
         const empty = META_BASE.replace('    blocks:', '    targets: []\n    blocks:');
         assert.ok(hasSchemaError(empty, '/targets'));

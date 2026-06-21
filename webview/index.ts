@@ -8,12 +8,8 @@ import { isRuntimeSupported, listSupportedRuntimes } from './codegen/core/genera
 import { setCommentAnnotation } from './codegen/core/commentAnnotation';
 import { initTypedVariableModal, initWorkspacePlugins, CPP_VARIABLE_TYPES, ThemedMinimap } from './plugins';
 import { initCppProcedureFlyout } from './custom-blocks/cppProcedureBlocks';
-// Registers the `hat_event_style` block extension as a side effect, so catalog
-// blocks referencing it (e.g. hat-style attachInterrupt) define without throwing.
-import './custom-blocks/hatEventStyle';
-// Registers the `field_param_input` field as a side effect, so arduino:python
-// callback-parameter blocks define without throwing regardless of active runtime.
-import './custom-fields/FieldParamInput';
+// The `hat_event_style` extension, `field_param_input`, and the rest of the
+// catalog-block field surface are registered by ./plugins (→ ./blockFields).
 
 // ── i18n bootstrap (must happen before any Blockly block defs or UI) ───────
 const locale = configureBlocklyLocale();

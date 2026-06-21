@@ -183,7 +183,7 @@ codegen:
     - "SPIClass mySPI(SPI);"
 ```
 
-**WYSIWYG principle**: do NOT put `.begin()` or other init calls in implementation-level `codegen.setup`. Instead, provide a dedicated statement block (e.g. "SPI.begin") that the user places inside a `code_setup` container. This keeps the generated code predictable — every line maps to a visible block.
+**WYSIWYG principle (recommended, not enforced)**: prefer not to put `.begin()` or other init calls in implementation-level `codegen.setup` — that code runs automatically whenever any block of the implementation is used, with no block on the canvas representing it. Instead, consider a dedicated statement block (e.g. "SPI.begin") that the user places inside a `code_setup` container, so every generated line maps to a visible block. This is authoring guidance, not a validation error: impl-level `setup` is allowed.
 
 See [Code generation](#code-generation) for the full section reference.
 
@@ -368,7 +368,7 @@ implementations:
     blocks: [...]
 ```
 
-**Use only for shared setup**: `imports` (the `#include`) and `declarations` (global object instances). Do **not** put `.begin()` calls here — provide explicit init blocks instead.
+**Best for shared plumbing**: `imports` (the `#include`) and `declarations` (global object instances). Putting `.begin()` calls here is allowed but runs them invisibly (no block on the canvas) — prefer explicit init blocks when you want the setup to be visible/WYSIWYG.
 
 ### Block-level `codegen`
 
@@ -558,9 +558,9 @@ The `validate-catalog` tool (available in both the MCP server and the Copilot ch
 6. **YAML syntax**: the file must parse as multi-document YAML.
 7. **i18n consistency**: if a `message*`/`tooltip` is an object, it must have `en`; all translations must preserve the same `%1`/`%2` placeholders.
 
-### WYSIWYG check
+### WYSIWYG guidance
 
-The validator warns if implementation-level `codegen.setup` contains init calls. The WYSIWYG principle requires explicit init blocks instead.
+Implementation-level `codegen.setup` is **not** restricted by the validator — it's allowed. As a style recommendation, prefer explicit init blocks over impl-level `setup` for init calls, so the generated setup maps to visible blocks (see the WYSIWYG principle above).
 
 ---
 

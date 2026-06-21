@@ -10,17 +10,6 @@ const ajv = new Ajv({ allErrors: true, strict: false });
 addFormats(ajv);
 const validate = ajv.compile(schema);
 
-export interface ValidateOptions {
-    /**
-     * Enforce the WYSIWYG rule that implementation-level `codegen.setup` must not
-     * contain init calls. This is authoring guidance (on by default, used by the
-     * `/validate` author tool). It is intentionally relaxed for community
-     * contribution gates, where the existing corpus legitimately uses impl-level
-     * setup — see contributeCatalog.ts and the community repo's CI validator.
-     */
-    wysiwyg?: boolean;
-}
-
 /** Structured result of validating a catalog YAML string. */
 export interface CatalogValidationResult {
     issues: CatalogIssue[];
@@ -33,12 +22,11 @@ export interface CatalogValidationResult {
 /**
  * Structured validation core: validates a multi-document block catalog YAML
  * string against the bundled JSON schema and runs structural checks (duplicate
- * types, output/precedence consistency, WYSIWYG, placeholder and inputDefaults
- * coverage). Returns structured issues; the string API (`validateCatalogYaml`)
- * is a formatter over this. Host-agnostic.
+ * types, output/precedence consistency, placeholder and inputDefaults coverage).
+ * Returns structured issues; the string API (`validateCatalogYaml`) is a formatter
+ * over this. Host-agnostic.
  */
-export function validateCatalogResult(input: string, opts: ValidateOptions = {}): CatalogValidationResult {
-    const wysiwyg = opts.wysiwyg ?? true;
+export function validateCatalogResult(input: string): CatalogValidationResult {
     const issues: CatalogIssue[] = [];
     const allTypes = new Set<string>();
     let docCount = 0;
@@ -71,12 +59,6 @@ export function validateCatalogResult(input: string, opts: ValidateOptions = {})
         if (!Array.isArray(impls)) continue;
 
         for (const impl of impls) {
-            const implCodegen = impl.codegen as Record<string, unknown> | undefined;
-            const implSetup = implCodegen?.setup as string[] | undefined;
-            if (wysiwyg && implSetup && implSetup.length > 0) {
-                error('', `WYSIWYG violation: implementation-level codegen.setup should not contain init calls (found: ${implSetup.join(', ')}). Provide explicit init blocks instead.`);
-            }
-
             const deps = impl.dependencies as Array<Record<string, unknown>> | undefined;
             if (Array.isArray(deps)) {
                 const seenDeps = new Set<string>();
@@ -128,8 +110,8 @@ export function validateCatalogResult(input: string, opts: ValidateOptions = {})
 }
 
 /** Convenience accessor returning only the issues (parse error becomes one issue). */
-export function validateCatalogIssues(input: string, opts: ValidateOptions = {}): CatalogIssue[] {
-    const result = validateCatalogResult(input, opts);
+export function validateCatalogIssues(input: string): CatalogIssue[] {
+    const result = validateCatalogResult(input);
     if (result.parseError !== undefined) {
         return [{ severity: 'error', kind: 'schema', path: '', message: `YAML parse error: ${result.parseError}` }];
     }
@@ -147,8 +129,8 @@ function flattenIssue(issue: CatalogIssue): string {
  * wording are a stable contract relied on by the MCP tool and the contribution
  * gate (see contributeCatalog.ts). Host-agnostic.
  */
-export function validateCatalogYaml(input: string, opts: ValidateOptions = {}): string {
-    const result = validateCatalogResult(input, opts);
+export function validateCatalogYaml(input: string): string {
+    const result = validateCatalogResult(input);
     if (result.parseError !== undefined) {
         return `YAML parse error: ${result.parseError}`;
     }

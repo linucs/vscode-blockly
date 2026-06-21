@@ -2,11 +2,16 @@ import * as Blockly from 'blockly';
 import type { CatalogIssue } from '../../src/catalog/catalogIssue';
 import type { HostToWebviewMessage, WebviewToHostMessage } from '../../src/catalog/catalogEditorProtocol';
 import { serializeWorkspace } from '../../src/catalog/serialize';
-import type { MetaWorkspace } from '../../src/catalog/serialize/types';
+import type { MetaBlock, MetaWorkspace } from '../../src/catalog/serialize/types';
 import { importCatalog } from '../../src/catalog/serialize/import';
+import { firstDiffYaml, semanticallyEqualYaml } from '../../src/catalog/serialize/normalize';
+// Register the same field + extension surface the runtime uses, so authored
+// blocks (e.g. hat_event_style, field_param_input) preview faithfully.
+import '../blockFields';
 import { configureBlocklyLocale, installDialogBridge, injectThemedWorkspace } from '../blocklyBootstrap';
 import { registerMetaBlocks, META_TOOLBOX } from './metaBlocks';
 import { renderSpec } from './renderSpec';
+import { initPreview, updatePreview } from './preview';
 
 /**
  * Guided Catalog Editor webview — M2.
@@ -27,7 +32,7 @@ function post(msg: WebviewToHostMessage): void {
 
 const $ = <T extends HTMLElement>(id: string): T => document.getElementById(id) as T;
 
-configureBlocklyLocale();
+const locale = configureBlocklyLocale();
 // Route Blockly help links (window.open) through the host; the catalog editor
 // has no dialog-driven blocks, so the returned bridge is unused.
 installDialogBridge(vscode);
@@ -101,8 +106,21 @@ function save(): void {
     post({ type: 'save', yamlText: serialize() });
 }
 
+function refreshPreview(selectedId?: string | null): void {
+    let target: Blockly.Block | null = selectedId ? workspace.getBlockById(selectedId) : null;
+    if (!target || target.type !== 'block_def') {
+        target = workspace.getAllBlocks(false).find(b => b.type === 'block_def') ?? null;
+    }
+    updatePreview(target as unknown as MetaBlock | null, locale, text => {
+        if (text) {
+            setStatus(text);
+        }
+    });
+}
+
 function loadCatalog(yamlText: string, fileName: string): void {
     loading = true;
+    let notFaithful = false;
     try {
         workspace.clear();
         const spec = importCatalog(yamlText);
@@ -111,8 +129,18 @@ function loadCatalog(yamlText: string, fileName: string): void {
             hat.moveBy(20, 20);
         }
         workspace.render();
+        // Import-time round-trip check (design "Drift-prevention" #1). This is a
+        // *warning*, not a gate: an unedited file is never written back (save is
+        // user-initiated and the "no write unless changed" rule holds), so a stylistic
+        // or lossy mismatch can't corrupt anything until the user makes a real edit.
+        // Denying block editing over it punishes the user for our serializer's gaps,
+        // so we stay in blocks and just flag that saving will reformat the file.
+        if (yamlText.trim() && !semanticallyEqualYaml(yamlText, serialize())) {
+            console.warn('guided import not byte-faithful (first diff):', firstDiffYaml(yamlText, serialize()));
+            notFaithful = true;
+        }
     } catch (err) {
-        // Anything the importer can't represent → hand back to the raw-text editor.
+        // A file that can't even be imported into the meta-model → raw-text editor.
         console.error('catalog import failed', err);
         post({ type: 'fallbackToText' });
         return;
@@ -123,7 +151,8 @@ function loadCatalog(yamlText: string, fileName: string): void {
     $<HTMLDivElement>('validation').replaceChildren();
     lastSerialized = serialize();
     setDirty(false);
-    setStatus('');
+    setStatus(notFaithful ? 'Heads up: this file uses a style the editor will normalize when you save.' : '');
+    refreshPreview();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -131,6 +160,19 @@ document.addEventListener('DOMContentLoaded', () => {
     ({ workspace } = injectThemedWorkspace(blocklyDiv, { toolbox: META_TOOLBOX }));
     Blockly.svgResize(workspace);
     workspace.addChangeListener(onWorkspaceChange);
+
+    initPreview($<HTMLDivElement>('previewDiv'));
+    // Refresh the preview when the selection changes or the content of a block edits.
+    workspace.addChangeListener(event => {
+        if (loading) {
+            return;
+        }
+        if (event.type === Blockly.Events.SELECTED) {
+            refreshPreview((event as Blockly.Events.Selected).newElementId);
+        } else if (!event.isUiEvent) {
+            refreshPreview();
+        }
+    });
 
     window.addEventListener('resize', () => Blockly.svgResize(workspace));
 

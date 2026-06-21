@@ -6,9 +6,9 @@ import { extraState, field, mapChain, type MetaBlock } from './types';
 /**
  * Build a {@link CatalogEntry} from the `catalog` hat block. `id`/`category` are
  * always emitted (required by the schema); the rest are omitted when their field
- * is empty. `description` is a plain string in M2 — files with an i18n-object
- * description are routed to the raw-text editor by the host gate, so they never
- * reach here.
+ * is empty. `description` is an {@link I18nText}: a plain string edited inline in
+ * the DESCRIPTION field, or an i18n locale map carried verbatim in extraState
+ * (M3 models both — see {@link readI18n}).
  */
 export function buildCatalogEntry(block: MetaBlock): CatalogEntry {
     const entry: CatalogEntry = {
@@ -17,12 +17,17 @@ export function buildCatalogEntry(block: MetaBlock): CatalogEntry {
         implementations: [],
     };
 
+    const state = extraState(block);
     const author = field(block, 'AUTHOR');
     const version = field(block, 'VERSION');
-    const colour = field(block, 'COLOUR');
+    // Colour comes solely from extraState — the source of truth for presence and
+    // verbatim hex case. The `field_colour` itself can't be empty (it defaults to a
+    // non-empty hex), so reading it directly would make every colour-less file gain
+    // one; the meta-block's saveExtraState decides whether colour was authored.
+    const colour = typeof state.colour === 'string' ? state.colour : '';
     // Description is an i18n value: a locale map lives in extraState, a plain
-    // string in the DESCRIPTION field (M2). Prefer the map when present.
-    const description = readI18n(extraState(block).description) ?? (field(block, 'DESCRIPTION') || undefined);
+    // string in the DESCRIPTION field. Prefer the map when present.
+    const description = readI18n(state.description) ?? (field(block, 'DESCRIPTION') || undefined);
     if (author) { entry.author = author; }
     if (version) { entry.version = version; }
     if (colour) { entry.colour = colour; }

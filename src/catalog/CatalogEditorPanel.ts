@@ -185,7 +185,13 @@ export class CatalogEditorPanel {
                         font-size: 12px; }
                     #banner.visible { display: flex; }
                     #editorArea { flex: 1; display: flex; flex-direction: column; min-height: 0; }
-                    #blocklyDiv { flex: 1; min-height: 0; }
+                    #workArea { flex: 1; display: flex; min-height: 0; }
+                    #blocklyDiv { flex: 1; min-width: 0; min-height: 0; }
+                    #previewPane { width: 320px; display: flex; flex-direction: column; min-height: 0;
+                        border-left: 1px solid var(--vscode-editorWidget-border, #454545); }
+                    #previewLabel { font-size: 11px; text-transform: uppercase; letter-spacing: .04em;
+                        opacity: .7; padding: 4px 8px; border-bottom: 1px solid var(--vscode-editorWidget-border, #454545); }
+                    #previewDiv { flex: 1; min-height: 0; }
                     #validation { max-height: 30%; overflow: auto; border-top: 1px solid var(--vscode-editorWidget-border, #454545); }
                     #validation:empty { display: none; }
                     .issue { padding: 4px 10px; font-size: 12px; display: flex; gap: 6px; }
@@ -207,7 +213,13 @@ export class CatalogEditorPanel {
                     <button id="saveBtn" type="button">Save</button>
                 </div>
                 <div id="editorArea">
-                    <div id="blocklyDiv"></div>
+                    <div id="workArea">
+                        <div id="blocklyDiv"></div>
+                        <div id="previewPane">
+                            <div id="previewLabel">Preview</div>
+                            <div id="previewDiv"></div>
+                        </div>
+                    </div>
                     <div id="status"></div>
                     <div id="validation"></div>
                 </div>

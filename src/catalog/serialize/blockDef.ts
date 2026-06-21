@@ -1,6 +1,6 @@
 import type { BlockCodegen, BlockDefinition, CodegenSections } from '../CatalogTypes';
 import { readI18n } from './i18n';
-import { extraState, field, mapChain, type MetaBlock } from './types';
+import { CODEGEN_SECTION_SLOTS, extraState, field, mapChain, type MetaBlock } from './types';
 
 /**
  * Serialize a `block_def` meta-block to a {@link BlockDefinition} (design "Model A":
@@ -10,10 +10,12 @@ import { extraState, field, mapChain, type MetaBlock } from './types';
  * Node-testable semantic round-trip.
  *
  * The meta-block field/extraState contract (shared with `import.ts`):
- * - `block_def`: fields `TYPE`, `CONNECTIONS` (`value`|`statement`|`none`), `INLINE`
- *   (`unset`|`true`|`false`), `HELPURL`, `PRECEDENCE`; extraState `{ tooltip?, output?,
- *   extensions?, colour?, style?, tags? }`; inputs `MESSAGES`, `BODY`, `SETUP`,
- *   `IMPORTS`, `DECLARATIONS`, `HELPERS`, `RAW_PROPS`.
+ * - `block_def`: fields `TYPE`, `INLINE` (`unset`|`true`|`false`), `HELPURL`,
+ *   `PRECEDENCE`; extraState `{ output?, previousStatement?, nextStatement?,
+ *   tooltip?, colour?, style?, extensions?, tags?, inputDefaults? }` (the
+ *   connection shape is preserved verbatim there, not via a field); inputs
+ *   `MESSAGES`, `BODY`, `SETUP`, `IMPORTS`, `DECLARATIONS`, `CLEANUP`, `HELPERS`,
+ *   `RAW_PROPS`.
  * - `message_row`: extraState `{ text }` (the verbatim message); input `ARGS`.
  * - arg blocks: see {@link buildArg}.
  */
@@ -162,12 +164,7 @@ function buildBlockCodegen(block: MetaBlock, state: Record<string, unknown>): Bl
 
 /** Shared {@link CodegenSections} (imports/declarations/setup/cleanup as code-line chains; helpers as a map). */
 export function assignSections(target: CodegenSections, block: MetaBlock): void {
-    for (const [slot, key] of [
-        ['IMPORTS', 'imports'],
-        ['DECLARATIONS', 'declarations'],
-        ['SETUP', 'setup'],
-        ['CLEANUP', 'cleanup'],
-    ] as const) {
+    for (const [key, slot] of CODEGEN_SECTION_SLOTS) {
         const lines = codeLines(block.getInputTargetBlock(slot));
         if (lines.length > 0) {
             target[key] = lines;

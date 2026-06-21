@@ -39,9 +39,7 @@ export async function contributeCatalog(uri?: vscode.Uri): Promise<void> {
         );
         return;
     }
-    // Relax the WYSIWYG impl-setup rule here — it's authoring guidance, and the
-    // community corpus legitimately uses impl-level setup. CI applies the same bar.
-    const report = validateCatalogYaml(content, { wysiwyg: false });
+    const report = validateCatalogYaml(content);
     if (!report.startsWith('Valid.')) {
         await vscode.window.showErrorMessage(
             vscode.l10n.t('This catalog can\'t be submitted yet — please fix the issues below first.'),

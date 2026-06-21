@@ -1,8 +1,8 @@
 import * as assert from 'assert';
 import { canEditInGuidedUi } from '../catalog/canEditInGuidedUi';
 
-// A real, block-bearing catalog. In M2 the guided surface can't model block
-// definitions, so these route to the raw-text editor.
+// A real, block-bearing catalog. M3 models block definitions, so this is guided-
+// editable; only generator/mutator variants route to the raw-text editor.
 const SINGLE_VALID = `
 id: arduino-demo
 category: "I/O::Digital"
@@ -50,13 +50,11 @@ suite('canEditInGuidedUi', () => {
         assert.strictEqual(canEditInGuidedUi('').ok, true);
     });
 
-    test('routes a block-bearing catalog to text (M2 cannot model blocks yet)', () => {
-        const r = canEditInGuidedUi(SINGLE_VALID);
-        assert.strictEqual(r.ok, false);
-        assert.strictEqual(r.reason, 'has-block-definitions');
+    test('accepts a block-bearing catalog (M3 models block definitions)', () => {
+        assert.deepStrictEqual(canEditInGuidedUi(SINGLE_VALID), { ok: true });
     });
 
-    test('routes impl-level codegen to text', () => {
+    test('accepts impl-level codegen (M3 models it)', () => {
         const withImplCodegen = `
 id: demo
 category: "I/O"
@@ -65,10 +63,12 @@ implementations:
     codegen:
       imports:
         - "#include <Servo.h>"
+    blocks:
+      - blockly:
+          type: demo_x
+          message0: "x"
 `;
-        const r = canEditInGuidedUi(withImplCodegen);
-        assert.strictEqual(r.ok, false);
-        assert.strictEqual(r.reason, 'has-block-definitions');
+        assert.deepStrictEqual(canEditInGuidedUi(withImplCodegen), { ok: true });
     });
 
     test('accepts a top-level docs map (modeled in M2)', () => {
@@ -76,7 +76,7 @@ implementations:
         assert.deepStrictEqual(canEditInGuidedUi(withDocs), { ok: true });
     });
 
-    test('routes an i18n-object description to text', () => {
+    test('accepts an i18n-object description (M3 models it)', () => {
         const withI18n = `
 id: demo
 category: "I/O"
@@ -85,10 +85,12 @@ description:
   it: "Dimostrazione"
 implementations:
   - runtime: "arduino:cpp"
+    blocks:
+      - blockly:
+          type: demo_x
+          message0: "x"
 `;
-        const r = canEditInGuidedUi(withI18n);
-        assert.strictEqual(r.ok, false);
-        assert.strictEqual(r.reason, 'has-block-definitions');
+        assert.deepStrictEqual(canEditInGuidedUi(withI18n), { ok: true });
     });
 
     test('rejects multi-document YAML', () => {
@@ -124,9 +126,18 @@ implementations:
         assert.strictEqual(r.reason, 'uses-mutator');
     });
 
-    test('rejects a schema-invalid catalog (missing required implementations)', () => {
-        const r = canEditInGuidedUi('id: arduino-demo\ncategory: "I/O"\n');
-        assert.strictEqual(r.ok, false);
-        assert.strictEqual(r.reason, 'schema-invalid');
+    test('opens a schema-invalid but parseable catalog (invalid values are not a gate)', () => {
+        // Missing `implementations` is a schema error, but the file parses and has
+        // no un-modelable construct, so it opens in blocks — the user keeps editing
+        // and the missing data surfaces as a validation message, not a text fallback.
+        assert.deepStrictEqual(canEditInGuidedUi('id: arduino-demo\ncategory: "I/O"\n'), { ok: true });
+    });
+
+    test('opens a catalog with an uppercase FQBN target (schema relaxed)', () => {
+        const withFqbn = SINGLE_VALID.replace(
+            '    runtime: "arduino:cpp"',
+            '    runtime: "arduino:cpp"\n    targets: ["arduino:samd:mkr1000USB"]',
+        );
+        assert.deepStrictEqual(canEditInGuidedUi(withFqbn), { ok: true });
     });
 });

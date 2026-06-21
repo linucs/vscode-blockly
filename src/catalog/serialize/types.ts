@@ -26,6 +26,20 @@ export interface MetaWorkspace {
     getTopBlocks(ordered: boolean): MetaBlock[];
 }
 
+/**
+ * Codegen sections that round-trip as `code_line` chains, paired as
+ * `[catalog key, meta-block slot name]`. Single source of truth for both
+ * directions: serialize ({@link ./blockDef.assignSections}) and import
+ * ({@link ./import.sectionInputs}). `helpers` is handled separately (a
+ * name→body map, not a line chain) and `body` is block-only, so neither is here.
+ */
+export const CODEGEN_SECTION_SLOTS = [
+    ['imports', 'IMPORTS'],
+    ['declarations', 'DECLARATIONS'],
+    ['setup', 'SETUP'],
+    ['cleanup', 'CLEANUP'],
+] as const;
+
 /** Walk a statement-input chain (head + `getNextBlock()` links), mapping each. */
 export function mapChain<T>(head: MetaBlock | null, fn: (b: MetaBlock) => T | null): T[] {
     const out: T[] = [];

@@ -27,7 +27,7 @@ export interface MetaWorkspace {
 }
 
 /**
- * Codegen sections that round-trip as `code_line` chains, paired as
+ * Codegen sections that round-trip as `code_snippet` chains, paired as
  * `[catalog key, meta-block slot name]`. Single source of truth for both
  * directions: serialize ({@link ./blockDef.assignSections}) and import
  * ({@link ./import.sectionInputs}). `helpers` is handled separately (a

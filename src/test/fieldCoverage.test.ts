@@ -24,9 +24,9 @@ function args0(yamlText: string): Array<Record<string, unknown>> {
  * representative attributes — including unmodeled optional attributes on the
  * plugin fields (`field_angle.clockwise`, `field_colour.columns`,
  * `field_multilineinput.spellcheck`, `field_grid_dropdown.columns`,
- * `field_bitmap` w/h, `field_dependent_dropdown.parentName`) to exercise the
- * verbatim `rest` bag. `%N` placeholders are arbitrary — only round-trip
- * identity of the args is asserted.
+ * `field_bitmap` w/h, `field_dependent_dropdown.optionMapping`/`defaultOptions`)
+ * to exercise the verbatim `rest` bag. `%N` placeholders are arbitrary — only
+ * round-trip identity of the args is asserted.
  */
 const ALL_FIELDS = `
 id: field_coverage
@@ -95,7 +95,9 @@ implementations:
             - type: field_dependent_dropdown
               name: DEP
               parentName: COL
-              options: [["one", "1"]]
+              optionMapping:
+                "1": [["one", "1"]]
+              defaultOptions: [["none", "none"]]
             - type: field_grid_dropdown
               name: GRID
               options:
@@ -160,6 +162,14 @@ suite('field coverage (M4) — round-trip identity for every field type', () => 
         assert.strictEqual(by.get('field_colour')!.columns, 4);
         assert.strictEqual(by.get('field_multilineinput')!.spellcheck, false);
         assert.strictEqual(by.get('field_grid_dropdown')!.columns, 3);
+        // A dependent dropdown's option map / defaults aren't modeled as a UI editor;
+        // they ride the verbatim rest bag (its `parentName` IS modeled — see below).
+        assert.deepStrictEqual(by.get('field_dependent_dropdown')!.optionMapping, { '1': [['one', '1']] });
+        assert.deepStrictEqual(by.get('field_dependent_dropdown')!.defaultOptions, [['none', 'none']]);
+    });
+
+    test('field_dependent_dropdown.parentName is a modeled scalar (not lost to rest)', () => {
+        const by = new Map(args0(ALL_FIELDS).map(a => [a.type as string, a]));
         assert.strictEqual(by.get('field_dependent_dropdown')!.parentName, 'COL');
     });
 

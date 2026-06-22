@@ -260,6 +260,14 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         if (event.type === Blockly.Events.SELECTED) {
+            // Blockly fires SELECTED *asynchronously*, so on a right-click it arrives
+            // after the context menu has opened. Rebuilding the preview here steals
+            // focus (menus use the focus manager's ephemeral focus) and tears the menu
+            // down — the "flash and vanish" bug. Skip the refresh while a context menu
+            // is showing; the preview catches up on the next selection/edit.
+            if (Blockly.ContextMenu.getMenu()) {
+                return;
+            }
             refreshPreview((event as Blockly.Events.Selected).newElementId);
         } else if (!event.isUiEvent) {
             schedulePreview();

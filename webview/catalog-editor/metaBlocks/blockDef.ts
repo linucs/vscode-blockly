@@ -16,8 +16,10 @@ const PRECEDENCE_OPTIONS: [string, string][] = [
  * The `block_def` meta-block — one Blockly block definition (design "Model A").
  * Editable fields: `TYPE`, `CONNECTIONS`, `INLINE`, `PRECEDENCE`, `HELPURL`.
  * Statement slots: `MESSAGES` (the rendered rows), the codegen sections
- * (`BODY`/`SETUP`/`IMPORTS`/`DECLARATIONS`/`CLEANUP` as `code_line` chains,
- * `HELPERS`), `EXTENSIONS` (`extension` chain), and `RAW_PROPS` (catch-all attributes).
+ * (`BODY`/`SETUP`/`IMPORTS`/`DECLARATIONS`/`CLEANUP` as `code_snippet` chains,
+ * `HELPERS`) and `EXTENSIONS` (`extension` chain). Any unmodeled top-level `blockly`
+ * attribute rides verbatim in `extraState.rawProps` (non-positional metadata, no
+ * visible block — alongside `style`/`tags`/`precedenceRaw`/`inputDefaultsRaw`).
  *
  * The authored block's **connection shape** is data, not the meta-block's own wiring:
  * the `CONNECTIONS` dropdown (`NONE`/`LEFT`/`TOP`/`BOTTOM`/`BOTH`) picks which of
@@ -44,22 +46,22 @@ export function defineBlockDefBlock(): void {
             this.state_ = {};
 
             this.appendDummyInput()
-                .appendField('block type')
+                .appendField('block id')
                 .appendField(new Blockly.FieldTextInput(''), 'TYPE');
             const connField = new Blockly.FieldDropdown([
-                ['statement (top+bottom)', 'BOTH'],
-                ['value (output)', 'LEFT'],
-                ['top only', 'TOP'],
-                ['bottom only', 'BOTTOM'],
-                ['standalone (none)', 'NONE'],
+                ['statement — connects above and below', 'BOTH'],
+                ['value — plugs into another block', 'LEFT'],
+                ['connects above only', 'TOP'],
+                ['connects below only', 'BOTTOM'],
+                ['standalone — no connections', 'NONE'],
             ]);
             this.appendDummyInput()
-                .appendField('connections')
+                .appendField('how it connects')
                 .appendField(connField, 'CONNECTIONS');
             this.appendDummyInput()
-                .appendField('inline')
+                .appendField('inline inputs')
                 .appendField(new Blockly.FieldDropdown([['auto', 'unset'], ['yes', 'true'], ['no', 'false']]), 'INLINE')
-                .appendField('precedence')
+                .appendField('precedence (for value blocks)')
                 // Closed 9-value enum (schema `CodegenPrecedence`) + an empty option
                 // (statement block → omitted on serialize). A parser-accepted but
                 // out-of-enum value is preserved verbatim via `extraState.precedenceRaw`
@@ -68,26 +70,30 @@ export function defineBlockDefBlock(): void {
                 // message (§5d), not a gate.
                 .appendField(new Blockly.FieldDropdown(PRECEDENCE_OPTIONS), 'PRECEDENCE');
 
-            this.appendStatementInput('MESSAGES').setCheck(CHECK.MSGROW).appendField('message rows');
-            this.appendStatementInput('BODY').setCheck(CHECK.CODELINE).appendField('code (body)');
-            this.appendStatementInput('SETUP').setCheck(CHECK.CODELINE).appendField('setup');
-            this.appendStatementInput('IMPORTS').setCheck(CHECK.CODELINE).appendField('imports');
-            this.appendStatementInput('DECLARATIONS').setCheck(CHECK.CODELINE).appendField('declarations');
-            this.appendStatementInput('CLEANUP').setCheck(CHECK.CODELINE).appendField('cleanup');
-            this.appendStatementInput('HELPERS').setCheck(CHECK.HELPER).appendField('helpers');
+            this.appendDummyInput('MESSAGES_LABEL').appendField('rows shown on the block');
+            this.appendStatementInput('MESSAGES').setCheck(CHECK.MSGROW);
+            this.appendStatementInput('BODY').setCheck(CHECK.CODESNIPPET).appendField('code — main body');
+            this.appendStatementInput('SETUP').setCheck(CHECK.CODESNIPPET).appendField('code — setup');
+            this.appendStatementInput('IMPORTS').setCheck(CHECK.CODESNIPPET).appendField('code — imports');
+            this.appendStatementInput('DECLARATIONS').setCheck(CHECK.CODESNIPPET).appendField('code — declarations');
+            this.appendStatementInput('CLEANUP').setCheck(CHECK.CODESNIPPET).appendField('code — cleanup');
+            this.appendStatementInput('HELPERS').setCheck(CHECK.HELPER).appendField('helper functions');
 
             this.appendDummyInput()
-                .appendField('helpUrl')
+                .appendField('help url')
                 .appendField(new Blockly.FieldTextInput(''), 'HELPURL')
                 .appendField('tooltip')
                 .appendField(new FieldTranslate(), 'TOOLTIP_TR');
             this.appendStatementInput('EXTENSIONS').setCheck(CHECK.EXTENSION).appendField('extensions');
-            this.appendStatementInput('RAW_PROPS').setCheck(CHECK.RAWPROP).appendField('extra blockly props');
 
             this.setPreviousStatement(true, CHECK.BLOCKDEF);
             this.setNextStatement(true, CHECK.BLOCKDEF);
             this.setColour(CATEGORY_COLOUR.block);
-            this.setTooltip('One Blockly block definition. Stacks inside an implementation.');
+            this.setTooltip(
+                'This is one block people will drag into their program. Give it an id, choose how it connects ' +
+                'to other blocks, lay out the text it shows, and write the code it generates. Everything below ' +
+                'the text rows is optional.',
+            );
 
             // Build the default (statement) check slots, then reconfigure live on change.
             this.updateShape_(this.getFieldValue('CONNECTIONS') ?? 'BOTH');
@@ -111,14 +117,14 @@ export function defineBlockDefBlock(): void {
                 }
             }
             const slots: [boolean, string, string][] = [
-                [connections === 'LEFT', 'OUTPUTCHECK', 'output accepts'],
-                [connections === 'TOP' || connections === 'BOTH', 'TOPCHECK', 'top accepts'],
-                [connections === 'BOTTOM' || connections === 'BOTH', 'BOTTOMCHECK', 'bottom accepts'],
+                [connections === 'LEFT', 'OUTPUTCHECK', 'tags this block has'],
+                [connections === 'TOP' || connections === 'BOTH', 'TOPCHECK', 'tags this block has'],
+                [connections === 'BOTTOM' || connections === 'BOTH', 'BOTTOMCHECK', 'tags it accepts below'],
             ];
             for (const [want, name, label] of slots) {
                 if (want) {
                     this.appendStatementInput(name).setCheck(CHECK.CONNCHECK).appendField(label);
-                    this.moveInputBefore(name, 'MESSAGES');
+                    this.moveInputBefore(name, 'MESSAGES_LABEL');
                 }
             }
         },

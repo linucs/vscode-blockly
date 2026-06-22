@@ -29,7 +29,7 @@ const TARGET_ROWS: VariadicRowsConfig = {
     rowPrefix: 'TARGET_ROW_',
     anchorBefore: 'DEPENDENCIES',
     fillRow(input, i): void {
-        input.appendField('target').appendField(new Blockly.FieldTextInput(''), `TARGET${i}`);
+        input.appendField('fqbn').appendField(new Blockly.FieldTextInput(''), `TARGET${i}`);
     },
 };
 
@@ -46,30 +46,34 @@ export function defineImplementationBlock(): void {
             this.rowCount_ = 0;
 
             this.appendDummyInput('RUNTIME_ROW')
-                .appendField('implementation   runtime')
+                .appendField('runtime')
                 .appendField(new FieldCombobox(runtimeOptions), 'RUNTIME');
 
-            appendVariadicHeader(this, 'TARGETS_HEADER', 'targets');
+            appendVariadicHeader(this, 'TARGETS_HEADER', 'supported boards');
 
             this.appendStatementInput('DEPENDENCIES')
                 .setCheck(CHECK.DEPENDENCY)
                 .appendField('dependencies');
 
             // Impl-level codegen sections (shared imports/declarations/etc.).
-            this.appendStatementInput('IMPORTS').setCheck(CHECK.CODELINE).appendField('codegen imports');
-            this.appendStatementInput('DECLARATIONS').setCheck(CHECK.CODELINE).appendField('codegen declarations');
-            this.appendStatementInput('SETUP').setCheck(CHECK.CODELINE).appendField('codegen setup');
-            this.appendStatementInput('CLEANUP').setCheck(CHECK.CODELINE).appendField('codegen cleanup');
-            this.appendStatementInput('HELPERS').setCheck(CHECK.HELPER).appendField('codegen helpers');
+            this.appendStatementInput('IMPORTS').setCheck(CHECK.CODESNIPPET).appendField('shared imports');
+            this.appendStatementInput('DECLARATIONS').setCheck(CHECK.CODESNIPPET).appendField('shared declarations');
+            this.appendStatementInput('SETUP').setCheck(CHECK.CODESNIPPET).appendField('shared setup code');
+            this.appendStatementInput('CLEANUP').setCheck(CHECK.CODESNIPPET).appendField('shared cleanup code');
+            this.appendStatementInput('HELPERS').setCheck(CHECK.HELPER).appendField('shared helper functions');
 
-            this.appendStatementInput('BLOCKS')
-                .setCheck(CHECK.BLOCKDEF)
-                .appendField('blocks');
+            this.appendDummyInput('BLOCKS_LABEL').appendField('blocks');
+            this.appendStatementInput('BLOCKS').setCheck(CHECK.BLOCKDEF);
 
             this.setPreviousStatement(true, CHECK.IMPLEMENTATION);
             this.setNextStatement(true, CHECK.IMPLEMENTATION);
             this.setColour(330);
-            this.setTooltip('One <framework>:<language> implementation. Use [+]/[−] to manage targets.');
+            this.setTooltip(
+                'One version of this catalog for a specific framework and language — the "runtime" ' +
+                '(for example Arduino with C++, shown as arduino:cpp). Here you list the boards it supports, ' +
+                'any libraries or other dependencies it needs, code shared by all its blocks, and the blocks ' +
+                'themselves. Use the + and − buttons to add or remove boards.',
+            );
         },
         saveExtraState(this: VariadicRowsBlock): object {
             return { targetCount: this.rowCount_ };

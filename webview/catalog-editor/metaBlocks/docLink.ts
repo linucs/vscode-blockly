@@ -24,7 +24,7 @@ const DOC_KINDS: [string, string][] = [
  */
 export const docLinkBlock = {
     type: 'doc_link',
-    message0: 'doc %1   url %2',
+    message0: 'documentation link   kind %1   url %2',
     args0: [
         { type: 'field_combobox', name: 'NAME', options: DOC_KINDS },
         { type: 'field_input', name: 'URL', text: '' },
@@ -32,6 +32,8 @@ export const docLinkBlock = {
     previousStatement: CHECK.DOC,
     nextStatement: CHECK.DOC,
     colour: 190,
-    tooltip: 'A documentation link (name → URL).',
+    tooltip:
+        'A link to documentation — a datasheet, library reference, tutorial, and so on. ' +
+        'Pick a kind (or type your own) and paste the URL.',
     helpUrl: '',
 };

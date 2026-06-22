@@ -106,7 +106,7 @@ export class FieldCode extends Blockly.Field<string | undefined> {
         });
 
         const title = document.createElement('span');
-        title.textContent = Blockly.Msg['FIELD_CODE_TITLE'] ?? 'Custom Code';
+        title.textContent = Blockly.Msg['FIELD_CODE_TITLE'] ?? 'Code snippet';
         Object.assign(title.style, {
             fontSize: '13px',
             fontWeight: '600',

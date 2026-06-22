@@ -15,10 +15,11 @@ import { CODEGEN_SECTION_SLOTS, extraState, field, mapChain, type MetaBlock } fr
  * - `block_def`: fields `TYPE`, `INLINE` (`unset`|`true`|`false`), `HELPURL`,
  *   `PRECEDENCE`, `CONNECTIONS` (`NONE`|`LEFT`|`TOP`|`BOTTOM`|`BOTH` —
  *   picks which of output/prev/next are present); extraState `{ tooltip?, colour?,
- *   tags?, precedenceRaw?, inputDefaultsRaw? }` (the verbatim bags for out-of-enum
- *   precedence and non-string/empty-string input defaults); inputs `MESSAGES`,
+ *   tags?, precedenceRaw?, inputDefaultsRaw?, rawProps? }` (the verbatim bags for
+ *   out-of-enum precedence, non-string/empty-string input defaults, and unmodeled
+ *   top-level `blockly` attributes); inputs `MESSAGES`,
  *   `BODY`, `SETUP`, `IMPORTS`,
- *   `DECLARATIONS`, `CLEANUP`, `HELPERS`, `EXTENSIONS`, `RAW_PROPS`, and the
+ *   `DECLARATIONS`, `CLEANUP`, `HELPERS`, `EXTENSIONS`, and the
  *   per-shape check slots `OUTPUTCHECK`/`TOPCHECK`/`BOTTOMCHECK` (connection_check chains).
  * - `message_row`: extraState `{ text }` (the verbatim message); input `ARGS`.
  * - arg blocks: see {@link buildArg}.
@@ -89,12 +90,12 @@ export function buildBlockDefinition(block: MetaBlock): BlockDefinition {
     if (extensions.length > 0) {
         blockly.extensions = extensions;
     }
-    // Catch-all: any unmodeled top-level blockly attribute, carried verbatim.
-    for (const rawProp of mapChain(block.getInputTargetBlock('RAW_PROPS'), b => b)) {
-        const key = field(rawProp, 'KEY');
-        if (key) {
-            blockly[key] = extraState(rawProp).value;
-        }
+    // Catch-all: any unmodeled top-level blockly attributes, carried verbatim in
+    // extraState. These are non-positional metadata (no place on the block), so
+    // they ride in the same invisible bag as `style`/`tags`/`inputDefaultsRaw`
+    // rather than a visible carrier block.
+    if (state.rawProps && typeof state.rawProps === 'object') {
+        Object.assign(blockly, state.rawProps);
     }
 
     const def: BlockDefinition = { blockly: blockly as BlockDefinition['blockly'] };
@@ -276,7 +277,7 @@ function buildStructured(
 function buildBlockCodegen(block: MetaBlock, state: Record<string, unknown>): BlockCodegen | undefined {
     const codegen: BlockCodegen = {};
 
-    const body = codeLines(block.getInputTargetBlock('BODY'));
+    const body = codeSnippets(block.getInputTargetBlock('BODY'));
     if (body.length > 0) {
         codegen.body = body;
     }
@@ -333,7 +334,7 @@ function collectInputDefaults(block: MetaBlock, state: Record<string, unknown>):
 /** Shared {@link CodegenSections} (imports/declarations/setup/cleanup as code-line chains; helpers as a map). */
 export function assignSections(target: CodegenSections, block: MetaBlock): void {
     for (const [key, slot] of CODEGEN_SECTION_SLOTS) {
-        const lines = codeLines(block.getInputTargetBlock(slot));
+        const lines = codeSnippets(block.getInputTargetBlock(slot));
         if (lines.length > 0) {
             target[key] = lines;
         }
@@ -344,9 +345,9 @@ export function assignSections(target: CodegenSections, block: MetaBlock): void 
     }
 }
 
-/** A `code_line` chain → string[] (its `TEXT` fields). */
-function codeLines(head: MetaBlock | null): string[] {
-    return mapChain(head, b => (b.type === 'code_line' ? b.getFieldValue('TEXT') ?? '' : null));
+/** A `code_snippet` chain → string[] (its `TEXT` fields). */
+function codeSnippets(head: MetaBlock | null): string[] {
+    return mapChain(head, b => (b.type === 'code_snippet' ? b.getFieldValue('TEXT') ?? '' : null));
 }
 
 /** A `helper` chain → `{ name: body }` map, or `undefined` when empty. */

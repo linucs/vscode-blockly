@@ -13,7 +13,7 @@
  * lists) rides in `extraState` under its JSON key. Any attribute claimed by
  * neither `name`/`scalars`/`structured` is preserved verbatim via the `rest`
  * bag (see import/serialize) — so round-trip identity holds regardless of how
- * lean a descriptor is, the same philosophy as `block_def`'s `raw_blockly_prop`.
+ * lean a descriptor is, the same philosophy as `block_def`'s `rawProps` bag.
  *
  * Labels are English-hardcoded; editor i18n is deferred to M8 (plan §3-6).
  */
@@ -73,7 +73,7 @@ export const FIELD_DESCRIPTORS: FieldDescriptor[] = [
     { type: 'field_dropdown', label: 'dropdown', hasName: true, scalars: [], structured: ['options'], structuredEditor: 'pairs' },
     { type: 'field_checkbox', label: 'checkbox', hasName: true, scalars: [BOOL('checked', 'CHECKED', 'checked')], structured: [] },
     { type: 'field_label', label: 'label', hasName: false, scalars: [STR('text', 'TEXT', 'text')], structured: [] },
-    { type: 'field_label_serializable', label: 'label (serializable)', hasName: true, scalars: [STR('text', 'TEXT', 'text')], structured: [] },
+    { type: 'field_label_serializable', label: 'named label', hasName: true, scalars: [STR('text', 'TEXT', 'text')], structured: [] },
     {
         type: 'field_variable', label: 'variable', hasName: true,
         scalars: [STR('variable', 'VARIABLE', 'variable'), STR('defaultType', 'DEFAULTTYPE', 'default type')],
@@ -81,16 +81,20 @@ export const FIELD_DESCRIPTORS: FieldDescriptor[] = [
     },
     {
         type: 'field_image', label: 'image', hasName: false,
-        scalars: [STR('src', 'SRC', 'src'), NUM('width', 'WIDTH', 'width'), NUM('height', 'HEIGHT', 'height'), STR('alt', 'ALT', 'alt'), BOOL('flipRtl', 'FLIPRTL', 'flip RTL')],
+        scalars: [STR('src', 'SRC', 'source'), NUM('width', 'WIDTH', 'width'), NUM('height', 'HEIGHT', 'height'), STR('alt', 'ALT', 'alt text'), BOOL('flipRtl', 'FLIPRTL', 'flip for RTL')],
         structured: [],
     },
     // ── Plugin fields (@blockly/*) ───────────────────────────────────────
     { type: 'field_angle', label: 'angle', hasName: true, scalars: [NUM('angle', 'ANGLE', 'angle')], structured: [] },
     { type: 'field_colour', label: 'colour', hasName: true, scalars: [STR('colour', 'COLOUR', 'colour')], structured: [] },
     { type: 'field_colour_hsv_sliders', label: 'colour (HSV)', hasName: true, scalars: [STR('colour', 'COLOUR', 'colour')], structured: [] },
-    { type: 'field_multilineinput', label: 'multiline', hasName: true, scalars: [STR('text', 'TEXT', 'default')], structured: [] },
+    { type: 'field_multilineinput', label: 'multiline text', hasName: true, scalars: [STR('text', 'TEXT', 'default')], structured: [] },
     { type: 'field_slider', label: 'slider', hasName: true, scalars: NUMERIC_RANGE, structured: [] },
-    { type: 'field_dependent_dropdown', label: 'dependent dropdown', hasName: true, scalars: [], structured: ['options'], structuredEditor: 'pairs' },
+    // A dependent dropdown has NO flat `options`: its menu derives from a parent
+    // field via `parentName` + an `optionMapping` (parent value → options) and
+    // `defaultOptions`. We model the editable `parentName`; the mapping/defaults
+    // ride verbatim in the `rest` bag (a rich map editor is a later milestone).
+    { type: 'field_dependent_dropdown', label: 'dependent dropdown', hasName: true, scalars: [STR('parentName', 'PARENTNAME', 'depends on field')], structured: [] },
     { type: 'field_grid_dropdown', label: 'grid dropdown', hasName: true, scalars: [], structured: ['options'], structuredEditor: 'pairs' },
     // ── First-party custom fields (webview/custom-fields/*) ──────────────
     { type: 'field_bitmap', label: 'bitmap', hasName: true, scalars: [NUM('width', 'WIDTH', 'width'), NUM('height', 'HEIGHT', 'height')], structured: ['value'], structuredEditor: 'bitmap' },

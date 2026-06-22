@@ -13,7 +13,7 @@ import { CATEGORY_COLOUR } from './categories';
  */
 export const catalogBlock = {
     type: 'catalog',
-    message0: 'catalog   id %1   category %2',
+    message0: 'block catalog   id %1   category %2',
     args0: [
         { type: 'field_input', name: 'ID', text: '' },
         { type: 'field_input', name: 'CATEGORY', text: '' },
@@ -24,20 +24,29 @@ export const catalogBlock = {
         { type: 'field_input', name: 'AUTHOR', text: '' },
         { type: 'field_colour', name: 'COLOUR', colour: '#5b80a5' },
     ],
-    message2: 'description %1 %2',
-    args2: [
+    message2: 'description',
+    args2: [],
+    message3: '%1 %2',
+    args3: [
         { type: 'field_multilinetext', name: 'DESCRIPTION', text: '' },
         { type: 'field_translate', name: 'DESC_TR' },
     ],
-    message3: 'docs %1',
-    args3: [
+    message4: 'documentation links',
+    args4: [],
+    message5: '%1',
+    args5: [
         { type: 'input_statement', name: 'DOCS', check: CHECK.DOC },
     ],
-    message4: 'implementations %1',
-    args4: [
+    message6: 'implementations (one per runtime)',
+    args6: [],
+    message7: '%1',
+    args7: [
         { type: 'input_statement', name: 'IMPLEMENTATIONS', check: CHECK.IMPLEMENTATION },
     ],
     colour: CATEGORY_COLOUR.catalog,
-    tooltip: 'Catalog root — one block-catalog file.',
+    tooltip:
+        'This is the whole catalog — one file describing a set of blocks people can drag into their program ' +
+        '(for example, all the blocks for one sensor or board). Give it a name, category and version here, then ' +
+        'add at least one "implementation" below to say which boards it works on and what code each block produces.',
     helpUrl: '',
 };

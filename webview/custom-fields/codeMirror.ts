@@ -27,7 +27,7 @@ export function langForRuntime(runtime: string | null | undefined): CodeLang | n
 }
 
 /**
- * Walk up the meta-block tree from a `code_line`/`helper` block to the enclosing
+ * Walk up the meta-block tree from a `code_snippet`/`helper` block to the enclosing
  * `implementation` and read its `RUNTIME`. Returns null outside the catalog editor
  * (e.g. the runtime webview, where `field_code` sits on a real catalog block) — the
  * editor then opens without a language grammar (plain text).

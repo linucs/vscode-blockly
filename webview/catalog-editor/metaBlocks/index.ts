@@ -163,7 +163,6 @@ export const META_TOOLBOX = {
                 { kind: 'block', type: 'message_row' },
                 { kind: 'block', type: 'connection_check' },
                 { kind: 'block', type: 'extension' },
-                { kind: 'block', type: 'raw_blockly_prop' },
             ],
         },
         {
@@ -190,7 +189,7 @@ export const META_TOOLBOX = {
             name: 'Codegen',
             colour: `${CATEGORY_COLOUR.codegen}`,
             contents: [
-                { kind: 'block', type: 'code_line' },
+                { kind: 'block', type: 'code_snippet' },
                 { kind: 'block', type: 'helper' },
             ],
         },

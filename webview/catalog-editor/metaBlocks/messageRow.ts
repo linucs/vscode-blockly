@@ -23,14 +23,18 @@ export function defineMessageRowBlock(): void {
             this.text_ = undefined;
             this.hasArgs_ = false;
             this.appendDummyInput()
-                .appendField('message')
+                .appendField('text')
                 .appendField(new Blockly.FieldTextInput(''), 'TEXT')
                 .appendField(new FieldTranslate(), 'TR');
-            this.appendStatementInput('ARGS').setCheck(CHECK.ARG).appendField('args');
+            this.appendDummyInput('ARGS_LABEL').appendField('fields and inputs');
+            this.appendStatementInput('ARGS').setCheck(CHECK.ARG);
             this.setPreviousStatement(true, CHECK.MSGROW);
             this.setNextStatement(true, CHECK.MSGROW);
             this.setColour(250);
-            this.setTooltip('One message row. Use %1, %2… for its args, in order.');
+            this.setTooltip(
+                'One row of text shown on the block. Type the words, and write %1, %2, … where each field or ' +
+                'input should appear (in order). Add those fields and inputs below.',
+            );
         },
 
         saveExtraState(this: MessageRowBlock): Record<string, unknown> {

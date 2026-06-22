@@ -25,7 +25,8 @@ const KNOWN_PRECEDENCE = new Set<string>(PRECEDENCE_VALUES);
  * blocks. Model A — messages/args are preserved **verbatim** as `message_row`
  * blocks (one per rendered row) holding the i18n template + an ordered `ARGS`
  * chain. `serialize(import(yaml))` is a semantic identity round-trip; unrecognized
- * fields/attributes are carried by `field_generic`/`raw_blockly_prop`.
+ * unmodeled fields are carried by `field_generic`; unmodeled top-level attributes
+ * ride verbatim in `block_def`'s `extraState.rawProps` bag.
  *
  * Returns `null` for an empty document (nothing to edit).
  */
@@ -118,7 +119,7 @@ function specFromDependency(dep: Dependency): BlockSpec {
     }
 }
 
-/** Top-level `blockly` keys the meta-model represents directly; the rest → `raw_blockly_prop`. */
+/** Top-level `blockly` keys the meta-model represents directly; the rest → `extraState.rawProps`. */
 const KNOWN_BLOCKLY_KEYS = new Set([
     'type', 'output', 'previousStatement', 'nextStatement', 'inputsInline',
     'tooltip', 'helpUrl', 'colour', 'style', 'extensions',
@@ -237,22 +238,24 @@ function specFromBlockDefinition(def: BlockDefinition): BlockSpec {
         }
     }
 
-    // Unmodeled top-level attributes → raw_blockly_prop carriers.
-    const rawProps: BlockSpec[] = [];
+    // Unmodeled top-level attributes → an invisible verbatim bag in extraState.
+    // Non-positional metadata (no place on the block), so no visible carrier block
+    // — same treatment as `style`/`tags`.
+    const rawProps: Record<string, unknown> = {};
     for (const [key, value] of Object.entries(blockly)) {
         if (KNOWN_BLOCKLY_KEYS.has(key) || /^(message|args)\d+$/.test(key)) {
             continue;
         }
-        const rp = new BlockSpec('raw_blockly_prop', { KEY: key });
-        rp.extraState = { value };
-        rawProps.push(rp);
+        rawProps[key] = value;
+    }
+    if (Object.keys(rawProps).length > 0) {
+        state.rawProps = rawProps;
     }
 
     const inputs: Record<string, BlockSpec | null> = {
         MESSAGES: chain(rows),
-        BODY: chain(codeLineSpecs(codegen.body)),
+        BODY: chain(codeSnippetSpecs(codegen.body)),
         EXTENSIONS: chain(extensionSpecs),
-        RAW_PROPS: chain(rawProps),
         ...shapeInputs,
         ...sectionInputs(codegen),
     };
@@ -446,7 +449,7 @@ function sectionInputs(sections: CodegenSections | undefined): Record<string, Bl
     for (const [key, slot] of CODEGEN_SECTION_SLOTS) {
         const lines = sections[key];
         if (Array.isArray(lines) && lines.length > 0) {
-            out[slot] = chain(codeLineSpecs(lines));
+            out[slot] = chain(codeSnippetSpecs(lines));
         }
     }
     const helpers = sections.helpers;
@@ -458,6 +461,6 @@ function sectionInputs(sections: CodegenSections | undefined): Record<string, Bl
     return out;
 }
 
-function codeLineSpecs(lines: string[] | undefined): BlockSpec[] {
-    return (lines ?? []).map(line => new BlockSpec('code_line', { TEXT: line }));
+function codeSnippetSpecs(lines: string[] | undefined): BlockSpec[] {
+    return (lines ?? []).map(line => new BlockSpec('code_snippet', { TEXT: line }));
 }

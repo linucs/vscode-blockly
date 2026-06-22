@@ -36,6 +36,8 @@ interface GenericBlock extends Blockly.Block {
 /** A field block's structured + `rest` leaf state, round-tripped via extraState. */
 interface FieldStateBlock extends VariadicRowsBlock {
     state_: Record<string, unknown>;
+    /** Guards the WIDTH/HEIGHT validators from recursing while we set them ourselves. */
+    bitmapBusy_?: boolean;
 }
 
 function arg(this: Blockly.Block, label: string, colour: number): void {
@@ -62,9 +64,36 @@ function summarizeStructured(desc: FieldDescriptor, state: Record<string, unknow
     return parts.length > 0 ? `(${parts.join(', ')})` : '';
 }
 
-/** Default empty grid for a fresh `field_bitmap` (8×8 all-off). */
-function emptyBitmap(): number[][] {
-    return Array.from({ length: 8 }, () => Array.from({ length: 8 }, () => 0));
+/** Bitmap grid size bounds — keep a fat-fingered value from freezing the editor. */
+const BITMAP_MIN = 1;
+const BITMAP_MAX = 32;
+
+/** Empty grid (all-off) of the given size; defaults to 8×8 for a fresh `field_bitmap`. */
+function emptyBitmap(width = 8, height = 8): number[][] {
+    return Array.from({ length: height }, () => Array.from({ length: width }, () => 0));
+}
+
+/** Resize a grid to width×height, keeping overlapping pixels and zero-filling new cells. */
+function resizeGrid(old: number[][], width: number, height: number): number[][] {
+    return Array.from({ length: height }, (_, r) =>
+        Array.from({ length: width }, (_, c) => old[r]?.[c] ?? 0));
+}
+
+/**
+ * Swap a bitmap meta-block's grid field for a fresh one holding `grid`. `FieldBitmap`
+ * builds its block display once at init and never rebuilds it when the value's
+ * dimensions change, so a resize (or an import of a non-8×8 grid) means replacing the
+ * whole field — `setValue` alone would render a broken grid.
+ */
+function setBitmapGrid(block: Blockly.Block, grid: number[][]): void {
+    const input = block.getInput('HEADER');
+    if (!input) {
+        return;
+    }
+    if (block.getField('VALUE')) {
+        input.removeField('VALUE');
+    }
+    input.appendField(new FieldThemedBitmap(grid), 'VALUE');
 }
 
 /** Row config for the inline `options` pairs editor (`label = value`). */
@@ -92,7 +121,7 @@ const VARTYPE_ROWS: VariadicRowsConfig = {
  * Build the live meta-block definition for one modeled field type. Scalars render as
  * editable fields (the M4 path). Structured leaf data is now editable per
  * `desc.structuredEditor`: `pairs`/`list` → inline `[+]/[−]` rows; `bitmap` → an
- * embedded themed grid. A `pairs` field whose options can't be expressed as
+ * embedded themed grid with width/height controls. A `pairs` field whose options can't be expressed as
  * `[string,string]` rows (image labels) keeps the verbatim `optionsRaw` bag and shows
  * a read-only summary. Any structured key without an editor falls back to a summary
  * (defensive — all current ones have editors).
@@ -121,13 +150,41 @@ function fieldBlock(desc: FieldDescriptor) {
                 }
             }
             if (editor === 'bitmap') {
-                input.appendField('grid').appendField(new FieldThemedBitmap(emptyBitmap()), 'VALUE');
+                const widthField = new Blockly.FieldNumber(8, BITMAP_MIN, BITMAP_MAX, 1);
+                const heightField = new Blockly.FieldNumber(8, BITMAP_MIN, BITMAP_MAX, 1);
+                input.appendField('size')
+                    .appendField(widthField, 'WIDTH')
+                    .appendField('×')
+                    .appendField(heightField, 'HEIGHT')
+                    .appendField(new FieldThemedBitmap(emptyBitmap()), 'VALUE');
+                // Editing width/height rebuilds the grid at the new size (the field plugin
+                // has no resize control of its own); the grid stays the single source —
+                // serialize derives width/height from it. Guarded against our own writes.
+                const block = this;
+                const resizeTo = (width: number, height: number): void => {
+                    const cur = (block.getFieldValue('VALUE') as number[][] | null) ?? [];
+                    setBitmapGrid(block, resizeGrid(cur, width, height));
+                };
+                widthField.setValidator((value): number => {
+                    const width = Number(value);
+                    if (!block.bitmapBusy_) {
+                        resizeTo(width, Number(block.getFieldValue('HEIGHT')));
+                    }
+                    return width;
+                });
+                heightField.setValidator((value): number => {
+                    const height = Number(value);
+                    if (!block.bitmapBusy_) {
+                        resizeTo(Number(block.getFieldValue('WIDTH')), height);
+                    }
+                    return height;
+                });
             } else if (rowCfg) {
                 appendVariadicHeader(this, 'STRUCT_HEADER', editor === 'pairs' ? 'options' : 'variable types');
             } else if (summaryOnly) {
                 input.appendField(new Blockly.FieldLabel(''), 'SUMMARY');
             }
-            arg.call(this, `A ${desc.label} field (%N).`, CATEGORY_COLOUR.fields);
+            arg.call(this, `A ${desc.label}. Write its %N in the message text to show where it appears.`, CATEGORY_COLOUR.fields);
         },
 
         saveExtraState(this: FieldStateBlock): Record<string, unknown> {
@@ -143,9 +200,16 @@ function fieldBlock(desc: FieldDescriptor) {
         loadExtraState(this: FieldStateBlock, state: Record<string, unknown>): void {
             this.state_ = state ?? {};
             if (editor === 'bitmap') {
-                if (Array.isArray(this.state_.value)) {
-                    this.setFieldValue(this.state_.value, 'VALUE');
-                }
+                const grid = Array.isArray(this.state_.value)
+                    ? (this.state_.value as number[][])
+                    : emptyBitmap();
+                // Rebuild the grid field at the loaded size, then mirror its dimensions
+                // into WIDTH/HEIGHT without re-triggering their resize validators.
+                this.bitmapBusy_ = true;
+                setBitmapGrid(this, grid);
+                this.setFieldValue(grid[0]?.length ?? 0, 'WIDTH');
+                this.setFieldValue(grid.length, 'HEIGHT');
+                this.bitmapBusy_ = false;
                 return;
             }
             if (rowCfg) {
@@ -198,7 +262,7 @@ const ALIGN_OPTIONS: [string, string][] = [
  * attribute round-trips verbatim via the `state_.rest` bag; `state_.checkArray`
  * preserves a one-element `["String"]` check from collapsing to a scalar.
  */
-function inputBlock(label: string, tooltip: string, hasCheck: boolean, hasDefault = false) {
+function inputBlock(label: string, tooltip: string, checkLabel: string | null, hasDefault = false) {
     return {
         init(this: InputStateBlock): void {
             this.state_ = {};
@@ -208,10 +272,10 @@ function inputBlock(label: string, tooltip: string, hasCheck: boolean, hasDefaul
                 .appendField(new Blockly.FieldTextInput(''), 'NAME')
                 .appendField(new Blockly.FieldDropdown(ALIGN_OPTIONS), 'ALIGN');
             if (hasDefault) {
-                row.appendField('default').appendField(new Blockly.FieldTextInput(''), 'DEFAULT');
+                row.appendField('default value').appendField(new Blockly.FieldTextInput(''), 'DEFAULT');
             }
-            if (hasCheck) {
-                this.appendStatementInput('CHECK').setCheck(CHECK.CONNCHECK).appendField('accepts');
+            if (checkLabel) {
+                this.appendStatementInput('CHECK').setCheck(CHECK.CONNCHECK).appendField(checkLabel);
             }
             arg.call(this, tooltip, CATEGORY_COLOUR.inputs);
         },
@@ -225,10 +289,26 @@ function inputBlock(label: string, tooltip: string, hasCheck: boolean, hasDefaul
 }
 
 export function defineArgBlocks(): void {
-    Blockly.Blocks['input_value'] = inputBlock('value input', 'A value input socket (%N).', true, true);
-    Blockly.Blocks['input_statement'] = inputBlock('statement input', 'A statement input socket (%N).', true);
-    Blockly.Blocks['input_dummy'] = inputBlock('dummy input', 'A row with no socket.', false);
-    Blockly.Blocks['input_end_row'] = inputBlock('end-row input', 'A row with no socket that ends the current row.', false);
+    Blockly.Blocks['input_value'] = inputBlock(
+        'value socket',
+        'A socket where the user plugs in a value block. Write its %N in the message text to show where it appears.',
+        'tags it accepts', true,
+    );
+    Blockly.Blocks['input_statement'] = inputBlock(
+        'statement socket',
+        'A C-shaped socket that holds a stack of blocks inside this one.',
+        'tags it accepts inside',
+    );
+    Blockly.Blocks['input_dummy'] = inputBlock(
+        'plain row',
+        'A row with no socket — used to place fields or start a new line.',
+        null,
+    );
+    Blockly.Blocks['input_end_row'] = inputBlock(
+        'row break',
+        'Ends the current row, so the fields after it start on a new line.',
+        null,
+    );
 
     for (const desc of FIELD_DESCRIPTORS) {
         Blockly.Blocks[desc.type] = fieldBlock(desc);
@@ -238,9 +318,9 @@ export function defineArgBlocks(): void {
         init(this: GenericBlock): void {
             this.entry_ = undefined;
             this.appendDummyInput()
-                .appendField('field')
+                .appendField('unknown field')
                 .appendField(new Blockly.FieldLabel(''), 'SUMMARY');
-            arg.call(this, 'A field type the guided editor does not model yet (preserved verbatim).', CATEGORY_COLOUR.fields);
+            arg.call(this, "A field type this editor doesn't know yet. It's kept exactly as-is so nothing is lost.", CATEGORY_COLOUR.fields);
         },
         saveExtraState(this: GenericBlock): Record<string, unknown> {
             return { entry: this.entry_ };

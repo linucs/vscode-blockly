@@ -142,7 +142,7 @@ implementations:
         assert.deepStrictEqual(arg.variableTypes, ['int', 'float']);
     });
 
-    test('preserves an unknown top-level blockly attribute via raw_blockly_prop', () => {
+    test('preserves an unknown top-level blockly attribute via the extraState rawProps bag', () => {
         const exotic = `
 id: x
 category: C

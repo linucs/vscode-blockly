@@ -22,12 +22,17 @@ export function defineConnectionCheckBlock(): void {
     Blockly.Blocks['connection_check'] = {
         init(this: Blockly.Block): void {
             this.appendDummyInput()
-                .appendField('accepts')
+                .appendField('matching tag')
                 .appendField(new FieldCombobox(PRESETS), 'VALUE');
             this.setPreviousStatement(true, CHECK.CONNCHECK);
             this.setNextStatement(true, CHECK.CONNCHECK);
             this.setColour(120);
-            this.setTooltip('One accepted connection type. Stack several for an "any of" list; leave "any" for no constraint.');
+            this.setTooltip(
+                'A matching tag for this connection. Two connections join only if they share at least one tag — ' +
+                'or if a side has no tag, meaning it joins anything. Common tags for value plugs are Number, ' +
+                'String, Boolean and Array, but a tag is just a name you can invent. Stack several here to allow ' +
+                'any of them.',
+            );
         },
     };
 }

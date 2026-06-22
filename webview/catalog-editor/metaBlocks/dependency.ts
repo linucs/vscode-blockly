@@ -19,7 +19,7 @@ import { appendVariadicHeader, installVariadicRows, rebuildRows, type VariadicRo
 export const dependencyBlocks = [
     {
         type: 'dependency_library',
-        message0: 'library   name %1   minVersion %2',
+        message0: 'library   name %1   minimum version %2',
         args0: [
             { type: 'field_input', name: 'NAME', text: '' },
             { type: 'field_input', name: 'MINVERSION', text: '' },
@@ -32,12 +32,14 @@ export const dependencyBlocks = [
         previousStatement: CHECK.DEPENDENCY,
         nextStatement: CHECK.DEPENDENCY,
         colour: 60,
-        tooltip: 'PlatformIO/registry or VCS library dependency.',
+        tooltip:
+            'A library this code needs — from the PlatformIO registry or a Git repository. Give its name, ' +
+            'and optionally a minimum version. "url" + "ref" point at a specific Git repo and branch/tag/commit.',
         helpUrl: '',
     },
     {
         type: 'dependency_pip',
-        message0: 'pip   name %1   minVersion %2',
+        message0: 'pip package   name %1   minimum version %2',
         args0: [
             { type: 'field_input', name: 'NAME', text: '' },
             { type: 'field_input', name: 'MINVERSION', text: '' },
@@ -45,7 +47,7 @@ export const dependencyBlocks = [
         previousStatement: CHECK.DEPENDENCY,
         nextStatement: CHECK.DEPENDENCY,
         colour: 60,
-        tooltip: 'Python pip dependency.',
+        tooltip: 'A Python package this code needs, installed with pip. Give its name, and optionally a minimum version.',
         helpUrl: '',
     },
 ];
@@ -86,7 +88,10 @@ export function defineDependencyBrickBlock(): void {
             this.setPreviousStatement(true, CHECK.DEPENDENCY);
             this.setNextStatement(true, CHECK.DEPENDENCY);
             this.setColour(60);
-            this.setTooltip('App Lab brick dependency. Use [+]/[−] to set variable overrides (NAME → value).');
+            this.setTooltip(
+                'An Arduino App Lab "brick" this code needs. Use the + and − buttons to override its ' +
+                'variables (each is a name → value pair).',
+            );
         },
         saveExtraState(this: VariadicRowsBlock): object {
             return { varCount: this.rowCount_ };

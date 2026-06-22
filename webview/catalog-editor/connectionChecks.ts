@@ -20,12 +20,10 @@ export const CHECK = {
     MSGROW: 'MessageRow',
     /** arg blocks (`input_*`/`field_*`); only nest inside `message_row.ARGS`. */
     ARG: 'Arg',
-    /** `code_line` blocks; only nest inside the codegen array slots. */
-    CODELINE: 'CodeLine',
+    /** `code_snippet` blocks; only nest inside the codegen array slots. */
+    CODESNIPPET: 'CodeSnippet',
     /** `helper` blocks; only nest inside a `HELPERS` slot. */
     HELPER: 'Helper',
-    /** `raw_blockly_prop` blocks; only nest inside `block_def.RAW_PROPS`. */
-    RAWPROP: 'RawProp',
     /**
      * `connection_check` blocks; nest inside a connection's check slot
      * (`OUTPUTCHECK`/`TOPCHECK`/`BOTTOMCHECK`) or a value/statement input's `CHECK`

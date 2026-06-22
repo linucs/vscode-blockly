@@ -21,7 +21,10 @@ export function defineExtensionBlock(): void {
             this.setPreviousStatement(true, CHECK.EXTENSION);
             this.setNextStatement(true, CHECK.EXTENSION);
             this.setColour(100);
-            this.setTooltip('A Blockly block extension applied to this block.');
+            this.setTooltip(
+                'Adds a named, pre-built behaviour to this block (a Blockly "extension"). Pick one from the ' +
+                'list — only extensions this editor knows about are offered.',
+            );
         },
     };
 }

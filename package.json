@@ -135,11 +135,6 @@
           "command": "blocks-editor.openInBlocksEditor",
           "when": "resourceExtname == .ino || resourceExtname == .pde || resourceExtname == .cpp || resourceExtname == .py",
           "group": "navigation@10"
-        },
-        {
-          "command": "blocks-editor.contributeCatalog",
-          "when": "resourceExtname =~ /\\.ya?ml$/ && resourcePath =~ /[\\\\/]\\.blocks[\\\\/]/",
-          "group": "navigation@11"
         }
       ],
       "editor/title/context": [

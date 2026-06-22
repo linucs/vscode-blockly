@@ -37,5 +37,5 @@
   "command.refreshLocalCatalogs": "Blocks Editor: Refresh Project Blocks",
   "command.editLocalCatalog": "Edit Catalog",
   "command.deleteLocalCatalog": "Delete Catalog",
-  "command.contributeLocalCatalog": "Contribute to Community"
+  "command.contributeLocalCatalog": "Share this block catalog with the Community"
 }

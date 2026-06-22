@@ -37,5 +37,5 @@
   "command.refreshLocalCatalogs": "Editor a Blocchi: Aggiorna blocchi del progetto",
   "command.editLocalCatalog": "Modifica catalogo",
   "command.deleteLocalCatalog": "Elimina catalogo",
-  "command.contributeLocalCatalog": "Contribuisci alla community"
+  "command.contributeLocalCatalog": "Condividi questo catalogo di blocchi con la community"
 }

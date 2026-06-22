@@ -1,5 +1,15 @@
 import * as Blockly from 'blockly';
+import { PRECEDENCE_VALUES } from '../../../src/catalog/serialize/types';
+import { isI18nMap, readI18n } from '../../../src/catalog/serialize/i18n';
 import { CHECK } from '../connectionChecks';
+import { FieldTranslate, type TranslatableBlock } from '../ui/FieldTranslate';
+import { openTranslationDialog } from '../ui/translationDialog';
+
+/** Dropdown options for `precedence`: empty (statement → omitted) + the closed enum. */
+const PRECEDENCE_OPTIONS: [string, string][] = [
+    ['(none)', ''],
+    ...PRECEDENCE_VALUES.map(v => [v, v] as [string, string]),
+];
 
 /**
  * The `block_def` meta-block — one Blockly block definition (design "Model A").
@@ -14,10 +24,12 @@ import { CHECK } from '../connectionChecks';
  * check slot (`OUTPUTCHECK`/`TOPCHECK`/`BOTTOMCHECK`, a `connection_check` chain) holds
  * each one's accepted types. (The meta-block's *own* prev/next stay `CHECK.BLOCKDEF`
  * so it keeps stacking inside `implementation.BLOCKS`.) A freshly dragged block
- * defaults to a statement (`BOTH`). Other preserved-but-not-yet-editable attributes
- * (`tooltip`, `colour`, `tags`, `inputDefaults`) live verbatim in `extraState`.
+ * defaults to a statement (`BOTH`). Preserved-but-not-yet-editable attributes
+ * (`tooltip`, `colour`, `tags`) and the verbatim fallback bags for out-of-enum
+ * `precedence` (`precedenceRaw`) and non-string input defaults (`inputDefaultsRaw`)
+ * live in `extraState`.
  */
-interface BlockDefBlock extends Blockly.Block {
+interface BlockDefBlock extends Blockly.Block, TranslatableBlock {
     state_: Record<string, unknown>;
     updateShape_(connections: string): void;
 }
@@ -46,12 +58,13 @@ export function defineBlockDefBlock(): void {
                 .appendField('inline')
                 .appendField(new Blockly.FieldDropdown([['auto', 'unset'], ['yes', 'true'], ['no', 'false']]), 'INLINE')
                 .appendField('precedence')
-                // PRECEDENCE is a closed 9-value enum in the schema (ATOMIC … NONE),
-                // but stays free text for now: the constrained dropdown + the
-                // "required when blockly.output is set" conditional land together in
-                // M6. An out-of-enum value is caught as a (non-blocking) validation
-                // message meanwhile; an empty value is omitted on serialize.
-                .appendField(new Blockly.FieldTextInput(''), 'PRECEDENCE');
+                // Closed 9-value enum (schema `CodegenPrecedence`) + an empty option
+                // (statement block → omitted on serialize). A parser-accepted but
+                // out-of-enum value is preserved verbatim via `extraState.precedenceRaw`
+                // (the importer leaves the dropdown empty), so the closed set never
+                // drops it. "Required when output is set" is a non-blocking validation
+                // message (§5d), not a gate.
+                .appendField(new Blockly.FieldDropdown(PRECEDENCE_OPTIONS), 'PRECEDENCE');
 
             this.appendStatementInput('MESSAGES').setCheck(CHECK.MSGROW).appendField('message rows');
             this.appendStatementInput('BODY').setCheck(CHECK.CODELINE).appendField('code (body)');
@@ -65,7 +78,9 @@ export function defineBlockDefBlock(): void {
                 .appendField('style')
                 .appendField(new Blockly.FieldTextInput(''), 'STYLE')
                 .appendField('helpUrl')
-                .appendField(new Blockly.FieldTextInput(''), 'HELPURL');
+                .appendField(new Blockly.FieldTextInput(''), 'HELPURL')
+                .appendField('tooltip')
+                .appendField(new FieldTranslate(), 'TOOLTIP_TR');
             this.appendStatementInput('EXTENSIONS').setCheck(CHECK.EXTENSION).appendField('extensions');
             this.appendStatementInput('RAW_PROPS').setCheck(CHECK.RAWPROP).appendField('extra blockly props');
 
@@ -117,6 +132,19 @@ export function defineBlockDefBlock(): void {
         loadExtraState(this: BlockDefBlock, state: Record<string, unknown>): void {
             this.state_ = state ?? {};
             this.updateShape_((this.state_.connections as string) ?? 'BOTH');
+        },
+
+        /** Tooltip is dialog-only (no inline field) — the 🌐 is its sole editor. */
+        editTranslations_(this: BlockDefBlock, field: FieldTranslate): void {
+            openTranslationDialog(readI18n(this.state_.tooltip), next => {
+                this.state_.tooltip = next === '' ? undefined : next;
+                field.forceRerender();
+            });
+        },
+
+        translationLocaleCount_(this: BlockDefBlock): number {
+            const value = readI18n(this.state_.tooltip);
+            return isI18nMap(value) ? Object.keys(value as Record<string, string>).length : 0;
         },
     };
 }

@@ -34,10 +34,12 @@ export function readI18n(raw: unknown): I18nText | undefined {
 }
 
 /**
- * M3 i18n editing: the guided editor edits the **primary locale** (`en`, or the
- * first key) inline as a normal field while the other translations are preserved
- * verbatim. {@link i18nDisplay} is the string shown/edited; {@link i18nMerge} folds
- * an edit back, keeping the other locales and key order.
+ * The guided editor edits the **primary locale** inline as a normal field while the
+ * other translations are preserved verbatim. The primary locale is the **first key**
+ * by insertion order (which is the first key in the YAML map) — the translation
+ * dialog pins it to the top and serialization keeps map order, so "first entry =
+ * primary" holds end to end. {@link i18nDisplay} is the string shown/edited;
+ * {@link i18nMerge} folds an edit back, keeping the other locales and key order.
  */
 export function i18nDisplay(value: I18nText | undefined): string {
     if (value === undefined) {
@@ -46,18 +48,15 @@ export function i18nDisplay(value: I18nText | undefined): string {
     if (typeof value === 'string') {
         return value;
     }
-    if ('en' in value) {
-        return value.en;
-    }
     return Object.values(value)[0] ?? '';
 }
 
-/** The primary locale key of a map (`en` or first); `undefined` for a scalar. */
-function primaryLocale(value: I18nText | undefined): string | undefined {
+/** The primary locale key of a map (the first by insertion order); `undefined` for a scalar. */
+export function primaryLocale(value: I18nText | undefined): string | undefined {
     if (value === undefined || typeof value === 'string') {
         return undefined;
     }
-    return 'en' in value ? 'en' : Object.keys(value)[0];
+    return Object.keys(value)[0];
 }
 
 /** Fold an edited primary-locale string back into an i18n value, preserving other locales. */
@@ -67,4 +66,22 @@ export function i18nMerge(original: I18nText | undefined, edited: string): I18nT
         return edited;
     }
     return { ...(original as Record<string, string>), [key]: edited };
+}
+
+/**
+ * Build an {@link I18nText} from the translation dialog's ordered rows. Empty-text
+ * rows are dropped; the result collapses to a plain string when a single locale
+ * remains (the scalar form — matching the corpus and runtime safety) and is an
+ * ordered locale→text map otherwise, with the first surviving row as the primary
+ * (first) key. Returns `''` when nothing is left.
+ */
+export function i18nFromEntries(entries: Array<[string, string]>): I18nText {
+    const kept = entries.filter(([, text]) => text.length > 0);
+    if (kept.length === 0) {
+        return '';
+    }
+    if (kept.length === 1) {
+        return kept[0][1];
+    }
+    return Object.fromEntries(kept);
 }

@@ -39,12 +39,39 @@ export interface ExternalChangeMessage {
     type: 'externalChange';
 }
 
+/**
+ * Host → Webview: whether LLM-backed translation is available (the host's
+ * `vscode.lm` API exists). Gates the per-row 🔄 in the translation dialog — the
+ * editor stays fully functional (manual entry) when this is `false`.
+ */
+export interface TranslateAvailabilityMessage {
+    type: 'translateAvailability';
+    available: boolean;
+}
+
+/** Host → Webview: a completed translation, keyed back to its request `id`. */
+export interface TranslatedMessage {
+    type: 'translated';
+    id: number;
+    text: string;
+}
+
+/** Host → Webview: a translation request failed (no model, denied consent, error). */
+export interface TranslateErrorMessage {
+    type: 'translateError';
+    id: number;
+    message: string;
+}
+
 export type HostToWebviewMessage =
     | LoadMessage
     | ValidationMessage
     | SavedMessage
     | SaveErrorMessage
-    | ExternalChangeMessage;
+    | ExternalChangeMessage
+    | TranslateAvailabilityMessage
+    | TranslatedMessage
+    | TranslateErrorMessage;
 
 /** Webview → Host: webview is initialized (also used to (re)request a fresh load). */
 export interface ReadyMessage {
@@ -80,10 +107,25 @@ export interface OpenUrlMessage {
     url: string;
 }
 
+/**
+ * Webview → Host: translate `text` from `from` to `to` via `vscode.lm`. The host
+ * replies with {@link TranslatedMessage} / {@link TranslateErrorMessage} carrying
+ * the same `id`. Best-effort; the click is the user-initiated action that triggers
+ * model-access consent on first use.
+ */
+export interface TranslateMessage {
+    type: 'translate';
+    id: number;
+    text: string;
+    from: string;
+    to: string;
+}
+
 export type WebviewToHostMessage =
     | ReadyMessage
     | DirtyMessage
     | RequestValidationMessage
     | SaveMessage
     | FallbackToTextMessage
-    | OpenUrlMessage;
+    | OpenUrlMessage
+    | TranslateMessage;

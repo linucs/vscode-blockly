@@ -436,6 +436,12 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
                         background: var(--vscode-button-background, #0e639c);
                     }
                     #emptyAction:hover { background: var(--vscode-button-hoverBackground, #1177bb); }
+                    /* Themed keyboard focus for the plain native controls (the
+                       browser default ring ignores the theme; the vscode-button web
+                       components theme their own focus). */
+                    #emptyAction:focus-visible, #autoGenCheck:focus-visible {
+                        outline: 1px solid var(--vscode-focusBorder, #007fd4); outline-offset: 2px;
+                    }
                     #emptyAction.visible { display: inline-block; }
 
                     .blocklyToolboxCategory[id="toolbox-search-input"] .blocklyTreeRowContentContainer {

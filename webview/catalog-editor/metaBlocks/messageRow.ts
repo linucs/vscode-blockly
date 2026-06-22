@@ -1,15 +1,18 @@
 import * as Blockly from 'blockly';
 import { CHECK } from '../connectionChecks';
-import { i18nMerge, type I18nText } from '../../../src/catalog/serialize/i18n';
+import { i18nDisplay, i18nMerge, isI18nMap, type I18nText } from '../../../src/catalog/serialize/i18n';
+import { FieldTranslate, type TranslatableBlock } from '../ui/FieldTranslate';
+import { openTranslationDialog } from '../ui/translationDialog';
 
 /**
  * The `message_row` meta-block — one rendered row of a block (one `message{N}`).
- * The `TEXT` field edits the primary locale (`en`); the full i18n value (other
+ * The `TEXT` field edits the primary locale inline; the full i18n value (other
  * locales) and the `args{N}`-presence flag are preserved in `extraState` and
  * folded back on save ({@link i18nMerge}), so translations round-trip untouched.
- * The `ARGS` slot holds the row's arg blocks (one per `%N`).
+ * The 🌐 field opens the translation dialog to edit the whole locale map. The
+ * `ARGS` slot holds the row's arg blocks (one per `%N`).
  */
-interface MessageRowBlock extends Blockly.Block {
+interface MessageRowBlock extends Blockly.Block, TranslatableBlock {
     text_: I18nText | undefined;
     hasArgs_: boolean;
 }
@@ -21,7 +24,8 @@ export function defineMessageRowBlock(): void {
             this.hasArgs_ = false;
             this.appendDummyInput()
                 .appendField('message')
-                .appendField(new Blockly.FieldTextInput(''), 'TEXT');
+                .appendField(new Blockly.FieldTextInput(''), 'TEXT')
+                .appendField(new FieldTranslate(), 'TR');
             this.appendStatementInput('ARGS').setCheck(CHECK.ARG).appendField('args');
             this.setPreviousStatement(true, CHECK.MSGROW);
             this.setNextStatement(true, CHECK.MSGROW);
@@ -37,6 +41,21 @@ export function defineMessageRowBlock(): void {
         loadExtraState(this: MessageRowBlock, state: { text?: I18nText; hasArgs?: boolean }): void {
             this.text_ = state?.text;
             this.hasArgs_ = state?.hasArgs ?? false;
+        },
+
+        /** The value the dialog edits = the stored map with the inline TEXT edit folded in. */
+        editTranslations_(this: MessageRowBlock, field: FieldTranslate): void {
+            const current = i18nMerge(this.text_, this.getFieldValue('TEXT') ?? '');
+            openTranslationDialog(current, next => {
+                this.text_ = next;
+                this.setFieldValue(i18nDisplay(next), 'TEXT');
+                field.forceRerender();
+            });
+        },
+
+        translationLocaleCount_(this: MessageRowBlock): number {
+            const value = i18nMerge(this.text_, this.getFieldValue('TEXT') ?? '');
+            return isI18nMap(value) ? Object.keys(value).length : 0;
         },
     };
 }

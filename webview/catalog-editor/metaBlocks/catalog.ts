@@ -23,9 +23,10 @@ export const catalogBlock = {
         { type: 'field_input', name: 'AUTHOR', text: '' },
         { type: 'field_colour', name: 'COLOUR', colour: '#5b80a5' },
     ],
-    message2: 'description %1',
+    message2: 'description %1 %2',
     args2: [
         { type: 'field_multilinetext', name: 'DESCRIPTION', text: '' },
+        { type: 'field_translate', name: 'DESC_TR' },
     ],
     message3: 'docs %1',
     args3: [

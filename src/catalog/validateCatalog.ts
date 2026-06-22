@@ -55,6 +55,14 @@ export function validateCatalogResult(input: string): CatalogValidationResult {
         }
 
         const entry = doc as Record<string, unknown>;
+        // A description i18n map must include `en`: the runtime resolves a locale
+        // map as `map[locale] ?? map.en` (catalogI18nPreprocess), so a map without
+        // `en` renders empty for any user not on one of its locales. Mirrors the
+        // block-level `en` guard in checkI18nFields.
+        const desc = entry.description;
+        if (desc && typeof desc === 'object' && !Array.isArray(desc) && !('en' in (desc as object))) {
+            error(`Catalog "${typeof entry.id === 'string' ? entry.id : ''}"`, 'description is an object but missing required "en" key');
+        }
         const impls = entry.implementations as Array<Record<string, unknown>> | undefined;
         if (!Array.isArray(impls)) continue;
 

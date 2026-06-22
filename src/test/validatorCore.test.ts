@@ -1,5 +1,15 @@
 import * as assert from 'assert';
 import { validateCatalogResult, validateCatalogIssues, validateCatalogYaml } from '../catalog/validateCatalog';
+import { serializeWorkspace } from '../catalog/serialize';
+import { importCatalog } from '../catalog/serialize/import';
+import type { MetaBlock, MetaWorkspace } from '../catalog/serialize/types';
+
+/** Validate the guided editor's actual output: YAML → specs → serialize → validate. */
+function validateThroughEditor(yamlText: string) {
+    const spec = importCatalog(yamlText);
+    const ws: MetaWorkspace = { getTopBlocks: () => (spec ? [spec as unknown as MetaBlock] : []) };
+    return validateCatalogResult(serializeWorkspace(ws));
+}
 
 const VALID = `
 id: arduino-demo
@@ -144,6 +154,128 @@ suite('metadata schema constraints', () => {
         const dupes = r.issues.filter(i => i.severity === 'warning' && /Duplicate dependency/.test(i.message));
         assert.strictEqual(dupes.length, 1, JSON.stringify(r.issues, null, 2));
         assert.strictEqual(dupes[0].kind, 'structural');
+    });
+});
+
+// M6 (D6.3): {{NAME}}↔args is validate-only. These run through the real guided-
+// editor serializer so they prove the check covers what the editor actually emits.
+suite('placeholder + inputDefault checks (guided-editor model)', () => {
+    test('an orphan {{NAME}} left by a rename is flagged on the serialized output', () => {
+        // Author the post-rename state: body still says {{FREQ}} but the input is PITCH.
+        const renamed = `
+id: demo
+category: "I/O::Digital"
+implementations:
+  - runtime: "arduino:cpp"
+    blocks:
+      - blockly:
+          type: tone_block
+          message0: "tone %1"
+          args0:
+            - type: input_value
+              name: PITCH
+          previousStatement: null
+          nextStatement: null
+        codegen:
+          body:
+            - "tone({{FREQ}});"
+`;
+        const r = validateThroughEditor(renamed);
+        assert.ok(
+            r.issues.some(i => i.message === 'placeholder {{FREQ}} not defined in args'),
+            JSON.stringify(r.issues, null, 2),
+        );
+    });
+
+    test('field-name and typed-param {{NAME.sub}} placeholders are accepted (not orphans)', () => {
+        const ok = `
+id: demo
+category: "I/O::Digital"
+implementations:
+  - runtime: "arduino:cpp"
+    blocks:
+      - blockly:
+          type: mixed_block
+          message0: "set %1 to %2"
+          args0:
+            - type: field_dropdown
+              name: MODE
+              options:
+                - ["A", "A"]
+                - ["B", "B"]
+            - type: field_typed_param_input
+              name: P
+          previousStatement: null
+          nextStatement: null
+        codegen:
+          body:
+            - "set_{{MODE}}({{P.type}} {{P.name}});"
+`;
+        const r = validateThroughEditor(ok);
+        assert.ok(
+            !r.issues.some(i => i.message.includes('not defined in args')),
+            JSON.stringify(r.issues, null, 2),
+        );
+    });
+
+    test('a description i18n map missing "en" is flagged (runtime fallback safety)', () => {
+        const noEn = `
+id: demo
+category: "I/O::Digital"
+description:
+  it: "Pin digitali."
+  de: "Digitale Pins."
+implementations:
+  - runtime: "arduino:cpp"
+    blocks:
+      - blockly:
+          type: t
+          message0: "x"
+`;
+        const r = validateCatalogResult(noEn);
+        assert.ok(
+            r.issues.some(i => i.message === 'description is an object but missing required "en" key'),
+            JSON.stringify(r.issues, null, 2),
+        );
+        // An it-first map that still includes en is fine (primary may be non-en).
+        const withEn = noEn.replace('  de: "Digitale Pins."', '  en: "Digital pins."');
+        assert.ok(
+            !validateCatalogResult(withEn).issues.some(i => i.message.includes('missing required "en"')),
+        );
+    });
+
+    test('a co-located default is valid; a default whose input is gone is flagged', () => {
+        // GHOST has no matching input_value → kept verbatim and flagged by checkInputDefaults.
+        const yaml = `
+id: demo
+category: "I/O::Digital"
+implementations:
+  - runtime: "arduino:cpp"
+    blocks:
+      - blockly:
+          type: d
+          message0: "x %1"
+          args0:
+            - type: input_value
+              name: PIN
+          previousStatement: null
+          nextStatement: null
+        codegen:
+          body:
+            - "use({{PIN}});"
+          inputDefaults:
+            PIN: "2"
+            GHOST: "9"
+`;
+        const r = validateThroughEditor(yaml);
+        assert.ok(
+            !r.issues.some(i => i.message.includes('inputDefault "PIN"')),
+            'co-located PIN default is valid',
+        );
+        assert.ok(
+            r.issues.some(i => i.message === 'inputDefault "GHOST" does not correspond to an input_value'),
+            JSON.stringify(r.issues, null, 2),
+        );
     });
 });
 

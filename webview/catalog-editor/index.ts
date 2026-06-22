@@ -12,6 +12,7 @@ import { configureBlocklyLocale, installDialogBridge, injectThemedWorkspace } fr
 import { registerMetaBlocks, META_TOOLBOX } from './metaBlocks';
 import { renderSpec } from './renderSpec';
 import { initPreview, updatePreview } from './preview';
+import { configureTranslation } from './ui/translationDialog';
 
 /**
  * Guided Catalog Editor webview — M2.
@@ -37,6 +38,22 @@ const locale = configureBlocklyLocale();
 // has no dialog-driven blocks, so the returned bridge is unused.
 installDialogBridge(vscode);
 registerMetaBlocks();
+// Seed the translation dialog with the editor locale; the 🔄 translate channel is
+// wired in once the host reports `translateAvailability`.
+configureTranslation({ locale });
+
+// Pending LLM-translate requests, keyed by id (resolved by translated/translateError).
+const pendingTranslations = new Map<number, { resolve: (text: string) => void; reject: (err: Error) => void }>();
+let translateSeq = 0;
+
+/** Post a translate request to the host and resolve when its reply arrives. */
+function requestTranslate(text: string, from: string, to: string): Promise<string> {
+    const id = ++translateSeq;
+    return new Promise<string>((resolve, reject) => {
+        pendingTranslations.set(id, { resolve, reject });
+        post({ type: 'translate', id, text, from, to });
+    });
+}
 
 let workspace: Blockly.WorkspaceSvg;
 let dirty = false;
@@ -215,6 +232,19 @@ window.addEventListener('message', (event: MessageEvent<HostToWebviewMessage>) =
             return;
         case 'externalChange':
             $<HTMLDivElement>('banner').classList.add('visible');
+            return;
+        case 'translateAvailability':
+            // Hand the dialog a translate callback only when the host has the API;
+            // otherwise the per-row 🔄 stays hidden (manual entry always works).
+            configureTranslation({ locale, translate: msg.available ? requestTranslate : undefined });
+            return;
+        case 'translated':
+            pendingTranslations.get(msg.id)?.resolve(msg.text);
+            pendingTranslations.delete(msg.id);
+            return;
+        case 'translateError':
+            pendingTranslations.get(msg.id)?.reject(new Error(msg.message));
+            pendingTranslations.delete(msg.id);
             return;
     }
 });

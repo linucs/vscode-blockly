@@ -15,7 +15,9 @@ import { CODEGEN_SECTION_SLOTS, extraState, field, mapChain, type MetaBlock } fr
  * - `block_def`: fields `TYPE`, `INLINE` (`unset`|`true`|`false`), `HELPURL`,
  *   `PRECEDENCE`, `STYLE`, `CONNECTIONS` (`NONE`|`LEFT`|`TOP`|`BOTTOM`|`BOTH` —
  *   picks which of output/prev/next are present); extraState `{ tooltip?, colour?,
- *   tags?, inputDefaults? }`; inputs `MESSAGES`, `BODY`, `SETUP`, `IMPORTS`,
+ *   tags?, precedenceRaw?, inputDefaultsRaw? }` (the verbatim bags for out-of-enum
+ *   precedence and non-string/empty-string input defaults); inputs `MESSAGES`,
+ *   `BODY`, `SETUP`, `IMPORTS`,
  *   `DECLARATIONS`, `CLEANUP`, `HELPERS`, `EXTENSIONS`, `RAW_PROPS`, and the
  *   per-shape check slots `OUTPUTCHECK`/`TOPCHECK`/`BOTTOMCHECK` (connection_check chains).
  * - `message_row`: extraState `{ text }` (the verbatim message); input `ARGS`.
@@ -205,18 +207,52 @@ function buildBlockCodegen(block: MetaBlock, state: Record<string, unknown>): Bl
     }
     assignSections(codegen, block);
 
+    // precedence: the dropdown holds an in-enum value (or '' = omitted); an
+    // out-of-enum value imported from a non-canonical file is preserved verbatim in
+    // `precedenceRaw` (the field wins when the user picked one).
     const precedence = field(block, 'PRECEDENCE');
     if (precedence) {
         codegen.precedence = precedence as BlockCodegen['precedence'];
+    } else if (state.precedenceRaw !== undefined) {
+        codegen.precedence = state.precedenceRaw as BlockCodegen['precedence'];
     }
 
-    // inputDefaults values may be empty strings or non-strings (schema: any), so
-    // carry them verbatim from extraState rather than via per-arg string fields.
-    if (state.inputDefaults !== undefined && Object.keys(state.inputDefaults as object).length > 0) {
-        codegen.inputDefaults = state.inputDefaults as Record<string, unknown>;
+    // inputDefaults: non-empty-string defaults are co-located on each `input_value`
+    // (so a rename carries them); non-string / empty-string defaults that a text
+    // field can't faithfully hold are kept verbatim in `inputDefaultsRaw`.
+    const inputDefaults = collectInputDefaults(block, state);
+    if (Object.keys(inputDefaults).length > 0) {
+        codegen.inputDefaults = inputDefaults;
     }
 
     return Object.keys(codegen).length > 0 ? codegen : undefined;
+}
+
+/**
+ * Gather `codegen.inputDefaults` from the authored block: each `input_value`'s
+ * `DEFAULT` field (non-empty string), merged over the verbatim `inputDefaultsRaw`
+ * bag (non-string / empty-string defaults, and any default whose input was dropped).
+ * The two are keyed by input name and never collide — the importer routes each
+ * default to exactly one side.
+ */
+function collectInputDefaults(block: MetaBlock, state: Record<string, unknown>): Record<string, unknown> {
+    const out: Record<string, unknown> = {};
+    for (const row of mapChain(block.getInputTargetBlock('MESSAGES'), r => r)) {
+        for (const arg of mapChain(row.getInputTargetBlock('ARGS'), a => a)) {
+            if (arg.type !== 'input_value') {
+                continue;
+            }
+            const name = field(arg, 'NAME');
+            const def = arg.getFieldValue('DEFAULT');
+            if (name && def) {
+                out[name] = def;
+            }
+        }
+    }
+    if (state.inputDefaultsRaw && typeof state.inputDefaultsRaw === 'object') {
+        Object.assign(out, state.inputDefaultsRaw as Record<string, unknown>);
+    }
+    return out;
 }
 
 /** Shared {@link CodegenSections} (imports/declarations/setup/cleanup as code-line chains; helpers as a map). */

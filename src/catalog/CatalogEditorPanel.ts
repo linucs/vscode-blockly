@@ -3,7 +3,7 @@ import * as path from 'path';
 import { loadL10nBundle, webviewDataScripts } from '../webviewHtml';
 import { validateCatalogIssues } from './validateCatalog';
 import { markSelfWrite, consumeSelfWrite } from './selfWriteRegistry';
-import type { HostToWebviewMessage, WebviewToHostMessage } from './catalogEditorProtocol';
+import type { HostToWebviewMessage, WebviewToHostMessage, TranslateMessage } from './catalogEditorProtocol';
 
 /**
  * Standalone webview panel hosting the Guided Catalog Editor for a single
@@ -82,6 +82,13 @@ export class CatalogEditorPanel {
         switch (msg.type) {
             case 'ready':
                 await this.loadFile();
+                // API existence is checked synchronously — no `selectChatModels`
+                // probe at load (that's reserved for the user-initiated 🔄 click,
+                // which triggers model-access consent on first use).
+                this.post({ type: 'translateAvailability', available: typeof vscode.lm?.selectChatModels === 'function' });
+                return;
+            case 'translate':
+                await this.translate(msg);
                 return;
             case 'dirty':
                 this.setDirty(msg.value);
@@ -134,6 +141,41 @@ export class CatalogEditorPanel {
         }
     }
 
+    /**
+     * Best-effort LLM translation via `vscode.lm` (optional integration — no hard
+     * dependency on any provider). The 🔄 click is the user-initiated action that
+     * triggers model-access consent on first use; any failure (no model, denied
+     * consent, request error) comes back as a `translateError` the dialog shows
+     * inline. Placeholders (`%1`, `{{NAME}}`) are preserved by instruction.
+     */
+    private async translate(msg: TranslateMessage): Promise<void> {
+        try {
+            const models = await vscode.lm.selectChatModels({ vendor: 'copilot' });
+            const model = models[0];
+            if (!model) {
+                this.post({ type: 'translateError', id: msg.id, message: 'No language model available.' });
+                return;
+            }
+            const prompt =
+                `Translate the following UI string from ${msg.from} to ${msg.to}. ` +
+                'Preserve every placeholder such as %1, %2 and {{NAME}} exactly as-is. ' +
+                'Reply with ONLY the translated string — no quotes, no explanation.\n\n' +
+                msg.text;
+            const response = await model.sendRequest(
+                [vscode.LanguageModelChatMessage.User(prompt)],
+                {},
+                new vscode.CancellationTokenSource().token,
+            );
+            let out = '';
+            for await (const chunk of response.text) {
+                out += chunk;
+            }
+            this.post({ type: 'translated', id: msg.id, text: out.trim() });
+        } catch (err) {
+            this.post({ type: 'translateError', id: msg.id, message: errText(err) });
+        }
+    }
+
     private async openAsText(): Promise<void> {
         const doc = await vscode.workspace.openTextDocument(vscode.Uri.file(this.fsPath));
         await vscode.window.showTextDocument(doc);
@@ -177,6 +219,8 @@ export class CatalogEditorPanel {
                         color: var(--vscode-button-foreground, #fff);
                         background: var(--vscode-button-background, #0e639c); }
                     button:hover { background: var(--vscode-button-hoverBackground, #1177bb); }
+                    /* Themed keyboard focus (browser default ring ignores the theme). */
+                    button:focus-visible { outline: 1px solid var(--vscode-focusBorder, #007fd4); outline-offset: 2px; }
                     button.secondary { color: var(--vscode-button-secondaryForeground, #fff);
                         background: var(--vscode-button-secondaryBackground, #3a3d41); }
                     #banner { display: none; align-items: center; gap: 8px; padding: 6px 8px;
@@ -187,6 +231,17 @@ export class CatalogEditorPanel {
                     #editorArea { flex: 1; display: flex; flex-direction: column; min-height: 0; }
                     #workArea { flex: 1; display: flex; min-height: 0; }
                     #blocklyDiv { flex: 1; min-width: 0; min-height: 0; }
+                    /* Drive the Blockly canvas background from the live theme var
+                       (not the ThemeAdapter's JS snapshot) so both the main and
+                       preview workspaces always track the current VS Code theme,
+                       including on theme switches. */
+                    #blocklyDiv, #previewDiv { background: var(--vscode-editor-background, #1e1e1e); }
+                    .blocklySvg { background-color: var(--vscode-editor-background, #1e1e1e) !important; }
+                    .blocklyMainBackground { fill: var(--vscode-editor-background, #1e1e1e) !important; stroke: none !important; }
+                    /* Toolbox (category sidebar) and flyout panel backgrounds, same
+                       live-var approach so they track the theme too. */
+                    .blocklyToolboxDiv { background-color: var(--vscode-editorWidget-background, #252526) !important; }
+                    .blocklyFlyoutBackground { fill: var(--vscode-editorWidget-background, #252526) !important; }
                     #previewPane { width: 320px; display: flex; flex-direction: column; min-height: 0;
                         border-left: 1px solid var(--vscode-editorWidget-border, #454545); }
                     #previewLabel { font-size: 11px; text-transform: uppercase; letter-spacing: .04em;

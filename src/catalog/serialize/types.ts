@@ -51,6 +51,28 @@ export const CODEGEN_SECTION_SLOTS = [
  */
 export const INPUT_ALIGN_VALUES = ['LEFT', 'RIGHT', 'CENTRE'] as const;
 
+/**
+ * The closed set of `codegen.precedence` values (schema `CodegenPrecedence`). The
+ * guided editor's PRECEDENCE dropdown offers exactly these (plus an empty option =
+ * "no precedence / statement block"). A parser-accepted-but-out-of-enum value
+ * (the corpus is parsable-but-not-canonical) is preserved verbatim via the
+ * `block_def` extraState `precedenceRaw` bag instead of being dropped by the closed
+ * set — the same claim-known-else-verbatim rule as {@link INPUT_ALIGN_VALUES}.
+ * Single source shared by the importer and the webview meta-block; keep in sync
+ * with `CodegenPrecedence` in `../CatalogTypes`.
+ */
+export const PRECEDENCE_VALUES = [
+    'ATOMIC',
+    'UNARY_PREFIX',
+    'MULTIPLICATION',
+    'ADDITION',
+    'RELATIONAL',
+    'EQUALITY',
+    'LOGICAL_AND',
+    'LOGICAL_OR',
+    'NONE',
+] as const;
+
 /** Walk a statement-input chain (head + `getNextBlock()` links), mapping each. */
 export function mapChain<T>(head: MetaBlock | null, fn: (b: MetaBlock) => T | null): T[] {
     const out: T[] = [];

@@ -11,10 +11,13 @@ import { BlockSpec, chain } from './blockSpec';
 import { valueToCheckChain } from './connectionCheck';
 import { FIELD_DESCRIPTOR_BY_TYPE, scalarToField, type FieldDescriptor } from './fieldDescriptors';
 import { i18nDisplay, isI18nMap } from './i18n';
-import { CODEGEN_SECTION_SLOTS, INPUT_ALIGN_VALUES } from './types';
+import { CODEGEN_SECTION_SLOTS, INPUT_ALIGN_VALUES, PRECEDENCE_VALUES } from './types';
 
 /** Alignment spellings the ALIGN dropdown can hold; others fall through to `rest`. */
 const KNOWN_ALIGN = new Set<string>(INPUT_ALIGN_VALUES);
+
+/** Precedence values the PRECEDENCE dropdown can hold; others → `precedenceRaw`. */
+const KNOWN_PRECEDENCE = new Set<string>(PRECEDENCE_VALUES);
 
 /**
  * Import (the inverse of {@link ./index.serializeWorkspace}): parse catalog YAML
@@ -146,9 +149,6 @@ function specFromBlockDefinition(def: BlockDefinition): BlockSpec {
     // The renderer rebuilds the dynamic check slots in loadExtraState (before
     // fields are set), so it needs the chosen shape there, not just in the field.
     state.connections = fields.CONNECTIONS;
-    if (codegen.inputDefaults && Object.keys(codegen.inputDefaults).length > 0) {
-        state.inputDefaults = codegen.inputDefaults;
-    }
 
     if (blockly.inputsInline === true) {
         fields.INLINE = 'true';
@@ -161,8 +161,14 @@ function specFromBlockDefinition(def: BlockDefinition): BlockSpec {
     if (typeof blockly.helpUrl === 'string') {
         fields.HELPURL = blockly.helpUrl;
     }
-    if (typeof codegen.precedence === 'string') {
-        fields.PRECEDENCE = codegen.precedence;
+    // precedence → dropdown when in-enum; an out-of-enum or non-string value
+    // (non-canonical file) is preserved verbatim and the dropdown stays empty.
+    if (codegen.precedence !== undefined) {
+        if (typeof codegen.precedence === 'string' && KNOWN_PRECEDENCE.has(codegen.precedence)) {
+            fields.PRECEDENCE = codegen.precedence;
+        } else {
+            state.precedenceRaw = codegen.precedence;
+        }
     }
     if (blockly.tooltip !== undefined) {
         state.tooltip = blockly.tooltip;
@@ -181,18 +187,45 @@ function specFromBlockDefinition(def: BlockDefinition): BlockSpec {
         .filter((e): e is string => typeof e === 'string')
         .map(e => new BlockSpec('extension', { VALUE: e }));
 
-    // message{N} + args{N} → one message_row per rendered row.
+    // message{N} + args{N} → one message_row per rendered row. Index the
+    // `input_value` specs by name so codegen.inputDefaults can be co-located.
     const rows: BlockSpec[] = [];
+    const inputValueByName = new Map<string, BlockSpec>();
     for (let n = 0; `message${n}` in blockly; n++) {
         const args = (blockly[`args${n}`] as Array<Record<string, unknown>> | undefined) ?? [];
+        const argSpecs = args.map(specFromArg);
+        for (const a of argSpecs) {
+            if (a.type === 'input_value' && a.fields.NAME) {
+                inputValueByName.set(a.fields.NAME, a);
+            }
+        }
         // The editor edits the primary locale in the TEXT field; extraState keeps
         // the full i18n value (other locales) and the args-presence flag.
         const text = blockly[`message${n}`];
         const row = new BlockSpec('message_row', { TEXT: i18nDisplay(text as never) }, {
-            ARGS: chain(args.map(specFromArg)),
+            ARGS: chain(argSpecs),
         });
         row.extraState = { text, hasArgs: `args${n}` in blockly };
         rows.push(row);
+    }
+
+    // inputDefaults: route a non-empty-string default to its `input_value`'s
+    // DEFAULT field (so a rename carries it); keep non-string / empty-string
+    // defaults — and any default whose input is missing — verbatim, so `0` (number)
+    // never collapses to `"0"` and the validator can still flag stray keys.
+    if (codegen.inputDefaults && typeof codegen.inputDefaults === 'object') {
+        const raw: Record<string, unknown> = {};
+        for (const [name, value] of Object.entries(codegen.inputDefaults)) {
+            const target = inputValueByName.get(name);
+            if (target && typeof value === 'string' && value.length > 0) {
+                target.fields.DEFAULT = value;
+            } else {
+                raw[name] = value;
+            }
+        }
+        if (Object.keys(raw).length > 0) {
+            state.inputDefaultsRaw = raw;
+        }
     }
 
     // Unmodeled top-level attributes → raw_blockly_prop carriers.

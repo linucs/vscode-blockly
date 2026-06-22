@@ -1,8 +1,10 @@
 import * as Blockly from 'blockly';
 import { registerFieldMultilineInput } from '@blockly/field-multilineinput';
 import { registerFieldColour } from '@blockly/field-colour';
-import { i18nMerge, type I18nText } from '../../../src/catalog/serialize/i18n';
+import { i18nDisplay, i18nMerge, isI18nMap, type I18nText } from '../../../src/catalog/serialize/i18n';
 import { FIELD_DESCRIPTORS } from '../../../src/catalog/serialize/fieldDescriptors';
+import { type FieldTranslate, type TranslatableBlock } from '../ui/FieldTranslate';
+import { openTranslationDialog } from '../ui/translationDialog';
 import { catalogBlock } from './catalog';
 import { defineImplementationBlock } from './implementation';
 import { dependencyBlocks } from './dependency';
@@ -26,10 +28,19 @@ import { defineExtensionBlock } from './extension';
 
 let registered = false;
 
-interface CatalogStateBlock extends Blockly.Block {
+interface CatalogStateBlock extends Blockly.Block, TranslatableBlock {
     descState_?: I18nText;
     colourState_?: string;
     colourPresent_?: boolean;
+}
+
+/** The catalog description's current value: the stored map (if any) with the inline edit folded in, else the scalar field. */
+function currentDescription(block: CatalogStateBlock): I18nText | undefined {
+    const edited = block.getFieldValue('DESCRIPTION') ?? '';
+    if (block.descState_ && typeof block.descState_ === 'object') {
+        return i18nMerge(block.descState_, edited);
+    }
+    return edited || undefined;
 }
 
 /** The `field_colour` default (see catalog.ts) — a file with no `colour` shows this. */
@@ -69,6 +80,25 @@ function augmentCatalogState(): void {
         this.descState_ = state?.description;
         this.colourState_ = state?.colour;
         this.colourPresent_ = state?.colour !== undefined;
+    };
+    // The 🌐 (DESC_TR) field edits the full description locale map; the inline
+    // DESCRIPTION field stays the quick editor for the primary locale.
+    def.editTranslations_ = function (this: CatalogStateBlock, field: FieldTranslate): void {
+        openTranslationDialog(currentDescription(this), next => {
+            if (isI18nMap(next)) {
+                this.descState_ = next;
+                this.setFieldValue(i18nDisplay(next), 'DESCRIPTION');
+            } else {
+                // A single language always serializes as a scalar (no locale tag).
+                this.descState_ = undefined;
+                this.setFieldValue(typeof next === 'string' ? next : '', 'DESCRIPTION');
+            }
+            field.forceRerender();
+        });
+    };
+    def.translationLocaleCount_ = function (this: CatalogStateBlock): number {
+        const value = currentDescription(this);
+        return isI18nMap(value) ? Object.keys(value as Record<string, string>).length : 0;
     };
 }
 

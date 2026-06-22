@@ -107,19 +107,24 @@ const ALIGN_OPTIONS: [string, string][] = [
 /**
  * Build an input meta-block. All four input types share a `name` field and an
  * editable `align` dropdown; `value`/`statement` additionally get a `CHECK` slot
- * (a `connection_check` chain modeling the accepted types). Any further unmodeled
+ * (a `connection_check` chain modeling the accepted types). `input_value` also gets
+ * a `DEFAULT` field (`codegen.inputDefaults[name]`, co-located so it travels with a
+ * rename — schema allows defaults only on value inputs). Any further unmodeled
  * attribute round-trips verbatim via the `state_.rest` bag; `state_.checkArray`
  * preserves a one-element `["String"]` check from collapsing to a scalar.
  */
-function inputBlock(label: string, tooltip: string, hasCheck: boolean) {
+function inputBlock(label: string, tooltip: string, hasCheck: boolean, hasDefault = false) {
     return {
         init(this: InputStateBlock): void {
             this.state_ = {};
-            this.appendDummyInput()
+            const row = this.appendDummyInput()
                 .appendField(label)
                 .appendField('name')
                 .appendField(new Blockly.FieldTextInput(''), 'NAME')
                 .appendField(new Blockly.FieldDropdown(ALIGN_OPTIONS), 'ALIGN');
+            if (hasDefault) {
+                row.appendField('default').appendField(new Blockly.FieldTextInput(''), 'DEFAULT');
+            }
             if (hasCheck) {
                 this.appendStatementInput('CHECK').setCheck(CHECK.CONNCHECK).appendField('accepts');
             }
@@ -135,7 +140,7 @@ function inputBlock(label: string, tooltip: string, hasCheck: boolean) {
 }
 
 export function defineArgBlocks(): void {
-    Blockly.Blocks['input_value'] = inputBlock('value input', 'A value input socket (%N).', true);
+    Blockly.Blocks['input_value'] = inputBlock('value input', 'A value input socket (%N).', true, true);
     Blockly.Blocks['input_statement'] = inputBlock('statement input', 'A statement input socket (%N).', true);
     Blockly.Blocks['input_dummy'] = inputBlock('dummy input', 'A row with no socket.', false);
     Blockly.Blocks['input_end_row'] = inputBlock('end-row input', 'A row with no socket that ends the current row.', false);

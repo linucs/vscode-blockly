@@ -158,3 +158,101 @@ implementations:
         assert.deepStrictEqual(block.extraField, { nested: true });
     });
 });
+
+// M6: precedence is now a closed-enum dropdown and inputDefaults are co-located on
+// the input_value they belong to (with a verbatim fallback for non-string values).
+const DEFAULTS_BLOCK = `
+id: x
+category: C
+implementations:
+  - runtime: "arduino:cpp"
+    blocks:
+      - blockly:
+          type: t
+          message0: "tone %1 for %2"
+          args0:
+            - type: input_value
+              name: FREQ
+            - type: input_value
+              name: DURATION
+          previousStatement: null
+          nextStatement: null
+        codegen:
+          body:
+            - "tone({{FREQ}}, {{DURATION}});"
+          inputDefaults:
+            FREQ: "440"
+            DURATION: 500
+`;
+
+suite('block definition serializer — M6 (precedence enum + co-located inputDefaults)', () => {
+    test('in-enum precedence round-trips via the dropdown field', () => {
+        const block = roundTrip(PIN_MODE).implementations[0].blocks[1];
+        assert.strictEqual(block.codegen?.precedence, 'ATOMIC');
+    });
+
+    test('an out-of-enum precedence is preserved verbatim (not dropped)', () => {
+        const weird = `
+id: x
+category: C
+implementations:
+  - runtime: "arduino:cpp"
+    blocks:
+      - blockly:
+          type: t
+          message0: "v %1"
+          args0:
+            - type: input_value
+              name: A
+          output: Number
+        codegen:
+          body: ["{{A}}"]
+          precedence: SOMETHING_CUSTOM
+`;
+        const original = yaml.load(weird);
+        const result = roundTrip(weird);
+        assert.ok(deepEqual(original, result), 'out-of-enum precedence round-trips');
+        assert.strictEqual(result.implementations[0].blocks[0].codegen?.precedence, 'SOMETHING_CUSTOM');
+    });
+
+    test('a string default co-locates on its input_value (travels with the input)', () => {
+        // Navigate the imported spec tree to prove the default lives ON the input
+        // block, not in a separate block-level key — so a rename carries it.
+        const spec = importCatalog(DEFAULTS_BLOCK) as unknown as MetaBlock;
+        const impl = spec.getInputTargetBlock('IMPLEMENTATIONS')!;
+        const blockDef = impl.getInputTargetBlock('BLOCKS')!;
+        const row = blockDef.getInputTargetBlock('MESSAGES')!;
+        const firstArg = row.getInputTargetBlock('ARGS')!;
+        assert.strictEqual(firstArg.type, 'input_value');
+        assert.strictEqual(firstArg.getFieldValue('NAME'), 'FREQ');
+        assert.strictEqual(firstArg.getFieldValue('DEFAULT'), '440');
+    });
+
+    test('a non-string (bare-number) default is preserved verbatim as a number', () => {
+        const result = roundTrip(DEFAULTS_BLOCK);
+        const defaults = result.implementations[0].blocks[0].codegen?.inputDefaults as Record<string, unknown>;
+        assert.strictEqual(defaults.FREQ, '440');
+        assert.strictEqual(defaults.DURATION, 500, 'bare number stays a number, not "500"');
+        assert.ok(deepEqual(yaml.load(DEFAULTS_BLOCK), result), 'mixed string + number defaults round-trip');
+    });
+
+    test('statement block omits precedence (empty dropdown → no codegen.precedence)', () => {
+        const stmt = `
+id: x
+category: C
+implementations:
+  - runtime: "arduino:cpp"
+    blocks:
+      - blockly:
+          type: t
+          message0: "go %1"
+          args0:
+            - type: input_statement
+              name: BODY
+          previousStatement: null
+          nextStatement: null
+`;
+        const block = roundTrip(stmt).implementations[0].blocks[0];
+        assert.strictEqual(block.codegen?.precedence, undefined);
+    });
+});

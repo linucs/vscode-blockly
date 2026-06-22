@@ -5,6 +5,7 @@ import {
 } from '../../../src/catalog/serialize/fieldDescriptors';
 import { INPUT_ALIGN_VALUES } from '../../../src/catalog/serialize/types';
 import { CHECK } from '../connectionChecks';
+import { CATEGORY_COLOUR } from './categories';
 
 /**
  * The arg meta-blocks — one per `%N` of a message row (design "Model A"): the
@@ -31,8 +32,6 @@ interface GenericBlock extends Blockly.Block {
 interface FieldStateBlock extends Blockly.Block {
     state_: Record<string, unknown>;
 }
-
-const FIELD_COLOUR = 160;
 
 function arg(this: Blockly.Block, label: string, colour: number): void {
     this.setPreviousStatement(true, CHECK.ARG);
@@ -79,7 +78,7 @@ function fieldBlock(desc: FieldDescriptor) {
             if (hasStructured) {
                 input.appendField(new Blockly.FieldLabel(''), 'SUMMARY');
             }
-            arg.call(this, `A ${desc.label} field (%N).`, FIELD_COLOUR);
+            arg.call(this, `A ${desc.label} field (%N).`, CATEGORY_COLOUR.fields);
         },
         saveExtraState(this: FieldStateBlock): Record<string, unknown> {
             return this.state_ ?? {};
@@ -128,7 +127,7 @@ function inputBlock(label: string, tooltip: string, hasCheck: boolean, hasDefaul
             if (hasCheck) {
                 this.appendStatementInput('CHECK').setCheck(CHECK.CONNCHECK).appendField('accepts');
             }
-            arg.call(this, tooltip, 210);
+            arg.call(this, tooltip, CATEGORY_COLOUR.inputs);
         },
         saveExtraState(this: InputStateBlock): Record<string, unknown> {
             return this.state_ ?? {};
@@ -155,7 +154,7 @@ export function defineArgBlocks(): void {
             this.appendDummyInput()
                 .appendField('field')
                 .appendField(new Blockly.FieldLabel(''), 'SUMMARY');
-            arg.call(this, 'A field type the guided editor does not model yet (preserved verbatim).', 0);
+            arg.call(this, 'A field type the guided editor does not model yet (preserved verbatim).', CATEGORY_COLOUR.fields);
         },
         saveExtraState(this: GenericBlock): Record<string, unknown> {
             return { entry: this.entry_ };

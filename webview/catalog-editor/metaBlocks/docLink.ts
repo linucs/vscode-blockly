@@ -31,7 +31,7 @@ export const docLinkBlock = {
     ],
     previousStatement: CHECK.DOC,
     nextStatement: CHECK.DOC,
-    colour: 200,
+    colour: 190,
     tooltip: 'A documentation link (name → URL).',
     helpUrl: '',
 };

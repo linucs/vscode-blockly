@@ -69,7 +69,7 @@ export function defineImplementationBlock(): void {
 
             this.setPreviousStatement(true, CHECK.IMPLEMENTATION);
             this.setNextStatement(true, CHECK.IMPLEMENTATION);
-            this.setColour(160);
+            this.setColour(330);
             this.setTooltip('One <framework>:<language> implementation. Use [+]/[−] to manage targets.');
         },
 

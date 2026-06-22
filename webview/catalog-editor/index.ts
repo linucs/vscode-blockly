@@ -1,7 +1,9 @@
 import * as Blockly from 'blockly';
+import '@blockly/toolbox-search'; // registers the toolbox `kind: 'search'` category
 import type { CatalogIssue } from '../../src/catalog/catalogIssue';
+import { issueTarget } from '../../src/catalog/issueTarget';
 import type { HostToWebviewMessage, WebviewToHostMessage } from '../../src/catalog/catalogEditorProtocol';
-import { serializeWorkspace } from '../../src/catalog/serialize';
+import { serializeWorkspace, dumpBlockDefinition } from '../../src/catalog/serialize';
 import type { MetaBlock, MetaWorkspace } from '../../src/catalog/serialize/types';
 import { importCatalog } from '../../src/catalog/serialize/import';
 import { firstDiffYaml, semanticallyEqualYaml } from '../../src/catalog/serialize/normalize';
@@ -11,7 +13,7 @@ import '../blockFields';
 import { configureBlocklyLocale, installDialogBridge, injectThemedWorkspace } from '../blocklyBootstrap';
 import { registerMetaBlocks, META_TOOLBOX } from './metaBlocks';
 import { renderSpec } from './renderSpec';
-import { initPreview, updatePreview } from './preview';
+import { initPreview, updatePreview, resizePreview } from './preview';
 import { configureTranslation } from './ui/translationDialog';
 
 /**
@@ -66,10 +68,55 @@ function setStatus(text: string): void {
     $<HTMLDivElement>('status').textContent = text;
 }
 
+/** Clears every inline validation marker from the meta-workspace. */
+function clearWarnings(): void {
+    for (const block of workspace.getAllBlocks(false)) {
+        block.setWarningText(null);
+    }
+}
+
+/**
+ * Resolve an issue's scope string to the live block(s) it concerns: a `block_def`
+ * by its authored TYPE, or the single `catalog` root. The validator only sees YAML,
+ * so this mapping happens here against the workspace (design §5d).
+ */
+function blocksForIssue(issue: CatalogIssue): Blockly.Block[] {
+    const target = issueTarget(issue.path);
+    if (!target) {
+        return [];
+    }
+    if (target.kind === 'catalog') {
+        const root = workspace.getAllBlocks(false).find(b => b.type === 'catalog');
+        return root ? [root] : [];
+    }
+    return workspace
+        .getAllBlocks(false)
+        .filter(b => b.type === 'block_def' && b.getFieldValue('TYPE') === target.type);
+}
+
+/**
+ * Surfaces validation issues two ways: an inline warning icon on each affected
+ * block (messages joined per block), and a navigable summary list whose mapped
+ * rows center+select the block on click. Unmapped scopes (`Doc N`, duplicates)
+ * stay summary-only. Informational only — it never blocks the (native) save.
+ */
 function renderIssues(issues: CatalogIssue[]): void {
     const validationEl = $<HTMLDivElement>('validation');
     validationEl.replaceChildren();
+    clearWarnings();
+
+    // Accumulate messages per block so a block with several issues gets one bubble.
+    const messagesByBlockId = new Map<string, string[]>();
+
     for (const issue of issues) {
+        const targets = blocksForIssue(issue);
+        const firstId = targets[0]?.id;
+        for (const block of targets) {
+            const list = messagesByBlockId.get(block.id) ?? [];
+            list.push(issue.message);
+            messagesByBlockId.set(block.id, list);
+        }
+
         const row = document.createElement('div');
         row.className = `issue ${issue.severity}`;
         if (issue.path) {
@@ -81,7 +128,18 @@ function renderIssues(issues: CatalogIssue[]): void {
         const msg = document.createElement('span');
         msg.textContent = issue.message;
         row.appendChild(msg);
+        if (firstId) {
+            row.classList.add('clickable');
+            row.addEventListener('click', () => {
+                workspace.getBlockById(firstId)?.select();
+                workspace.centerOnBlock(firstId);
+            });
+        }
         validationEl.appendChild(row);
+    }
+
+    for (const [id, msgs] of messagesByBlockId) {
+        workspace.getBlockById(id)?.setWarningText(msgs.join('\n'));
     }
 }
 
@@ -121,6 +179,19 @@ function refreshPreview(selectedId?: string | null): void {
             setStatus(text);
         }
     });
+    // Second preview section: the selected block's YAML as it would be written.
+    // buildBlockDefinition can throw on a transiently incomplete block — keep the
+    // last good text rather than flashing empty, same spirit as the block preview.
+    const yamlEl = $<HTMLPreElement>('yamlDiv');
+    if (!target) {
+        yamlEl.textContent = '';
+    } else {
+        try {
+            yamlEl.textContent = dumpBlockDefinition(target as unknown as MetaBlock);
+        } catch {
+            /* leave the previous YAML in place */
+        }
+    }
 }
 
 /**
@@ -168,6 +239,7 @@ function loadCatalog(yamlText: string): void {
         loading = false;
     }
     $<HTMLDivElement>('validation').replaceChildren();
+    clearWarnings();
     // Re-baseline so a re-import (initial load or external change) never echoes a
     // `change` back to the host.
     lastSerialized = serialized;
@@ -194,7 +266,39 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    window.addEventListener('resize', () => Blockly.svgResize(workspace));
+    window.addEventListener('resize', () => {
+        Blockly.svgResize(workspace);
+        resizePreview();
+    });
+
+    // Draggable splitter: let the user widen/narrow the preview pane. Width is the
+    // distance from the cursor to the work area's right edge, clamped to a sane range.
+    const gutter = $<HTMLDivElement>('previewGutter');
+    const previewPane = $<HTMLDivElement>('previewPane');
+    let dragging = false;
+    gutter.addEventListener('mousedown', event => {
+        dragging = true;
+        event.preventDefault();
+        document.body.style.cursor = 'col-resize';
+    });
+    window.addEventListener('mousemove', event => {
+        if (!dragging) {
+            return;
+        }
+        const right = previewPane.parentElement?.getBoundingClientRect().right ?? window.innerWidth;
+        previewPane.style.width = `${Math.min(800, Math.max(200, right - event.clientX))}px`;
+        Blockly.svgResize(workspace);
+        resizePreview();
+    });
+    window.addEventListener('mouseup', () => {
+        if (!dragging) {
+            return;
+        }
+        dragging = false;
+        document.body.style.cursor = '';
+        Blockly.svgResize(workspace);
+        resizePreview();
+    });
 
     // No Save button / Cmd-S handler: the host writes the bound document on every
     // `change`, so native VS Code save (and the dirty dot, undo, close prompt) apply.

@@ -102,11 +102,19 @@ function specFromDependency(dep: Dependency): BlockSpec {
                 NAME: dep.name ?? '',
                 MINVERSION: dep.minVersion ?? '',
             });
-        case 'brick':
-            return new BlockSpec('dependency_brick', {
-                NAME: dep.name ?? '',
-                VARIABLES: Object.entries(dep.variables ?? {}).map(([k, v]) => `${k}=${v}`).join(', '),
+        case 'brick': {
+            // Distribute the NAME→value map across the variadic VARNAME{i}/VARVAL{i}
+            // rows; varCount tells the renderer how many rows to build before fields.
+            const fields: Record<string, string> = { NAME: dep.name ?? '' };
+            const entries = Object.entries(dep.variables ?? {});
+            entries.forEach(([k, v], i) => {
+                fields[`VARNAME${i}`] = k;
+                fields[`VARVAL${i}`] = v;
             });
+            const spec = new BlockSpec('dependency_brick', fields);
+            spec.extraState = { varCount: entries.length };
+            return spec;
+        }
     }
 }
 
@@ -176,8 +184,9 @@ function specFromBlockDefinition(def: BlockDefinition): BlockSpec {
     if (blockly.colour !== undefined) {
         state.colour = blockly.colour;
     }
-    if (typeof blockly.style === 'string') {
-        fields.STYLE = blockly.style;
+    // `style` is preserved verbatim (not an editable field) — see serialize/blockDef.ts.
+    if (blockly.style !== undefined) {
+        state.style = blockly.style;
     }
     if (Array.isArray(def.tags)) {
         state.tags = def.tags;

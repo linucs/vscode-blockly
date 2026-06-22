@@ -1,4 +1,6 @@
+import * as Blockly from 'blockly';
 import { CHECK } from '../connectionChecks';
+import { createMinusField, createPlusField } from '../../custom-fields/blocklyFieldHelpers';
 
 /**
  * The three `dependency_*` meta-blocks (library / pip / brick), discriminated by
@@ -7,8 +9,12 @@ import { CHECK } from '../connectionChecks';
  * branch of the schema's `Dependency` oneOf; the serializer reads the block type
  * to emit the `type:` discriminant.
  *
- * `brick.variables` (a string→string map) is a `k=v, k=v` text field parsed by
- * the serializer — a nested-map UI is deferred.
+ * `library` and `pip` are static JSON. `brick` is defined imperatively (see
+ * {@link defineDependencyBrickBlock}) so its `variables` (a string→string map of
+ * brick-variable overrides — see the App Lab brick `brick_config.yaml`, where each
+ * variable has a `name`/`default_value`) can be authored as a proper variadic
+ * NAME → value row list via the standard `[+]`/`[−]` affordance, instead of a single
+ * `k=v, k=v` text field.
  */
 export const dependencyBlocks = [
     {
@@ -42,20 +48,99 @@ export const dependencyBlocks = [
         tooltip: 'Python pip dependency.',
         helpUrl: '',
     },
-    {
-        type: 'dependency_brick',
-        message0: 'brick   name %1',
-        args0: [
-            { type: 'field_input', name: 'NAME', text: '' },
-        ],
-        message1: 'variables %1',
-        args1: [
-            { type: 'field_input', name: 'VARIABLES', text: '' },
-        ],
-        previousStatement: CHECK.DEPENDENCY,
-        nextStatement: CHECK.DEPENDENCY,
-        colour: 60,
-        tooltip: 'App Lab brick dependency (variables as k=v, k=v).',
-        helpUrl: '',
-    },
 ];
+
+/**
+ * The `dependency_brick` meta-block. `variables` is a NAME → value map (brick
+ * variable overrides), authored as a variadic row list with `[+]`/`[−]` — the same
+ * mechanism as `implementation`'s targets. Each row is a `VARNAME{i}` = `VARVAL{i}`
+ * pair; the serializer enumerates them. A row with an empty name is skipped; empty
+ * values are kept (some brick variables legitimately default to `""`).
+ */
+interface BrickBlock extends Blockly.Block {
+    varCount_: number;
+    plus(): void;
+    minus(): void;
+    addVariable_(): void;
+    removeVariable_(): void;
+    updateMinus_(): void;
+}
+
+let brickDefined = false;
+
+export function defineDependencyBrickBlock(): void {
+    if (brickDefined) {
+        return;
+    }
+    brickDefined = true;
+
+    Blockly.Blocks['dependency_brick'] = {
+        init(this: BrickBlock): void {
+            this.varCount_ = 0;
+            this.appendDummyInput('NAME_ROW')
+                .appendField('brick   name')
+                .appendField(new Blockly.FieldTextInput(''), 'NAME');
+            this.appendDummyInput('VARIABLES_HEADER')
+                .appendField(createPlusField(), 'PLUS')
+                .appendField('variables');
+            this.setPreviousStatement(true, CHECK.DEPENDENCY);
+            this.setNextStatement(true, CHECK.DEPENDENCY);
+            this.setColour(60);
+            this.setTooltip('App Lab brick dependency. Use [+]/[−] to set variable overrides (NAME → value).');
+        },
+
+        plus(this: BrickBlock): void {
+            this.addVariable_();
+        },
+
+        minus(this: BrickBlock): void {
+            if (this.varCount_ <= 0) {
+                return;
+            }
+            this.removeVariable_();
+        },
+
+        addVariable_(this: BrickBlock): void {
+            const i = this.varCount_++;
+            this.appendDummyInput(`VAR_ROW_${i}`)
+                .appendField(new Blockly.FieldTextInput(''), `VARNAME${i}`)
+                .appendField('=')
+                .appendField(new Blockly.FieldTextInput(''), `VARVAL${i}`);
+            this.updateMinus_();
+        },
+
+        removeVariable_(this: BrickBlock): void {
+            this.varCount_--;
+            this.removeInput(`VAR_ROW_${this.varCount_}`);
+            this.updateMinus_();
+        },
+
+        updateMinus_(this: BrickBlock): void {
+            const header = this.getInput('VARIABLES_HEADER')!;
+            const hasMinus = Boolean(this.getField('MINUS'));
+            if (!hasMinus && this.varCount_ > 0) {
+                header.insertFieldAt(1, createMinusField(), 'MINUS');
+            } else if (hasMinus && this.varCount_ <= 0) {
+                (header as unknown as { removeField(n: string): void }).removeField('MINUS');
+            }
+        },
+
+        saveExtraState(this: BrickBlock): object {
+            return { varCount: this.varCount_ };
+        },
+
+        loadExtraState(this: BrickBlock, state: { varCount?: number }): void {
+            for (let i = 0; i < this.varCount_; i++) {
+                this.removeInput(`VAR_ROW_${i}`);
+            }
+            this.varCount_ = 0;
+            if (this.getField('MINUS')) {
+                (this.getInput('VARIABLES_HEADER')! as unknown as { removeField(n: string): void }).removeField('MINUS');
+            }
+            const count = state.varCount ?? 0;
+            for (let i = 0; i < count; i++) {
+                this.addVariable_();
+            }
+        },
+    };
+}

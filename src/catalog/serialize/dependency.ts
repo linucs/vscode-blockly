@@ -1,5 +1,5 @@
 import type { Dependency } from '../CatalogTypes';
-import { field, parseMap, type MetaBlock } from './types';
+import { field, type MetaBlock } from './types';
 
 /**
  * Build a {@link Dependency} from a `dependency_*` block, discriminated by block
@@ -28,8 +28,24 @@ export function buildDependency(block: MetaBlock): Dependency | null {
         }
         case 'dependency_brick': {
             const dep: Dependency = { type: 'brick', name };
-            const variables = parseMap(field(block, 'VARIABLES'));
-            if (variables) { dep.variables = variables; }
+            // Variables are variadic `VARNAME{i}` = `VARVAL{i}` rows (the [+]/[−]
+            // list). Enumerate until the first absent index; skip rows with an
+            // empty name, but keep empty values (some brick vars default to "").
+            const variables: Record<string, string> = {};
+            let any = false;
+            for (let i = 0; ; i++) {
+                const rawName = block.getFieldValue(`VARNAME${i}`);
+                if (rawName === null) {
+                    break;
+                }
+                const key = rawName.trim();
+                if (!key) {
+                    continue;
+                }
+                variables[key] = block.getFieldValue(`VARVAL${i}`) ?? '';
+                any = true;
+            }
+            if (any) { dep.variables = variables; }
             return dep;
         }
         default:

@@ -10,14 +10,14 @@ let activeFieldCode: FieldCode | null = null;
  *
  * Registered as `field_code` in the Blockly field registry.
  */
-export class FieldCode extends Blockly.Field<string> {
+export class FieldCode extends Blockly.Field<string | undefined> {
     override SERIALIZABLE = true;
     override EDITABLE = true;
 
     private modalEl_: HTMLDivElement | null = null;
     private textarea_: HTMLTextAreaElement | null = null;
 
-    constructor(value?: string, validator?: Blockly.FieldValidator<string>) {
+    constructor(value?: string, validator?: Blockly.FieldValidator<string | undefined>) {
         super(value || '', validator);
     }
 
@@ -102,7 +102,7 @@ export class FieldCode extends Blockly.Field<string> {
         });
 
         const title = document.createElement('span');
-        title.textContent = Blockly.Msg['FIELD_CODE_TITLE'] ?? 'Custom Code (C++)';
+        title.textContent = Blockly.Msg['FIELD_CODE_TITLE'] ?? 'Custom Code';
         Object.assign(title.style, {
             fontSize: '13px',
             fontWeight: '600',

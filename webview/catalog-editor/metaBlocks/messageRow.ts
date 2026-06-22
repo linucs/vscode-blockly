@@ -9,7 +9,7 @@ import { translationHooks } from '../ui/translationDialog';
  * The `TEXT` field edits the primary locale inline; the full i18n value (other
  * locales) and the `args{N}`-presence flag are preserved in `extraState` and
  * folded back on save ({@link i18nMerge}), so translations round-trip untouched.
- * The 🌐 field opens the translation dialog to edit the whole locale map. The
+ * The 文A field opens the translation dialog to edit the whole locale map. The
  * `ARGS` slot holds the row's arg blocks (one per `%N`).
  */
 interface MessageRowBlock extends Blockly.Block, TranslatableBlock {

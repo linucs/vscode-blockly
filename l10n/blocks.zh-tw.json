@@ -28,7 +28,7 @@
   "CPP_PROC_CALL_RETURN_TOOLTIP": "呼叫一個回傳值的函式。",
   "CPP_PROC_CALL_TOOLTIP": "呼叫一個函式。",
   "NEW_TYPED_VARIABLE": "建立變數…",
-  "FIELD_CODE_TITLE": "自訂程式碼（C++）",
+  "FIELD_CODE_TITLE": "自訂程式碼",
   "FIELD_CODE_DONE": "完成",
   "FIELD_PARAM_NAME": "名稱",
   "FIELD_PARAM_TYPE": "型別",

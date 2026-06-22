@@ -2,6 +2,7 @@ import * as Blockly from 'blockly';
 import { PRECEDENCE_VALUES } from '../../../src/catalog/serialize/types';
 import { readI18n } from '../../../src/catalog/serialize/i18n';
 import { CHECK } from '../connectionChecks';
+import { CATEGORY_COLOUR } from './categories';
 import { FieldTranslate, type TranslatableBlock } from '../ui/FieldTranslate';
 import { translationHooks } from '../ui/translationDialog';
 
@@ -13,7 +14,7 @@ const PRECEDENCE_OPTIONS: [string, string][] = [
 
 /**
  * The `block_def` meta-block — one Blockly block definition (design "Model A").
- * Editable fields: `TYPE`, `CONNECTIONS`, `INLINE`, `PRECEDENCE`, `STYLE`, `HELPURL`.
+ * Editable fields: `TYPE`, `CONNECTIONS`, `INLINE`, `PRECEDENCE`, `HELPURL`.
  * Statement slots: `MESSAGES` (the rendered rows), the codegen sections
  * (`BODY`/`SETUP`/`IMPORTS`/`DECLARATIONS`/`CLEANUP` as `code_line` chains,
  * `HELPERS`), `EXTENSIONS` (`extension` chain), and `RAW_PROPS` (catch-all attributes).
@@ -24,10 +25,11 @@ const PRECEDENCE_OPTIONS: [string, string][] = [
  * check slot (`OUTPUTCHECK`/`TOPCHECK`/`BOTTOMCHECK`, a `connection_check` chain) holds
  * each one's accepted types. (The meta-block's *own* prev/next stay `CHECK.BLOCKDEF`
  * so it keeps stacking inside `implementation.BLOCKS`.) A freshly dragged block
- * defaults to a statement (`BOTH`). Preserved-but-not-yet-editable attributes
- * (`tooltip`, `colour`, `tags`) and the verbatim fallback bags for out-of-enum
- * `precedence` (`precedenceRaw`) and non-string input defaults (`inputDefaultsRaw`)
- * live in `extraState`.
+ * defaults to a statement (`BOTH`). `tooltip` is edited via the translation dialog;
+ * `colour`, `style` and `tags` are preserved verbatim (not exposed as choices —
+ * `style` overlaps confusingly with `colour`), as are the verbatim fallback bags for
+ * out-of-enum `precedence` (`precedenceRaw`) and non-string input defaults
+ * (`inputDefaultsRaw`). All live in `extraState`.
  */
 interface BlockDefBlock extends Blockly.Block, TranslatableBlock {
     state_: Record<string, unknown>;
@@ -75,8 +77,6 @@ export function defineBlockDefBlock(): void {
             this.appendStatementInput('HELPERS').setCheck(CHECK.HELPER).appendField('helpers');
 
             this.appendDummyInput()
-                .appendField('style')
-                .appendField(new Blockly.FieldTextInput(''), 'STYLE')
                 .appendField('helpUrl')
                 .appendField(new Blockly.FieldTextInput(''), 'HELPURL')
                 .appendField('tooltip')
@@ -86,7 +86,7 @@ export function defineBlockDefBlock(): void {
 
             this.setPreviousStatement(true, CHECK.BLOCKDEF);
             this.setNextStatement(true, CHECK.BLOCKDEF);
-            this.setColour(290);
+            this.setColour(CATEGORY_COLOUR.block);
             this.setTooltip('One Blockly block definition. Stacks inside an implementation.');
 
             // Build the default (statement) check slots, then reconfigure live on change.
@@ -134,7 +134,7 @@ export function defineBlockDefBlock(): void {
             this.updateShape_((this.state_.connections as string) ?? 'BOTH');
         },
 
-        // Tooltip is dialog-only (no inline field) — the 🌐 is its sole editor.
+        // Tooltip is dialog-only (no inline field) — the 文A is its sole editor.
         ...translationHooks<BlockDefBlock>({
             get() {
                 return readI18n(this.state_.tooltip);

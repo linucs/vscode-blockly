@@ -13,7 +13,7 @@ import { CODEGEN_SECTION_SLOTS, extraState, field, mapChain, type MetaBlock } fr
  *
  * The meta-block field/extraState contract (shared with `import.ts`):
  * - `block_def`: fields `TYPE`, `INLINE` (`unset`|`true`|`false`), `HELPURL`,
- *   `PRECEDENCE`, `STYLE`, `CONNECTIONS` (`NONE`|`LEFT`|`TOP`|`BOTTOM`|`BOTH` —
+ *   `PRECEDENCE`, `CONNECTIONS` (`NONE`|`LEFT`|`TOP`|`BOTTOM`|`BOTH` —
  *   picks which of output/prev/next are present); extraState `{ tooltip?, colour?,
  *   tags?, precedenceRaw?, inputDefaultsRaw? }` (the verbatim bags for out-of-enum
  *   precedence and non-string/empty-string input defaults); inputs `MESSAGES`,
@@ -75,9 +75,12 @@ export function buildBlockDefinition(block: MetaBlock): BlockDefinition {
     if (state.colour !== undefined) {
         blockly.colour = state.colour;
     }
-    const style = field(block, 'STYLE');
-    if (style) {
-        blockly.style = style;
+    // `style` (a theme block-style name) is preserved verbatim, not editable: it
+    // overlaps confusingly with `colour` (Blockly treats them as mutually exclusive)
+    // and only references the built-in language-block styles, which are meaningless
+    // on a catalog block. Round-tripped like `colour`/`tags` so existing files keep it.
+    if (state.style !== undefined) {
+        blockly.style = state.style;
     }
     // extensions: one editable `extension` block per name in the EXTENSIONS slot.
     const extensions = mapChain(block.getInputTargetBlock('EXTENSIONS'), b =>

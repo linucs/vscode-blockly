@@ -20,7 +20,7 @@ export function defineExtensionBlock(): void {
                 .appendField(new FieldCombobox(PRESETS), 'VALUE');
             this.setPreviousStatement(true, CHECK.EXTENSION);
             this.setNextStatement(true, CHECK.EXTENSION);
-            this.setColour(20);
+            this.setColour(100);
             this.setTooltip('A Blockly block extension applied to this block.');
         },
     };

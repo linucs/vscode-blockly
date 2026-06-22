@@ -99,22 +99,3 @@ export function extraState(block: MetaBlock): Record<string, unknown> {
     const state = block.getExtraState?.() ?? block.saveExtraState?.() ?? null;
     return state ?? {};
 }
-
-/** Parse a `k=v, k=v` text field into a string→string map (empty → `undefined`). */
-export function parseMap(raw: string): Record<string, string> | undefined {
-    const map: Record<string, string> = {};
-    let any = false;
-    for (const pair of raw.split(',')) {
-        const eq = pair.indexOf('=');
-        if (eq < 0) {
-            continue;
-        }
-        const key = pair.slice(0, eq).trim();
-        if (!key) {
-            continue;
-        }
-        map[key] = pair.slice(eq + 1).trim();
-        any = true;
-    }
-    return any ? map : undefined;
-}

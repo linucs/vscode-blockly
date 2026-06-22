@@ -23,6 +23,13 @@ export function initPreview(container: Element): void {
     }));
 }
 
+/** Re-layout the preview workspace after its container resizes (pane drag/window). */
+export function resizePreview(): void {
+    if (previewWs) {
+        Blockly.svgResize(previewWs);
+    }
+}
+
 export function updatePreview(block: MetaBlock | null, locale: string, setNotice: (text: string) => void): void {
     if (!previewWs) {
         return;

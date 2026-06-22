@@ -202,31 +202,75 @@ export class CatalogEditorProvider implements vscode.CustomTextEditorProvider {
                     .blocklySvg { background-color: var(--vscode-editor-background, #1e1e1e) !important; }
                     .blocklyMainBackground { fill: var(--vscode-editor-background, #1e1e1e) !important; stroke: none !important; }
                     /* Toolbox (category sidebar) and flyout panel backgrounds, same
-                       live-var approach so they track the theme too. */
-                    .blocklyToolboxDiv { background-color: var(--vscode-editorWidget-background, #252526) !important; }
+                       live-var approach so they track the theme too. (Blockly 12's
+                       toolbox container is .blocklyToolbox, not .blocklyToolboxDiv.) */
+                    .blocklyToolbox { background-color: var(--vscode-editorWidget-background, #252526) !important; }
                     .blocklyFlyoutBackground { fill: var(--vscode-editorWidget-background, #252526) !important; }
-                    #previewPane { width: 320px; display: flex; flex-direction: column; min-height: 0;
-                        border-left: 1px solid var(--vscode-editorWidget-border, #454545); }
-                    #previewLabel { font-size: 11px; text-transform: uppercase; letter-spacing: .04em;
+                    #previewPane { width: 320px; flex: 0 0 auto; display: flex; flex-direction: column; min-height: 0; }
+                    /* Draggable splitter between the canvas and the preview pane. */
+                    #previewGutter { flex: 0 0 6px; cursor: col-resize;
+                        background: var(--vscode-editorWidget-border, #454545); }
+                    #previewGutter:hover { background: var(--vscode-focusBorder, #007fd4); }
+                    #previewLabel, #yamlLabel { font-size: 11px; text-transform: uppercase; letter-spacing: .04em;
                         opacity: .7; padding: 4px 8px; border-bottom: 1px solid var(--vscode-editorWidget-border, #454545); }
-                    #previewDiv { flex: 1; min-height: 0; }
+                    #yamlLabel { border-top: 1px solid var(--vscode-editorWidget-border, #454545); }
+                    #previewDiv { flex: 1 1 60%; min-height: 0; }
+                    /* Second section: the selected block's YAML as it would be written. */
+                    #yamlDiv { flex: 1 1 40%; min-height: 0; overflow: auto; margin: 0;
+                        padding: 6px 8px; white-space: pre; tab-size: 2;
+                        font-family: var(--vscode-editor-font-family, monospace);
+                        font-size: var(--vscode-editor-font-size, 12px);
+                        color: var(--vscode-editor-foreground, #ccc); }
+                    #yamlDiv:empty::before { content: "Select a block to see its YAML."; opacity: .5; }
                     #validation { max-height: 30%; overflow: auto; border-top: 1px solid var(--vscode-editorWidget-border, #454545); }
                     #validation:empty { display: none; }
                     .issue { padding: 4px 10px; font-size: 12px; display: flex; gap: 6px; }
                     .issue.error { color: var(--vscode-errorForeground, #f48771); }
                     .issue.warning { color: var(--vscode-editorWarning-foreground, #cca700); }
+                    .issue.clickable { cursor: pointer; }
+                    .issue.clickable:hover { background: var(--vscode-list-hoverBackground, rgba(255,255,255,0.07)); }
                     .issue .path { opacity: 0.7; }
                     #status { font-size: 12px; padding: 4px 10px; opacity: 0.8; min-height: 16px; }
                     #status:empty { display: none; }
+                    /* Theme the toolbox search input (kind: 'search') — same as the
+                       main blocks editor, which Blockly otherwise leaves unstyled. */
+                    .blocklyToolboxCategory[id="toolbox-search-input"] {
+                        padding: 6px 8px !important;
+                        display: flex !important;
+                        align-items: center !important;
+                    }
+                    .blocklyToolboxCategoryContainer[aria-labelledby="toolbox-search-input.label"] {
+                        margin: 0; padding: 0;
+                    }
+                    .blocklyToolboxCategory[id="toolbox-search-input"] .blocklyTreeRowContentContainer {
+                        pointer-events: auto !important;
+                        display: flex; align-items: center; width: 100%;
+                    }
+                    input#toolbox-search-input {
+                        width: 100%; padding: 5px 8px; margin: 0;
+                        border: 1px solid var(--vscode-input-border, rgba(255,255,255,0.2));
+                        border-radius: 3px;
+                        background: var(--vscode-input-background, rgba(0,0,0,0.3));
+                        color: var(--vscode-input-foreground, inherit);
+                        font-size: 12px; font-family: var(--vscode-font-family, sans-serif);
+                        outline: none; box-sizing: border-box;
+                    }
+                    input#toolbox-search-input:focus { border-color: var(--vscode-focusBorder, #007fd4); }
+                    input#toolbox-search-input::placeholder {
+                        color: var(--vscode-input-placeholderForeground, rgba(255,255,255,0.4));
+                    }
                 </style>
             </head>
             <body>
                 <div id="editorArea">
                     <div id="workArea">
                         <div id="blocklyDiv"></div>
+                        <div id="previewGutter"></div>
                         <div id="previewPane">
                             <div id="previewLabel">Preview</div>
                             <div id="previewDiv"></div>
+                            <div id="yamlLabel">Block YAML</div>
+                            <pre id="yamlDiv"></pre>
                         </div>
                     </div>
                     <div id="status"></div>

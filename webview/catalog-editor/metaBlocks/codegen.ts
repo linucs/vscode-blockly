@@ -1,6 +1,7 @@
 import * as Blockly from 'blockly';
-import { FieldMultilineInput } from '@blockly/field-multilineinput';
+import { FieldCode } from '../../custom-fields/FieldCode';
 import { CHECK } from '../connectionChecks';
+import { CATEGORY_COLOUR } from './categories';
 
 /**
  * Codegen + catch-all meta-blocks:
@@ -18,11 +19,12 @@ export function defineCodegenBlocks(): void {
         init(this: Blockly.Block): void {
             // Multiline: a single codegen entry may contain newlines (e.g. a Python
             // `def …:\n  …`); a single-line field would strip them and break round-trip.
+            // FieldCode = truncated preview + monospace modal (comfortable for code).
             this.appendDummyInput()
-                .appendField(new FieldMultilineInput(''), 'TEXT');
+                .appendField(new FieldCode(''), 'TEXT');
             this.setPreviousStatement(true, CHECK.CODELINE);
             this.setNextStatement(true, CHECK.CODELINE);
-            this.setColour(20);
+            this.setColour(CATEGORY_COLOUR.codegen);
             this.setTooltip('One line of generated code. Use {{NAME}} placeholders.');
         },
     };
@@ -35,10 +37,10 @@ export function defineCodegenBlocks(): void {
             // Helper bodies are multi-line functions — preserve newlines.
             this.appendDummyInput()
                 .appendField('body')
-                .appendField(new FieldMultilineInput(''), 'BODY');
+                .appendField(new FieldCode(''), 'BODY');
             this.setPreviousStatement(true, CHECK.HELPER);
             this.setNextStatement(true, CHECK.HELPER);
-            this.setColour(20);
+            this.setColour(CATEGORY_COLOUR.codegen);
             this.setTooltip('A named helper function (helpers[name] = body).');
         },
     };

@@ -67,7 +67,10 @@ suite('catalog importer', () => {
         assert.strictEqual(dep1.type, 'dependency_pip');
         const dep2 = dep1.getNextBlock() as BlockSpec;
         assert.strictEqual(dep2.type, 'dependency_brick');
-        assert.strictEqual(dep2.getFieldValue('VARIABLES'), 'pin=A0');
+        // Brick variables are variadic VARNAME{i}/VARVAL{i} rows with a varCount mutator.
+        assert.strictEqual(dep2.getFieldValue('VARNAME0'), 'pin');
+        assert.strictEqual(dep2.getFieldValue('VARVAL0'), 'A0');
+        assert.deepStrictEqual(dep2.extraState, { varCount: 1 });
     });
 
     test('serialize(import(yaml)) reproduces the catalog (modulo empty blocks)', () => {

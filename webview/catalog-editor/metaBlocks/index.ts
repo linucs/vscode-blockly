@@ -3,11 +3,12 @@ import { registerFieldMultilineInput } from '@blockly/field-multilineinput';
 import { registerFieldColour } from '@blockly/field-colour';
 import { i18nDisplay, i18nMerge, isI18nMap, type I18nText } from '../../../src/catalog/serialize/i18n';
 import { FIELD_DESCRIPTORS } from '../../../src/catalog/serialize/fieldDescriptors';
+import { CATEGORY_COLOUR } from './categories';
 import { type TranslatableBlock } from '../ui/FieldTranslate';
 import { translationHooks } from '../ui/translationDialog';
 import { catalogBlock } from './catalog';
 import { defineImplementationBlock } from './implementation';
-import { dependencyBlocks } from './dependency';
+import { dependencyBlocks, defineDependencyBrickBlock } from './dependency';
 import { docLinkBlock } from './docLink';
 import { defineBlockDefBlock } from './blockDef';
 import { defineMessageRowBlock } from './messageRow';
@@ -81,7 +82,7 @@ function augmentCatalogState(): void {
         this.colourState_ = state?.colour;
         this.colourPresent_ = state?.colour !== undefined;
     };
-    // The 🌐 (DESC_TR) field edits the full description locale map; the inline
+    // The 文A (DESC_TR) field edits the full description locale map; the inline
     // DESCRIPTION field stays the quick editor for the primary locale.
     Object.assign(def, translationHooks<CatalogStateBlock>({
         get() {
@@ -118,6 +119,7 @@ export function registerMetaBlocks(): void {
         ...dependencyBlocks,
     ]);
     augmentCatalogState();
+    defineDependencyBrickBlock();
     defineImplementationBlock();
     defineBlockDefBlock();
     defineMessageRowBlock();
@@ -128,31 +130,69 @@ export function registerMetaBlocks(): void {
     registered = true;
 }
 
-/** Flyout toolbox offering every meta-block. */
+/**
+ * Categorized toolbox offering every meta-block. The flat flyout grew crowded once
+ * the 19 field blocks landed (M4), so the palette is grouped Catalog / Block /
+ * Inputs / Fields / Codegen, with a search box on top. The Fields category is
+ * derived from the shared `FIELD_DESCRIPTORS` table (single source of truth).
+ * Category `colour` hues avoid needing theme category-style registration.
+ */
 export const META_TOOLBOX = {
-    kind: 'flyoutToolbox',
+    kind: 'categoryToolbox',
     contents: [
-        { kind: 'block', type: 'catalog' },
-        { kind: 'block', type: 'implementation' },
-        { kind: 'block', type: 'doc_link' },
-        { kind: 'block', type: 'dependency_library' },
-        { kind: 'block', type: 'dependency_pip' },
-        { kind: 'block', type: 'dependency_brick' },
-        { kind: 'sep' },
-        { kind: 'block', type: 'block_def' },
-        { kind: 'block', type: 'message_row' },
-        { kind: 'block', type: 'input_value' },
-        { kind: 'block', type: 'input_statement' },
-        { kind: 'block', type: 'input_dummy' },
-        { kind: 'block', type: 'input_end_row' },
-        // Every modeled field type, derived from the shared descriptor table.
-        // (`field_generic` is import-only — it carries unmodeled types verbatim.)
-        ...FIELD_DESCRIPTORS.map(d => ({ kind: 'block', type: d.type })),
-        { kind: 'sep' },
-        { kind: 'block', type: 'connection_check' },
-        { kind: 'block', type: 'extension' },
-        { kind: 'block', type: 'code_line' },
-        { kind: 'block', type: 'helper' },
-        { kind: 'block', type: 'raw_blockly_prop' },
+        { kind: 'search' },
+        {
+            kind: 'category',
+            name: 'Catalog',
+            colour: `${CATEGORY_COLOUR.catalog}`,
+            contents: [
+                { kind: 'block', type: 'catalog' },
+                { kind: 'block', type: 'implementation' },
+                { kind: 'block', type: 'doc_link' },
+                { kind: 'block', type: 'dependency_library' },
+                { kind: 'block', type: 'dependency_pip' },
+                { kind: 'block', type: 'dependency_brick' },
+            ],
+        },
+        {
+            kind: 'category',
+            name: 'Block',
+            colour: `${CATEGORY_COLOUR.block}`,
+            contents: [
+                { kind: 'block', type: 'block_def' },
+                { kind: 'block', type: 'message_row' },
+                { kind: 'block', type: 'connection_check' },
+                { kind: 'block', type: 'extension' },
+                { kind: 'block', type: 'raw_blockly_prop' },
+            ],
+        },
+        {
+            kind: 'category',
+            name: 'Inputs',
+            colour: `${CATEGORY_COLOUR.inputs}`,
+            contents: [
+                { kind: 'block', type: 'input_value' },
+                { kind: 'block', type: 'input_statement' },
+                { kind: 'block', type: 'input_dummy' },
+                { kind: 'block', type: 'input_end_row' },
+            ],
+        },
+        {
+            kind: 'category',
+            name: 'Fields',
+            colour: `${CATEGORY_COLOUR.fields}`,
+            // Every modeled field type, derived from the shared descriptor table.
+            // (`field_generic` is import-only — it carries unmodeled types verbatim.)
+            contents: FIELD_DESCRIPTORS.map(d => ({ kind: 'block', type: d.type })),
+        },
+        {
+            kind: 'category',
+            name: 'Codegen',
+            colour: `${CATEGORY_COLOUR.codegen}`,
+            contents: [
+                { kind: 'block', type: 'code_line' },
+                { kind: 'block', type: 'helper' },
+            ],
+        },
     ],
 };

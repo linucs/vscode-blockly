@@ -1,4 +1,5 @@
 import { CHECK } from '../connectionChecks';
+import { CATEGORY_COLOUR } from './categories';
 
 /**
  * The `catalog` root meta-block — a single, un-nestable hat (no output / no
@@ -36,7 +37,7 @@ export const catalogBlock = {
     args4: [
         { type: 'input_statement', name: 'IMPLEMENTATIONS', check: CHECK.IMPLEMENTATION },
     ],
-    colour: 230,
+    colour: CATEGORY_COLOUR.catalog,
     tooltip: 'Catalog root — one block-catalog file.',
     helpUrl: '',
 };

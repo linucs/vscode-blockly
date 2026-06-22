@@ -28,7 +28,7 @@
   "CPP_PROC_CALL_RETURN_TOOLTIP": "调用一个返回值的函数。",
   "CPP_PROC_CALL_TOOLTIP": "调用一个函数。",
   "NEW_TYPED_VARIABLE": "创建变量…",
-  "FIELD_CODE_TITLE": "自定义代码（C++）",
+  "FIELD_CODE_TITLE": "自定义代码",
   "FIELD_CODE_DONE": "完成",
   "FIELD_PARAM_NAME": "名称",
   "FIELD_PARAM_TYPE": "类型",

@@ -453,13 +453,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     break;
                 }
 
-                // The raw-code field title is language-specific. The block is
-                // shared across runtimes, so drop the "(C++)" suffix when the
-                // active runtime is not C++.
-                if (runtime !== 'arduino:cpp' && Blockly.Msg['FIELD_CODE_TITLE']) {
-                    Blockly.Msg['FIELD_CODE_TITLE'] = Blockly.Msg['FIELD_CODE_TITLE'].replace(/\s*\(C\+\+\)\s*$/, '');
-                }
-
                 // Supported runtime: show the toolbox and enable generation.
                 emptyState?.classList.remove('visible');
                 runtimeReady = true;

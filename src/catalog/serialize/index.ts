@@ -1,7 +1,8 @@
 import * as yaml from 'js-yaml';
 import type { CatalogEntry } from '../CatalogTypes';
 import { buildCatalogEntry } from './catalog';
-import type { MetaWorkspace } from './types';
+import { buildBlockDefinition } from './blockDef';
+import type { MetaBlock, MetaWorkspace } from './types';
 
 /**
  * The single YAML producer (design §3a rule 3, §5d): walk the meta-workspace,
@@ -58,6 +59,15 @@ export const DUMP_OPTIONS: yaml.DumpOptions = {
 /** Serialize a {@link CatalogEntry} to canonical catalog YAML. */
 export function dumpCatalog(entry: CatalogEntry): string {
     return yaml.dump(orderCatalogForDump(entry), DUMP_OPTIONS);
+}
+
+/**
+ * Serialize a single authored `block_def` to the canonical YAML of one
+ * `implementations[].blocks[]` entry — the same {@link buildBlockDefinition} the
+ * save path uses, so the editor's per-block YAML preview matches what gets written.
+ */
+export function dumpBlockDefinition(block: MetaBlock): string {
+    return yaml.dump(buildBlockDefinition(block), DUMP_OPTIONS);
 }
 
 /**

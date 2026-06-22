@@ -26,7 +26,7 @@ export function defineConnectionCheckBlock(): void {
                 .appendField(new FieldCombobox(PRESETS), 'VALUE');
             this.setPreviousStatement(true, CHECK.CONNCHECK);
             this.setNextStatement(true, CHECK.CONNCHECK);
-            this.setColour(20);
+            this.setColour(120);
             this.setTooltip('One accepted connection type. Stack several for an "any of" list; leave "any" for no constraint.');
         },
     };

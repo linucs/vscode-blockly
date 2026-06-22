@@ -1,6 +1,6 @@
 import * as Blockly from 'blockly';
 import { CHECK } from '../connectionChecks';
-import { createMinusField, createPlusField } from '../../custom-fields/blocklyFieldHelpers';
+import { appendVariadicHeader, installVariadicRows, rebuildRows, type VariadicRowsBlock, type VariadicRowsConfig } from './variadicRows';
 
 /**
  * The three `dependency_*` meta-blocks (library / pip / brick), discriminated by
@@ -57,14 +57,16 @@ export const dependencyBlocks = [
  * pair; the serializer enumerates them. A row with an empty name is skipped; empty
  * values are kept (some brick variables legitimately default to `""`).
  */
-interface BrickBlock extends Blockly.Block {
-    varCount_: number;
-    plus(): void;
-    minus(): void;
-    addVariable_(): void;
-    removeVariable_(): void;
-    updateMinus_(): void;
-}
+const BRICK_ROWS: VariadicRowsConfig = {
+    header: 'VARIABLES_HEADER',
+    rowPrefix: 'VAR_ROW_',
+    fillRow(input, i): void {
+        input
+            .appendField(new Blockly.FieldTextInput(''), `VARNAME${i}`)
+            .appendField('=')
+            .appendField(new Blockly.FieldTextInput(''), `VARVAL${i}`);
+    },
+};
 
 let brickDefined = false;
 
@@ -74,73 +76,25 @@ export function defineDependencyBrickBlock(): void {
     }
     brickDefined = true;
 
-    Blockly.Blocks['dependency_brick'] = {
-        init(this: BrickBlock): void {
-            this.varCount_ = 0;
+    const def: Record<string, unknown> = {
+        init(this: VariadicRowsBlock): void {
+            this.rowCount_ = 0;
             this.appendDummyInput('NAME_ROW')
                 .appendField('brick   name')
                 .appendField(new Blockly.FieldTextInput(''), 'NAME');
-            this.appendDummyInput('VARIABLES_HEADER')
-                .appendField(createPlusField(), 'PLUS')
-                .appendField('variables');
+            appendVariadicHeader(this, 'VARIABLES_HEADER', 'variables');
             this.setPreviousStatement(true, CHECK.DEPENDENCY);
             this.setNextStatement(true, CHECK.DEPENDENCY);
             this.setColour(60);
             this.setTooltip('App Lab brick dependency. Use [+]/[−] to set variable overrides (NAME → value).');
         },
-
-        plus(this: BrickBlock): void {
-            this.addVariable_();
+        saveExtraState(this: VariadicRowsBlock): object {
+            return { varCount: this.rowCount_ };
         },
-
-        minus(this: BrickBlock): void {
-            if (this.varCount_ <= 0) {
-                return;
-            }
-            this.removeVariable_();
-        },
-
-        addVariable_(this: BrickBlock): void {
-            const i = this.varCount_++;
-            this.appendDummyInput(`VAR_ROW_${i}`)
-                .appendField(new Blockly.FieldTextInput(''), `VARNAME${i}`)
-                .appendField('=')
-                .appendField(new Blockly.FieldTextInput(''), `VARVAL${i}`);
-            this.updateMinus_();
-        },
-
-        removeVariable_(this: BrickBlock): void {
-            this.varCount_--;
-            this.removeInput(`VAR_ROW_${this.varCount_}`);
-            this.updateMinus_();
-        },
-
-        updateMinus_(this: BrickBlock): void {
-            const header = this.getInput('VARIABLES_HEADER')!;
-            const hasMinus = Boolean(this.getField('MINUS'));
-            if (!hasMinus && this.varCount_ > 0) {
-                header.insertFieldAt(1, createMinusField(), 'MINUS');
-            } else if (hasMinus && this.varCount_ <= 0) {
-                (header as unknown as { removeField(n: string): void }).removeField('MINUS');
-            }
-        },
-
-        saveExtraState(this: BrickBlock): object {
-            return { varCount: this.varCount_ };
-        },
-
-        loadExtraState(this: BrickBlock, state: { varCount?: number }): void {
-            for (let i = 0; i < this.varCount_; i++) {
-                this.removeInput(`VAR_ROW_${i}`);
-            }
-            this.varCount_ = 0;
-            if (this.getField('MINUS')) {
-                (this.getInput('VARIABLES_HEADER')! as unknown as { removeField(n: string): void }).removeField('MINUS');
-            }
-            const count = state.varCount ?? 0;
-            for (let i = 0; i < count; i++) {
-                this.addVariable_();
-            }
+        loadExtraState(this: VariadicRowsBlock, state: { varCount?: number }): void {
+            rebuildRows(this, BRICK_ROWS, state.varCount ?? 0);
         },
     };
+    installVariadicRows(def, BRICK_ROWS);
+    Blockly.Blocks['dependency_brick'] = def;
 }

@@ -6,6 +6,11 @@ import {
 import { INPUT_ALIGN_VALUES } from '../../../src/catalog/serialize/types';
 import { CHECK } from '../connectionChecks';
 import { CATEGORY_COLOUR } from './categories';
+import { FieldThemedBitmap } from '../../custom-fields/FieldThemedBitmap';
+import {
+    appendVariadicHeader, installVariadicRows, rebuildRows,
+    type VariadicRowsBlock, type VariadicRowsConfig,
+} from './variadicRows';
 
 /**
  * The arg meta-blocks — one per `%N` of a message row (design "Model A"): the
@@ -29,7 +34,7 @@ interface GenericBlock extends Blockly.Block {
     entry_: Record<string, unknown> | undefined;
 }
 /** A field block's structured + `rest` leaf state, round-tripped via extraState. */
-interface FieldStateBlock extends Blockly.Block {
+interface FieldStateBlock extends VariadicRowsBlock {
     state_: Record<string, unknown>;
 }
 
@@ -57,39 +62,120 @@ function summarizeStructured(desc: FieldDescriptor, state: Record<string, unknow
     return parts.length > 0 ? `(${parts.join(', ')})` : '';
 }
 
-/** Build the live meta-block definition for one modeled field type. */
+/** Default empty grid for a fresh `field_bitmap` (8×8 all-off). */
+function emptyBitmap(): number[][] {
+    return Array.from({ length: 8 }, () => Array.from({ length: 8 }, () => 0));
+}
+
+/** Row config for the inline `options` pairs editor (`label = value`). */
+const OPTION_ROWS: VariadicRowsConfig = {
+    header: 'STRUCT_HEADER',
+    rowPrefix: 'OPT_ROW_',
+    fillRow(input, i): void {
+        input
+            .appendField(new Blockly.FieldTextInput(''), `OPTLABEL${i}`)
+            .appendField('=')
+            .appendField(new Blockly.FieldTextInput(''), `OPTVAL${i}`);
+    },
+};
+
+/** Row config for the inline `variableTypes` list editor (one type per row). */
+const VARTYPE_ROWS: VariadicRowsConfig = {
+    header: 'STRUCT_HEADER',
+    rowPrefix: 'VTYPE_ROW_',
+    fillRow(input, i): void {
+        input.appendField(new Blockly.FieldTextInput(''), `VTYPE${i}`);
+    },
+};
+
+/**
+ * Build the live meta-block definition for one modeled field type. Scalars render as
+ * editable fields (the M4 path). Structured leaf data is now editable per
+ * `desc.structuredEditor`: `pairs`/`list` → inline `[+]/[−]` rows; `bitmap` → an
+ * embedded themed grid. A `pairs` field whose options can't be expressed as
+ * `[string,string]` rows (image labels) keeps the verbatim `optionsRaw` bag and shows
+ * a read-only summary. Any structured key without an editor falls back to a summary
+ * (defensive — all current ones have editors).
+ */
 function fieldBlock(desc: FieldDescriptor) {
-    const hasStructured = desc.structured.length > 0;
-    return {
+    const editor = desc.structuredEditor;
+    const rowCfg = editor === 'pairs' ? OPTION_ROWS : editor === 'list' ? VARTYPE_ROWS : null;
+    const countKey = editor === 'pairs' ? 'optCount' : 'varTypeCount';
+    const summaryOnly = desc.structured.length > 0 && !editor;
+
+    const def: Record<string, unknown> = {
         init(this: FieldStateBlock): void {
             this.state_ = {};
-            const input = this.appendDummyInput().appendField(desc.label);
+            this.rowCount_ = 0;
+            const input = this.appendDummyInput('HEADER').appendField(desc.label);
             if (desc.hasName) {
                 input.appendField('name').appendField(new Blockly.FieldTextInput(''), 'NAME');
             }
-            for (const scalar of desc.scalars) {
-                input.appendField(scalar.label);
-                if (scalar.kind === 'bool') {
-                    input.appendField(new Blockly.FieldCheckbox('FALSE'), scalar.field);
-                } else {
-                    input.appendField(new Blockly.FieldTextInput(''), scalar.field);
+            if (editor !== 'bitmap') {
+                for (const scalar of desc.scalars) {
+                    input.appendField(scalar.label);
+                    input.appendField(
+                        scalar.kind === 'bool' ? new Blockly.FieldCheckbox('FALSE') : new Blockly.FieldTextInput(''),
+                        scalar.field,
+                    );
                 }
             }
-            if (hasStructured) {
+            if (editor === 'bitmap') {
+                input.appendField('grid').appendField(new FieldThemedBitmap(emptyBitmap()), 'VALUE');
+            } else if (rowCfg) {
+                appendVariadicHeader(this, 'STRUCT_HEADER', editor === 'pairs' ? 'options' : 'variable types');
+            } else if (summaryOnly) {
                 input.appendField(new Blockly.FieldLabel(''), 'SUMMARY');
             }
             arg.call(this, `A ${desc.label} field (%N).`, CATEGORY_COLOUR.fields);
         },
+
         saveExtraState(this: FieldStateBlock): Record<string, unknown> {
-            return this.state_ ?? {};
+            const out: Record<string, unknown> = { ...this.state_ };
+            if (editor === 'bitmap') {
+                out.value = this.getFieldValue('VALUE');
+            } else if (rowCfg && this.state_.optionsRaw === undefined) {
+                out[countKey] = this.rowCount_;
+            }
+            return out;
         },
+
         loadExtraState(this: FieldStateBlock, state: Record<string, unknown>): void {
             this.state_ = state ?? {};
-            if (hasStructured) {
+            if (editor === 'bitmap') {
+                if (Array.isArray(this.state_.value)) {
+                    this.setFieldValue(this.state_.value, 'VALUE');
+                }
+                return;
+            }
+            if (rowCfg) {
+                if (this.state_.optionsRaw !== undefined) {
+                    // Non-editable (e.g. image-label) options: drop the [+], show a summary.
+                    rebuildRows(this, rowCfg, 0);
+                    const header = this.getInput('STRUCT_HEADER')!;
+                    if (this.getField('PLUS')) {
+                        (header as unknown as { removeField(n: string): void }).removeField('PLUS');
+                    }
+                    if (!this.getField('SUMMARY')) {
+                        header.appendField(new Blockly.FieldLabel(''), 'SUMMARY');
+                    }
+                    const raw = this.state_.optionsRaw as unknown[];
+                    this.setFieldValue(`(${raw.length} options — edit as text)`, 'SUMMARY');
+                } else {
+                    rebuildRows(this, rowCfg, (this.state_[countKey] as number) ?? 0);
+                }
+                return;
+            }
+            if (summaryOnly) {
                 this.setFieldValue(summarizeStructured(desc, this.state_), 'SUMMARY');
             }
         },
     };
+
+    if (rowCfg) {
+        installVariadicRows(def, rowCfg);
+    }
+    return def;
 }
 
 /**

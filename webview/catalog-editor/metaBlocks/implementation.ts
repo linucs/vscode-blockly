@@ -2,7 +2,7 @@ import * as Blockly from 'blockly';
 import { CHECK } from '../connectionChecks';
 import { listSupportedRuntimes } from '../../codegen/core/generatorRegistry';
 import { FieldCombobox } from '../../custom-fields/FieldCombobox';
-import { createMinusField, createPlusField } from '../../custom-fields/blocklyFieldHelpers';
+import { appendVariadicHeader, installVariadicRows, rebuildRows, type VariadicRowsBlock, type VariadicRowsConfig } from './variadicRows';
 
 /**
  * The `implementation` meta-block — one `<framework>:<language>` runtime with its
@@ -21,16 +21,17 @@ import { createMinusField, createPlusField } from '../../custom-fields/blocklyFi
  * M2 models runtime/targets/dependencies only; `blocks` and impl-level `codegen`
  * are M3 — files containing them are routed to the raw-text editor by the host gate.
  */
-interface ImplementationBlock extends Blockly.Block {
-    targetCount_: number;
-    plus(): void;
-    minus(): void;
-    addTarget_(): void;
-    removeTarget_(): void;
-    updateMinus_(): void;
-}
-
 let defined = false;
+
+// Target rows live above the dependencies slot; each is a single `TARGET{i}` field.
+const TARGET_ROWS: VariadicRowsConfig = {
+    header: 'TARGETS_HEADER',
+    rowPrefix: 'TARGET_ROW_',
+    anchorBefore: 'DEPENDENCIES',
+    fillRow(input, i): void {
+        input.appendField('target').appendField(new Blockly.FieldTextInput(''), `TARGET${i}`);
+    },
+};
 
 export function defineImplementationBlock(): void {
     if (defined) {
@@ -40,17 +41,15 @@ export function defineImplementationBlock(): void {
 
     const runtimeOptions: [string, string][] = listSupportedRuntimes().map(r => [r, r]);
 
-    Blockly.Blocks['implementation'] = {
-        init(this: ImplementationBlock): void {
-            this.targetCount_ = 0;
+    const def: Record<string, unknown> = {
+        init(this: VariadicRowsBlock): void {
+            this.rowCount_ = 0;
 
             this.appendDummyInput('RUNTIME_ROW')
                 .appendField('implementation   runtime')
                 .appendField(new FieldCombobox(runtimeOptions), 'RUNTIME');
 
-            this.appendDummyInput('TARGETS_HEADER')
-                .appendField(createPlusField(), 'PLUS')
-                .appendField('targets');
+            appendVariadicHeader(this, 'TARGETS_HEADER', 'targets');
 
             this.appendStatementInput('DEPENDENCIES')
                 .setCheck(CHECK.DEPENDENCY)
@@ -72,61 +71,13 @@ export function defineImplementationBlock(): void {
             this.setColour(330);
             this.setTooltip('One <framework>:<language> implementation. Use [+]/[−] to manage targets.');
         },
-
-        plus(this: ImplementationBlock): void {
-            this.addTarget_();
+        saveExtraState(this: VariadicRowsBlock): object {
+            return { targetCount: this.rowCount_ };
         },
-
-        minus(this: ImplementationBlock): void {
-            if (this.targetCount_ <= 0) {
-                return;
-            }
-            this.removeTarget_();
-        },
-
-        addTarget_(this: ImplementationBlock): void {
-            const i = this.targetCount_++;
-            this.appendDummyInput(`TARGET_ROW_${i}`)
-                .appendField('target')
-                .appendField(new Blockly.FieldTextInput(''), `TARGET${i}`);
-            // Keep target rows above the dependencies/codegen/blocks slots.
-            this.moveInputBefore(`TARGET_ROW_${i}`, 'DEPENDENCIES');
-            this.updateMinus_();
-        },
-
-        removeTarget_(this: ImplementationBlock): void {
-            this.targetCount_--;
-            this.removeInput(`TARGET_ROW_${this.targetCount_}`);
-            this.updateMinus_();
-        },
-
-        updateMinus_(this: ImplementationBlock): void {
-            const header = this.getInput('TARGETS_HEADER')!;
-            const hasMinus = Boolean(this.getField('MINUS'));
-            if (!hasMinus && this.targetCount_ > 0) {
-                header.insertFieldAt(1, createMinusField(), 'MINUS');
-            } else if (hasMinus && this.targetCount_ <= 0) {
-                (header as unknown as { removeField(n: string): void }).removeField('MINUS');
-            }
-        },
-
-        saveExtraState(this: ImplementationBlock): object {
-            return { targetCount: this.targetCount_ };
-        },
-
-        loadExtraState(this: ImplementationBlock, state: { targetCount?: number }): void {
-            for (let i = 0; i < this.targetCount_; i++) {
-                this.removeInput(`TARGET_ROW_${i}`);
-            }
-            this.targetCount_ = 0;
-            if (this.getField('MINUS')) {
-                (this.getInput('TARGETS_HEADER')! as unknown as { removeField(n: string): void }).removeField('MINUS');
-            }
-
-            const count = state.targetCount ?? 0;
-            for (let i = 0; i < count; i++) {
-                this.addTarget_();
-            }
+        loadExtraState(this: VariadicRowsBlock, state: { targetCount?: number }): void {
+            rebuildRows(this, TARGET_ROWS, state.targetCount ?? 0);
         },
     };
+    installVariadicRows(def, TARGET_ROWS);
+    Blockly.Blocks['implementation'] = def;
 }

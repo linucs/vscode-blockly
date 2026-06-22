@@ -9,7 +9,7 @@ import type {
 } from '../CatalogTypes';
 import { BlockSpec, chain } from './blockSpec';
 import { valueToCheckChain } from './connectionCheck';
-import { FIELD_DESCRIPTOR_BY_TYPE, scalarToField, type FieldDescriptor } from './fieldDescriptors';
+import { FIELD_DESCRIPTOR_BY_TYPE, isStringPairOptions, scalarToField, type FieldDescriptor } from './fieldDescriptors';
 import { i18nDisplay, isI18nMap } from './i18n';
 import { CODEGEN_SECTION_SLOTS, INPUT_ALIGN_VALUES, PRECEDENCE_VALUES } from './types';
 
@@ -350,18 +350,17 @@ function specFromFieldArg(arg: Record<string, unknown>, desc: FieldDescriptor): 
         }
     }
     for (const scalar of desc.scalars) {
+        // Bitmap dimensions are derived from the grid, not editable scalar fields.
+        if (desc.structuredEditor === 'bitmap') {
+            continue;
+        }
         claimed.add(scalar.json);
         if (arg[scalar.json] !== undefined) {
             fields[scalar.field] = scalarToField(arg[scalar.json], scalar.kind);
         }
     }
     const state: Record<string, unknown> = {};
-    for (const key of desc.structured) {
-        claimed.add(key);
-        if (arg[key] !== undefined) {
-            state[key] = arg[key];
-        }
-    }
+    importStructured(arg, desc, fields, state, claimed);
     const rest: Record<string, unknown> = {};
     for (const [key, value] of Object.entries(arg)) {
         if (!claimed.has(key)) {
@@ -376,6 +375,66 @@ function specFromFieldArg(arg: Record<string, unknown>, desc: FieldDescriptor): 
         spec.extraState = state;
     }
     return spec;
+}
+
+/**
+ * Inverse of {@link ./blockDef.buildStructured}. The editable editors distribute the
+ * structured value into meta-block fields + a row/count in `extraState`; non-editable
+ * data falls back to a verbatim `extraState` bag (so the closed editors never drop
+ * it). Unmodeled-shaped data is left unclaimed and rides the `rest` bag.
+ */
+function importStructured(
+    arg: Record<string, unknown>,
+    desc: FieldDescriptor,
+    fields: Record<string, string>,
+    state: Record<string, unknown>,
+    claimed: Set<string>,
+): void {
+    const key = desc.structured[0];
+    switch (desc.structuredEditor) {
+        case 'pairs': {
+            const options = arg[key];
+            if (isStringPairOptions(options)) {
+                options.forEach(([label, value], i) => {
+                    fields[`OPTLABEL${i}`] = label;
+                    fields[`OPTVAL${i}`] = value;
+                });
+                state.optCount = options.length;
+                claimed.add(key);
+            } else if (Array.isArray(options)) {
+                state.optionsRaw = options; // image labels / odd shape → verbatim summary
+                claimed.add(key);
+            }
+            return;
+        }
+        case 'list': {
+            const types = arg[key];
+            if (Array.isArray(types)) {
+                types.forEach((t, i) => { fields[`VTYPE${i}`] = String(t); });
+                state.varTypeCount = types.length;
+                claimed.add(key);
+            }
+            return;
+        }
+        case 'bitmap': {
+            if (arg.value !== undefined) {
+                state.value = arg.value;
+                claimed.add('value');
+                // width/height are derived from the grid on serialize; claim them only
+                // when the grid is present so a value-less bitmap keeps them via `rest`.
+                claimed.add('width');
+                claimed.add('height');
+            }
+            return;
+        }
+        default:
+            for (const k of desc.structured) {
+                claimed.add(k);
+                if (arg[k] !== undefined) {
+                    state[k] = arg[k];
+                }
+            }
+    }
 }
 
 /** Build the shared codegen-section slots (imports/declarations/setup/cleanup/helpers) for a spec. */

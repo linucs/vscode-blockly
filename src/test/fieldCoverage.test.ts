@@ -176,3 +176,37 @@ suite('field coverage (M4) — round-trip identity for every field type', () => 
         assert.strictEqual(label.text, 'static label');
     });
 });
+
+/** A one-block catalog whose single field is `arg`, for focused structured-editor checks. */
+function oneField(arg: Record<string, unknown>): string {
+    return yaml.dump({
+        id: 'sx', category: 'Test',
+        implementations: [{
+            runtime: 'arduino:cpp',
+            blocks: [{ blockly: { type: 'b', message0: 'm %1', args0: [arg] } }],
+        }],
+    });
+}
+
+suite('structured field editors (item 1) — inline editors + round-trip', () => {
+    test('image-label dropdown options are preserved verbatim (not editable inline)', () => {
+        const arg = {
+            type: 'field_dropdown', name: 'DD',
+            options: [[{ src: 'x.png', width: 8, height: 8, alt: 'i' }, 'img'], ['B', 'b']],
+        };
+        // Non-string labels can't become [label,value] rows → verbatim optionsRaw bag.
+        assert.ok(deepEqual(yaml.load(oneField(arg)), roundTrip(oneField(arg))));
+    });
+
+    test('bitmap width/height are derived from the grid (added when source omits them)', () => {
+        const out = args0(oneField({ type: 'field_bitmap', name: 'BMP', value: [[0, 1], [1, 0]] }))[0];
+        assert.strictEqual(out.width, 2);
+        assert.strictEqual(out.height, 2);
+        assert.deepStrictEqual(out.value, [[0, 1], [1, 0]]);
+    });
+
+    test('empty variableTypes is omitted (no rows → no key)', () => {
+        const out = args0(oneField({ type: 'field_variable', name: 'V', variable: 'x' }))[0];
+        assert.ok(!('variableTypes' in out));
+    });
+});

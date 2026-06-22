@@ -182,6 +182,11 @@ function buildFieldArg(
         }
     }
     for (const scalar of desc.scalars) {
+        // The bitmap grid owns its dimensions; width/height are derived from the
+        // value below, so skip the (unrendered) WIDTH/HEIGHT scalar fields here.
+        if (desc.structuredEditor === 'bitmap') {
+            continue;
+        }
         const raw = block.getFieldValue(scalar.field);
         // Numbers drop the empty string (absent), matching the M3 `field_number`.
         if (raw === null || (scalar.kind === 'number' && raw === '')) {
@@ -189,15 +194,82 @@ function buildFieldArg(
         }
         entry[scalar.json] = scalarToJson(raw, scalar.kind);
     }
-    for (const key of desc.structured) {
-        if (state[key] !== undefined) {
-            entry[key] = state[key];
-        }
-    }
+    buildStructured(entry, block, desc, state);
     if (state.rest && typeof state.rest === 'object') {
         Object.assign(entry, state.rest);
     }
     return entry;
+}
+
+/**
+ * Emit the descriptor's structured value(s). The editable editors reconstruct from
+ * the meta-block (inline rows / the bitmap field); everything else copies verbatim
+ * from `extraState`. Each editable branch falls back to a verbatim bag when the
+ * source data isn't in its editable shape (e.g. image-label options), so round-trip
+ * identity holds regardless.
+ */
+function buildStructured(
+    entry: Record<string, unknown>,
+    block: MetaBlock,
+    desc: FieldDescriptor,
+    state: Record<string, unknown>,
+): void {
+    const key = desc.structured[0];
+    switch (desc.structuredEditor) {
+        case 'pairs': {
+            if (state.optionsRaw !== undefined) {
+                entry[key] = state.optionsRaw; // non-editable (image label etc.) — verbatim
+                return;
+            }
+            const options: [string, string][] = [];
+            for (let i = 0; ; i++) {
+                const label = block.getFieldValue(`OPTLABEL${i}`);
+                if (label === null) {
+                    break;
+                }
+                const value = block.getFieldValue(`OPTVAL${i}`) ?? '';
+                if (label === '' && value === '') {
+                    continue; // skip a fully-empty row
+                }
+                options.push([label, value]);
+            }
+            if (options.length > 0) {
+                entry[key] = options;
+            }
+            return;
+        }
+        case 'list': {
+            const types: string[] = [];
+            for (let i = 0; ; i++) {
+                const t = block.getFieldValue(`VTYPE${i}`);
+                if (t === null) {
+                    break;
+                }
+                types.push(t);
+            }
+            if (types.length > 0) {
+                entry[key] = types;
+            }
+            return;
+        }
+        case 'bitmap': {
+            // The themed bitmap field owns the grid (live block); a BlockSpec carries
+            // it in extraState. Derive width/height from the grid dimensions.
+            const value = (block.getFieldValue('VALUE') as unknown) ?? state.value;
+            if (Array.isArray(value)) {
+                entry.width = Array.isArray(value[0]) ? value[0].length : 0;
+                entry.height = value.length;
+                entry.value = value;
+            }
+            return;
+        }
+        default:
+            for (const k of desc.structured) {
+                if (state[k] !== undefined) {
+                    entry[k] = state[k];
+                }
+            }
+    }
 }
 
 /** Block-level codegen (`body`/`setup`/`imports`/`declarations`/`helpers`/`precedence`/`inputDefaults`). */

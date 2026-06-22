@@ -1,12 +1,17 @@
 import * as Blockly from 'blockly';
+import type { EditorView } from '@codemirror/view';
+import { createCodeEditor, langForRuntime, runtimeForBlock } from './codeMirror';
 
 const MAX_DISPLAY_LENGTH = 30;
 
 let activeFieldCode: FieldCode | null = null;
 
 /**
- * A code-editing field that shows a truncated preview on the block
- * and opens a modal with a monospace textarea when clicked.
+ * A code-editing field that shows a truncated preview on the block and opens a
+ * modal with a CodeMirror editor when clicked. Syntax highlighting follows the
+ * enclosing `implementation`'s runtime language (catalog editor); `{{NAME}}`
+ * placeholders are highlighted. Falls back to a plain editor (no grammar) where
+ * the runtime can't be resolved.
  *
  * Registered as `field_code` in the Blockly field registry.
  */
@@ -15,7 +20,7 @@ export class FieldCode extends Blockly.Field<string | undefined> {
     override EDITABLE = true;
 
     private modalEl_: HTMLDivElement | null = null;
-    private textarea_: HTMLTextAreaElement | null = null;
+    private editor_: EditorView | null = null;
 
     constructor(value?: string, validator?: Blockly.FieldValidator<string | undefined>) {
         super(value || '', validator);
@@ -56,7 +61,6 @@ export class FieldCode extends Blockly.Field<string | undefined> {
         const widgetBorder = styles.getPropertyValue('--vscode-editorWidget-border').trim() || '#454545';
         const selectionBg = styles.getPropertyValue('--vscode-editor-selectionBackground').trim() || '#264f78';
         const font = styles.getPropertyValue('--vscode-editor-fontFamily').trim() || '"Courier New", monospace';
-        const fontSize = styles.getPropertyValue('--vscode-editor-fontSize').trim() || '13px';
 
         // Backdrop
         const modal = document.createElement('div');
@@ -125,62 +129,42 @@ export class FieldCode extends Blockly.Field<string | undefined> {
         header.appendChild(title);
         header.appendChild(doneBtn);
 
-        // Textarea
-        const textarea = document.createElement('textarea');
-        textarea.value = this.getValue() || '';
-        textarea.spellcheck = false;
-        Object.assign(textarea.style, {
+        // Editor host — CodeMirror mounts here. Background/scroll live on the host so
+        // the editor fills the dialog body; the editor theme is transparent over it.
+        const host = document.createElement('div');
+        Object.assign(host.style, {
             flex: '1',
-            margin: '0',
-            padding: '12px 14px',
-            border: 'none',
-            outline: 'none',
-            resize: 'none',
+            minHeight: '240px',
+            overflow: 'auto',
             backgroundColor: bg,
-            color: fg,
-            fontFamily: font,
-            fontSize: fontSize,
-            lineHeight: '1.5',
-            tabSize: '2',
-            minHeight: '200px',
             borderBottomLeftRadius: '6px',
             borderBottomRightRadius: '6px',
         });
-
-        textarea.addEventListener('keydown', (e: KeyboardEvent) => {
-            // Tab inserts spaces instead of moving focus
-            if (e.key === 'Tab') {
-                e.preventDefault();
-                const start = textarea.selectionStart;
-                const end = textarea.selectionEnd;
-                textarea.value = textarea.value.substring(0, start) + '  ' + textarea.value.substring(end);
-                textarea.selectionStart = textarea.selectionEnd = start + 2;
-            }
-            // Escape closes
-            if (e.key === 'Escape') {
-                e.preventDefault();
-                this.closeModal_();
-            }
-            // Prevent Blockly from handling keys
-            e.stopPropagation();
-        });
-
-        this.textarea_ = textarea;
+        // Keep keystrokes inside the editor (don't let Blockly shortcuts fire).
+        host.addEventListener('keydown', e => e.stopPropagation());
 
         dialog.appendChild(header);
-        dialog.appendChild(textarea);
+        dialog.appendChild(host);
         modal.appendChild(backdrop);
         modal.appendChild(dialog);
         document.body.appendChild(modal);
         this.modalEl_ = modal;
 
-        textarea.focus();
+        const lang = langForRuntime(runtimeForBlock(this.getSourceBlock()));
+        this.editor_ = createCodeEditor({
+            parent: host,
+            doc: this.getValue() || '',
+            lang,
+            onEscape: () => this.closeModal_(),
+        });
+        this.editor_.focus();
     }
 
     private closeModal_(): void {
-        if (this.textarea_) {
-            this.setValue(this.textarea_.value);
-            this.textarea_ = null;
+        if (this.editor_) {
+            this.setValue(this.editor_.state.doc.toString());
+            this.editor_.destroy();
+            this.editor_ = null;
         }
         if (this.modalEl_) {
             this.modalEl_.remove();

@@ -1,9 +1,9 @@
 import * as Blockly from 'blockly';
 import { PRECEDENCE_VALUES } from '../../../src/catalog/serialize/types';
-import { isI18nMap, readI18n } from '../../../src/catalog/serialize/i18n';
+import { readI18n } from '../../../src/catalog/serialize/i18n';
 import { CHECK } from '../connectionChecks';
 import { FieldTranslate, type TranslatableBlock } from '../ui/FieldTranslate';
-import { openTranslationDialog } from '../ui/translationDialog';
+import { translationHooks } from '../ui/translationDialog';
 
 /** Dropdown options for `precedence`: empty (statement → omitted) + the closed enum. */
 const PRECEDENCE_OPTIONS: [string, string][] = [
@@ -134,17 +134,14 @@ export function defineBlockDefBlock(): void {
             this.updateShape_((this.state_.connections as string) ?? 'BOTH');
         },
 
-        /** Tooltip is dialog-only (no inline field) — the 🌐 is its sole editor. */
-        editTranslations_(this: BlockDefBlock, field: FieldTranslate): void {
-            openTranslationDialog(readI18n(this.state_.tooltip), next => {
+        // Tooltip is dialog-only (no inline field) — the 🌐 is its sole editor.
+        ...translationHooks<BlockDefBlock>({
+            get() {
+                return readI18n(this.state_.tooltip);
+            },
+            set(next) {
                 this.state_.tooltip = next === '' ? undefined : next;
-                field.forceRerender();
-            });
-        },
-
-        translationLocaleCount_(this: BlockDefBlock): number {
-            const value = readI18n(this.state_.tooltip);
-            return isI18nMap(value) ? Object.keys(value as Record<string, string>).length : 0;
-        },
+            },
+        }),
     };
 }

@@ -3,7 +3,6 @@ import * as fs from 'fs/promises';
 import { gatherInstalledCatalogs, LocalCatalog } from '../contribute/localCatalogs';
 import { titleCase } from '../util/strings';
 import { canEditInGuidedUi } from './canEditInGuidedUi';
-import { CatalogEditorPanel } from './CatalogEditorPanel';
 
 type LocalCatalogItem = VendorGroup | CatalogFileItem;
 
@@ -94,12 +93,15 @@ export class LocalCatalogsProvider implements vscode.TreeDataProvider<LocalCatal
             text = '';
         }
 
+        const uri = vscode.Uri.file(fsPath);
         if (canEditInGuidedUi(text).ok) {
-            CatalogEditorPanel.createOrShow(this.extensionUri, fsPath);
+            // Content gate stays in the command (a glob selector can't see file
+            // contents): open the guided CustomTextEditor for modelable files only.
+            await vscode.commands.executeCommand('vscode.openWith', uri, 'blocks-editor.catalogEditor');
             return;
         }
 
-        const doc = await vscode.workspace.openTextDocument(vscode.Uri.file(fsPath));
+        const doc = await vscode.workspace.openTextDocument(uri);
         await vscode.window.showTextDocument(doc);
     }
 

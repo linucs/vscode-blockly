@@ -1,6 +1,7 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
 import { BlocksEditorProvider } from './BlocksEditorProvider';
+import { CatalogEditorProvider } from './catalog/CatalogEditorProvider';
 import { CatalogManager } from './catalog/CatalogManager';
 import { CatalogRegistryProvider } from './catalog/CatalogRegistryProvider';
 import { LocalCatalogsProvider } from './catalog/LocalCatalogsProvider';
@@ -15,6 +16,7 @@ export async function activate(context: vscode.ExtensionContext) {
     await catalogManager.init();
 
 	context.subscriptions.push(BlocksEditorProvider.register(context, catalogManager));
+	context.subscriptions.push(CatalogEditorProvider.register(context));
 	registerMcpServerProvider(context);
 
     const registryProvider = new CatalogRegistryProvider(context);

@@ -2,41 +2,29 @@ import type { CatalogIssue } from './catalogIssue';
 
 /**
  * postMessage contract between the Guided Catalog Editor host
- * ({@link CatalogEditorPanel}) and its webview (`webview/catalog-editor`).
+ * (`CatalogEditorProvider`, a {@link vscode.CustomTextEditorProvider}) and its
+ * webview (`webview/catalog-editor`).
  *
  * vscode-free and Node-free so both bundles can `import type` it across the
- * host/browser boundary. The unions are exhaustive on `type`; the webview shell
- * is a minimal textarea in M1 and grows into the Blockly meta-workspace in M2,
- * but the contract is fixed here up front (design §6).
+ * host/browser boundary. The unions are exhaustive on `type`. The host is bound to
+ * the YAML document: it `load`s the document text, the webview pushes edits back via
+ * `change` (written with a `WorkspaceEdit`), and save/dirty/undo are native.
  */
 
-/** Host → Webview: deliver the YAML to edit. */
+/**
+ * Host → Webview: deliver the YAML to edit. Sent on `ready` and again whenever the
+ * bound document changes externally (split-view/undo/another tool), so the webview
+ * re-imports. The filename isn't carried — the CustomTextEditor tab shows it natively.
+ */
 export interface LoadMessage {
     type: 'load';
     yamlText: string;
-    fileName: string;
 }
 
 /** Host → Webview: validation results to render (inline + summary). */
 export interface ValidationMessage {
     type: 'validation';
     issues: CatalogIssue[];
-}
-
-/** Host → Webview: the file was written successfully. */
-export interface SavedMessage {
-    type: 'saved';
-}
-
-/** Host → Webview: the save was rejected (blocking issues) or failed to write. */
-export interface SaveErrorMessage {
-    type: 'saveError';
-    message: string;
-}
-
-/** Host → Webview: the file changed on disk from outside this editor. */
-export interface ExternalChangeMessage {
-    type: 'externalChange';
 }
 
 /**
@@ -66,9 +54,6 @@ export interface TranslateErrorMessage {
 export type HostToWebviewMessage =
     | LoadMessage
     | ValidationMessage
-    | SavedMessage
-    | SaveErrorMessage
-    | ExternalChangeMessage
     | TranslateAvailabilityMessage
     | TranslatedMessage
     | TranslateErrorMessage;
@@ -78,21 +63,19 @@ export interface ReadyMessage {
     type: 'ready';
 }
 
-/** Webview → Host: unsaved-changes flag, drives the `● ` dirty marker in the title. */
-export interface DirtyMessage {
-    type: 'dirty';
-    value: boolean;
+/**
+ * Webview → Host: the serialised YAML for the current block workspace. The host
+ * applies it to the bound document via a `WorkspaceEdit` (marking it dirty); the
+ * user persists with native save. Replaces the old explicit `save`/`dirty` flow.
+ */
+export interface ChangeMessage {
+    type: 'change';
+    yamlText: string;
 }
 
 /** Webview → Host: validate this text without saving (debounced live validation). */
 export interface RequestValidationMessage {
     type: 'requestValidation';
-    yamlText: string;
-}
-
-/** Webview → Host: validate and, if clean, persist this text. */
-export interface SaveMessage {
-    type: 'save';
     yamlText: string;
 }
 
@@ -123,9 +106,8 @@ export interface TranslateMessage {
 
 export type WebviewToHostMessage =
     | ReadyMessage
-    | DirtyMessage
+    | ChangeMessage
     | RequestValidationMessage
-    | SaveMessage
     | FallbackToTextMessage
     | OpenUrlMessage
     | TranslateMessage;

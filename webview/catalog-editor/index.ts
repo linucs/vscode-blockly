@@ -15,14 +15,15 @@ import { initPreview, updatePreview } from './preview';
 import { configureTranslation } from './ui/translationDialog';
 
 /**
- * Guided Catalog Editor webview — M2.
+ * Guided Catalog Editor webview.
  *
  * A Blockly meta-workspace whose connection checks enforce the catalog schema by
- * construction. On `load` the host's YAML is imported into meta-blocks; every
- * edit re-serializes the workspace to YAML (the single producer) and round-trips
- * through the host for validation and save. Only files the gate
- * (`canEditInGuidedUi`) deems fully modelable reach here; the rest stay on the
- * raw-text editor. M3 adds block-definition authoring.
+ * construction. The host is a {@link vscode.CustomTextEditorProvider} bound to the
+ * YAML document: on `load` the document text is imported into meta-blocks; every
+ * edit re-serializes the workspace (the single producer) and posts `change`, which
+ * the host writes into the document via a `WorkspaceEdit` — so dirty/undo/save are
+ * native (no in-webview Save button). Only files the gate (`canEditInGuidedUi`)
+ * deems fully modelable reach here; the rest fall back to the raw-text editor.
  */
 
 const vscode = acquireVsCodeApi();
@@ -56,18 +57,10 @@ function requestTranslate(text: string, from: string, to: string): Promise<strin
 }
 
 let workspace: Blockly.WorkspaceSvg;
-let dirty = false;
 let loading = false;
 let lastSerialized = '';
 let validateTimer: ReturnType<typeof setTimeout> | undefined;
-
-function setDirty(value: boolean): void {
-    if (dirty === value) {
-        return;
-    }
-    dirty = value;
-    post({ type: 'dirty', value });
-}
+let previewTimer: ReturnType<typeof setTimeout> | undefined;
 
 function setStatus(text: string): void {
     $<HTMLDivElement>('status').textContent = text;
@@ -103,7 +96,7 @@ function scheduleValidation(yamlText: string): void {
     validateTimer = setTimeout(() => post({ type: 'requestValidation', yamlText }), 400);
 }
 
-/** React to a meaningful workspace edit: re-serialize, mark dirty, validate. */
+/** React to a meaningful workspace edit: re-serialize, push to the document, validate. */
 function onWorkspaceChange(event: Blockly.Events.Abstract): void {
     if (loading || event.isUiEvent) {
         return;
@@ -113,14 +106,9 @@ function onWorkspaceChange(event: Blockly.Events.Abstract): void {
         return;
     }
     lastSerialized = yamlText;
-    setDirty(true);
     setStatus('');
+    post({ type: 'change', yamlText });
     scheduleValidation(yamlText);
-}
-
-function save(): void {
-    setStatus('Saving…');
-    post({ type: 'save', yamlText: serialize() });
 }
 
 function refreshPreview(selectedId?: string | null): void {
@@ -135,9 +123,22 @@ function refreshPreview(selectedId?: string | null): void {
     });
 }
 
-function loadCatalog(yamlText: string, fileName: string): void {
+/**
+ * Debounce content-driven preview refreshes: `updatePreview` deep-clones the block
+ * def, re-resolves i18n and re-`defineBlocksWithJsonArray`s on each call, so running
+ * it on every keystroke is wasted churn. Selection changes still refresh immediately.
+ */
+function schedulePreview(): void {
+    if (previewTimer !== undefined) {
+        clearTimeout(previewTimer);
+    }
+    previewTimer = setTimeout(() => refreshPreview(), 150);
+}
+
+function loadCatalog(yamlText: string): void {
     loading = true;
     let notFaithful = false;
+    let serialized = '';
     try {
         workspace.clear();
         const spec = importCatalog(yamlText);
@@ -146,14 +147,16 @@ function loadCatalog(yamlText: string, fileName: string): void {
             hat.moveBy(20, 20);
         }
         workspace.render();
+        // Serialize once and reuse for the faithfulness check and the baseline below.
+        serialized = serialize();
         // Import-time round-trip check (design "Drift-prevention" #1). This is a
-        // *warning*, not a gate: an unedited file is never written back (save is
-        // user-initiated and the "no write unless changed" rule holds), so a stylistic
-        // or lossy mismatch can't corrupt anything until the user makes a real edit.
-        // Denying block editing over it punishes the user for our serializer's gaps,
-        // so we stay in blocks and just flag that saving will reformat the file.
-        if (yamlText.trim() && !semanticallyEqualYaml(yamlText, serialize())) {
-            console.warn('guided import not byte-faithful (first diff):', firstDiffYaml(yamlText, serialize()));
+        // *warning*, not a gate: an unedited workspace never posts a `change`, so a
+        // stylistic or lossy mismatch can't touch the document until the user makes a
+        // real edit. Denying block editing over it punishes the user for our
+        // serializer's gaps, so we stay in blocks and just flag that the first save
+        // will reformat the file.
+        if (yamlText.trim() && !semanticallyEqualYaml(yamlText, serialized)) {
+            console.warn('guided import not byte-faithful (first diff):', firstDiffYaml(yamlText, serialized));
             notFaithful = true;
         }
     } catch (err) {
@@ -164,10 +167,10 @@ function loadCatalog(yamlText: string, fileName: string): void {
     } finally {
         loading = false;
     }
-    $<HTMLSpanElement>('fileName').textContent = fileName;
     $<HTMLDivElement>('validation').replaceChildren();
-    lastSerialized = serialize();
-    setDirty(false);
+    // Re-baseline so a re-import (initial load or external change) never echoes a
+    // `change` back to the host.
+    lastSerialized = serialized;
     setStatus(notFaithful ? 'Heads up: this file uses a style the editor will normalize when you save.' : '');
     refreshPreview();
 }
@@ -187,30 +190,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (event.type === Blockly.Events.SELECTED) {
             refreshPreview((event as Blockly.Events.Selected).newElementId);
         } else if (!event.isUiEvent) {
-            refreshPreview();
+            schedulePreview();
         }
     });
 
     window.addEventListener('resize', () => Blockly.svgResize(workspace));
 
-    $<HTMLButtonElement>('saveBtn').addEventListener('click', save);
-
-    window.addEventListener('keydown', e => {
-        if ((e.ctrlKey || e.metaKey) && e.key === 's') {
-            e.preventDefault();
-            save();
-        }
-    });
-
-    $<HTMLButtonElement>('reloadBtn').addEventListener('click', () => {
-        $<HTMLDivElement>('banner').classList.remove('visible');
-        post({ type: 'ready' }); // host re-reads the file and posts a fresh `load`
-    });
-
-    $<HTMLButtonElement>('dismissBtn').addEventListener('click', () => {
-        $<HTMLDivElement>('banner').classList.remove('visible');
-    });
-
+    // No Save button / Cmd-S handler: the host writes the bound document on every
+    // `change`, so native VS Code save (and the dirty dot, undo, close prompt) apply.
     post({ type: 'ready' });
 });
 
@@ -218,20 +205,10 @@ window.addEventListener('message', (event: MessageEvent<HostToWebviewMessage>) =
     const msg = event.data;
     switch (msg.type) {
         case 'load':
-            loadCatalog(msg.yamlText, msg.fileName);
+            loadCatalog(msg.yamlText);
             return;
         case 'validation':
             renderIssues(msg.issues);
-            return;
-        case 'saved':
-            setDirty(false);
-            setStatus('Saved.');
-            return;
-        case 'saveError':
-            setStatus(msg.message);
-            return;
-        case 'externalChange':
-            $<HTMLDivElement>('banner').classList.add('visible');
             return;
         case 'translateAvailability':
             // Hand the dialog a translate callback only when the host has the API;

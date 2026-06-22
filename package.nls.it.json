@@ -10,6 +10,7 @@
   "command.refreshCatalogs": "Editor a Blocchi: Aggiorna cataloghi remoti",
   "command.enableClaudeCode": "Editor a Blocchi: Configura assistenti AI (Copilot e Claude Code)",
   "editor.displayName": "Editor a Blocchi (Programmazione Visuale)",
+  "editor.catalog.displayName": "Editor Catalogo a Blocchi",
   "viewContainer.catalogBrowser.title": "Catalogo Community",
   "view.catalogRegistry.name": "Catalogo Community",
   "command.refreshRegistry": "Editor a Blocchi: Aggiorna catalogo community",

@@ -3,8 +3,8 @@ import { registerFieldMultilineInput } from '@blockly/field-multilineinput';
 import { registerFieldColour } from '@blockly/field-colour';
 import { i18nDisplay, i18nMerge, isI18nMap, type I18nText } from '../../../src/catalog/serialize/i18n';
 import { FIELD_DESCRIPTORS } from '../../../src/catalog/serialize/fieldDescriptors';
-import { type FieldTranslate, type TranslatableBlock } from '../ui/FieldTranslate';
-import { openTranslationDialog } from '../ui/translationDialog';
+import { type TranslatableBlock } from '../ui/FieldTranslate';
+import { translationHooks } from '../ui/translationDialog';
 import { catalogBlock } from './catalog';
 import { defineImplementationBlock } from './implementation';
 import { dependencyBlocks } from './dependency';
@@ -83,8 +83,11 @@ function augmentCatalogState(): void {
     };
     // The 🌐 (DESC_TR) field edits the full description locale map; the inline
     // DESCRIPTION field stays the quick editor for the primary locale.
-    def.editTranslations_ = function (this: CatalogStateBlock, field: FieldTranslate): void {
-        openTranslationDialog(currentDescription(this), next => {
+    Object.assign(def, translationHooks<CatalogStateBlock>({
+        get() {
+            return currentDescription(this);
+        },
+        set(next) {
             if (isI18nMap(next)) {
                 this.descState_ = next;
                 this.setFieldValue(i18nDisplay(next), 'DESCRIPTION');
@@ -93,13 +96,8 @@ function augmentCatalogState(): void {
                 this.descState_ = undefined;
                 this.setFieldValue(typeof next === 'string' ? next : '', 'DESCRIPTION');
             }
-            field.forceRerender();
-        });
-    };
-    def.translationLocaleCount_ = function (this: CatalogStateBlock): number {
-        const value = currentDescription(this);
-        return isI18nMap(value) ? Object.keys(value as Record<string, string>).length : 0;
-    };
+        },
+    }));
 }
 
 export function registerMetaBlocks(): void {

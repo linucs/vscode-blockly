@@ -10,6 +10,7 @@
   "command.refreshCatalogs": "Blocks Editor: Refresh Remote Catalogs",
   "command.enableClaudeCode": "Blocks Editor: Set Up AI Assistants (Copilot & Claude Code)",
   "editor.displayName": "Blocks Editor (Visual Programming)",
+  "editor.catalog.displayName": "Blocks Catalog Editor",
   "viewContainer.catalogBrowser.title": "Community Catalog",
   "view.catalogRegistry.name": "Community Catalog",
   "command.refreshRegistry": "Blocks Editor: Refresh Community Catalog",

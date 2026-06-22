@@ -1,8 +1,8 @@
 import * as Blockly from 'blockly';
 import { CHECK } from '../connectionChecks';
-import { i18nDisplay, i18nMerge, isI18nMap, type I18nText } from '../../../src/catalog/serialize/i18n';
+import { i18nDisplay, i18nMerge, type I18nText } from '../../../src/catalog/serialize/i18n';
 import { FieldTranslate, type TranslatableBlock } from '../ui/FieldTranslate';
-import { openTranslationDialog } from '../ui/translationDialog';
+import { translationHooks } from '../ui/translationDialog';
 
 /**
  * The `message_row` meta-block — one rendered row of a block (one `message{N}`).
@@ -43,19 +43,16 @@ export function defineMessageRowBlock(): void {
             this.hasArgs_ = state?.hasArgs ?? false;
         },
 
-        /** The value the dialog edits = the stored map with the inline TEXT edit folded in. */
-        editTranslations_(this: MessageRowBlock, field: FieldTranslate): void {
-            const current = i18nMerge(this.text_, this.getFieldValue('TEXT') ?? '');
-            openTranslationDialog(current, next => {
+        // The value the dialog edits = the stored map with the inline TEXT edit folded
+        // in; on apply, write it back and re-sync the inline field to the new primary.
+        ...translationHooks<MessageRowBlock>({
+            get() {
+                return i18nMerge(this.text_, this.getFieldValue('TEXT') ?? '');
+            },
+            set(next) {
                 this.text_ = next;
                 this.setFieldValue(i18nDisplay(next), 'TEXT');
-                field.forceRerender();
-            });
-        },
-
-        translationLocaleCount_(this: MessageRowBlock): number {
-            const value = i18nMerge(this.text_, this.getFieldValue('TEXT') ?? '');
-            return isI18nMap(value) ? Object.keys(value).length : 0;
-        },
+            },
+        }),
     };
 }

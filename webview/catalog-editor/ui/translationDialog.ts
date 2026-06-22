@@ -1,5 +1,7 @@
 import { i18nFromEntries, isI18nMap, type I18nText } from '../../../src/catalog/serialize/i18n';
+import { fireBlockMutation } from '../../custom-fields/blocklyFieldHelpers';
 import { LOCALE_CODES, localeDisplayName } from './locales';
+import type { FieldTranslate, TranslatableBlock } from './FieldTranslate';
 
 /**
  * The in-webview translation dialog (design D6.4) — chrome, not a meta-block.
@@ -8,11 +10,11 @@ import { LOCALE_CODES, localeDisplayName } from './locales';
  * `block_def` tooltip, `catalog` description).
  *
  * UX (pinned): the first row is the **primary** (translation source + first key in
- * the YAML map, shown with a ⭐ pill and pinnable via "make primary"); the
- * "add language" dropdown lists all locales (pre-selected to the VS Code locale)
+ * the YAML map, marked bold + selection background and pinnable via "make primary");
+ * the "add language" dropdown lists all locales (pre-selected to the VS Code locale)
  * and appends an empty row; a single language always collapses to a scalar string
- * ({@link i18nFromEntries}); each non-primary row offers a best-effort 🔄 translate
- * from a chosen source when an LLM provider is available.
+ * ({@link i18nFromEntries}); each non-primary row offers a best-effort ✨ AI translate
+ * from the primary language when an LLM provider is available.
  *
  * English strings are hardcoded; catalog-editor i18n lands in M8.
  */
@@ -312,4 +314,40 @@ function styleButton(btn: HTMLButtonElement, primary: boolean): void {
         color: primary ? 'var(--vscode-button-foreground, #fff)' : 'var(--vscode-button-secondaryForeground, #fff)',
         background: primary ? 'var(--vscode-button-background, #0e639c)' : 'var(--vscode-button-secondaryBackground, #3a3d41)',
     });
+}
+
+/**
+ * The two {@link TranslatableBlock} hooks shared by every block carrying a
+ * translatable value (`message_row` text, `block_def` tooltip, `catalog`
+ * description). Only `get`/`set` (bound to the block via `this`) differ per block;
+ * the dialog wiring and the locale-count rule live here once. Spread the result into
+ * the block definition (or `Object.assign` it onto an already-defined block).
+ */
+export function translationHooks<B>(opts: {
+    get(this: B): I18nText | undefined;
+    set(this: B, next: I18nText): void;
+}): {
+    editTranslations_(this: B, field: FieldTranslate): void;
+    translationLocaleCount_(this: B): number;
+} {
+    return {
+        editTranslations_(this: B, field: FieldTranslate): void {
+            openTranslationDialog(opts.get.call(this), next => {
+                // The set mutates extraState-backed state (text_/tooltip/descState_),
+                // which emits no Blockly event on its own — wrap it so the workspace
+                // registers the edit (document goes dirty; undo works).
+                const block = field.getSourceBlock();
+                if (block) {
+                    fireBlockMutation(block, () => opts.set.call(this, next));
+                } else {
+                    opts.set.call(this, next);
+                }
+                field.forceRerender();
+            });
+        },
+        translationLocaleCount_(this: B): number {
+            const value = opts.get.call(this);
+            return isI18nMap(value) ? Object.keys(value).length : 0;
+        },
+    };
 }

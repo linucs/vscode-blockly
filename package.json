@@ -269,6 +269,19 @@
           }
         ],
         "priority": "option"
+      },
+      {
+        "viewType": "blocks-editor.catalogEditor",
+        "displayName": "%editor.catalog.displayName%",
+        "selector": [
+          {
+            "filenamePattern": "**/.blocks/**/*.yaml"
+          },
+          {
+            "filenamePattern": "**/.blocks/**/*.yml"
+          }
+        ],
+        "priority": "default"
       }
     ],
     "configuration": {

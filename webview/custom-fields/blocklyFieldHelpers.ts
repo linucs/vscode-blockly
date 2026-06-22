@@ -21,20 +21,35 @@ function getMutationState(block: Blockly.Block): string {
     return '';
 }
 
-export function createPlusField(): Blockly.FieldImage {
-    return new Blockly.FieldImage(PLUS_SVG, 15, 15, undefined, (field) => {
-        const block = field.getSourceBlock();
-        if (!block || block.isInFlyout) return;
-        Blockly.Events.setGroup(true);
+/**
+ * Run `mutate` and, if it changed the block's serialized extra state, fire a Blockly
+ * `mutation` {@link Blockly.Events.BlockChange} so the workspace registers the edit
+ * (workspace change listeners run → dirty; undo/redo restores the state). Imperative
+ * mutations to `extraState`-backed state (variadic inputs, i18n locale maps, …) don't
+ * emit any event on their own, so this is required to make them "count". The whole
+ * thing is one event group so undo treats it as a single step.
+ */
+export function fireBlockMutation(block: Blockly.Block, mutate: () => void): void {
+    Blockly.Events.setGroup(true);
+    try {
         const before = getMutationState(block);
-        (block as unknown as { plus(): void }).plus();
+        mutate();
         const after = getMutationState(block);
         if (before !== after) {
             Blockly.Events.fire(
                 new Blockly.Events.BlockChange(block, 'mutation', null, before, after),
             );
         }
+    } finally {
         Blockly.Events.setGroup(false);
+    }
+}
+
+export function createPlusField(): Blockly.FieldImage {
+    return new Blockly.FieldImage(PLUS_SVG, 15, 15, undefined, (field) => {
+        const block = field.getSourceBlock();
+        if (!block || block.isInFlyout) return;
+        fireBlockMutation(block, () => (block as unknown as { plus(): void }).plus());
     });
 }
 
@@ -42,15 +57,6 @@ export function createMinusField(): Blockly.FieldImage {
     return new Blockly.FieldImage(MINUS_SVG, 15, 15, undefined, (field) => {
         const block = field.getSourceBlock();
         if (!block || block.isInFlyout) return;
-        Blockly.Events.setGroup(true);
-        const before = getMutationState(block);
-        (block as unknown as { minus(): void }).minus();
-        const after = getMutationState(block);
-        if (before !== after) {
-            Blockly.Events.fire(
-                new Blockly.Events.BlockChange(block, 'mutation', null, before, after),
-            );
-        }
-        Blockly.Events.setGroup(false);
+        fireBlockMutation(block, () => (block as unknown as { minus(): void }).minus());
     });
 }

@@ -10,6 +10,7 @@
   "command.refreshCatalogs": "Blocks Editor: 원격 카탈로그 새로 고침",
   "command.enableClaudeCode": "Blocks Editor: AI 어시스턴트 설정 (Copilot 및 Claude Code)",
   "editor.displayName": "Blocks Editor (비주얼 프로그래밍)",
+  "editor.catalog.displayName": "블록 카탈로그 편집기",
   "viewContainer.catalogBrowser.title": "커뮤니티 카탈로그",
   "view.catalogRegistry.name": "커뮤니티 카탈로그",
   "command.refreshRegistry": "Blocks Editor: 커뮤니티 카탈로그 새로 고침",

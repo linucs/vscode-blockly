@@ -55,7 +55,7 @@ function catalogPathRoots(): string[] {
     const roots: string[] = [];
     for (const raw of customPaths) {
         const p = raw.trim();
-        if (!p || /^https?:\/\//i.test(p)) continue;
+        if (!p || /^https?:\/\//i.test(p)) {continue;}
         roots.push(path.isAbsolute(p) || !firstFolder ? p : path.join(firstFolder, p));
     }
     return roots;

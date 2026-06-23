@@ -10,6 +10,7 @@
   "command.refreshCatalogs": "Blockeditor: Remote-Kataloge aktualisieren",
   "command.enableClaudeCode": "Blockeditor: KI-Assistenten einrichten (Copilot & Claude Code)",
   "editor.displayName": "Blockeditor (Visuelle Programmierung)",
+  "editor.catalog.displayName": "Blockkatalog-Editor",
   "viewContainer.catalogBrowser.title": "Community-Katalog",
   "view.catalogRegistry.name": "Community-Katalog",
   "command.refreshRegistry": "Blockeditor: Community-Katalog aktualisieren",

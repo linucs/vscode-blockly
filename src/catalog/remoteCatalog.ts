@@ -11,7 +11,7 @@ function filenameForUrl(url: string): string {
     try {
         const parsed = new URL(url);
         const base = path.basename(parsed.pathname);
-        if (base && /\.ya?ml$/i.test(base)) return base;
+        if (base && /\.ya?ml$/i.test(base)) {return base;}
     } catch { /* ignore */ }
     // Fallback: hex-encode a short hash of the URL.
     let hash = 0;

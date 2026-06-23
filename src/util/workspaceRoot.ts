@@ -36,15 +36,15 @@ export function activeDocumentUri(): vscode.Uri | undefined {
  */
 export async function resolveActiveWorkspaceRoot(pickPlaceHolder?: string): Promise<string | undefined> {
     const folders = vscode.workspace.workspaceFolders;
-    if (!folders || folders.length === 0) return undefined;
+    if (!folders || folders.length === 0) {return undefined;}
 
     const activeUri = activeDocumentUri();
     if (activeUri) {
         const folder = vscode.workspace.getWorkspaceFolder(activeUri);
-        if (folder) return folder.uri.fsPath;
+        if (folder) {return folder.uri.fsPath;}
     }
 
-    if (folders.length === 1) return folders[0].uri.fsPath;
+    if (folders.length === 1) {return folders[0].uri.fsPath;}
 
     if (pickPlaceHolder) {
         const picked = await vscode.window.showWorkspaceFolderPick({ placeHolder: pickPlaceHolder });

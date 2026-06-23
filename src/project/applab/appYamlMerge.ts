@@ -22,7 +22,7 @@ function detectEol(content: string): string {
 /** Package identity from a requirements line: strip version/extras/markers, lowercase. */
 function pipIdentity(line: string): string {
     const s = line.trim();
-    if (!s || s.startsWith('#')) return '';
+    if (!s || s.startsWith('#')) {return '';}
     // Split on the first version specifier / extras / marker delimiter.
     const name = s.split(/[\s<>=!~;[]/)[0];
     return name.trim().toLowerCase();
@@ -40,7 +40,7 @@ export function mergeRequirementsTxt(
     content: string,
     pip: PipDependency[],
 ): { content: string; changed: boolean } {
-    if (pip.length === 0) return { content, changed: false };
+    if (pip.length === 0) {return { content, changed: false };}
 
     const eol = content.includes('\r\n') ? '\r\n' : '\n';
     const existing = new Set(
@@ -50,7 +50,7 @@ export function mergeRequirementsTxt(
     const missing = pip
         .filter(dep => !existing.has(dep.name.trim().toLowerCase()))
         .map(pipFromDep);
-    if (missing.length === 0) return { content, changed: false };
+    if (missing.length === 0) {return { content, changed: false };}
 
     const base = content.length === 0
         ? ''
@@ -68,8 +68,8 @@ function indentOf(line: string): number {
 /** Brick id from a `- <id>` / `- <id>:` list item, lowercased. */
 function brickIdentity(listItem: string): string {
     let s = listItem.trim();
-    if (s.startsWith('- ')) s = s.slice(2).trim();
-    if (s.endsWith(':')) s = s.slice(0, -1).trim();
+    if (s.startsWith('- ')) {s = s.slice(2).trim();}
+    if (s.endsWith(':')) {s = s.slice(0, -1).trim();}
     return s.toLowerCase();
 }
 
@@ -93,7 +93,7 @@ export function mergeAppYamlBricks(
     content: string,
     bricks: BrickDependency[],
 ): { content: string; changed: boolean } {
-    if (bricks.length === 0) return { content, changed: false };
+    if (bricks.length === 0) {return { content, changed: false };}
 
     const eol = detectEol(content);
     const lines = content.split(/\r?\n/);
@@ -112,7 +112,7 @@ export function mergeAppYamlBricks(
             if (lines[i].trim() === '') { listEnd = i + 1; continue; }
             // A list item or a deeper-indented continuation belongs to the block.
             if (/^\s*-\s+/.test(lines[i]) || indentOf(lines[i]) > 0) {
-                if (/^\s*-\s+/.test(lines[i])) existing.add(brickIdentity(lines[i]));
+                if (/^\s*-\s+/.test(lines[i])) {existing.add(brickIdentity(lines[i]));}
                 listEnd = i + 1;
             } else {
                 break; // next top-level key
@@ -121,7 +121,7 @@ export function mergeAppYamlBricks(
     }
 
     const missing = bricks.filter(b => !existing.has(b.name.trim().toLowerCase()));
-    if (missing.length === 0) return { content, changed: false };
+    if (missing.length === 0) {return { content, changed: false };}
 
     const newLines = missing.flatMap(formatBrick);
 

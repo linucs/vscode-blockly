@@ -10,6 +10,7 @@
   "command.refreshCatalogs": "Blocks Editor: Obnovit vzdálené katalogy",
   "command.enableClaudeCode": "Blocks Editor: Nastavit AI asistenty (Copilot a Claude Code)",
   "editor.displayName": "Blocks Editor (Vizuální programování)",
+  "editor.catalog.displayName": "Editor katalogu bloků",
   "viewContainer.catalogBrowser.title": "Komunitní katalog",
   "view.catalogRegistry.name": "Komunitní katalog",
   "command.refreshRegistry": "Blocks Editor: Obnovit komunitní katalog",

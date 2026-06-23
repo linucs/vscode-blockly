@@ -54,7 +54,7 @@ function findEnvRange(lines: string[], envName: string): { start: number; end: n
     for (let i = 0; i < lines.length; i++) {
         if (lines[i].trim() === header) { start = i; break; }
     }
-    if (start === -1) return undefined;
+    if (start === -1) {return undefined;}
     let end = lines.length;
     for (let i = start + 1; i < lines.length; i++) {
         if (/^\s*\[.+\]\s*$/.test(lines[i])) { end = i; break; }
@@ -69,7 +69,7 @@ function mergeKey(
     additions: string[],
     spec: KeySpec
 ): { lines: string[]; changed: boolean } {
-    if (additions.length === 0) return { lines, changed: false };
+    if (additions.length === 0) {return { lines, changed: false };}
 
     const keyRe = new RegExp(`^\\s*${key}\\s*=`);
     let keyIdx = -1;
@@ -90,13 +90,13 @@ function mergeKey(
             if (/^\s+\S/.test(lines[i]) && !/^\s*\[/.test(lines[i])) {
                 existing.push(...spec.tokenize(lines[i]));
                 blockEnd = i + 1;
-            } else break;
+            } else {break;}
         }
     }
 
     const seen = new Set(existing.map(spec.dedupKey));
     const missing = additions.filter(a => !seen.has(spec.dedupKey(a)));
-    if (missing.length === 0) return { lines, changed: false };
+    if (missing.length === 0) {return { lines, changed: false };}
 
     const merged = [...existing, ...missing];
     const block = [`${key} =`, ...merged.map(t => `    ${t}`)];
@@ -125,7 +125,7 @@ export function mergeEnvLists(
         const range = findEnvRange(lines, envName)!; // re-locate (indices shift)
         const r = mergeKey(lines, range, key, adds ?? [], spec);
         lines = r.lines;
-        if (r.changed) changed = true;
+        if (r.changed) {changed = true;}
     };
 
     apply('lib_deps', additions.libDeps, LIB_SPEC);

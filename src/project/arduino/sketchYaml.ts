@@ -26,13 +26,13 @@ interface SketchYaml {
  */
 export function parseSketchYaml(content: string): { envs: ProjectEnv[]; defaultEnvs: string[] } {
     const doc = yaml.load(content) as SketchYaml | null;
-    if (!doc || typeof doc !== 'object') return { envs: [], defaultEnvs: [] };
+    if (!doc || typeof doc !== 'object') {return { envs: [], defaultEnvs: [] };}
 
     const envs: ProjectEnv[] = [];
 
     if (doc.profiles && typeof doc.profiles === 'object') {
         for (const [name, profile] of Object.entries(doc.profiles)) {
-            if (!profile || typeof profile !== 'object') continue;
+            if (!profile || typeof profile !== 'object') {continue;}
             envs.push(profileToEnv(name, profile));
         }
     }
@@ -84,7 +84,7 @@ function stripVersion(s: string): string {
 export async function findSketchYaml(startFsPath: string): Promise<string | undefined> {
     let dir = startFsPath;
     try {
-        if ((await fs.stat(startFsPath)).isFile()) dir = path.dirname(startFsPath);
+        if ((await fs.stat(startFsPath)).isFile()) {dir = path.dirname(startFsPath);}
     } catch {
         dir = path.dirname(startFsPath);
     }
@@ -93,7 +93,7 @@ export async function findSketchYaml(startFsPath: string): Promise<string | unde
     while (dir && dir !== prev) {
         const candidate = path.join(dir, 'sketch.yaml');
         try {
-            if ((await fs.stat(candidate)).isFile()) return candidate;
+            if ((await fs.stat(candidate)).isFile()) {return candidate;}
         } catch { /* keep climbing */ }
         prev = dir;
         dir = path.dirname(dir);
@@ -104,7 +104,7 @@ export async function findSketchYaml(startFsPath: string): Promise<string | unde
 /** Locate and parse the sketch.yaml governing the given document path. */
 export async function loadArduinoProject(documentFsPath: string): Promise<ProjectConfig | undefined> {
     const yamlPath = await findSketchYaml(documentFsPath);
-    if (!yamlPath) return undefined;
+    if (!yamlPath) {return undefined;}
     try {
         const content = await fs.readFile(yamlPath, 'utf-8');
         const { envs, defaultEnvs } = parseSketchYaml(content);

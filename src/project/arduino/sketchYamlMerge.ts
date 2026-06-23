@@ -18,8 +18,8 @@ import { LibraryDependency } from '../../catalog/CatalogTypes';
  */
 function sketchLibIdentity(entry: string): string {
     let s = entry.trim();
-    if (s.startsWith('dependency:')) s = s.slice('dependency:'.length).trim();
-    if (s.startsWith('dir:')) return s;
+    if (s.startsWith('dependency:')) {s = s.slice('dependency:'.length).trim();}
+    if (s.startsWith('dir:')) {return s;}
     const parenIdx = s.indexOf('(');
     return (parenIdx !== -1 ? s.slice(0, parenIdx) : s).trim().toLowerCase();
 }
@@ -31,7 +31,7 @@ function sketchLibIdentity(entry: string): string {
  * registry lib, no version  → `Name`
  */
 function sketchLibFromDep(dep: LibraryDependency): string {
-    if (dep.url) return dep.name;
+    if (dep.url) {return dep.name;}
     return dep.minVersion ? `${dep.name} (${dep.minVersion})` : dep.name;
 }
 
@@ -52,16 +52,16 @@ function findLibrariesRange(
     for (let i = 0; i < lines.length; i++) {
         if (/^profiles:\s*$/.test(lines[i])) { profilesIdx = i; break; }
     }
-    if (profilesIdx === -1) return undefined;
+    if (profilesIdx === -1) {return undefined;}
 
     // Find the target profile (indented under profiles:)
     const profileRe = new RegExp(`^\\s{2}${escapeRegex(profileName)}:\\s*$`);
     let profileStart = -1;
     for (let i = profilesIdx + 1; i < lines.length; i++) {
         if (profileRe.test(lines[i])) { profileStart = i; break; }
-        if (/^\S/.test(lines[i])) break;
+        if (/^\S/.test(lines[i])) {break;}
     }
-    if (profileStart === -1) return undefined;
+    if (profileStart === -1) {return undefined;}
 
     // Find `libraries:` within this profile
     let libKeyIdx = -1;
@@ -69,8 +69,8 @@ function findLibrariesRange(
         const trimmed = lines[i].trimStart();
         // Hit next profile or top-level key
         if (/^\S/.test(lines[i]) || (/^\s{2}\S/.test(lines[i]) && !lines[i].trim().startsWith('-') && !lines[i].trim().startsWith('libraries'))) {
-            if (/^\s{2}\S/.test(lines[i]) && !lines[i].trim().startsWith('-')) break;
-            if (/^\S/.test(lines[i])) break;
+            if (/^\s{2}\S/.test(lines[i]) && !lines[i].trim().startsWith('-')) {break;}
+            if (/^\S/.test(lines[i])) {break;}
         }
         if (/^\s+libraries:\s*$/.test(lines[i])) { libKeyIdx = i; break; }
     }
@@ -109,7 +109,7 @@ export function mergeSketchLibraries(
     profileName: string,
     libraries: LibraryDependency[]
 ): { content: string; changed: boolean } {
-    if (libraries.length === 0) return { content, changed: false };
+    if (libraries.length === 0) {return { content, changed: false };}
 
     // No real profile exists (the active env is the in-memory env synthesized
     // from `default_fqbn` — see parseSketchYaml). In that case the project is in
@@ -128,7 +128,7 @@ export function mergeSketchLibraries(
     const lines = content.split(/\r?\n/);
 
     const range = findLibrariesRange(lines, profileName);
-    if (!range) return { content, changed: false };
+    if (!range) {return { content, changed: false };}
 
     // Collect existing library identities
     const existing: string[] = [];
@@ -144,7 +144,7 @@ export function mergeSketchLibraries(
     const seen = new Set(existing.map(sketchLibIdentity));
     const converted = libraries.map(sketchLibFromDep);
     const missing = converted.filter(lib => !seen.has(sketchLibIdentity(lib)));
-    if (missing.length === 0) return { content, changed: false };
+    if (missing.length === 0) {return { content, changed: false };}
 
     const indent = range.libKeyIdx !== -1 ? indentOf(lines[range.libKeyIdx]) + 2 : 6;
     const prefix = ' '.repeat(indent) + '- ';
@@ -173,8 +173,8 @@ export function mergeSketchLibraries(
 
 function findProfileEndForInsertion(lines: string[], profileStart: number): number {
     for (let i = profileStart + 1; i < lines.length; i++) {
-        if (/^\S/.test(lines[i])) return i;
-        if (/^\s{2}\S/.test(lines[i]) && !lines[i].trim().startsWith('-')) return i;
+        if (/^\S/.test(lines[i])) {return i;}
+        if (/^\s{2}\S/.test(lines[i]) && !lines[i].trim().startsWith('-')) {return i;}
     }
     return lines.length;
 }

@@ -11,12 +11,12 @@ export const platformioBackend: ProjectBackend = {
     load: loadPlatformioProject,
     async sync(ctx) {
         const libDeps = ctx.requirements.library.map(composePioLibDep);
-        if (libDeps.length === 0) return;
+        if (libDeps.length === 0) {return;}
         const path = ctx.project.configPath;
         // Read fresh immediately before the synchronous merge+write below.
         const content = await ctx.readFile(path);
-        if (content === undefined) return;
+        if (content === undefined) {return;}
         const { content: merged, changed } = mergeEnvLists(content, ctx.activeEnv.name, { libDeps });
-        if (changed) await ctx.writeFile(path, merged);
+        if (changed) {await ctx.writeFile(path, merged);}
     },
 };

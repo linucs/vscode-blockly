@@ -10,6 +10,7 @@
   "command.refreshCatalogs": "Blocks Editor: 重新整理遠端目錄",
   "command.enableClaudeCode": "Blocks Editor: 設定 AI 助理（Copilot 與 Claude Code）",
   "editor.displayName": "Blocks Editor (視覺化程式設計)",
+  "editor.catalog.displayName": "積木目錄編輯器",
   "viewContainer.catalogBrowser.title": "社群目錄",
   "view.catalogRegistry.name": "社群目錄",
   "command.refreshRegistry": "Blocks Editor: 重新整理社群目錄",

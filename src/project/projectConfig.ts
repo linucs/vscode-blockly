@@ -41,11 +41,11 @@ export interface BoardContext {
 export function resolveActiveEnv(project: ProjectConfig, requested?: string): ProjectEnv | undefined {
     if (requested !== undefined) {
         const found = project.envs.find(e => e.name === requested);
-        if (found) return found;
+        if (found) {return found;}
     }
     for (const name of project.defaultEnvs) {
         const found = project.envs.find(e => e.name === name);
-        if (found) return found;
+        if (found) {return found;}
     }
     return project.envs[0];
 }

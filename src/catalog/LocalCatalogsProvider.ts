@@ -61,7 +61,7 @@ export class LocalCatalogsProvider implements vscode.TreeDataProvider<LocalCatal
             const vendors = new Map<string, LocalCatalog[]>();
             for (const catalog of catalogs) {
                 const vendor = catalog.vendor ?? '_ungrouped';
-                if (!vendors.has(vendor)) vendors.set(vendor, []);
+                if (!vendors.has(vendor)) {vendors.set(vendor, []);}
                 vendors.get(vendor)!.push(catalog);
             }
             return Array.from(vendors.entries())
@@ -83,7 +83,7 @@ export class LocalCatalogsProvider implements vscode.TreeDataProvider<LocalCatal
      * to the raw-text editor via {@link canEditInGuidedUi}.
      */
     async edit(item: LocalCatalogItem): Promise<void> {
-        if (item?.kind !== 'file') return;
+        if (item?.kind !== 'file') {return;}
         const fsPath = item.catalog.fsPath;
 
         let text: string;
@@ -111,7 +111,7 @@ export class LocalCatalogsProvider implements vscode.TreeDataProvider<LocalCatal
      * context menus already use) — we only adapt the tree item into a URI.
      */
     async contribute(item: LocalCatalogItem): Promise<void> {
-        if (item?.kind !== 'file') return;
+        if (item?.kind !== 'file') {return;}
         await vscode.commands.executeCommand(
             'blocks-editor.contributeCatalog',
             vscode.Uri.file(item.catalog.fsPath)
@@ -120,7 +120,7 @@ export class LocalCatalogsProvider implements vscode.TreeDataProvider<LocalCatal
 
     /** Delete a catalog file from disk, after explicit confirmation. */
     async delete(item: LocalCatalogItem): Promise<void> {
-        if (item?.kind !== 'file') return;
+        if (item?.kind !== 'file') {return;}
         const { catalog } = item;
         const name = catalog.id ?? catalog.fileName;
 
@@ -130,7 +130,7 @@ export class LocalCatalogsProvider implements vscode.TreeDataProvider<LocalCatal
             { modal: true },
             confirm
         );
-        if (choice !== confirm) return;
+        if (choice !== confirm) {return;}
 
         try {
             await fs.unlink(catalog.fsPath);

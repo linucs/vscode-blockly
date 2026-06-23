@@ -45,7 +45,7 @@ export function validateCatalogResult(input: string): CatalogValidationResult {
         issues.push({ severity: 'warning', kind: 'structural', path, message });
 
     for (const doc of docs) {
-        if (doc === null || doc === undefined) continue;
+        if (doc === null || doc === undefined) {continue;}
         docCount++;
 
         if (!validate(doc)) {
@@ -64,7 +64,7 @@ export function validateCatalogResult(input: string): CatalogValidationResult {
             error(`Catalog "${typeof entry.id === 'string' ? entry.id : ''}"`, 'description is an object but missing required "en" key');
         }
         const impls = entry.implementations as Array<Record<string, unknown>> | undefined;
-        if (!Array.isArray(impls)) continue;
+        if (!Array.isArray(impls)) {continue;}
 
         for (const impl of impls) {
             const deps = impl.dependencies as Array<Record<string, unknown>> | undefined;
@@ -83,16 +83,16 @@ export function validateCatalogResult(input: string): CatalogValidationResult {
             }
 
             const blocks = impl.blocks as Array<Record<string, unknown>> | undefined;
-            if (!Array.isArray(blocks)) continue;
+            if (!Array.isArray(blocks)) {continue;}
 
             for (const block of blocks) {
                 blockCount++;
                 const blockly = block.blockly as Record<string, unknown> | undefined;
-                if (!blockly) continue;
+                if (!blockly) {continue;}
 
                 const type = blockly.type as string | undefined;
                 if (type) {
-                    if (allTypes.has(type)) error('', `Duplicate block type: "${type}"`);
+                    if (allTypes.has(type)) {error('', `Duplicate block type: "${type}"`);}
                     allTypes.add(type);
                 }
 
@@ -160,7 +160,7 @@ function checkI18nFields(
 ) {
     const scope = `Block "${type}"`;
     for (const key of Object.keys(blockly)) {
-        if (!MSG_FIELD_RE.test(key) && !I18N_FIELDS.has(key)) continue;
+        if (!MSG_FIELD_RE.test(key) && !I18N_FIELDS.has(key)) {continue;}
         const val = blockly[key];
         if (val && typeof val === 'object' && !Array.isArray(val)) {
             const obj = val as Record<string, unknown>;
@@ -171,7 +171,7 @@ function checkI18nFields(
             const enMsg = typeof obj['en'] === 'string' ? obj['en'] : '';
             const enPlaceholders = (enMsg.match(/%\d+/g) ?? []).sort();
             for (const [lang, text] of Object.entries(obj)) {
-                if (lang === 'en' || typeof text !== 'string') continue;
+                if (lang === 'en' || typeof text !== 'string') {continue;}
                 const langPlaceholders = (text.match(/%\d+/g) ?? []).sort();
                 if (JSON.stringify(enPlaceholders) !== JSON.stringify(langPlaceholders)) {
                     error(scope, `i18n "${key}" locale "${lang}" has different placeholders than "en" (en: ${enPlaceholders.join(',')} vs ${lang}: ${langPlaceholders.join(',')})`);
@@ -187,16 +187,16 @@ function checkPlaceholders(
     type: string | undefined,
     error: ReportFn
 ) {
-    if (!codegen) return;
+    if (!codegen) {return;}
 
     const definedNames = new Set<string>();
     // Indices can be sparse (e.g. message0 with no args0, then args1/args2 on a
     // hat block) — scan all of them, don't stop at the first gap.
     for (let i = 0; i < 10; i++) {
         const args = blockly[`args${i}`] as Array<Record<string, unknown>> | undefined;
-        if (!Array.isArray(args)) continue;
+        if (!Array.isArray(args)) {continue;}
         for (const arg of args) {
-            if (arg.name) definedNames.add(arg.name as string);
+            if (arg.name) {definedNames.add(arg.name as string);}
         }
     }
 
@@ -217,14 +217,14 @@ function checkInputDefaults(
     error: ReportFn
 ) {
     const defaults = codegen?.inputDefaults as Record<string, unknown> | undefined;
-    if (!defaults) return;
+    if (!defaults) {return;}
 
     const inputValueNames = new Set<string>();
     for (let i = 0; i < 10; i++) {
         const args = blockly[`args${i}`] as Array<Record<string, unknown>> | undefined;
-        if (!Array.isArray(args)) continue;
+        if (!Array.isArray(args)) {continue;}
         for (const arg of args) {
-            if (arg.type === 'input_value' && arg.name) inputValueNames.add(arg.name as string);
+            if (arg.type === 'input_value' && arg.name) {inputValueNames.add(arg.name as string);}
         }
     }
 

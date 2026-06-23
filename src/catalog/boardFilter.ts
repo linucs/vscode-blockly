@@ -17,7 +17,7 @@ export function composeRuntime(framework: string, language: string): string {
  *     Absent `targets` means universal.
  */
 export function isImplCompatible(impl: Implementation, ctx: BoardContext, runtime: string): boolean {
-    if (impl.runtime.trim().toLowerCase() !== runtime) return false;
+    if (impl.runtime.trim().toLowerCase() !== runtime) {return false;}
 
     if (impl.targets && impl.targets.length > 0) {
         const candidates = [ctx.platform, ctx.board].filter((v): v is string => !!v);
@@ -26,11 +26,11 @@ export function isImplCompatible(impl: Implementation, ctx: BoardContext, runtim
         // ("arduino:avr", "arduino:avr:uno") names.
         if (ctx.fqbn) {
             const parts = ctx.fqbn.split(':');
-            if (parts.length >= 2) candidates.push(parts.slice(0, 2).join(':'));
+            if (parts.length >= 2) {candidates.push(parts.slice(0, 2).join(':'));}
             candidates.push(ctx.fqbn);
         }
         const wanted = new Set(candidates.map(v => v.toLowerCase()));
-        if (!impl.targets.some(t => wanted.has(t.trim().toLowerCase()))) return false;
+        if (!impl.targets.some(t => wanted.has(t.trim().toLowerCase()))) {return false;}
     }
 
     return true;
@@ -50,7 +50,7 @@ export function filterEntriesForRuntime(
     const result: CatalogEntry[] = [];
     for (const entry of entries) {
         const compatible = entry.implementations.filter(impl => isImplCompatible(impl, ctx, runtime));
-        if (compatible.length === 0) continue;
+        if (compatible.length === 0) {continue;}
         result.push({ ...entry, implementations: compatible });
     }
     return result;

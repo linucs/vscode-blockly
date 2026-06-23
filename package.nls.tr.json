@@ -10,6 +10,7 @@
   "command.refreshCatalogs": "Blok Editörü: Uzak Katalogları Yenile",
   "command.enableClaudeCode": "Blok Editörü: Yapay zekâ asistanlarını ayarla (Copilot ve Claude Code)",
   "editor.displayName": "Blok Editörü (Görsel Programlama)",
+  "editor.catalog.displayName": "Blok Kataloğu Editörü",
   "viewContainer.catalogBrowser.title": "Topluluk Kataloğu",
   "view.catalogRegistry.name": "Topluluk Kataloğu",
   "command.refreshRegistry": "Blok Editörü: Topluluk Kataloğunu Yenile",

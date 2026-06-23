@@ -13,9 +13,9 @@ export function summarizeBuiltinBlocks(entries: CatalogEntry[]): string {
         for (const impl of entry.implementations) {
             for (const block of impl.blocks) {
                 const type = block.blockly?.type as string | undefined;
-                if (!type) continue;
+                if (!type) {continue;}
                 const cat = entry.category;
-                if (!byCategory.has(cat)) byCategory.set(cat, []);
+                if (!byCategory.has(cat)) {byCategory.set(cat, []);}
                 byCategory.get(cat)!.push(type);
             }
         }

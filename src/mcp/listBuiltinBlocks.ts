@@ -8,7 +8,7 @@ async function collectEntries(dir: string, out: CatalogEntry[]): Promise<void> {
     let files: string[];
     try {
         const stat = await fs.stat(dir);
-        if (!stat.isDirectory()) return;
+        if (!stat.isDirectory()) {return;}
         files = await fs.readdir(dir);
     } catch {
         return; // ENOENT or not accessible — skip silently
@@ -20,12 +20,12 @@ async function collectEntries(dir: string, out: CatalogEntry[]): Promise<void> {
             try {
                 const text = await fs.readFile(full, 'utf-8');
                 for (const doc of yaml.loadAll(text)) {
-                    if (doc && typeof doc === 'object') out.push(doc as CatalogEntry);
+                    if (doc && typeof doc === 'object') {out.push(doc as CatalogEntry);}
                 }
             } catch { /* skip unparseable file */ }
         } else {
             try {
-                if ((await fs.stat(full)).isDirectory()) await collectEntries(full, out);
+                if ((await fs.stat(full)).isDirectory()) {await collectEntries(full, out);}
             } catch { /* skip */ }
         }
     }

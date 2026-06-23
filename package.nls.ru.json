@@ -10,6 +10,7 @@
   "command.refreshCatalogs": "Blocks Editor: Обновить удалённые каталоги",
   "command.enableClaudeCode": "Blocks Editor: Настроить ИИ-ассистентов (Copilot и Claude Code)",
   "editor.displayName": "Blocks Editor (Визуальное программирование)",
+  "editor.catalog.displayName": "Редактор каталога блоков",
   "viewContainer.catalogBrowser.title": "Каталог сообщества",
   "view.catalogRegistry.name": "Каталог сообщества",
   "command.refreshRegistry": "Blocks Editor: Обновить каталог сообщества",

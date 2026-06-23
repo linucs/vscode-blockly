@@ -29,7 +29,7 @@ export const appLabBackend: ProjectBackend = {
             const reqPath = requirementsTxtPathFor(appYamlPath);
             const content = (await ctx.readFile(reqPath)) ?? '';
             const { content: merged, changed } = mergeRequirementsTxt(content, pip);
-            if (changed) await ctx.writeFile(reqPath, merged);
+            if (changed) {await ctx.writeFile(reqPath, merged);}
         }
 
         // brick → app.yaml bricks:.
@@ -37,7 +37,7 @@ export const appLabBackend: ProjectBackend = {
             const content = await ctx.readFile(appYamlPath);
             if (content !== undefined) {
                 const { content: merged, changed } = mergeAppYamlBricks(content, brick);
-                if (changed) await ctx.writeFile(appYamlPath, merged);
+                if (changed) {await ctx.writeFile(appYamlPath, merged);}
             }
         }
 
@@ -48,7 +48,7 @@ export const appLabBackend: ProjectBackend = {
             if (content !== undefined) {
                 const { content: merged, changed } =
                     mergeSketchLibraries(content, ctx.activeEnv.name, library);
-                if (changed) await ctx.writeFile(sketchPath, merged);
+                if (changed) {await ctx.writeFile(sketchPath, merged);}
             }
         }
     },

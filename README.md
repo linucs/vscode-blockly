@@ -103,17 +103,38 @@ You can leave everything at its defaults. If you want to tweak things, open VS C
 
 ## Good to know
 
-- Right now Blocks Editor supports the **Arduino** framework with **C++** (PlatformIO / Arduino CLI) and **Python** (Arduino App Lab). Other frameworks (ESP-IDF, STM32Cube, …) aren't supported yet.
+- Right now Blocks Editor supports the **Arduino** framework with **C++** (PlatformIO / Arduino CLI) and **Python** (Arduino App Lab). Other frameworks (ESP-IDF, STM32Cube, Micropython, …) aren't supported yet.
 - The PlatformIO project reader doesn't yet understand advanced `platformio.ini` features (`extends`, `${...}` variables, file includes).
 - Don't hand-edit the generated source file — your block layout is the real source, and edits to the code will be overwritten.
 
 ---
 
-## For developers: creating your own blocks
+## For block authors: creating your own blocks
 
 > This section is for people who want to **add new blocks** (for a specific sensor, board, or library). If you just want to *use* the editor, you can stop reading here.
 
-Blocks are defined in **YAML catalog files**, validated against a JSON Schema. For the full technical reference (every key, every section, every design decision), see [BLOCK_AUTHORING.md](BLOCK_AUTHORING.md). A minimal catalog looks like this:
+Blocks are defined in **catalog files** — YAML stored in your project's `.blocks/` folder and validated against a JSON Schema. There are **three ways** to create one, from easiest to most hands-on:
+
+1. **The visual Catalog Editor** — snap blocks together to design a catalog, no YAML to learn. *(New in 0.4.0 — start here.)*
+2. **The Block Author AI assistant** — describe a library in plain language and let Copilot or Claude Code write the catalog for you.
+3. **By hand** — write the YAML yourself, using the reference below.
+
+All three produce the same kind of `.blocks/*.yaml` catalog, and all three can be [shared with the community](#-share-your-blocks-with-the-community) the same way.
+
+### Author blocks visually (Catalog Editor)
+
+The fastest way to make a block is to draw it. The **Catalog Editor** is a visual editor — just like the Blocks Editor itself, but for *building* blocks instead of using them.
+
+**Open it:**
+
+- **New catalog:** create a file under a `.blocks/` folder in your project (e.g. `.blocks/my-sensor.yaml`) and open it — catalog files open in the Catalog Editor by default.
+- **Existing catalog:** in the **Community Catalog** activity-bar view, expand **Installed Blocks**, right-click a catalog, and choose **"Edit catalog"**.
+
+**Build the catalog** by dragging meta-blocks from the toolbox and snapping them together: the catalog holds *entries*, each entry holds an *implementation* (its runtime, dependencies, and shared code sections), and each implementation holds the *blocks* you're defining — their label, inputs, fields, and the code each one generates. The connection rules only let pieces fit where the schema allows, so you **can't build an invalid catalog by accident**. Mistakes and missing pieces are flagged inline and in a summary panel as you go.
+
+Your work is saved straight back to the YAML file (the real source of truth) — with normal **save**, **undo**, and dirty-dot behavior. If a catalog uses something the visual surface can't represent yet (a custom imperative `generator:`, a Blockly mutator, or several documents in one file), the editor steps aside and opens the file as plain text instead.
+
+For the full technical reference behind what the editor builds (every key, every section, every design decision), see [BLOCK_AUTHORING.md](BLOCK_AUTHORING.md). A minimal catalog — the YAML the editor reads and writes — looks like this:
 
 ```yaml
 id: my-sensor

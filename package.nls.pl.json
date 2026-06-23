@@ -10,6 +10,7 @@
   "command.refreshCatalogs": "Edytor Bloków: Odśwież zdalne katalogi",
   "command.enableClaudeCode": "Edytor Bloków: Skonfiguruj asystentów AI (Copilot i Claude Code)",
   "editor.displayName": "Edytor Bloków (Programowanie wizualne)",
+  "editor.catalog.displayName": "Edytor Katalogu Bloków",
   "viewContainer.catalogBrowser.title": "Katalog Społeczności",
   "view.catalogRegistry.name": "Katalog Społeczności",
   "command.refreshRegistry": "Edytor Bloków: Odśwież katalog społeczności",

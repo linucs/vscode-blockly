@@ -55,7 +55,7 @@ export class CatalogManager {
 
         for (const rawPath of customPaths) {
             const customPath = rawPath.trim();
-            if (!customPath || isUrl(customPath)) continue;
+            if (!customPath || isUrl(customPath)) {continue;}
 
             let resolvedPath = customPath;
             if (!path.isAbsolute(customPath) && vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0) {
@@ -99,7 +99,7 @@ export class CatalogManager {
         const config = vscode.workspace.getConfiguration('blocks-editor');
         const paths: string[] = config.get('catalogPaths') || [];
         const urls = paths.map(p => p.trim()).filter(isUrl);
-        if (urls.length === 0) return;
+        if (urls.length === 0) {return;}
 
         for (const url of urls) {
             try {
@@ -134,7 +134,7 @@ export class CatalogManager {
     private async collectEntriesFromDirectory(dirPath: string, out: CatalogEntry[]): Promise<void> {
         try {
             const stat = await fs.stat(dirPath);
-            if (!stat.isDirectory()) return;
+            if (!stat.isDirectory()) {return;}
 
             const files = await fs.readdir(dirPath);
             for (const file of files) {
@@ -161,7 +161,7 @@ export class CatalogManager {
             const documents = yaml.loadAll(content);
 
             for (const doc of documents) {
-                if (!doc || typeof doc !== 'object') continue;
+                if (!doc || typeof doc !== 'object') {continue;}
 
                 if (this.validate(doc)) {
                     out.push(doc as CatalogEntry);

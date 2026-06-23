@@ -27,7 +27,7 @@ export async function contributeCatalog(uri?: vscode.Uri): Promise<void> {
 
     // 1. Pick the catalog.
     const catalog = await pickCatalog(uri);
-    if (!catalog) return;
+    if (!catalog) {return;}
 
     // 2. Validate locally — only valid catalogs are submittable.
     let content: string;
@@ -55,7 +55,7 @@ export async function contributeCatalog(uri?: vscode.Uri): Promise<void> {
 
     // 4. Resolve the destination path, prompting for vendor when not inferable.
     const repoPath = await resolveDestination(catalog, index);
-    if (!repoPath) return;
+    if (!repoPath) {return;}
     const isUpdate = !!index?.entries.some(e => e.path === repoPath);
 
     if (isUpdate) {
@@ -64,7 +64,7 @@ export async function contributeCatalog(uri?: vscode.Uri): Promise<void> {
             { modal: true },
             vscode.l10n.t('Continue')
         );
-        if (!proceed) return;
+        if (!proceed) {return;}
     }
 
     // 5. Author + license consent.
@@ -74,14 +74,14 @@ export async function contributeCatalog(uri?: vscode.Uri): Promise<void> {
         value: await defaultAuthor(),
         ignoreFocusOut: true,
     });
-    if (author === undefined) return;
+    if (author === undefined) {return;}
 
     const consent = await vscode.window.showInformationMessage(
         vscode.l10n.t('By contributing, you agree to license this catalog under the community catalog\'s LICENSE.'),
         { modal: true, detail: vscode.l10n.t('Destination: {0}', repoPath) },
         vscode.l10n.t('Contribute')
     );
-    if (!consent) return;
+    if (!consent) {return;}
 
     // 6. Choose submission path (default to PR when already signed in to GitHub).
     const hasSession = !!(await vscode.authentication.getSession('github', ['public_repo'], { createIfNone: false }));
@@ -91,12 +91,12 @@ export async function contributeCatalog(uri?: vscode.Uri): Promise<void> {
         { label: path_PR, description: vscode.l10n.t('Uses your GitHub account — no manual fork or git needed') },
         { label: path_Issue, description: vscode.l10n.t('No fork or git — opens a pre-filled form in your browser') },
     ];
-    if (!hasSession) picks.reverse(); // surface the lower-friction option first when not signed in
+    if (!hasSession) {picks.reverse();} // surface the lower-friction option first when not signed in
     const chosen = await vscode.window.showQuickPick(picks, {
         title: vscode.l10n.t('Contribute Catalog'),
         placeHolder: vscode.l10n.t('How would you like to submit "{0}"?', id),
     });
-    if (!chosen) return;
+    if (!chosen) {return;}
 
     const ctx: SubmitContext = { upstream, repoPath, content, id, author: author.trim(), isUpdate };
     if (chosen.label === path_PR) {
@@ -137,7 +137,7 @@ async function runPullRequest(ctx: SubmitContext): Promise<void> {
             vscode.l10n.t('Couldn\'t open the pull request: {0}', msg),
             fallback
         );
-        if (action === fallback) await runIssue(ctx);
+        if (action === fallback) {await runIssue(ctx);}
     }
 }
 
@@ -166,7 +166,7 @@ async function pickCatalog(uri?: vscode.Uri): Promise<LocalCatalog | undefined> 
     if (uri) {
         const all = await gatherLocalCatalogs();
         const match = all.find(c => c.fsPath === uri.fsPath);
-        if (match) return match;
+        if (match) {return match;}
         // Right-clicked a YAML outside the scanned roots — still allow it.
         return { fsPath: uri.fsPath, fileName: path.basename(uri.fsPath) };
     }
@@ -194,7 +194,7 @@ async function resolveDestination(catalog: LocalCatalog, index: RegistryIndex | 
     let vendor = catalog.vendor;
     if (!vendor) {
         vendor = await promptVendor(index);
-        if (!vendor) return undefined;
+        if (!vendor) {return undefined;}
     }
 
     const initial = `catalogs/${vendor}/${catalog.fileName}`;
@@ -214,7 +214,7 @@ async function promptVendor(index: RegistryIndex | undefined): Promise<string | 
     const vendors = new Set<string>();
     for (const e of index?.entries ?? []) {
         const parts = e.path.replace(/^catalogs\//, '').split('/');
-        if (parts.length > 1) vendors.add(parts[0]);
+        if (parts.length > 1) {vendors.add(parts[0]);}
     }
     const NEW = vscode.l10n.t('New vendor…');
     const items = [...[...vendors].sort().map(v => ({ label: v })), { label: NEW }];
@@ -222,8 +222,8 @@ async function promptVendor(index: RegistryIndex | undefined): Promise<string | 
         title: vscode.l10n.t('Contribute Catalog'),
         placeHolder: vscode.l10n.t('Choose a vendor folder'),
     });
-    if (!picked) return undefined;
-    if (picked.label !== NEW) return picked.label;
+    if (!picked) {return undefined;}
+    if (picked.label !== NEW) {return picked.label;}
 
     return await vscode.window.showInputBox({
         title: vscode.l10n.t('Contribute Catalog'),
@@ -249,7 +249,7 @@ async function loadIndex(upstream: RepoSlug): Promise<RegistryIndex | undefined>
 async function defaultAuthor(): Promise<string> {
     try {
         const session = await vscode.authentication.getSession('github', ['public_repo'], { createIfNone: false });
-        if (session?.account.label) return session.account.label;
+        if (session?.account.label) {return session.account.label;}
     } catch { /* ignore */ }
     return '';
 }

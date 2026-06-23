@@ -39,15 +39,15 @@ export function collectRequirements(
     const seen = { library: new Set<string>(), pip: new Set<string>(), brick: new Set<string>() };
 
     const addUnique = <T>(bucket: T[], set: Set<string>, key: string, dep: T): void => {
-        if (set.has(key)) return;
+        if (set.has(key)) {return;}
         set.add(key);
         bucket.push(dep);
     };
 
     for (const entry of entries) {
         const impl = entry.implementations.find(i => i.runtime.trim().toLowerCase() === runtime);
-        if (!impl) continue;
-        if (!impl.blocks.some(b => used.has(b.blockly?.type))) continue;
+        if (!impl) {continue;}
+        if (!impl.blocks.some(b => used.has(b.blockly?.type))) {continue;}
 
         for (const dep of impl.dependencies ?? []) {
             switch (dep.type) {

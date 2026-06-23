@@ -26,7 +26,7 @@ export async function readCompanionWorkspace(companion: vscode.Uri): Promise<unk
     } catch {
         return undefined;
     }
-    if (!text.trim()) return undefined;
+    if (!text.trim()) {return undefined;}
     try {
         const data = JSON.parse(text);
         if (data && typeof data === 'object' && 'workspace' in data) {

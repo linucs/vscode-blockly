@@ -111,7 +111,7 @@ async function getFileSha(
         );
         return file.sha;
     } catch (err) {
-        if (httpStatus(err) === 404) return undefined;
+        if (httpStatus(err) === 404) {return undefined;}
         throw err;
     }
 }
@@ -149,7 +149,7 @@ async function gh<T = unknown>(
         throw new GitHubApiError(`GitHub API ${res.status} on ${method} ${pathname}${detail}`, res.status);
     }
 
-    if (res.status === 204) return undefined as T;
+    if (res.status === 204) {return undefined as T;}
     return await res.json() as T;
 }
 

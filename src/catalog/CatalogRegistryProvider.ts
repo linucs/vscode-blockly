@@ -23,8 +23,8 @@ interface EntryItem {
 }
 
 function resolveLocaleString(value: string | Record<string, string> | undefined): string {
-    if (!value) return '';
-    if (typeof value === 'string') return value;
+    if (!value) {return '';}
+    if (typeof value === 'string') {return value;}
     const lang = vscode.env.language.split('-')[0];
     return value[lang] ?? value['en'] ?? Object.values(value)[0] ?? '';
 }
@@ -79,7 +79,7 @@ export class CatalogRegistryProvider implements vscode.TreeDataProvider<CatalogR
             for (const entry of this.index.entries) {
                 const parts = entry.path.replace(/^catalogs\//, '').split('/');
                 const vendor = parts.length > 1 ? parts[0] : '_ungrouped';
-                if (!vendors.has(vendor)) vendors.set(vendor, []);
+                if (!vendors.has(vendor)) {vendors.set(vendor, []);}
                 vendors.get(vendor)!.push(entry);
             }
             return Array.from(vendors.entries())
@@ -110,7 +110,7 @@ export class CatalogRegistryProvider implements vscode.TreeDataProvider<CatalogR
 
     async search(): Promise<void> {
         await this.ensureIndexLoaded();
-        if (!this.index) return;
+        if (!this.index) {return;}
 
         const items = this.index.entries.map(entry => {
             const vendor = entry.path.replace(/^catalogs\//, '').split('/')[0];
@@ -134,7 +134,7 @@ export class CatalogRegistryProvider implements vscode.TreeDataProvider<CatalogR
     }
 
     async download(item: CatalogRegistryItem): Promise<void> {
-        if (item.kind !== 'entry') return;
+        if (item.kind !== 'entry') {return;}
 
         const root = await resolveActiveWorkspaceRoot(
             vscode.l10n.t('Select the folder to download the catalog into')
@@ -175,7 +175,7 @@ export class CatalogRegistryProvider implements vscode.TreeDataProvider<CatalogR
 
     private resolveBlocksDir(): string | undefined {
         const folders = vscode.workspace.workspaceFolders;
-        if (!folders || folders.length === 0) return undefined;
+        if (!folders || folders.length === 0) {return undefined;}
         // Match download(): prefer the active document's folder so the tree's
         // "installed" markers reflect the project you're working in. Passive
         // scan — no prompt, fall back to the first folder.
@@ -187,7 +187,7 @@ export class CatalogRegistryProvider implements vscode.TreeDataProvider<CatalogR
     private async scanInstalledPaths(): Promise<void> {
         this.installedPaths.clear();
         const blocksDir = this.resolveBlocksDir();
-        if (!blocksDir) return;
+        if (!blocksDir) {return;}
         await this.collectYamlPaths(blocksDir, blocksDir);
     }
 
@@ -215,17 +215,17 @@ export class CatalogRegistryProvider implements vscode.TreeDataProvider<CatalogR
     }
 
     private ensureIndex(): void {
-        if (this.fetching || this.isFresh()) return;
+        if (this.fetching || this.isFresh()) {return;}
         void this.fetchIndex();
     }
 
     private async ensureIndexLoaded(): Promise<void> {
-        if (this.isFresh()) return;
+        if (this.isFresh()) {return;}
         await this.fetchIndex();
     }
 
     private async fetchIndex(): Promise<void> {
-        if (this.fetching) return;
+        if (this.fetching) {return;}
         this.fetching = true;
 
         try {
@@ -266,7 +266,7 @@ export class CatalogRegistryProvider implements vscode.TreeDataProvider<CatalogR
      */
     private resolveIndexSource(): string {
         const envOverride = process.env['BLOCKS_CATALOG_INDEX'];
-        if (envOverride) return envOverride;
+        if (envOverride) {return envOverride;}
         const config = vscode.workspace.getConfiguration('blocks-editor');
         return config.get('catalogRegistryUrl',
             'https://raw.githubusercontent.com/linucs/blocks-community-catalog/main/index.json');
@@ -274,9 +274,9 @@ export class CatalogRegistryProvider implements vscode.TreeDataProvider<CatalogR
 
     private resolveLocalRoot(): string | undefined {
         const explicit = process.env['BLOCKS_CATALOG_ROOT'];
-        if (explicit) return explicit;
+        if (explicit) {return explicit;}
         const indexSource = process.env['BLOCKS_CATALOG_INDEX'];
-        if (indexSource && !/^https?:\/\//i.test(indexSource)) return path.dirname(indexSource);
+        if (indexSource && !/^https?:\/\//i.test(indexSource)) {return path.dirname(indexSource);}
         return undefined;
     }
 

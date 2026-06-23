@@ -72,7 +72,7 @@ suite('App Lab project detection', () => {
     });
 
     suiteTeardown(async () => {
-        if (root) await fs.rm(root, { recursive: true, force: true });
+        if (root) {await fs.rm(root, { recursive: true, force: true });}
     });
 
     test('findAppYaml walks up from python/main.py', async () => {

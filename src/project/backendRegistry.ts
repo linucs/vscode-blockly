@@ -37,14 +37,14 @@ export async function selectBackend(documentFsPath: string): Promise<ProjectBack
     );
     const present = found.filter((f): f is { backend: ProjectBackend; path: string } => Boolean(f.path));
 
-    if (present.length === 0) return undefined;
-    if (present.length === 1) return present[0].backend;
+    if (present.length === 0) {return undefined;}
+    if (present.length === 1) {return present[0].backend;}
 
     // Nearest config wins: keep only the deepest matches (most path segments).
     const depth = (p: string) => p.split(path.sep).length;
     const maxDepth = Math.max(...present.map(p => depth(p.path)));
     const deepest = present.filter(p => depth(p.path) === maxDepth);
-    if (deepest.length === 1) return deepest[0].backend;
+    if (deepest.length === 1) {return deepest[0].backend;}
 
     const choice = await vscode.window.showQuickPick(
         deepest.map(p => ({

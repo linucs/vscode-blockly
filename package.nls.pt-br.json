@@ -10,6 +10,7 @@
   "command.refreshCatalogs": "Blocks Editor: Atualizar catálogos remotos",
   "command.enableClaudeCode": "Blocks Editor: Configurar assistentes de IA (Copilot e Claude Code)",
   "editor.displayName": "Blocks Editor (Programação Visual)",
+  "editor.catalog.displayName": "Editor de Catálogo de Blocos",
   "viewContainer.catalogBrowser.title": "Catálogo da Comunidade",
   "view.catalogRegistry.name": "Catálogo da Comunidade",
   "command.refreshRegistry": "Blocks Editor: Atualizar catálogo da comunidade",

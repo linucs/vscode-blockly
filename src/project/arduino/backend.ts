@@ -10,15 +10,15 @@ export const arduinoBackend: ProjectBackend = {
     find: findSketchYaml,
     load: loadArduinoProject,
     async sync(ctx) {
-        if (ctx.requirements.library.length === 0) return;
+        if (ctx.requirements.library.length === 0) {return;}
         const path = ctx.project.configPath;
         // Read fresh immediately before the synchronous merge+write: the optional
         // vscode-arduino-cli daemon reformats this whole file on lib add/remove,
         // so starting from the current on-disk content minimizes lost updates.
         const content = await ctx.readFile(path);
-        if (content === undefined) return;
+        if (content === undefined) {return;}
         const { content: merged, changed } =
             mergeSketchLibraries(content, ctx.activeEnv.name, ctx.requirements.library);
-        if (changed) await ctx.writeFile(path, merged);
+        if (changed) {await ctx.writeFile(path, merged);}
     },
 };

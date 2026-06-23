@@ -34,7 +34,7 @@ export function requirementsTxtPathFor(appYamlPath: string): string {
 export async function findAppYaml(startFsPath: string): Promise<string | undefined> {
     let dir = startFsPath;
     try {
-        if ((await fs.stat(startFsPath)).isFile()) dir = path.dirname(startFsPath);
+        if ((await fs.stat(startFsPath)).isFile()) {dir = path.dirname(startFsPath);}
     } catch {
         dir = path.dirname(startFsPath);
     }
@@ -43,7 +43,7 @@ export async function findAppYaml(startFsPath: string): Promise<string | undefin
     while (dir && dir !== prev) {
         const candidate = path.join(dir, 'app.yaml');
         try {
-            if ((await fs.stat(candidate)).isFile()) return candidate;
+            if ((await fs.stat(candidate)).isFile()) {return candidate;}
         } catch { /* keep climbing */ }
         prev = dir;
         dir = path.dirname(dir);
@@ -61,7 +61,7 @@ export async function findAppYaml(startFsPath: string): Promise<string | undefin
  */
 export async function loadAppLabProject(documentFsPath: string): Promise<ProjectConfig | undefined> {
     const appYamlPath = await findAppYaml(documentFsPath);
-    if (!appYamlPath) return undefined;
+    if (!appYamlPath) {return undefined;}
 
     let envs: ProjectEnv[] = [];
     let defaultEnvs: string[] = [];

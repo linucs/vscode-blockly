@@ -43,7 +43,7 @@ export async function enableClaudeCodeIntegration(context: vscode.ExtensionConte
     try {
         const existing = await fs.readFile(mcpJsonPath, 'utf-8');
         config = JSON.parse(existing) as McpConfig;
-        if (typeof config !== 'object' || config === null) config = {};
+        if (typeof config !== 'object' || config === null) {config = {};}
     } catch {
         // ENOENT or invalid JSON — start fresh.
     }

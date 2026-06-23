@@ -32,7 +32,7 @@ async function readJsonBundle(extensionUri: vscode.Uri, relativePath: string): P
 /** Load the extension-host l10n bundle for the active locale (`'{}'` for English/none). */
 export async function loadL10nBundle(extensionUri: vscode.Uri): Promise<string> {
     const locale = vscode.env.language;
-    if (!locale || locale === 'en') return '{}';
+    if (!locale || locale === 'en') {return '{}';}
     return readJsonBundle(extensionUri, `l10n/bundle.l10n.${locale}.json`);
 }
 

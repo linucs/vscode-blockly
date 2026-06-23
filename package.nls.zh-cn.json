@@ -10,6 +10,7 @@
   "command.refreshCatalogs": "Blocks Editor: 刷新远程目录",
   "command.enableClaudeCode": "Blocks Editor: 设置 AI 助手（Copilot 和 Claude Code）",
   "editor.displayName": "Blocks Editor (可视化编程)",
+  "editor.catalog.displayName": "积木目录编辑器",
   "viewContainer.catalogBrowser.title": "社区目录",
   "view.catalogRegistry.name": "社区目录",
   "command.refreshRegistry": "Blocks Editor: 刷新社区目录",

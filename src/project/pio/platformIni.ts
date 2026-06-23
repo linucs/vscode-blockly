@@ -21,12 +21,12 @@ export function parsePlatformIni(content: string): { defaultEnvs: string[]; envs
     for (const rawLine of content.split(/\r?\n/)) {
         if (lastKey && current && /^\s+\S/.test(rawLine) && !rawLine.trimStart().startsWith('[')) {
             const cont = stripComment(rawLine).trim();
-            if (cont) current[lastKey] += '\n' + cont;
+            if (cont) {current[lastKey] += '\n' + cont;}
             continue;
         }
 
         const line = stripComment(rawLine).trim();
-        if (!line) continue;
+        if (!line) {continue;}
 
         const sectionMatch = /^\[(.+)\]$/.exec(line);
         if (sectionMatch) {
@@ -38,7 +38,7 @@ export function parsePlatformIni(content: string): { defaultEnvs: string[]; envs
         }
 
         const eq = line.indexOf('=');
-        if (eq === -1 || !current) continue;
+        if (eq === -1 || !current) {continue;}
         const key = line.slice(0, eq).trim();
         const value = line.slice(eq + 1).trim();
         current[key] = value;
@@ -50,7 +50,7 @@ export function parsePlatformIni(content: string): { defaultEnvs: string[]; envs
 
     const envs: ProjectEnv[] = [];
     for (const [name, opts] of sections) {
-        if (!name.startsWith('env:')) continue;
+        if (!name.startsWith('env:')) {continue;}
         const merged = { ...base, ...opts };
         envs.push({
             name: name.slice('env:'.length).trim(),
@@ -67,8 +67,8 @@ function stripComment(line: string): string {
     const semi = line.indexOf(';');
     const hash = line.indexOf('#');
     let cut = -1;
-    if (semi !== -1) cut = semi;
-    if (hash !== -1 && (cut === -1 || hash < cut)) cut = hash;
+    if (semi !== -1) {cut = semi;}
+    if (hash !== -1 && (cut === -1 || hash < cut)) {cut = hash;}
     return cut === -1 ? line : line.slice(0, cut);
 }
 
@@ -86,7 +86,7 @@ function splitList(value: string): string[] {
 export async function findPlatformIni(startFsPath: string): Promise<string | undefined> {
     let dir = startFsPath;
     try {
-        if ((await fs.stat(startFsPath)).isFile()) dir = path.dirname(startFsPath);
+        if ((await fs.stat(startFsPath)).isFile()) {dir = path.dirname(startFsPath);}
     } catch {
         dir = path.dirname(startFsPath);
     }
@@ -95,7 +95,7 @@ export async function findPlatformIni(startFsPath: string): Promise<string | und
     while (dir && dir !== prev) {
         const candidate = path.join(dir, 'platformio.ini');
         try {
-            if ((await fs.stat(candidate)).isFile()) return candidate;
+            if ((await fs.stat(candidate)).isFile()) {return candidate;}
         } catch { /* not here, keep climbing */ }
         prev = dir;
         dir = path.dirname(dir);
@@ -106,7 +106,7 @@ export async function findPlatformIni(startFsPath: string): Promise<string | und
 /** Locate and parse the platformio.ini governing the given document path. */
 export async function loadPlatformioProject(documentFsPath: string): Promise<ProjectConfig | undefined> {
     const iniPath = await findPlatformIni(documentFsPath);
-    if (!iniPath) return undefined;
+    if (!iniPath) {return undefined;}
     try {
         const content = await fs.readFile(iniPath, 'utf-8');
         const { defaultEnvs, envs } = parsePlatformIni(content);

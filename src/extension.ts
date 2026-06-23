@@ -120,8 +120,14 @@ async function showUpdateNotification(
         whatsNew
     );
     if (choice === whatsNew) {
-        const uri = vscode.Uri.joinPath(context.extensionUri, 'CHANGELOG.md');
-        void vscode.commands.executeCommand('markdown.showPreview', uri);
+        // Open the extension's native Changelog tab (rendered by VS Code from the
+        // bundled CHANGELOG.md) rather than previewing the file by path, which is
+        // unreliable in the installed layout.
+        void vscode.commands.executeCommand(
+            'extension.open',
+            context.extension.id,
+            'changelog'
+        );
     }
 }
 
@@ -151,7 +157,7 @@ function registerMcpServerProvider(context: vscode.ExtensionContext): void {
             onDidChangeMcpServerDefinitions: didChange.event,
             async provideMcpServerDefinitions() {
                 const root = await resolveActiveWorkspaceRoot();
-                if (!root) return [];
+                if (!root) {return [];}
                 return [
                     new vscode.McpStdioServerDefinition(
                         'blocks-editor',

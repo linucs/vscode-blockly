@@ -82,7 +82,7 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
 
         const sendCatalog = () => {
             const activeEnv = project ? resolveActiveEnv(project, selectedEnv) : undefined;
-            if (activeEnv) selectedEnv = activeEnv.name;
+            if (activeEnv) {selectedEnv = activeEnv.name;}
 
             const framework = activeEnv?.framework;
             const runtime = activeEnv && framework ? composeRuntime(framework, language) : undefined;
@@ -112,7 +112,7 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
                 const fb = vscode.workspace
                     .getConfiguration('blocks-editor', sourceUri)
                     .get<string>('fallbackFramework');
-                if (fb) project = synthesizeManualProject(sourceUri.fsPath, fb);
+                if (fb) {project = synthesizeManualProject(sourceUri.fsPath, fb);}
             }
             if (project) {
                 const projectBlocksDir = this.resolveBlocksDir(sourceUri);
@@ -177,12 +177,12 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
         };
 
         const configSubscription = vscode.workspace.onDidChangeConfiguration(e => {
-            if (e.affectsConfiguration('blocks-editor.generateOnChange')) sendMode();
-            if (e.affectsConfiguration('blocks-editor.showMinimap')) sendMinimap();
-            if (e.affectsConfiguration('blocks-editor.annotateGeneratedCode')) sendAnnotate();
+            if (e.affectsConfiguration('blocks-editor.generateOnChange')) {sendMode();}
+            if (e.affectsConfiguration('blocks-editor.showMinimap')) {sendMinimap();}
+            if (e.affectsConfiguration('blocks-editor.annotateGeneratedCode')) {sendAnnotate();}
             // Keep every editor on the same folder in sync when the manual
             // framework fallback changes (same echo pattern as the settings above).
-            if (e.affectsConfiguration('blocks-editor.fallbackFramework')) void reloadProject();
+            if (e.affectsConfiguration('blocks-editor.fallbackFramework')) {void reloadProject();}
         });
 
         const themeSubscription = vscode.window.onDidChangeActiveColorTheme(() => {
@@ -228,11 +228,11 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
                     // framework (the candidate list is derived webview-side from
                     // the supported runtimes) and persist it for this folder.
                     const frameworks: string[] = e.frameworks ?? [];
-                    if (!frameworks.length) return;
+                    if (!frameworks.length) {return;}
                     const picked = await vscode.window.showQuickPick(frameworks, {
                         placeHolder: vscode.l10n.t('Select the framework for this project'),
                     });
-                    if (!picked) return;
+                    if (!picked) {return;}
                     await vscode.workspace.getConfiguration('blocks-editor', sourceUri)
                         .update('fallbackFramework', picked, vscode.ConfigurationTarget.WorkspaceFolder);
                     await reloadProject();
@@ -273,7 +273,7 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
                 }
                 case 'show_docs': {
                     const groups: Array<{ title: string; links: Array<{ label: string; url: string }> }> = e.docs ?? [];
-                    if (!groups.length) return;
+                    if (!groups.length) {return;}
 
                     const items: (vscode.QuickPickItem & { url?: string })[] = [];
                     for (const group of groups) {
@@ -336,7 +336,7 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
         language: string
     ): Promise<void> {
         const activeEnv = project ? resolveActiveEnv(project, selectedEnv) : undefined;
-        if (!project || !activeEnv || !activeEnv.framework) return;
+        if (!project || !activeEnv || !activeEnv.framework) {return;}
 
         const runtime = composeRuntime(activeEnv.framework, language);
         const projectBlocksDir = this.resolveBlocksDir(vscode.Uri.file(project.configPath));
@@ -348,7 +348,7 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
         // The backend reads each file fresh immediately before merging and
         // writing it — see ProjectBackend.sync / the injected readFile below.
         const backend = getBackend(project.configType);
-        if (!backend) return;
+        if (!backend) {return;}
 
         await backend.sync({
             project,
@@ -369,7 +369,7 @@ export class BlocksEditorProvider implements vscode.CustomTextEditorProvider {
     }
 
     private writeSource(document: vscode.TextDocument, code: string) {
-        if (document.getText() === code) return Promise.resolve(true);
+        if (document.getText() === code) {return Promise.resolve(true);}
         const edit = new vscode.WorkspaceEdit();
         edit.replace(document.uri, new vscode.Range(0, 0, document.lineCount, 0), code);
         return vscode.workspace.applyEdit(edit);

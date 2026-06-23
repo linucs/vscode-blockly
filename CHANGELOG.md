@@ -4,6 +4,16 @@ All notable changes to the "Blocks Editor" extension will be documented in this 
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.4.0] - 2026-06-22
+
+### Added
+
+- **Guided Catalog Editor** — a visual editor for block catalogs. Opening any catalog file under a project's `.blocks/` folder (or choosing **"Edit catalog"** on a catalog in the **Community Catalog → Installed Blocks** view) now opens a Blockly surface where the whole catalog — entries, implementations, dependencies, every block, field, and code section — is built by snapping meta-blocks together. Connection rules enforce the catalog schema by construction, so the editor can't produce structurally invalid YAML; problems are surfaced inline and in a summary as you work. The YAML on disk stays the source of truth (imported on open, regenerated on save) with native dirty/save/undo. Catalogs using constructs the visual surface can't represent (a `generator:` block, a Blockly mutator, or multiple documents in one file) fall back automatically to the raw-text editor.
+
+### Changed
+
+- The README now documents authoring and contributing a block with the Guided Catalog Editor, alongside the existing AI-assistant and hand-written-YAML paths.
+
 ## [0.3.3] - 2026-06-16
 
 ### Added
@@ -128,6 +138,7 @@ First public preview.
 - **Workspace conveniences** — optional minimap, toolbox search, and customizable category colors.
 - **Block Author chat participant** (`@blocks`) — assists in creating new block catalogs for hardware libraries.
 
+[0.4.0]: https://github.com/linucs/vscode-blockly/releases/tag/v0.4.0
 [0.3.3]: https://github.com/linucs/vscode-blockly/releases/tag/v0.3.3
 [0.3.2]: https://github.com/linucs/vscode-blockly/releases/tag/v0.3.2
 [0.3.1]: https://github.com/linucs/vscode-blockly/releases/tag/v0.3.1

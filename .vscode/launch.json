@@ -21,10 +21,10 @@
 			// Loads BOTH this extension and the sibling vscode-arduino-cli from
 			// source into one Extension Development Host, so the optional toolchain
 			// integration (arduino-cli's editor/title compile/upload buttons over
-			// the Blocks Editor) can be exercised and debugged end-to-end.
+			// the Maker Block Studio) can be exercised and debugged end-to-end.
 			// Do NOT also have vscode-arduino-cli installed as a VSIX while using
 			// this (the same extension id loaded twice conflicts).
-			"name": "Run Extension + Arduino CLI",
+			"name": "Run Extension + Arduino Sketch Studio",
 			"type": "extensionHost",
 			"request": "launch",
 			"args": [

@@ -1,8 +1,8 @@
-# Blocks Editor — Release Notes
+# Maker Block Studio — Release Notes
 
 Build programs for Arduino by **dragging colorful blocks** — like Scratch, but it writes real C++ (or Python, for Arduino App Lab apps) for you. The blocks are the source of truth; the generated `.cpp`/`.ino`/`.py` stays in sync automatically.
 
-> **Works on top of your existing toolchain** — you need **one** of [PlatformIO](https://platformio.org/install/ide?install=vscode) or the [Arduino CLI](https://arduino.github.io/arduino-cli/). Blocks Editor reads your project to know which board you're targeting; it never builds or flashes on its own. To compile and upload from inside VS Code, install the sister extension [**Arduino CLI IDE**](https://marketplace.visualstudio.com/items?itemName=linucs.vscode-arduino-cli-ide).
+> **Works on top of your existing toolchain** — you need **one** of [PlatformIO](https://platformio.org/install/ide?install=vscode) or the [Arduino CLI](https://arduino.github.io/arduino-cli/). Maker Block Studio reads your project to know which board you're targeting; it never builds or flashes on its own. To compile and upload from inside VS Code, install the sister extension [**Arduino CLI IDE**](https://marketplace.visualstudio.com/items?itemName=linucs.vscode-arduino-cli-ide).
 
 ---
 

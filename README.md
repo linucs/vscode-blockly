@@ -1,8 +1,8 @@
-# Blocks Editor
+# Maker Block Studio
 
 **Build programs for Arduino by dragging colorful blocks — like Scratch, but it writes real code for you.**
 
-No syntax to memorize. No semicolons to forget. You snap blocks together, and Blocks Editor turns them into working C++ that compiles and uploads to your board.
+No syntax to memorize. No semicolons to forget. You snap blocks together, and Maker Block Studio turns them into working C++ that compiles and uploads to your board.
 
 ![Drag a block, see the code appear](images/demo.gif)
 
@@ -21,7 +21,7 @@ No syntax to memorize. No semicolons to forget. You snap blocks together, and Bl
 
 ### What you need first
 
-Blocks Editor sits on top of one of two free tools that actually build and upload your code to the board. You need **one** of them:
+Maker Block Studio sits on top of one of two free tools that actually build and upload your code to the board. You need **one** of them:
 
 - **[PlatformIO](https://platformio.org/install/ide?install=vscode)** — a popular extension for VS Code. (Easiest if you're already in VS Code.)
 - **[Arduino CLI](https://arduino.github.io/arduino-cli/)** — or the Arduino IDE 2.x, which uses it under the hood. Pair it with the sister extension **[Arduino CLI IDE](https://marketplace.visualstudio.com/items?itemName=linucs.vscode-arduino-cli-ide)** to get Compile and Upload buttons right inside VS Code.
@@ -40,7 +40,7 @@ If you're using PlatformIO, the Arduino IDE, or App Lab, creating a new project 
 1. Install this extension (plus PlatformIO or the Arduino CLI).
 2. Open your project folder in VS Code.
 3. In the file explorer, **right-click** your main source file (it ends in `.cpp`, `.ino`, or `.py`).
-4. Choose **"Open in Blocks Editor"**. (The classic **"Open With…"** → **"Blocks Editor"** route still works too.)
+4. Choose **"Open in Maker Block Studio"**. (The classic **"Open With…"** → **"Maker Block Studio"** route still works too.)
 5. Drag blocks from the menu on the left and click them together to build your program.
 6. Build and upload to your board the way you normally would — the code is already written for you.
 
@@ -85,7 +85,7 @@ Most blocks run over and over (that's the `loop`). For things that should happen
 
 ## Settings
 
-You can leave everything at its defaults. If you want to tweak things, open VS Code Settings and search for "Blocks Editor":
+You can leave everything at its defaults. If you want to tweak things, open VS Code Settings and search for "Maker Block Studio":
 
 | Setting | Default | What it does |
 |---------|---------|--------------|
@@ -103,7 +103,7 @@ You can leave everything at its defaults. If you want to tweak things, open VS C
 
 ## Good to know
 
-- Right now Blocks Editor supports the **Arduino** framework with **C++** (PlatformIO / Arduino CLI) and **Python** (Arduino App Lab). Other frameworks (ESP-IDF, STM32Cube, Micropython, …) aren't supported yet.
+- Right now Maker Block Studio supports the **Arduino** framework with **C++** (PlatformIO / Arduino CLI) and **Python** (Arduino App Lab). Other frameworks (ESP-IDF, STM32Cube, Micropython, …) aren't supported yet.
 - The PlatformIO project reader doesn't yet understand advanced `platformio.ini` features (`extends`, `${...}` variables, file includes).
 - Don't hand-edit the generated source file — your block layout is the real source, and edits to the code will be overwritten.
 
@@ -123,7 +123,7 @@ All three produce the same kind of `.blocks/*.yaml` catalog, and all three can b
 
 ### Author blocks visually (Catalog Editor)
 
-The fastest way to make a block is to draw it. The **Catalog Editor** is a visual editor — just like the Blocks Editor itself, but for *building* blocks instead of using them.
+The fastest way to make a block is to draw it. The **Catalog Editor** is a visual editor — just like the Maker Block Studio itself, but for *building* blocks instead of using them.
 
 **Open it:**
 
@@ -201,7 +201,7 @@ Add directories or URLs to the `blocks-editor.catalogPaths` setting:
 }
 ```
 
-Run the command **"Blocks Editor: Refresh Remote Catalogs"** to re-download remote catalogs after they change upstream.
+Run the command **"Maker Block Studio: Refresh Remote Catalogs"** to re-download remote catalogs after they change upstream.
 
 ### Catalog key concepts
 
@@ -219,7 +219,7 @@ Don't want to write YAML by hand? Let an AI assistant research a hardware librar
 
 Run this once per project from the Command Palette:
 
-**"Blocks Editor: Set Up AI Assistants (Copilot & Claude Code)"**
+**"Maker Block Studio: Set Up AI Assistants (Copilot & Claude Code)"**
 
 It writes three things into your workspace:
 
@@ -249,7 +249,7 @@ The assistant follows the same workflow in both hosts:
 
 It takes one step — no git, no manual fork:
 
-1. Right-click your catalog file under `.blocks/` (or run **"Blocks Editor: Contribute Catalog to Community…"** from the Command Palette).
+1. Right-click your catalog file under `.blocks/` (or run **"Maker Block Studio: Contribute Catalog to Community…"** from the Command Palette).
 2. The extension **validates it locally**, then asks how you'd like to submit:
    - **Open a Pull Request** — uses your GitHub account and forks the community repo automatically.
    - **Submit via Issue** — opens a pre-filled form in your browser; no fork or git needed.

@@ -10,7 +10,7 @@ import { contributeCatalog } from './contribute/contributeCatalog';
 import { resolveActiveWorkspaceRoot } from './util/workspaceRoot';
 
 export async function activate(context: vscode.ExtensionContext) {
-	console.log('Blocks Editor extension is now active.');
+	console.log('Maker Block Studio extension is now active.');
 
     const catalogManager = new CatalogManager(context);
     await catalogManager.init();
@@ -116,7 +116,7 @@ async function showUpdateNotification(
 ): Promise<void> {
     const whatsNew = vscode.l10n.t("What's New");
     const choice = await vscode.window.showInformationMessage(
-        vscode.l10n.t('Blocks Editor updated to v{0}', version),
+        vscode.l10n.t('Maker Block Studio updated to v{0}', version),
         whatsNew
     );
     if (choice === whatsNew) {

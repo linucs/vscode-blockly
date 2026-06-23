@@ -263,6 +263,6 @@ function renderPrBody(ctx: SubmitContext): string {
         '',
         '- [x] I agree to license this catalog under the repository LICENSE.',
         '',
-        '_Submitted from the Blocks Editor VS Code extension._',
+        '_Submitted from the Maker Block Studio VS Code extension._',
     ].filter(Boolean).join('\n');
 }

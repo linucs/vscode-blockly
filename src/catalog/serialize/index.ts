@@ -56,9 +56,18 @@ export const DUMP_OPTIONS: yaml.DumpOptions = {
     quotingType: '"',
 };
 
-/** Serialize a {@link CatalogEntry} to canonical catalog YAML. */
+/**
+ * Schema modeline emitted as the first line of every serialized catalog. The YAML
+ * Language Server reads it to provide validation/autocomplete in the raw-text editor.
+ * Hand-authored catalogs carry this line; js-yaml drops comments on round-trip, so
+ * `dumpCatalog` re-emits it unconditionally to avoid stripping it on save.
+ */
+export const SCHEMA_MODELINE =
+    '# yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json';
+
+/** Serialize a {@link CatalogEntry} to canonical catalog YAML (with schema modeline). */
 export function dumpCatalog(entry: CatalogEntry): string {
-    return yaml.dump(orderCatalogForDump(entry), DUMP_OPTIONS);
+    return `${SCHEMA_MODELINE}\n${yaml.dump(orderCatalogForDump(entry), DUMP_OPTIONS)}`;
 }
 
 /**

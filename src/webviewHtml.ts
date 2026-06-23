@@ -3,7 +3,7 @@ import * as fs from 'fs/promises';
 
 /**
  * Shared webview scaffolding for the extension's two browser bundles — the
- * Blocks Editor (`dist/webview.js`) and the Guided Catalog Editor
+ * Maker Block Studio (`dist/webview.js`) and the Guided Catalog Editor
  * (`dist/catalog-editor.js`). Pure host module: may use `vscode`/Node, never
  * imports from `webview/`.
  *

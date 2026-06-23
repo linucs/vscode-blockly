@@ -19,18 +19,15 @@
   },
   "homepage": "https://github.com/linucs/vscode-blockly#readme",
   "keywords": [
-    "arduino",
     "blockly",
-    "platformio",
-    "arduino-cli",
+    "blocks",
+    "arduino",
+    "platform-io",
     "visual-programming",
     "block-programming",
     "no-code",
     "scratch",
     "embedded",
-    "microcontroller",
-    "esp32",
-    "stem",
     "education"
   ],
   "engines": {

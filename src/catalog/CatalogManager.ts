@@ -35,7 +35,7 @@ export class CatalogManager {
             await this.reloadCatalogs();
         } catch (error) {
             console.error('Failed to initialize CatalogManager:', error);
-            vscode.window.showErrorMessage(vscode.l10n.t('Failed to initialize Blocks Editor Catalog Manager.'));
+            vscode.window.showErrorMessage(vscode.l10n.t('Failed to initialize Maker Block Studio Catalog Manager.'));
         }
     }
 

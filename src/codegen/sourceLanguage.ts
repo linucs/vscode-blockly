@@ -2,7 +2,7 @@ import * as path from 'path';
 
 /**
  * Maps a source-file extension to its codegen language. The blocks editor opens
- * directly on a source file (via "Open in Blocks Editor" / "Open With…"); that
+ * directly on a source file (via "Open in Maker Block Studio" / "Open With…"); that
  * file's extension — not a global mapping — decides the generation language and
  * which catalog implementations apply.
  *
@@ -10,7 +10,7 @@ import * as path from 'path';
  *   .py                 -> python
  *
  * This set must stay in sync with the `customEditors` selector and the
- * "Open in Blocks Editor" menu `when` clauses in package.json — enforced by
+ * "Open in Maker Block Studio" menu `when` clauses in package.json — enforced by
  * scripts/check-editor-extensions.js (yarn check-editor-ext).
  */
 export const SOURCE_LANGUAGE_BY_EXT: Readonly<Record<string, string>> = {

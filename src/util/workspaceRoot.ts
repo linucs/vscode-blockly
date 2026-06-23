@@ -3,7 +3,7 @@ import * as vscode from 'vscode';
 /**
  * URI of the document in the active editor tab. Unlike
  * `window.activeTextEditor`, this also resolves custom editors such as the
- * Blocks Editor (a webview), as well as text and notebook tabs.
+ * Maker Block Studio (a webview), as well as text and notebook tabs.
  */
 export function activeDocumentUri(): vscode.Uri | undefined {
     const input = vscode.window.tabGroups.activeTabGroup?.activeTab?.input;

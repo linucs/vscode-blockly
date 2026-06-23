@@ -1,4 +1,4 @@
-# Maker Block Studio
+# Maker Block Studio for VS Code
 
 **Build programs for Arduino by dragging colorful blocks — like Scratch, but it writes real code for you.**
 

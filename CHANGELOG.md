@@ -6,15 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## [Unreleased]
 
-### Fixed
-
-- **Guided Catalog Editor no longer strips the schema modeline** — saving a catalog from the visual editor preserved every field but dropped the leading `# yaml-language-server: $schema=…` comment (js-yaml discards comments on round-trip), which disabled validation/autocomplete in the raw-text editor and shipped editor-authored catalogs without it. The serializer now re-emits the canonical modeline as the first line of every saved catalog.
-
-### Changed
-
-- **Renamed to "Maker Block Studio"** — the extension (formerly "Blocks Editor") now shares the `… Studio` naming family with its sibling extensions **Arduino Sketch Studio** and **Arduino App Studio**. The name drops the Arduino lock to leave room for future non-Arduino targets. All technical identifiers are unchanged — the extension ID (`linucs.blocks-editor`), command IDs (`blocks-editor.*`), settings keys (`blocks-editor.*`), and the `blocks-editor.editor` view type stay the same, so existing settings and keybindings keep working. Command-palette titles are now prefixed `Maker Block Studio:`.
-
-## [0.4.0] - 2026-06-22
+## [0.4.0] - 2026-06-23
 
 ### Added
 
@@ -22,7 +14,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Changed
 
+- **Renamed to "Maker Block Studio"** — the extension (formerly "Blocks Editor") now shares the `… Studio` naming family with its sibling extensions **Arduino Sketch Studio** and **Arduino App Studio**. The name drops the Arduino lock to leave room for future non-Arduino targets. All technical identifiers are unchanged — the extension ID (`linucs.blocks-editor`), command IDs (`blocks-editor.*`), settings keys (`blocks-editor.*`), and the `blocks-editor.editor` view type stay the same, so existing settings and keybindings keep working. Command-palette titles are now prefixed `Maker Block Studio:`.
 - The README now documents authoring and contributing a block with the Guided Catalog Editor, alongside the existing AI-assistant and hand-written-YAML paths.
+
+### Fixed
+
+- **Guided Catalog Editor no longer strips the schema modeline** — saving a catalog from the visual editor preserved every field but dropped the leading `# yaml-language-server: $schema=…` comment (js-yaml discards comments on round-trip), which disabled validation/autocomplete in the raw-text editor and shipped editor-authored catalogs without it. The serializer now re-emits the canonical modeline as the first line of every saved catalog.
 
 ## [0.3.3] - 2026-06-16
 

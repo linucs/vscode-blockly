@@ -6,6 +6,11 @@ Build programs for Arduino by **dragging colorful blocks** — like Scratch, but
 
 ---
 
+## v0.4.0 — 2026-06-23
+
+- **Renamed to "Maker Block Studio"** — the extension (formerly "Blocks Editor") now shares the **… Studio** naming family with its sister extensions **Arduino Sketch Studio** and **Arduino App Studio**, and drops the Arduino lock to leave room for future boards. Nothing to relearn — your settings, keybindings, and shortcuts all keep working; only the name and command-palette titles change.
+- **Build your own blocks visually — the Guided Catalog Editor** — author a block catalog by snapping meta-blocks together instead of hand-writing YAML. Open any catalog in a project's `.blocks/` folder (or pick **"Edit catalog"** in the **Community Catalog → Installed Blocks** view) and lay out the whole thing — entries, implementations, dependencies, fields, and code — on a Blockly surface. The connection rules follow the catalog schema, so you can't snap together something invalid; problems show up inline and in a summary as you work. The YAML on disk stays the source of truth, with normal save/undo. Catalogs using advanced constructs the visual surface can't show yet fall back to the raw-text editor automatically.
+
 ## v0.3.3 — 2026-06-16
 
 - **Blocks for the Arduino UNO Q** — new built-in catalogs for the dual-brain board, on both sides of the bridge. On the **MCU (C++)** side: light up the onboard **RGB LED**, print to the App Lab **Monitor**, and use the **MCU→SBC Bridge** to notify, provide, and call services. On the **CPU (Python)** side: the onboard **RGB LED**, the **Logger**, `sleep`, and the Python half of the **Bridge** messaging.

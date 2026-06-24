@@ -93,5 +93,22 @@
   "Delete": "Elimina",
   "Delete catalog \"{0}\"? This permanently removes the file {1}.": "Eliminare il catalogo \"{0}\"? Questo rimuove definitivamente il file {1}.",
   "Catalog \"{0}\" deleted.": "Catalogo \"{0}\" eliminato.",
-  "Failed to delete catalog \"{0}\": {1}": "Eliminazione del catalogo \"{0}\" non riuscita: {1}"
+  "Failed to delete catalog \"{0}\": {1}": "Eliminazione del catalogo \"{0}\" non riuscita: {1}",
+  "Select the workspace folder to add the catalog to": "Seleziona la cartella dell'area di lavoro a cui aggiungere il catalogo",
+  "Open a workspace folder first to create a catalog.": "Apri prima una cartella dell'area di lavoro per creare un catalogo.",
+  "New Catalog: identifier": "Nuovo catalogo: identificatore",
+  "Unique catalog id (lowercase, words separated by - or _), e.g. modulino-thermo": "id univoco del catalogo (minuscolo, parole separate da - o _), es. modulino-thermo",
+  "An id is required.": "È richiesto un id.",
+  "Use lowercase letters, digits, and single - or _ separators (e.g. modulino-thermo).": "Usa lettere minuscole, cifre e singoli separatori - o _ (es. modulino-thermo).",
+  "A catalog named \"{0}.yaml\" already exists in this project.": "Un catalogo denominato \"{0}.yaml\" esiste già in questo progetto.",
+  "New Catalog: category": "Nuovo catalogo: categoria",
+  "Toolbox category, optionally with subcategories: <category>[::<subcategory>], e.g. Sensors::Temperature": "Categoria della casella degli strumenti, facoltativamente con sottocategorie: <category>[::<subcategory>], es. Sensors::Temperature",
+  "A category is required.": "È richiesta una categoria.",
+  "Use <category>[::<subcategory>]; each segment must be non-empty (e.g. Sensors::Temperature).": "Usa <category>[::<subcategory>]; ogni segmento non deve essere vuoto (es. Sensors::Temperature).",
+  "New Catalog: description (optional)": "Nuovo catalogo: descrizione (facoltativa)",
+  "Short description of what this catalog does. Leave blank to skip.": "Breve descrizione di cosa fa questo catalogo. Lascia vuoto per saltare.",
+  "New Catalog: runtime": "Nuovo catalogo: runtime",
+  "Target runtime (framework:language)": "Runtime di destinazione (framework:language)",
+  "Failed to create catalog \"{0}\": {1}": "Impossibile creare il catalogo \"{0}\": {1}",
+  "Catalog \"{0}\" created.": "Catalogo \"{0}\" creato."
 }

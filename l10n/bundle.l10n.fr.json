@@ -93,5 +93,22 @@
   "Delete": "Supprimer",
   "Delete catalog \"{0}\"? This permanently removes the file {1}.": "Supprimer le catalogue \"{0}\" ? Cela supprime définitivement le fichier {1}.",
   "Catalog \"{0}\" deleted.": "Catalogue \"{0}\" supprimé.",
-  "Failed to delete catalog \"{0}\": {1}": "Échec de la suppression du catalogue \"{0}\" : {1}"
+  "Failed to delete catalog \"{0}\": {1}": "Échec de la suppression du catalogue \"{0}\" : {1}",
+  "Select the workspace folder to add the catalog to": "Sélectionnez le dossier de l'espace de travail auquel ajouter le catalogue",
+  "Open a workspace folder first to create a catalog.": "Ouvrez d'abord un dossier d'espace de travail pour créer un catalogue.",
+  "New Catalog: identifier": "Nouveau catalogue : identifiant",
+  "Unique catalog id (lowercase, words separated by - or _), e.g. modulino-thermo": "id de catalogue unique (minuscules, mots séparés par - ou _), par ex. modulino-thermo",
+  "An id is required.": "Un id est requis.",
+  "Use lowercase letters, digits, and single - or _ separators (e.g. modulino-thermo).": "Utilisez des lettres minuscules, des chiffres et des séparateurs simples - ou _ (par ex. modulino-thermo).",
+  "A catalog named \"{0}.yaml\" already exists in this project.": "Un catalogue nommé \"{0}.yaml\" existe déjà dans ce projet.",
+  "New Catalog: category": "Nouveau catalogue : catégorie",
+  "Toolbox category, optionally with subcategories: <category>[::<subcategory>], e.g. Sensors::Temperature": "Catégorie de la boîte à outils, éventuellement avec des sous-catégories : <category>[::<subcategory>], par ex. Sensors::Temperature",
+  "A category is required.": "Une catégorie est requise.",
+  "Use <category>[::<subcategory>]; each segment must be non-empty (e.g. Sensors::Temperature).": "Utilisez <category>[::<subcategory>] ; chaque segment doit être non vide (par ex. Sensors::Temperature).",
+  "New Catalog: description (optional)": "Nouveau catalogue : description (facultative)",
+  "Short description of what this catalog does. Leave blank to skip.": "Brève description de ce que fait ce catalogue. Laissez vide pour ignorer.",
+  "New Catalog: runtime": "Nouveau catalogue : runtime",
+  "Target runtime (framework:language)": "Runtime cible (framework:language)",
+  "Failed to create catalog \"{0}\": {1}": "Impossible de créer le catalogue \"{0}\" : {1}",
+  "Catalog \"{0}\" created.": "Catalogue \"{0}\" créé."
 }

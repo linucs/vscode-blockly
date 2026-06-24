@@ -34,6 +34,8 @@
   "config.contributionRepo": "Repositorio de GitHub (owner/repo) al que se contribuyen los catálogos creados. Cámbialo para apuntar a un fork o a un catálogo de comunidad privado.",
   "config.fallbackFramework": "Framework que se asume cuando no se detecta ningún archivo de proyecto (platformio.ini, sketch.yaml o app.yaml) para el archivo abierto. Se usa solo como último recurso: un proyecto detectado siempre tiene prioridad. Se establece automáticamente cuando eliges un framework desde la acción «Seleccionar framework» del editor.",
   "view.localCatalogs.name": "Bloques Instalados",
+  "command.addCommunityCatalog": "Añadir bloques del catálogo de la comunidad…",
+  "command.createLocalCatalog": "Nuevo catálogo…",
   "command.refreshLocalCatalogs": "Maker Block Studio: Actualizar bloques instalados",
   "command.editLocalCatalog": "Editar catálogo",
   "command.deleteLocalCatalog": "Eliminar catálogo",

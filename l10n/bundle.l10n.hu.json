@@ -93,5 +93,22 @@
   "Delete": "Törlés",
   "Delete catalog \"{0}\"? This permanently removes the file {1}.": "Törli a(z) \"{0}\" katalógust? Ez véglegesen eltávolítja a(z) {1} fájlt.",
   "Catalog \"{0}\" deleted.": "A(z) \"{0}\" katalógus törölve.",
-  "Failed to delete catalog \"{0}\": {1}": "A(z) \"{0}\" katalógus törlése sikertelen: {1}"
+  "Failed to delete catalog \"{0}\": {1}": "A(z) \"{0}\" katalógus törlése sikertelen: {1}",
+  "Select the workspace folder to add the catalog to": "Válassza ki a munkaterület-mappát, amelyhez a katalógust hozzá szeretné adni",
+  "Open a workspace folder first to create a catalog.": "Katalógus létrehozásához először nyisson meg egy munkaterület-mappát.",
+  "New Catalog: identifier": "Új katalógus: azonosító",
+  "Unique catalog id (lowercase, words separated by - or _), e.g. modulino-thermo": "Egyedi katalógusazonosító (kisbetűkkel, a szavakat - vagy _ választja el), pl. modulino-thermo",
+  "An id is required.": "Az azonosító megadása kötelező.",
+  "Use lowercase letters, digits, and single - or _ separators (e.g. modulino-thermo).": "Használjon kisbetűket, számjegyeket és egyetlen - vagy _ elválasztót (pl. modulino-thermo).",
+  "A catalog named \"{0}.yaml\" already exists in this project.": "Egy \"{0}.yaml\" nevű katalógus már létezik ebben a projektben.",
+  "New Catalog: category": "Új katalógus: kategória",
+  "Toolbox category, optionally with subcategories: <category>[::<subcategory>], e.g. Sensors::Temperature": "Eszköztár-kategória, opcionálisan alkategóriákkal: <category>[::<subcategory>], pl. Sensors::Temperature",
+  "A category is required.": "A kategória megadása kötelező.",
+  "Use <category>[::<subcategory>]; each segment must be non-empty (e.g. Sensors::Temperature).": "Használja a <category>[::<subcategory>] formátumot; egyik szegmens sem lehet üres (pl. Sensors::Temperature).",
+  "New Catalog: description (optional)": "Új katalógus: leírás (opcionális)",
+  "Short description of what this catalog does. Leave blank to skip.": "Rövid leírás arról, hogy ez a katalógus mit csinál. Hagyja üresen a kihagyáshoz.",
+  "New Catalog: runtime": "Új katalógus: futtatókörnyezet",
+  "Target runtime (framework:language)": "Cél futtatókörnyezet (framework:language)",
+  "Failed to create catalog \"{0}\": {1}": "Nem sikerült létrehozni a(z) \"{0}\" katalógust: {1}",
+  "Catalog \"{0}\" created.": "A(z) \"{0}\" katalógus létrehozva."
 }

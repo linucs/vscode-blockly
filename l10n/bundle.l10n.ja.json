@@ -93,5 +93,22 @@
   "Delete": "削除",
   "Delete catalog \"{0}\"? This permanently removes the file {1}.": "カタログ \"{0}\" を削除しますか？ファイル {1} を完全に削除します。",
   "Catalog \"{0}\" deleted.": "カタログ \"{0}\" を削除しました。",
-  "Failed to delete catalog \"{0}\": {1}": "カタログ \"{0}\" の削除に失敗しました: {1}"
+  "Failed to delete catalog \"{0}\": {1}": "カタログ \"{0}\" の削除に失敗しました: {1}",
+  "Select the workspace folder to add the catalog to": "カタログを追加するワークスペースフォルダーを選択してください",
+  "Open a workspace folder first to create a catalog.": "カタログを作成するには、まずワークスペースフォルダーを開いてください。",
+  "New Catalog: identifier": "新しいカタログ: 識別子",
+  "Unique catalog id (lowercase, words separated by - or _), e.g. modulino-thermo": "一意のカタログ ID (小文字、単語は - または _ で区切る)。例: modulino-thermo",
+  "An id is required.": "ID は必須です。",
+  "Use lowercase letters, digits, and single - or _ separators (e.g. modulino-thermo).": "小文字、数字、単一の - または _ の区切り文字を使用してください (例: modulino-thermo)。",
+  "A catalog named \"{0}.yaml\" already exists in this project.": "\"{0}.yaml\" という名前のカタログはこのプロジェクトに既に存在します。",
+  "New Catalog: category": "新しいカタログ: カテゴリ",
+  "Toolbox category, optionally with subcategories: <category>[::<subcategory>], e.g. Sensors::Temperature": "ツールボックスのカテゴリ。サブカテゴリも指定可能: <category>[::<subcategory>]。例: Sensors::Temperature",
+  "A category is required.": "カテゴリは必須です。",
+  "Use <category>[::<subcategory>]; each segment must be non-empty (e.g. Sensors::Temperature).": "<category>[::<subcategory>] の形式を使用してください。各セグメントは空にできません (例: Sensors::Temperature)。",
+  "New Catalog: description (optional)": "新しいカタログ: 説明 (省略可)",
+  "Short description of what this catalog does. Leave blank to skip.": "このカタログの動作の簡単な説明。スキップするには空白のままにします。",
+  "New Catalog: runtime": "新しいカタログ: ランタイム",
+  "Target runtime (framework:language)": "ターゲットランタイム (framework:language)",
+  "Failed to create catalog \"{0}\": {1}": "カタログ \"{0}\" の作成に失敗しました: {1}",
+  "Catalog \"{0}\" created.": "カタログ \"{0}\" を作成しました。"
 }

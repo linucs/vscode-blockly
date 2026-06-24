@@ -93,5 +93,22 @@
   "Delete": "Usuń",
   "Delete catalog \"{0}\"? This permanently removes the file {1}.": "Usunąć katalog \"{0}\"? Spowoduje to trwałe usunięcie pliku {1}.",
   "Catalog \"{0}\" deleted.": "Katalog \"{0}\" usunięty.",
-  "Failed to delete catalog \"{0}\": {1}": "Nie udało się usunąć katalogu \"{0}\": {1}"
+  "Failed to delete catalog \"{0}\": {1}": "Nie udało się usunąć katalogu \"{0}\": {1}",
+  "Select the workspace folder to add the catalog to": "Wybierz folder obszaru roboczego, do którego chcesz dodać katalog",
+  "Open a workspace folder first to create a catalog.": "Najpierw otwórz folder obszaru roboczego, aby utworzyć katalog.",
+  "New Catalog: identifier": "Nowy katalog: identyfikator",
+  "Unique catalog id (lowercase, words separated by - or _), e.g. modulino-thermo": "Unikalny identyfikator katalogu (małe litery, słowa oddzielone - lub _), np. modulino-thermo",
+  "An id is required.": "Identyfikator jest wymagany.",
+  "Use lowercase letters, digits, and single - or _ separators (e.g. modulino-thermo).": "Używaj małych liter, cyfr i pojedynczych separatorów - lub _ (np. modulino-thermo).",
+  "A catalog named \"{0}.yaml\" already exists in this project.": "Katalog o nazwie \"{0}.yaml\" już istnieje w tym projekcie.",
+  "New Catalog: category": "Nowy katalog: kategoria",
+  "Toolbox category, optionally with subcategories: <category>[::<subcategory>], e.g. Sensors::Temperature": "Kategoria przybornika, opcjonalnie z podkategoriami: <category>[::<subcategory>], np. Sensors::Temperature",
+  "A category is required.": "Kategoria jest wymagana.",
+  "Use <category>[::<subcategory>]; each segment must be non-empty (e.g. Sensors::Temperature).": "Użyj <category>[::<subcategory>]; każdy segment nie może być pusty (np. Sensors::Temperature).",
+  "New Catalog: description (optional)": "Nowy katalog: opis (opcjonalnie)",
+  "Short description of what this catalog does. Leave blank to skip.": "Krótki opis działania tego katalogu. Pozostaw puste, aby pominąć.",
+  "New Catalog: runtime": "Nowy katalog: środowisko uruchomieniowe",
+  "Target runtime (framework:language)": "Docelowe środowisko uruchomieniowe (framework:language)",
+  "Failed to create catalog \"{0}\": {1}": "Nie udało się utworzyć katalogu \"{0}\": {1}",
+  "Catalog \"{0}\" created.": "Utworzono katalog \"{0}\"."
 }

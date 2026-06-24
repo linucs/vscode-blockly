@@ -93,5 +93,22 @@
   "Delete": "삭제",
   "Delete catalog \"{0}\"? This permanently removes the file {1}.": "카탈로그 \"{0}\"을(를) 삭제하시겠습니까? 파일 {1}이(가) 영구적으로 제거됩니다.",
   "Catalog \"{0}\" deleted.": "카탈로그 \"{0}\"이(가) 삭제되었습니다.",
-  "Failed to delete catalog \"{0}\": {1}": "카탈로그 \"{0}\" 삭제에 실패했습니다: {1}"
+  "Failed to delete catalog \"{0}\": {1}": "카탈로그 \"{0}\" 삭제에 실패했습니다: {1}",
+  "Select the workspace folder to add the catalog to": "카탈로그를 추가할 작업 영역 폴더를 선택하세요",
+  "Open a workspace folder first to create a catalog.": "카탈로그를 만들려면 먼저 작업 영역 폴더를 여세요.",
+  "New Catalog: identifier": "새 카탈로그: 식별자",
+  "Unique catalog id (lowercase, words separated by - or _), e.g. modulino-thermo": "고유한 카탈로그 id (소문자, 단어는 - 또는 _ 로 구분), 예: modulino-thermo",
+  "An id is required.": "id는 필수입니다.",
+  "Use lowercase letters, digits, and single - or _ separators (e.g. modulino-thermo).": "소문자, 숫자, 단일 - 또는 _ 구분자를 사용하세요 (예: modulino-thermo).",
+  "A catalog named \"{0}.yaml\" already exists in this project.": "\"{0}.yaml\" 이름의 카탈로그가 이 프로젝트에 이미 있습니다.",
+  "New Catalog: category": "새 카탈로그: 범주",
+  "Toolbox category, optionally with subcategories: <category>[::<subcategory>], e.g. Sensors::Temperature": "도구 상자 범주, 하위 범주 지정 가능: <category>[::<subcategory>], 예: Sensors::Temperature",
+  "A category is required.": "범주는 필수입니다.",
+  "Use <category>[::<subcategory>]; each segment must be non-empty (e.g. Sensors::Temperature).": "<category>[::<subcategory>] 형식을 사용하세요. 각 구간은 비어 있을 수 없습니다 (예: Sensors::Temperature).",
+  "New Catalog: description (optional)": "새 카탈로그: 설명 (선택 사항)",
+  "Short description of what this catalog does. Leave blank to skip.": "이 카탈로그가 하는 일에 대한 간단한 설명. 건너뛰려면 비워 두세요.",
+  "New Catalog: runtime": "새 카탈로그: 런타임",
+  "Target runtime (framework:language)": "대상 런타임 (framework:language)",
+  "Failed to create catalog \"{0}\": {1}": "카탈로그 \"{0}\" 생성 실패: {1}",
+  "Catalog \"{0}\" created.": "카탈로그 \"{0}\" 이(가) 생성되었습니다."
 }

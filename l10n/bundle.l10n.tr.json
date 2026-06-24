@@ -93,5 +93,22 @@
   "Delete": "Sil",
   "Delete catalog \"{0}\"? This permanently removes the file {1}.": "\"{0}\" kataloğu silinsin mi? Bu, {1} dosyasını kalıcı olarak kaldırır.",
   "Catalog \"{0}\" deleted.": "\"{0}\" kataloğu silindi.",
-  "Failed to delete catalog \"{0}\": {1}": "\"{0}\" kataloğu silinemedi: {1}"
+  "Failed to delete catalog \"{0}\": {1}": "\"{0}\" kataloğu silinemedi: {1}",
+  "Select the workspace folder to add the catalog to": "Kataloğun ekleneceği çalışma alanı klasörünü seçin",
+  "Open a workspace folder first to create a catalog.": "Bir katalog oluşturmak için önce bir çalışma alanı klasörü açın.",
+  "New Catalog: identifier": "Yeni Katalog: tanımlayıcı",
+  "Unique catalog id (lowercase, words separated by - or _), e.g. modulino-thermo": "Benzersiz katalog id'si (küçük harf, kelimeler - veya _ ile ayrılır), örneğin modulino-thermo",
+  "An id is required.": "Bir id gereklidir.",
+  "Use lowercase letters, digits, and single - or _ separators (e.g. modulino-thermo).": "Küçük harfler, rakamlar ve tek - veya _ ayırıcıları kullanın (örneğin modulino-thermo).",
+  "A catalog named \"{0}.yaml\" already exists in this project.": "Bu projede \"{0}.yaml\" adlı bir katalog zaten var.",
+  "New Catalog: category": "Yeni Katalog: kategori",
+  "Toolbox category, optionally with subcategories: <category>[::<subcategory>], e.g. Sensors::Temperature": "Araç kutusu kategorisi, isteğe bağlı alt kategorilerle: <category>[::<subcategory>], örneğin Sensors::Temperature",
+  "A category is required.": "Bir kategori gereklidir.",
+  "Use <category>[::<subcategory>]; each segment must be non-empty (e.g. Sensors::Temperature).": "<category>[::<subcategory>] kullanın; her bölüm boş olmamalıdır (örneğin Sensors::Temperature).",
+  "New Catalog: description (optional)": "Yeni Katalog: açıklama (isteğe bağlı)",
+  "Short description of what this catalog does. Leave blank to skip.": "Bu kataloğun ne yaptığına dair kısa açıklama. Atlamak için boş bırakın.",
+  "New Catalog: runtime": "Yeni Katalog: çalışma zamanı",
+  "Target runtime (framework:language)": "Hedef çalışma zamanı (framework:language)",
+  "Failed to create catalog \"{0}\": {1}": "\"{0}\" kataloğu oluşturulamadı: {1}",
+  "Catalog \"{0}\" created.": "\"{0}\" kataloğu oluşturuldu."
 }

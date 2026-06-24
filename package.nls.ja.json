@@ -34,6 +34,8 @@
   "config.contributionRepo": "作成したカタログの提供先となる GitHub リポジトリ（owner/repo）。フォークやプライベートなコミュニティカタログを指すように変更できます。",
   "config.fallbackFramework": "開いているファイルに対してプロジェクトファイル（platformio.ini、sketch.yaml、app.yaml）が検出されない場合に想定するフレームワーク。最終手段としてのみ使用されます — 検出されたプロジェクトが常に優先されます。エディターの「フレームワークを選択」操作でフレームワークを選ぶと自動的に設定されます。",
   "view.localCatalogs.name": "インストール済みブロック",
+  "command.addCommunityCatalog": "コミュニティカタログからブロックを追加…",
+  "command.createLocalCatalog": "新しいカタログ…",
   "command.refreshLocalCatalogs": "ブロックエディター: インストール済みブロックを更新",
   "command.editLocalCatalog": "カタログを編集",
   "command.deleteLocalCatalog": "カタログを削除",

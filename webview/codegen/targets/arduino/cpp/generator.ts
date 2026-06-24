@@ -6,8 +6,9 @@ import { formatGeneratedAt } from '../../../../../src/codegen/generatedAt';
 import { RuntimeGenerator } from '../../../core/runtimeGenerator';
 import { blockCommentPrefix } from '../../../core/commentAnnotation';
 import { FIRST_PARTY_GENERATORS } from './firstParty';
+import { ARDUINO_CPP_RUNTIME } from '../../../../../src/codegen/runtimes';
 
-export const ARDUINO_CPP_RUNTIME = 'arduino:cpp';
+export { ARDUINO_CPP_RUNTIME };
 
 let paramVarIds: Set<string> = new Set();
 

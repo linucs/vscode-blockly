@@ -93,5 +93,22 @@
   "Delete": "删除",
   "Delete catalog \"{0}\"? This permanently removes the file {1}.": "删除目录 \"{0}\"？这将永久删除文件 {1}。",
   "Catalog \"{0}\" deleted.": "已删除目录 \"{0}\"。",
-  "Failed to delete catalog \"{0}\": {1}": "删除目录 \"{0}\" 失败：{1}"
+  "Failed to delete catalog \"{0}\": {1}": "删除目录 \"{0}\" 失败：{1}",
+  "Select the workspace folder to add the catalog to": "选择要添加目录的工作区文件夹",
+  "Open a workspace folder first to create a catalog.": "请先打开一个工作区文件夹以创建目录。",
+  "New Catalog: identifier": "新建目录：标识符",
+  "Unique catalog id (lowercase, words separated by - or _), e.g. modulino-thermo": "唯一的目录 id（小写，单词以 - 或 _ 分隔），例如 modulino-thermo",
+  "An id is required.": "id 为必填项。",
+  "Use lowercase letters, digits, and single - or _ separators (e.g. modulino-thermo).": "请使用小写字母、数字以及单个 - 或 _ 分隔符（例如 modulino-thermo）。",
+  "A catalog named \"{0}.yaml\" already exists in this project.": "此项目中已存在名为 \"{0}.yaml\" 的目录。",
+  "New Catalog: category": "新建目录：类别",
+  "Toolbox category, optionally with subcategories: <category>[::<subcategory>], e.g. Sensors::Temperature": "工具箱类别，可选附带子类别：<category>[::<subcategory>]，例如 Sensors::Temperature",
+  "A category is required.": "类别为必填项。",
+  "Use <category>[::<subcategory>]; each segment must be non-empty (e.g. Sensors::Temperature).": "请使用 <category>[::<subcategory>]；每个部分均不能为空（例如 Sensors::Temperature）。",
+  "New Catalog: description (optional)": "新建目录：说明（可选）",
+  "Short description of what this catalog does. Leave blank to skip.": "对此目录功能的简短说明。留空则跳过。",
+  "New Catalog: runtime": "新建目录：运行时",
+  "Target runtime (framework:language)": "目标运行时（framework:language）",
+  "Failed to create catalog \"{0}\": {1}": "创建目录 \"{0}\" 失败：{1}",
+  "Catalog \"{0}\" created.": "已创建目录 \"{0}\"。"
 }

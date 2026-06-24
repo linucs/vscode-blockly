@@ -93,5 +93,22 @@
   "Delete": "Odstranit",
   "Delete catalog \"{0}\"? This permanently removes the file {1}.": "Odstranit katalog \"{0}\"? Tím se trvale odstraní soubor {1}.",
   "Catalog \"{0}\" deleted.": "Katalog \"{0}\" odstraněn.",
-  "Failed to delete catalog \"{0}\": {1}": "Nepodařilo se odstranit katalog \"{0}\": {1}"
+  "Failed to delete catalog \"{0}\": {1}": "Nepodařilo se odstranit katalog \"{0}\": {1}",
+  "Select the workspace folder to add the catalog to": "Vyberte složku pracovního prostoru, do které chcete přidat katalog",
+  "Open a workspace folder first to create a catalog.": "Nejprve otevřete složku pracovního prostoru, abyste mohli vytvořit katalog.",
+  "New Catalog: identifier": "Nový katalog: identifikátor",
+  "Unique catalog id (lowercase, words separated by - or _), e.g. modulino-thermo": "Jedinečné ID katalogu (malá písmena, slova oddělená - nebo _), např. modulino-thermo",
+  "An id is required.": "ID je povinné.",
+  "Use lowercase letters, digits, and single - or _ separators (e.g. modulino-thermo).": "Používejte malá písmena, číslice a jednotlivé oddělovače - nebo _ (např. modulino-thermo).",
+  "A catalog named \"{0}.yaml\" already exists in this project.": "Katalog s názvem \"{0}.yaml\" již v tomto projektu existuje.",
+  "New Catalog: category": "Nový katalog: kategorie",
+  "Toolbox category, optionally with subcategories: <category>[::<subcategory>], e.g. Sensors::Temperature": "Kategorie panelu nástrojů, volitelně s podkategoriemi: <category>[::<subcategory>], např. Sensors::Temperature",
+  "A category is required.": "Kategorie je povinná.",
+  "Use <category>[::<subcategory>]; each segment must be non-empty (e.g. Sensors::Temperature).": "Použijte <category>[::<subcategory>]; každý segment nesmí být prázdný (např. Sensors::Temperature).",
+  "New Catalog: description (optional)": "Nový katalog: popis (volitelné)",
+  "Short description of what this catalog does. Leave blank to skip.": "Stručný popis toho, co tento katalog dělá. Ponechte prázdné pro přeskočení.",
+  "New Catalog: runtime": "Nový katalog: běhové prostředí",
+  "Target runtime (framework:language)": "Cílové běhové prostředí (framework:language)",
+  "Failed to create catalog \"{0}\": {1}": "Nepodařilo se vytvořit katalog \"{0}\": {1}",
+  "Catalog \"{0}\" created.": "Katalog \"{0}\" byl vytvořen."
 }

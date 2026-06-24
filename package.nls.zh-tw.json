@@ -34,6 +34,8 @@
   "config.contributionRepo": "所建立目錄將貢獻到的 GitHub 儲存庫（owner/repo）。可變更為指向某個 fork 或私有社群目錄。",
   "config.fallbackFramework": "當未針對開啟的檔案偵測到專案檔（platformio.ini、sketch.yaml 或 app.yaml）時所採用的框架。僅作為最後手段使用 — 已偵測到的專案一律優先。當你透過編輯器的「選擇框架」動作選擇框架時會自動設定。",
   "view.localCatalogs.name": "已安裝的積木",
+  "command.addCommunityCatalog": "從社群目錄新增積木…",
+  "command.createLocalCatalog": "新增目錄…",
   "command.refreshLocalCatalogs": "積木編輯器：重新整理已安裝的積木",
   "command.editLocalCatalog": "編輯目錄",
   "command.deleteLocalCatalog": "刪除目錄",

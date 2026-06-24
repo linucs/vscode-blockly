@@ -93,5 +93,22 @@
   "Delete": "Удалить",
   "Delete catalog \"{0}\"? This permanently removes the file {1}.": "Удалить каталог \"{0}\"? Это безвозвратно удалит файл {1}.",
   "Catalog \"{0}\" deleted.": "Каталог \"{0}\" удалён.",
-  "Failed to delete catalog \"{0}\": {1}": "Не удалось удалить каталог \"{0}\": {1}"
+  "Failed to delete catalog \"{0}\": {1}": "Не удалось удалить каталог \"{0}\": {1}",
+  "Select the workspace folder to add the catalog to": "Выберите папку рабочей области для добавления каталога",
+  "Open a workspace folder first to create a catalog.": "Сначала откройте папку рабочей области, чтобы создать каталог.",
+  "New Catalog: identifier": "Новый каталог: идентификатор",
+  "Unique catalog id (lowercase, words separated by - or _), e.g. modulino-thermo": "Уникальный id каталога (строчные буквы, слова разделяются - или _), например modulino-thermo",
+  "An id is required.": "Требуется id.",
+  "Use lowercase letters, digits, and single - or _ separators (e.g. modulino-thermo).": "Используйте строчные буквы, цифры и одиночные разделители - или _ (например modulino-thermo).",
+  "A catalog named \"{0}.yaml\" already exists in this project.": "Каталог с именем \"{0}.yaml\" уже существует в этом проекте.",
+  "New Catalog: category": "Новый каталог: категория",
+  "Toolbox category, optionally with subcategories: <category>[::<subcategory>], e.g. Sensors::Temperature": "Категория панели элементов, при необходимости с подкатегориями: <category>[::<subcategory>], например Sensors::Temperature",
+  "A category is required.": "Требуется категория.",
+  "Use <category>[::<subcategory>]; each segment must be non-empty (e.g. Sensors::Temperature).": "Используйте <category>[::<subcategory>]; каждый сегмент не должен быть пустым (например Sensors::Temperature).",
+  "New Catalog: description (optional)": "Новый каталог: описание (необязательно)",
+  "Short description of what this catalog does. Leave blank to skip.": "Краткое описание того, что делает этот каталог. Оставьте пустым, чтобы пропустить.",
+  "New Catalog: runtime": "Новый каталог: среда выполнения",
+  "Target runtime (framework:language)": "Целевая среда выполнения (framework:language)",
+  "Failed to create catalog \"{0}\": {1}": "Не удалось создать каталог \"{0}\": {1}",
+  "Catalog \"{0}\" created.": "Каталог \"{0}\" создан."
 }

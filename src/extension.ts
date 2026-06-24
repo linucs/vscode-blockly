@@ -36,6 +36,8 @@ export async function activate(context: vscode.ExtensionContext) {
         vscode.window.createTreeView('blocks-editor.localCatalogs', {
             treeDataProvider: localCatalogsProvider,
         }),
+        vscode.commands.registerCommand('blocks-editor.addCommunityCatalog', () => registryProvider.search()),
+        vscode.commands.registerCommand('blocks-editor.createLocalCatalog', () => localCatalogsProvider.create()),
         vscode.commands.registerCommand('blocks-editor.refreshLocalCatalogs', () => localCatalogsProvider.refresh()),
         vscode.commands.registerCommand('blocks-editor.editLocalCatalog', (item) => localCatalogsProvider.edit(item)),
         vscode.commands.registerCommand('blocks-editor.contributeLocalCatalog', (item) => localCatalogsProvider.contribute(item)),

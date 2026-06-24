@@ -93,5 +93,22 @@
   "Delete": "Eliminar",
   "Delete catalog \"{0}\"? This permanently removes the file {1}.": "¿Eliminar el catálogo \"{0}\"? Esto elimina permanentemente el archivo {1}.",
   "Catalog \"{0}\" deleted.": "Catálogo \"{0}\" eliminado.",
-  "Failed to delete catalog \"{0}\": {1}": "No se pudo eliminar el catálogo \"{0}\": {1}"
+  "Failed to delete catalog \"{0}\": {1}": "No se pudo eliminar el catálogo \"{0}\": {1}",
+  "Select the workspace folder to add the catalog to": "Selecciona la carpeta del área de trabajo a la que añadir el catálogo",
+  "Open a workspace folder first to create a catalog.": "Abre primero una carpeta del área de trabajo para crear un catálogo.",
+  "New Catalog: identifier": "Nuevo catálogo: identificador",
+  "Unique catalog id (lowercase, words separated by - or _), e.g. modulino-thermo": "id único del catálogo (minúsculas, palabras separadas por - o _), p. ej. modulino-thermo",
+  "An id is required.": "Se requiere un id.",
+  "Use lowercase letters, digits, and single - or _ separators (e.g. modulino-thermo).": "Usa letras minúsculas, dígitos y separadores únicos - o _ (p. ej. modulino-thermo).",
+  "A catalog named \"{0}.yaml\" already exists in this project.": "Ya existe un catálogo llamado \"{0}.yaml\" en este proyecto.",
+  "New Catalog: category": "Nuevo catálogo: categoría",
+  "Toolbox category, optionally with subcategories: <category>[::<subcategory>], e.g. Sensors::Temperature": "Categoría de la caja de herramientas, opcionalmente con subcategorías: <category>[::<subcategory>], p. ej. Sensors::Temperature",
+  "A category is required.": "Se requiere una categoría.",
+  "Use <category>[::<subcategory>]; each segment must be non-empty (e.g. Sensors::Temperature).": "Usa <category>[::<subcategory>]; cada segmento no debe estar vacío (p. ej. Sensors::Temperature).",
+  "New Catalog: description (optional)": "Nuevo catálogo: descripción (opcional)",
+  "Short description of what this catalog does. Leave blank to skip.": "Breve descripción de lo que hace este catálogo. Déjalo en blanco para omitir.",
+  "New Catalog: runtime": "Nuevo catálogo: runtime",
+  "Target runtime (framework:language)": "Runtime de destino (framework:language)",
+  "Failed to create catalog \"{0}\": {1}": "No se pudo crear el catálogo \"{0}\": {1}",
+  "Catalog \"{0}\" created.": "Catálogo \"{0}\" creado."
 }

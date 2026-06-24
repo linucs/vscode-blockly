@@ -34,6 +34,8 @@
   "config.contributionRepo": "GitHub-tároló (owner/repo), amelyhez a létrehozott katalógusok hozzájárulnak. Módosítsa, hogy egy forkra vagy privát közösségi katalógusra mutasson.",
   "config.fallbackFramework": "A megnyitott fájlhoz feltételezett keretrendszer, ha nem található projektfájl (platformio.ini, sketch.yaml vagy app.yaml). Csak végső esetben használatos — egy észlelt projekt mindig elsőbbséget élvez. Automatikusan beállításra kerül, amikor a szerkesztő „Keretrendszer kiválasztása” műveletével választasz keretrendszert.",
   "view.localCatalogs.name": "Telepített blokkok",
+  "command.addCommunityCatalog": "Blokkok hozzáadása a közösségi katalógusból…",
+  "command.createLocalCatalog": "Új katalógus…",
   "command.refreshLocalCatalogs": "Maker Block Studio: Telepített blokkok frissítése",
   "command.editLocalCatalog": "Katalógus szerkesztése",
   "command.deleteLocalCatalog": "Katalógus törlése",

@@ -155,9 +155,19 @@
           "group": "navigation@2"
         },
         {
-          "command": "blocks-editor.refreshLocalCatalogs",
+          "command": "blocks-editor.addCommunityCatalog",
+          "when": "view == blocks-editor.localCatalogs",
+          "group": "navigation@0"
+        },
+        {
+          "command": "blocks-editor.createLocalCatalog",
           "when": "view == blocks-editor.localCatalogs",
           "group": "navigation@1"
+        },
+        {
+          "command": "blocks-editor.refreshLocalCatalogs",
+          "when": "view == blocks-editor.localCatalogs",
+          "group": "navigation@2"
         }
       ],
       "view/item/context": [
@@ -222,6 +232,16 @@
         "command": "blocks-editor.contributeCatalog",
         "title": "%command.contributeCatalog%",
         "icon": "$(cloud-upload)"
+      },
+      {
+        "command": "blocks-editor.addCommunityCatalog",
+        "title": "%command.addCommunityCatalog%",
+        "icon": "$(add)"
+      },
+      {
+        "command": "blocks-editor.createLocalCatalog",
+        "title": "%command.createLocalCatalog%",
+        "icon": "$(new-file)"
       },
       {
         "command": "blocks-editor.refreshLocalCatalogs",

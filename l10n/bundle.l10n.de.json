@@ -93,5 +93,22 @@
   "Delete": "Löschen",
   "Delete catalog \"{0}\"? This permanently removes the file {1}.": "Katalog \"{0}\" löschen? Dadurch wird die Datei {1} endgültig entfernt.",
   "Catalog \"{0}\" deleted.": "Katalog \"{0}\" gelöscht.",
-  "Failed to delete catalog \"{0}\": {1}": "Katalog \"{0}\" konnte nicht gelöscht werden: {1}"
+  "Failed to delete catalog \"{0}\": {1}": "Katalog \"{0}\" konnte nicht gelöscht werden: {1}",
+  "Select the workspace folder to add the catalog to": "Arbeitsbereichsordner auswählen, dem der Katalog hinzugefügt werden soll",
+  "Open a workspace folder first to create a catalog.": "Öffnen Sie zuerst einen Arbeitsbereichsordner, um einen Katalog zu erstellen.",
+  "New Catalog: identifier": "Neuer Katalog: Bezeichner",
+  "Unique catalog id (lowercase, words separated by - or _), e.g. modulino-thermo": "Eindeutige Katalog-ID (Kleinbuchstaben, Wörter getrennt durch - oder _), z. B. modulino-thermo",
+  "An id is required.": "Eine ID ist erforderlich.",
+  "Use lowercase letters, digits, and single - or _ separators (e.g. modulino-thermo).": "Verwenden Sie Kleinbuchstaben, Ziffern und einzelne Trennzeichen - oder _ (z. B. modulino-thermo).",
+  "A catalog named \"{0}.yaml\" already exists in this project.": "Ein Katalog namens \"{0}.yaml\" existiert in diesem Projekt bereits.",
+  "New Catalog: category": "Neuer Katalog: Kategorie",
+  "Toolbox category, optionally with subcategories: <category>[::<subcategory>], e.g. Sensors::Temperature": "Toolbox-Kategorie, optional mit Unterkategorien: <category>[::<subcategory>], z. B. Sensors::Temperature",
+  "A category is required.": "Eine Kategorie ist erforderlich.",
+  "Use <category>[::<subcategory>]; each segment must be non-empty (e.g. Sensors::Temperature).": "Verwenden Sie <category>[::<subcategory>]; jedes Segment darf nicht leer sein (z. B. Sensors::Temperature).",
+  "New Catalog: description (optional)": "Neuer Katalog: Beschreibung (optional)",
+  "Short description of what this catalog does. Leave blank to skip.": "Kurze Beschreibung, was dieser Katalog tut. Leer lassen zum Überspringen.",
+  "New Catalog: runtime": "Neuer Katalog: Laufzeitumgebung",
+  "Target runtime (framework:language)": "Ziel-Laufzeitumgebung (framework:language)",
+  "Failed to create catalog \"{0}\": {1}": "Katalog \"{0}\" konnte nicht erstellt werden: {1}",
+  "Catalog \"{0}\" created.": "Katalog \"{0}\" erstellt."
 }

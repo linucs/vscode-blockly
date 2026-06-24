@@ -34,7 +34,9 @@
   "walkthrough.contribute.description": "I believe Arduino and block programming can truly help beginners learn advanced concepts — including edge AI. But I'm a solo developer, and I can't author blocks for every hardware device and use case out there.\n\nIf you also believe in sharing knowledge and helping others learn, **please contribute**: submit your block catalogs, open issues, or send pull requests. Every contribution makes visual programming accessible to more people.\n\n[Share your Blocks](https://github.com/linucs/blocks-community-catalog)",
   "mcp.blocksEditor.label": "Maker Block Studio",
   "view.localCatalogs.name": "Project Blocks",
-  "command.refreshLocalCatalogs": "Maker Block Studio: Refresh Project Blocks",
+  "command.addCommunityCatalog": "Add Blocks from Community Catalog…",
+  "command.createLocalCatalog": "New Catalog…",
+  "command.refreshLocalCatalogs": "Refresh Project Blocks",
   "command.editLocalCatalog": "Edit Catalog",
   "command.deleteLocalCatalog": "Delete Catalog",
   "command.contributeLocalCatalog": "Share this block catalog with the Community"

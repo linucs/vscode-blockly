@@ -34,6 +34,8 @@
   "config.contributionRepo": "Úložiště GitHub (owner/repo), do kterého se přispívají vytvořené katalogy. Změňte pro odkaz na fork nebo soukromý komunitní katalog.",
   "config.fallbackFramework": "Framework, který se použije, když pro otevřený soubor není nalezen žádný soubor projektu (platformio.ini, sketch.yaml nebo app.yaml). Použije se pouze jako poslední možnost — nalezený projekt má vždy přednost. Nastaví se automaticky, když vyberete framework pomocí akce „Vybrat framework“ v editoru.",
   "view.localCatalogs.name": "Nainstalované bloky",
+  "command.addCommunityCatalog": "Přidat bloky z komunitního katalogu…",
+  "command.createLocalCatalog": "Nový katalog…",
   "command.refreshLocalCatalogs": "Editor bloků: Obnovit nainstalované bloky",
   "command.editLocalCatalog": "Upravit katalog",
   "command.deleteLocalCatalog": "Odstranit katalog",

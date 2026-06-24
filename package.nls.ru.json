@@ -34,6 +34,8 @@
   "config.contributionRepo": "Репозиторий GitHub (owner/repo), в который вносятся созданные каталоги. Измените, чтобы указать на форк или приватный каталог сообщества.",
   "config.fallbackFramework": "Фреймворк, используемый, когда для открытого файла не обнаружен файл проекта (platformio.ini, sketch.yaml или app.yaml). Используется только как крайняя мера — обнаруженный проект всегда имеет приоритет. Устанавливается автоматически при выборе фреймворка через действие редактора «Выбрать фреймворк».",
   "view.localCatalogs.name": "Установленные блоки",
+  "command.addCommunityCatalog": "Добавить блоки из каталога сообщества…",
+  "command.createLocalCatalog": "Новый каталог…",
   "command.refreshLocalCatalogs": "Редактор блоков: Обновить установленные блоки",
   "command.editLocalCatalog": "Изменить каталог",
   "command.deleteLocalCatalog": "Удалить каталог",

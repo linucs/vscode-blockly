@@ -1,8 +1,29 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs/promises';
+import * as path from 'path';
+import * as yaml from 'js-yaml';
 import { gatherInstalledCatalogs, LocalCatalog } from '../contribute/localCatalogs';
 import { titleCase } from '../util/strings';
 import { canEditInGuidedUi } from './canEditInGuidedUi';
+import { resolveActiveWorkspaceRoot } from '../util/workspaceRoot';
+import { SUPPORTED_RUNTIMES } from '../codegen/runtimes';
+
+/**
+ * `id` must be a single kebab/snake-case token. Mirrors the `id` pattern in
+ * block-catalog_v1.schema.json — keep in sync with that schema (the source of truth).
+ */
+const ID_PATTERN = /^[a-z0-9]+([_-][a-z0-9]+)*$/;
+
+/**
+ * `category` is `<category>[::<subcategory>…]`: each `::`-separated segment must be
+ * non-empty and free of leading/trailing whitespace. Mirrors the `category` pattern in
+ * block-catalog_v1.schema.json — keep in sync with that schema (the source of truth).
+ */
+const CATEGORY_PATTERN = /^[^\s:](?:[^:]*[^\s:])?(?:::[^\s:](?:[^:]*[^\s:])?)*$/;
+
+/** Schema reference line the catalog editor and authored files carry at the top. */
+const SCHEMA_COMMENT =
+    '# yaml-language-server: $schema=https://raw.githubusercontent.com/linucs/vscode-blockly/refs/heads/main/src/catalog/block-catalog_v1.schema.json\n';
 
 type LocalCatalogItem = VendorGroup | CatalogFileItem;
 
@@ -74,6 +95,110 @@ export class LocalCatalogsProvider implements vscode.TreeDataProvider<LocalCatal
         }
 
         return [];
+    }
+
+    /**
+     * Create a new block catalog in the active workspace folder's `.blocks/` directory.
+     * Walks the user through a short guided prompt (id → category → description → runtime),
+     * writes a minimal valid scaffold, then opens it in the guided catalog editor so they
+     * can start adding blocks. Any prompt dismissed with Esc aborts the whole flow.
+     */
+    async create(): Promise<void> {
+        const root = await resolveActiveWorkspaceRoot(
+            vscode.l10n.t('Select the workspace folder to add the catalog to')
+        );
+        if (!root) {
+            vscode.window.showInformationMessage(
+                vscode.l10n.t('Open a workspace folder first to create a catalog.')
+            );
+            return;
+        }
+        const blocksDir = path.join(root, '.blocks');
+
+        const id = await vscode.window.showInputBox({
+            title: vscode.l10n.t('New Catalog: identifier'),
+            prompt: vscode.l10n.t('Unique catalog id (lowercase, words separated by - or _), e.g. modulino-thermo'),
+            ignoreFocusOut: true,
+            validateInput: async (value) => {
+                const v = value.trim();
+                if (!v) {return vscode.l10n.t('An id is required.');}
+                if (!ID_PATTERN.test(v)) {
+                    return vscode.l10n.t('Use lowercase letters, digits, and single - or _ separators (e.g. modulino-thermo).');
+                }
+                try {
+                    await fs.access(path.join(blocksDir, `${v}.yaml`));
+                    return vscode.l10n.t('A catalog named "{0}.yaml" already exists in this project.', v);
+                } catch {
+                    return undefined; // file doesn't exist — good
+                }
+            },
+        });
+        if (id === undefined) {return;}
+        const trimmedId = id.trim();
+
+        const category = await vscode.window.showInputBox({
+            title: vscode.l10n.t('New Catalog: category'),
+            prompt: vscode.l10n.t('Toolbox category, optionally with subcategories: <category>[::<subcategory>], e.g. Sensors::Temperature'),
+            ignoreFocusOut: true,
+            validateInput: (value) => {
+                const v = value.trim();
+                if (!v) {return vscode.l10n.t('A category is required.');}
+                if (!CATEGORY_PATTERN.test(v)) {
+                    return vscode.l10n.t('Use <category>[::<subcategory>]; each segment must be non-empty (e.g. Sensors::Temperature).');
+                }
+                return undefined;
+            },
+        });
+        if (category === undefined) {return;}
+
+        const description = await vscode.window.showInputBox({
+            title: vscode.l10n.t('New Catalog: description (optional)'),
+            prompt: vscode.l10n.t('Short description of what this catalog does. Leave blank to skip.'),
+            ignoreFocusOut: true,
+        });
+        if (description === undefined) {return;}
+
+        const runtime = await vscode.window.showQuickPick([...SUPPORTED_RUNTIMES], {
+            title: vscode.l10n.t('New Catalog: runtime'),
+            placeHolder: vscode.l10n.t('Target runtime (framework:language)'),
+            ignoreFocusOut: true,
+        });
+        if (runtime === undefined) {return;}
+
+        const content = this.buildScaffold(trimmedId, category.trim(), description.trim(), runtime);
+        const fsPath = path.join(blocksDir, `${trimmedId}.yaml`);
+
+        try {
+            await fs.mkdir(blocksDir, { recursive: true });
+            await fs.writeFile(fsPath, content, 'utf-8');
+        } catch (err) {
+            const msg = err instanceof Error ? err.message : String(err);
+            vscode.window.showErrorMessage(vscode.l10n.t('Failed to create catalog "{0}": {1}', trimmedId, msg));
+            return;
+        }
+
+        this.refresh();
+        vscode.window.showInformationMessage(vscode.l10n.t('Catalog "{0}" created.', trimmedId));
+        await vscode.commands.executeCommand('vscode.openWith', vscode.Uri.file(fsPath), 'blocks-editor.catalogEditor');
+    }
+
+    /**
+     * Serialize a minimal catalog scaffold. The `description` is emitted as an i18n map
+     * (`{ en: … }`) when provided, and omitted entirely when blank. `js-yaml` handles
+     * quoting of the category (contains `::`/spaces) and description; the schema comment
+     * is prepended so the file matches authored catalogs.
+     */
+    private buildScaffold(id: string, category: string, description: string, runtime: string): string {
+        const doc: Record<string, unknown> = {
+            id,
+            version: '0.0.1',
+            category,
+        };
+        if (description) {
+            doc.description = { en: description };
+        }
+        doc.implementations = [{ runtime, blocks: [] }];
+        return SCHEMA_COMMENT + yaml.dump(doc, { lineWidth: 0, quotingType: '"' });
     }
 
     /**

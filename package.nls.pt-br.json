@@ -34,6 +34,8 @@
   "config.contributionRepo": "Repositório do GitHub (owner/repo) para o qual os catálogos criados são contribuídos. Altere para apontar para um fork ou catálogo de comunidade privado.",
   "config.fallbackFramework": "Framework a ser assumido quando nenhum arquivo de projeto (platformio.ini, sketch.yaml ou app.yaml) é detectado para o arquivo aberto. Usado apenas como último recurso — um projeto detectado sempre tem precedência. Definido automaticamente quando você escolhe um framework pela ação \"Selecionar framework\" do editor.",
   "view.localCatalogs.name": "Blocos Instalados",
+  "command.addCommunityCatalog": "Adicionar blocos do catálogo da comunidade…",
+  "command.createLocalCatalog": "Novo catálogo…",
   "command.refreshLocalCatalogs": "Editor de Blocos: Atualizar blocos instalados",
   "command.editLocalCatalog": "Editar catálogo",
   "command.deleteLocalCatalog": "Excluir catálogo",

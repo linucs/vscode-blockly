@@ -11,8 +11,9 @@ import { formatGeneratedAt } from '../../../../../src/codegen/generatedAt';
 import { RuntimeGenerator } from '../../../core/runtimeGenerator';
 import { blockCommentPrefix } from '../../../core/commentAnnotation';
 import { FIRST_PARTY_GENERATORS } from './firstParty';
+import { ARDUINO_PYTHON_RUNTIME } from '../../../../../src/codegen/runtimes';
 
-export const ARDUINO_PYTHON_RUNTIME = 'arduino:python';
+export { ARDUINO_PYTHON_RUNTIME };
 
 /**
  * arduino:python generation engine (axis 2). Builds on Blockly's stock

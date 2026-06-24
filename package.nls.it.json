@@ -34,6 +34,8 @@
   "walkthrough.contribute.description": "Credo che Arduino e la programmazione a blocchi possano davvero aiutare i principianti a imparare concetti avanzati — inclusa l'AI on the edge. Ma sono un solo sviluppatore, e non posso creare blocchi per ogni dispositivo hardware e caso d'uso.\n\nSe anche tu credi nella condivisione e nell'aiutare gli altri a imparare, **contribuisci**: invia i tuoi cataloghi di blocchi, apri issue o manda pull request. Ogni contributo rende la programmazione visuale accessibile a più persone.\n\n[Condividi i tuoi blocchi](https://github.com/linucs/blocks-community-catalog)",
   "mcp.blocksEditor.label": "Maker Block Studio",
   "view.localCatalogs.name": "Blocchi del Progetto",
+  "command.addCommunityCatalog": "Aggiungi blocchi dal catalogo community…",
+  "command.createLocalCatalog": "Nuovo catalogo…",
   "command.refreshLocalCatalogs": "Maker Block Studio: Aggiorna blocchi del progetto",
   "command.editLocalCatalog": "Modifica catalogo",
   "command.deleteLocalCatalog": "Elimina catalogo",

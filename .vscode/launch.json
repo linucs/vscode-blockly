@@ -36,6 +36,25 @@
 				"/Users/linucs/Projects/vscode-arduino-cli/dist/**/*.js"
 			],
 			"preLaunchTask": "watch + arduino-cli"
+		},
+		{
+			// Same as above, but loads the sibling vscode-arduino-app-cli instead of
+			// vscode-arduino-cli, so this extension can be exercised end-to-end against
+			// the app-cli toolchain integration.
+			// Do NOT also have vscode-arduino-app-cli installed as a VSIX while using
+			// this (the same extension id loaded twice conflicts).
+			"name": "Run Extension + Arduino App Studio",
+			"type": "extensionHost",
+			"request": "launch",
+			"args": [
+				"--extensionDevelopmentPath=${workspaceFolder}",
+				"--extensionDevelopmentPath=/Users/linucs/Projects/vscode-arduino-app-cli"
+			],
+			"outFiles": [
+				"${workspaceFolder}/dist/**/*.js",
+				"/Users/linucs/Projects/vscode-arduino-app-cli/dist/**/*.js"
+			],
+			"preLaunchTask": "watch + arduino-app-cli"
 		}
 	]
 }

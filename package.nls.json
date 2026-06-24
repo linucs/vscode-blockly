@@ -11,7 +11,7 @@
   "command.enableClaudeCode": "Maker Block Studio: Set Up AI Assistants (Copilot & Claude Code)",
   "editor.displayName": "Maker Block Studio (Visual Programming)",
   "editor.catalog.displayName": "Blocks Catalog Editor",
-  "viewContainer.catalogBrowser.title": "Community Catalog",
+  "viewContainer.catalogBrowser.title": "Maker Block Studio",
   "view.catalogRegistry.name": "Community Catalog",
   "command.refreshRegistry": "Maker Block Studio: Refresh Community Catalog",
   "command.downloadCatalog": "Download Catalog",

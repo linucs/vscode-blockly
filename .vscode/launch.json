@@ -29,11 +29,11 @@
 			"request": "launch",
 			"args": [
 				"--extensionDevelopmentPath=${workspaceFolder}",
-				"--extensionDevelopmentPath=/Users/linucs/Projects/vscode-arduino-cli"
+				"--extensionDevelopmentPath=${workspaceFolder}/../vscode-arduino-cli"
 			],
 			"outFiles": [
 				"${workspaceFolder}/dist/**/*.js",
-				"/Users/linucs/Projects/vscode-arduino-cli/dist/**/*.js"
+				"${workspaceFolder}/../vscode-arduino-cli/dist/**/*.js"
 			],
 			"preLaunchTask": "watch + arduino-cli"
 		},
@@ -48,11 +48,11 @@
 			"request": "launch",
 			"args": [
 				"--extensionDevelopmentPath=${workspaceFolder}",
-				"--extensionDevelopmentPath=/Users/linucs/Projects/vscode-arduino-app-cli"
+				"--extensionDevelopmentPath=${workspaceFolder}/../vscode-arduino-app-cli"
 			],
 			"outFiles": [
 				"${workspaceFolder}/dist/**/*.js",
-				"/Users/linucs/Projects/vscode-arduino-app-cli/dist/**/*.js"
+				"${workspaceFolder}/../vscode-arduino-app-cli/dist/**/*.js"
 			],
 			"preLaunchTask": "watch + arduino-app-cli"
 		}

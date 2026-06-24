@@ -115,14 +115,16 @@
       ]
     },
     "views": {
+      "explorer": [
+        {
+          "id": "blocks-editor.localCatalogs",
+          "name": "%view.localCatalogs.name%"
+        }
+      ],
       "blocks-catalog-browser": [
         {
           "id": "blocks-editor.catalogRegistry",
           "name": "%view.catalogRegistry.name%"
-        },
-        {
-          "id": "blocks-editor.localCatalogs",
-          "name": "%view.localCatalogs.name%"
         }
       ]
     },

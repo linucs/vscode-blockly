@@ -6,6 +6,12 @@ Build programs for Arduino by **dragging colorful blocks** — like Scratch, but
 
 ---
 
+## v0.4.1 — 2026-06-25
+
+- **Start a new block catalog in one click** — the **Project Blocks** view now has a **New Catalog…** button that walks you through a few short questions (an id, a toolbox category, an optional description, and which language it generates) and creates a ready-to-edit catalog in your project's `.blocks/` folder. It opens straight in the Guided Catalog Editor, so you can start snapping blocks together right away.
+- **Grab community blocks without leaving your project** — a new **+** button in the same view downloads a community catalog directly into the project you're working on.
+- **Project Blocks now lives in the Explorer** — the **Project Blocks** view moved out of the activity bar and into the Explorer sidebar, right alongside your files — matching its sister extensions **Arduino Sketch Studio** and **Arduino App Studio**. The **Community Catalog** browser stays in the activity bar.
+
 ## v0.4.0 — 2026-06-23
 
 - **Renamed to "Maker Block Studio"** — the extension (formerly "Blocks Editor") now shares the **… Studio** naming family with its sister extensions **Arduino Sketch Studio** and **Arduino App Studio**, and drops the Arduino lock to leave room for future boards. Nothing to relearn — your settings, keybindings, and shortcuts all keep working; only the name and command-palette titles change.

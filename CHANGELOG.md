@@ -6,6 +6,18 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-06-25
+
+### Added
+
+- **Create a new catalog from the Project Blocks view** — a **New Catalog…** button (and command) walks you through a short guided prompt (identifier → toolbox category → optional description → runtime) and scaffolds a starter catalog under the project's `.blocks/` folder, ready to open in the Guided Catalog Editor and start adding blocks. Dismissing any prompt with Esc aborts the whole flow.
+- **Add Blocks from Community Catalog** — the Project Blocks view now has an inline **+** button to download a community catalog straight into the current project, next to the new-catalog and refresh actions.
+
+### Changed
+
+- **Project Blocks moved to the Explorer** — the **Project Blocks** view now lives in the Explorer panel instead of the activity bar, matching the layout of the sibling Arduino Sketch Studio and Arduino App Studio extensions. The activity-bar view container (now titled **Maker Block Studio**) keeps the **Community Catalog** view.
+- Runtime ids (`arduino:cpp`, `arduino:python`) are now defined in one shared module, used by both the webview generator registry and the host's new-catalog runtime picker.
+
 ## [0.4.0] - 2026-06-23
 
 ### Added
